@@ -13,6 +13,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-21 – Plan-Tab neu: Agenda, Woche, Trainingstage
+- Ziel (mit Falk besprochen): Plan ist Werkzeug, kein Spiel. Flammen/XP/Monatsziel raus, Serien-Kalender bleibt im Verlauf (`#calw`).
+- Agenda: vorgestern bis +6 Tage (`ui.pa`, „7 Tage“ verlängert bis +27), Tag antippen klappt auf: Gruppen, Ausnahme für das Datum (`data-ctog`/`crest`/`creset`, wie vorher über `plan.ov`), heute „Training“. Hinweise (`notices`) sitzen jetzt im Plan: Tages-Hinweise an der Heute-Zeile, „Wochenziel wackelt“ im Agenda-Kopf, neue Übungen bei Trainingstage.
+- Woche: Mo–So mit Zuordnung (`data-wd`), Balance (Tage pro Gruppe, 0 bei Pull/Push/Core sichtbar), Hinweis „ohne Pause“ bei Pull/Push an zwei Tagen hintereinander (Hantel ausgenommen, mischt Zug/Druck).
+- Trainingstage als Liste mit Wochentagen, Übungszahl und geschätzter Dauer (`durEst`: Mittel der letzten Einheiten, an denen genau dieser Tag geplant war).
+- Aufklappen ohne Neuaufbau (`rowToggle`, `grid-template-rows`-Übergang 220 ms), Ausnahme gesetzt = kurzes Aufleuchten der Zeile, `prefers-reduced-motion` beachtet.
+- Datenform unverändert. Entfernt: Monatskalender im Plan, `ui.pm`/`ui.px`, Wischen für Monate, 121 tote CSS-Regeln (`.pcx`, `.pc*`, `.pd2`, `.nt`, `fpulse` …).
+
 ### 2026-10-21 – Design-Skills
 - 11 Skills aus `emilkowalski/skills` (Commit 2d22863) nach `.claude/skills/` übernommen, vorher gelesen (nur Markdown, keine Scripts). Weggelassen: animate-expo, write-swift, ask-sonner, pick-ui-library.
 

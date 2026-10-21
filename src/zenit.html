@@ -1120,8 +1120,9 @@ button.pdb-h:active { background: var(--s2); }
 .fmb.su .fbt > i { background: var(--ink3); }
 .fmb.su.over .fbt > i { background: var(--danger); }
 .fmb.su.over b { color: var(--danger); }
-.ftl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
-.fti { display: grid; align-content: space-between; gap: 4px; min-width: 0; min-height: 84px; padding: 9px 9px 8px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
+.ftl { display: flex; gap: 8px; margin: 12px -16px 0; padding: 0 16px 2px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; scrollbar-width: none; }
+.ftl::-webkit-scrollbar { display: none; }
+.fti { flex: 0 0 calc((100% - 32px - 24px) / 4.3); scroll-snap-align: start; display: grid; align-content: space-between; gap: 4px; min-width: 0; min-height: 84px; padding: 9px 9px 8px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
 .fti:active { transform: scale(.95); }
 .fti b { display: -webkit-box; overflow: hidden; font-size: 13px; line-height: 1.15; -webkit-hyphens: auto; hyphens: auto; overflow-wrap: anywhere; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 .fti small { font-size: 11px; color: var(--ink3); }
@@ -1147,6 +1148,14 @@ button.pdb-h:active { background: var(--s2); }
 .fsi em { font-family: var(--f-mono); font-size: 13px; font-style: normal; font-weight: 600; color: var(--ink2); }
 .fsi em::after { content: " kcal"; font-size: 10px; color: var(--ink3); }
 .fsb { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.fcg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.fcg button { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 48px; padding: 0 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
+.fcg button:active { transform: scale(.97); }
+.fcg b { font-size: 13px; }
+.fcg small { font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
+.fcb { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 0; border: 0; background: transparent; color: var(--ink); font: inherit; }
+.fcb .ic { width: 18px; height: 18px; color: var(--ink2); }
+.fcb b { font-size: 15px; }
 .fpc { display: flex; flex-wrap: wrap; gap: 6px; }
 .fpc button { min-height: 38px; padding: 0 12px; border-radius: 99px; border: 1px solid var(--line); background: var(--s2); color: var(--ink2); font: inherit; font-size: 13px; font-weight: 700; transition: transform .14s var(--ease); }
 .fpc button:active { transform: scale(.96); }
@@ -1439,7 +1448,7 @@ button.pdb-h:active { background: var(--s2); }
   var DEMO = false; try { DEMO = localStorage.getItem('zenit.mode') === 'demo'; } catch (e) { /* egal */ }
   var KEY = DEMO ? 'stufenbuch.demo' : 'stufenbuch.v1';
   var state = { logs: [], u: 0, plan: null, food: null };
-  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fq: '', fpick: null, ftiles: null, ftok: null, cpr: null, gmode: 'a', nts: [], pd: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, todo: false, pdo: {}, plk: null, pmode: null, draft: null, psel: null, pnt: null, pdisc: 0, pwe: null, pact: null, pnoclick: 0, dd: null, xo: {}, gx: {}, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
+  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fq: '', fcat: '', fpick: null, ftiles: null, ftok: null, cpr: null, gmode: 'a', nts: [], pd: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, todo: false, pdo: {}, plk: null, pmode: null, draft: null, psel: null, pnt: null, pdisc: 0, pwe: null, pact: null, pnoclick: 0, dd: null, xo: {}, gx: {}, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
   var store = 'local', sync = '', ref = null, timer = null, writing = false, dirty = false;
 
   var EQUIP = [['bar', 'Klimmzugstange'], ['board', 'Push-up-Board'], ['db', 'Kurzhanteln'], ['mat', 'Matte'], ['roll', 'Blackroll'], ['ball', 'Faszienball'], ['bike', 'Homebike'], ['band', 'Widerstandsband']];
@@ -2438,9 +2447,23 @@ button.pdb-h:active { background: var(--s2); }
     return o;
   });
   var FOODB = {}; FOODS.forEach(function (x) { FOODB[x.id] = x; });
+  // Kategorien für die Übersicht in der Suche
+  var FCATS = [
+    ['g', 'Getreide & Brot', 'hafer muesli cornfl reis_r reis_g nud_r nud_g vknud kart skart quinoa cous vkbrot mischbr broet toast wrap reisw'],
+    ['m', 'Milch & Käse', 'milch15 milch35 hafmil sojmil skyr mquark quark40 joghurt grjog huette gouda mozz feta parm butter sahne whey ppudd'],
+    ['e', 'Eier, Fleisch & Fisch', 'ei eiklar haehn pute rhack steak schwf kschin salami lachs thun garnel seela'],
+    ['h', 'Hülsenfrüchte & Tofu', 'linsen_r linsen_g kicher kidney tofu edam hummus'],
+    ['v', 'Gemüse', 'brok papr tomate gurke karotte zucch spinat salat zwieb champ mais erbsen avoc'],
+    ['o', 'Obst', 'banane apfel beeren erdb orange trauben kiwi datteln'],
+    ['n', 'Nüsse, Samen & Öl', 'mandeln walnuss erdnuss ernmus cashew leins chia olivoel rapsoel'],
+    ['s', 'Süßes & Snacks', 'zbschok mschok priegel chips gummi honig marm nusscr vaneis'],
+    ['d', 'Getränke', 'osaft cola bier'],
+    ['r', 'Fertiges & Imbiss', 'pizza doener burger pommes lasag']
+  ];
+  FCATS.forEach(function (c) { c[2].split(' ').forEach(function (id) { if (FOODB[id]) FOODB[id].cat = c[0]; }); });
   var NK = ['k', 'p', 'f', 'c', 'fb', 'su'], NSH = { k: 'kcal', p: 'Protein', f: 'Fett', c: 'Kohlenh.', fb: 'Ballast.', su: 'Zucker' };
   // Kacheln, solange es noch wenig Verlauf gibt: [Lebensmittel, Gramm]
-  var TILEDEF = [['skyr', 150], ['hafer', 80], ['ei', 180], ['banane', 120], ['whey', 30], ['haehn', 150], ['reis_g', 200], ['mandeln', 25]];
+  var TILEDEF = [['skyr', 150], ['hafer', 80], ['ei', 180], ['banane', 120], ['whey', 30], ['haehn', 150], ['reis_g', 200], ['mandeln', 25], ['vkbrot', 100], ['apfel', 150], ['mquark', 250], ['brok', 150]];
   function foodState() {
     if (!state.food) state.food = { g: null, e: [], d: [] };
     ['d', 'w', 'm', 'o'].forEach(function (k) { if (!state.food[k]) state.food[k] = []; });
@@ -2516,15 +2539,15 @@ button.pdb-h:active { background: var(--s2); }
     return { ok: 1, n: n, wn: pts.length, est: Math.round(est), maint: Math.round(maint), adj: Math.round((est - maint) / 50) * 50, wk: slope * 7 };
   }
 
-  // Kacheln: die 8 häufigsten Einträge (gleiche Quelle und Menge) der letzten 60 Tage, aufgefüllt mit Vorschlägen
+  // Kacheln: die 12 häufigsten Einträge (gleiche Quelle und Menge) der letzten 60 Tage, aufgefüllt mit Vorschlägen
   function fTiles() {
     var m = {}, arr = [], since = Date.now() - 60 * 864e5;
     foodState().e.forEach(function (x) {
       if (x.t < since || !x.r || !fItem(x.r.i)) return;
       var key = x.r.i + '|' + x.r.g; if (!m[key]) { m[key] = { i: x.r.i, g: x.r.g, c: 0, t: 0 }; arr.push(m[key]); } m[key].c++; m[key].t = Math.max(m[key].t, x.t);
     });
-    arr.sort(function (a, b) { return b.c - a.c || b.t - a.t; }); arr = arr.slice(0, 8);
-    TILEDEF.forEach(function (d) { if (arr.length < 8 && !arr.some(function (y) { return y.i === d[0]; })) arr.push({ i: d[0], g: d[1], c: 0 }); });
+    arr.sort(function (a, b) { return b.c - a.c || b.t - a.t; }); arr = arr.slice(0, 12);
+    TILEDEF.forEach(function (d) { if (arr.length < 12 && !arr.some(function (y) { return y.i === d[0]; })) arr.push({ i: d[0], g: d[1], c: 0 }); });
     return arr;
   }
   function fbar(k, v, g) {
@@ -2576,7 +2599,7 @@ button.pdb-h:active { background: var(--s2); }
       (g.tb ? '<span class="ftb">' + ic('dumb') + '+' + g.tb + '</span>' : '') + '<em>' + (g.k - s.k >= 0 ? (g.k - s.k) + ' offen' : (s.k - g.k) + ' drüber') + '</em><i class="fbt"><i' + pv('fkb', Math.min(1, kp)) + '></i></i></div>' +
       '<div class="fbm">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return fbar(k, s[k], g[k]); }).join('') + '</div></section>';
     // Schnell-Kacheln
-    h += '<section class="ftl rise" style="--i:2">' + tl.map(function (x, j) {
+    h += '<section class="ftl rise" style="--i:2" data-noswipe="1">' + tl.map(function (x, j) {
       var it = fItem(x.i), v = fNut(it, x.g);
       return '<button class="fti' + (ui.ftok === j ? ' done' : '') + '" data-ftile="' + j + '"><b>' + esc(it.n) + '</b><small>' + fAmt(it, x.g) + '</small><span>' + Math.round(v.k) + '<em>kcal</em></span></button>';
     }).join('') + '</section>';
@@ -2590,16 +2613,19 @@ button.pdb-h:active { background: var(--s2); }
         return '<div class="fe" data-fedit="' + o.i + '" role="button" tabindex="0"><div class="fn"><b>' + esc(o.x.n || 'Mahlzeit') + '</b><small>' + (it ? fAmt(it, o.x.r.g) + ' · ' : '') + new Date(o.x.t).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + '</small></div>' +
           '<span class="fv"><b>' + Math.round(o.x.k) + ' kcal</b><small>P ' + fN(o.x.p) + (o.x.f != null ? ' · F ' + fN(o.x.f) + ' · K ' + fN(o.x.c) : '') + '</small></span><button class="xb rem" data-fdel="' + o.i + '" aria-label="Löschen">' + ic('close') + '</button></div>';
       }).join('') + '</div>' : '<p class="muted">Noch nichts eingetragen.</p>') + '</section>';
-    // Verlauf (14 Tage, % vom Tagesziel)
+    return h;
+  }
+
+  function foodStats(today) {
+    // Ernährung im Verlauf (Tab Verlauf › Körper): 14 Tage in % vom Tagesziel, gewählter Tag, Ø 7 Tage, Tage im Ziel
     if (ui.fd === null || ui.fd > today) ui.fd = today;
     setTimeout(function () { ui.fdrawn = true; }, 1200);
     var ch = fchart(today), sel = ch.rows.filter(function (o) { return o.d === ui.fd; })[0] || ch.rows[ch.rows.length - 1], l7 = ch.rows.slice(-7);
     var hp = l7.filter(function (o) { return o.pp >= 100; }).length, hk = l7.filter(function (o) { return o.kp >= 90 && o.kp <= 110; }).length;
     var av = l7.filter(function (o) { return o.k > 0 || o.p > 0; }), avgN = av.length, avgP = av.reduce(function (a, o) { return a + o.p; }, 0) / (avgN || 1), avgK = av.reduce(function (a, o) { return a + o.k; }, 0) / (avgN || 1);
-    h += '<section class="sec rise" style="--i:5"><h2 class="sec-h">Verlauf<small>% vom Ziel</small></h2><div class="fch' + (ui.fdrawn ? ' nd' : '') + '">' + ch.svg + '<div class="fleg"><span><i class="p"></i>Protein · g links</span><span><i class="k"></i>Kalorien · kcal rechts</span></div></div>' +
+    return '<section class="sec rise" style="--i:9"><h2 class="sec-h">' + ic('food') + 'Ernährung<small>% vom Ziel</small></h2><div class="fch' + (ui.fdrawn ? ' nd' : '') + '">' + ch.svg + '<div class="fleg"><span><i class="p"></i>Protein · g links</span><span><i class="k"></i>Kalorien · kcal rechts</span></div></div>' +
       '<div class="fsel"><b>' + fmtDayL(sel.d) + '</b><span class="p">' + sel.p + ' g · ' + Math.round(sel.pp) + ' %</span><span class="k">' + sel.k + ' kcal · ' + Math.round(sel.kp) + ' %</span></div>' +
       (avgN ? '<div class="fsel"><b>Ø ' + avgN + ' Tage</b><span class="p">' + Math.round(avgP) + ' g</span><span class="k">' + Math.round(avgK) + ' kcal</span></div>' : '') + '<div class="fsum two"><span class="p"><b>' + hp + '/7</b>Protein im Ziel</span><span class="k"><b>' + hk + '/7</b>Kalorien im Ziel</span></div></section>';
-    return h;
   }
 
   // Sheets: Suche → Menge, Schnell, eigenes Lebensmittel, Gerichte, Ziele/Rechner
@@ -2607,17 +2633,19 @@ button.pdb-h:active { background: var(--s2); }
     return '<div class="grab"></div><div class="sh-h">' + (back ? '<button class="x" data-fback="1" aria-label="Zurück">' + ic('back') + '</button>' : '<span class="gi">' + ic(icn) + '</span>') + '<div class="nm"><b>' + esc(title) + '</b><small>' + esc(sub) + '</small></div><button class="x" data-sheet-close aria-label="Schließen">' + ic('close') + '</button></div>';
   }
   function sheetOpen(html, tall) { $('sheet').className = 'sheet' + (tall ? ' tall' : ''); $('sheet').innerHTML = html; $('shade').classList.add('open'); $('sheet').classList.add('open'); }
-  function openFsearch() {
-    ui.sheet = { fsearch: true }; ui.fq = ''; ui.fpick = null; ui.fday = 0;
+  function openFsearch(keep) {
+    ui.sheet = { fsearch: true }; ui.fq = ''; ui.fcat = keep ? ui.fcat : ''; ui.fpick = null; ui.fday = 0;
     sheetOpen(shHead('search', 'Eintragen', 'Lebensmittel oder Gericht suchen') + '<input id="fq" class="fnm fq" type="search" placeholder="Suchen, z. B. Skyr" autocomplete="off" aria-label="Suchen"><div id="fres" class="fsr">' + fresHtml() + '</div>', true);
     setTimeout(function () { var i = $('fq'); if (i && !('ontouchstart' in window)) i.focus(); }, 350);
   }
   function fresHtml() {
     var q = fnorm(ui.fq.trim()), st = foodState(), list = [], seen = {};
-    if (!q) {
-      // Ohne Suche: zuletzt gegessen, dann eigene Lebensmittel und Gerichte
-      st.e.slice().reverse().forEach(function (x) { if (x.r && !seen[x.r.i] && fItem(x.r.i) && list.length < 10) { seen[x.r.i] = 1; list.push(x.r.i); } });
-      st.o.concat(st.d).forEach(function (x) { if (!seen[x.id]) list.push(x.id); });
+    if (!q && ui.fcat) {
+      // Kategorie: eingebaute Lebensmittel der Kategorie, „Eigene“ = eigene Lebensmittel, „Gerichte“ = Gerichte
+      list = ui.fcat === 'u' ? st.o.map(function (x) { return x.id; }) : ui.fcat === 'dish' ? st.d.map(function (x) { return x.id; }) : FOODS.filter(function (x) { return x.cat === ui.fcat; }).map(function (x) { return x.id; });
+    } else if (!q) {
+      // Ohne Suche: die 5 zuletzt gegessenen, darunter die Kategorien
+      st.e.slice().reverse().forEach(function (x) { if (x.r && !seen[x.r.i] && fItem(x.r.i) && list.length < 5) { seen[x.r.i] = 1; list.push(x.r.i); } });
     } else {
       var sc = [];
       st.o.map(function (x) { return x.id; }).concat(st.d.map(function (x) { return x.id; }), FOODS.map(function (x) { return x.id; })).forEach(function (id) {
@@ -2625,10 +2653,13 @@ button.pdb-h:active { background: var(--s2); }
       });
       sc.sort(function (a, b) { return a[1] - b[1]; }); list = sc.slice(0, 30).map(function (x) { return x[0]; });
     }
-    var h = list.length ? (q ? '' : '<h3 class="xg">Zuletzt und eigene</h3>') + list.map(function (id) {
+    var cat = !q && ui.fcat ? (ui.fcat === 'u' ? 'Eigene' : ui.fcat === 'dish' ? 'Gerichte' : FCATS.filter(function (c) { return c[0] === ui.fcat; })[0][1]) : '';
+    var h = (cat ? '<button class="fcb" data-fcat="">' + ic('back') + '<b>' + cat + '</b></button>' : '') + (list.length ? (q || cat ? '' : '<h3 class="xg">Zuletzt</h3>') + list.map(function (id) {
       var it = fItem(id);
       return '<button class="fsi' + (it.dish ? ' dish' : /^u/.test(id) ? ' own' : '') + '" data-fpick="' + id + '"><span><b>' + esc(it.n) + '</b><small>' + (it.dish ? 'Portion' : '100 g') + ' · P ' + fN(it.p) + ' · F ' + fV(it.f) + ' · K ' + fV(it.c) + '</small></span><em>' + Math.round(it.k) + '</em></button>';
-    }).join('') : q ? '<p class="muted">Nichts gefunden. Lege es als eigenes Lebensmittel an.</p>' : '<p class="muted">Tippe einen Namen, z. B. Haferflocken.</p>';
+    }).join('') : q ? '<p class="muted">Nichts gefunden. Lege es als eigenes Lebensmittel an.</p>' : cat ? '<p class="muted">Noch leer.</p>' : '');
+    if (!q && !cat) h += '<h3 class="xg">Kategorien</h3><div class="fcg">' + FCATS.map(function (c) { return '<button data-fcat="' + c[0] + '"><b>' + c[1] + '</b><small>' + FOODS.filter(function (x) { return x.cat === c[0]; }).length + '</small></button>'; }).join('') +
+      '<button data-fcat="u"><b>Eigene</b><small>' + st.o.length + '</small></button><button data-fcat="dish"><b>Gerichte</b><small>' + st.d.length + '</small></button></div>';
     return h + '<div class="fsb"><button class="btn small" data-fown="new">' + ic('plus') + 'Eigenes Lebensmittel</button><button class="btn small" data-fquick="1">' + ic('bolt') + 'Schnell</button></div>';
   }
   function openPick(id, a, edit) {
@@ -2840,7 +2871,8 @@ button.pdb-h:active { background: var(--s2); }
     if (t.closest('[data-fdishes]')) { openDishes(); return true; }
     if (t.closest('[data-fquick]')) { openQuick(null); return true; }
     if ((el = t.closest('[data-fpick]'))) { var from = ui.sheet && (ui.sheet.fsearch || ui.sheet.fdishes) ? (ui.sheet.fsearch ? 's' : 'd') : null; openPick(el.dataset.fpick); ui.sheet.from = from; $('sheet').innerHTML = fpickHtml(); return true; }
-    if (t.closest('[data-fback]')) { if (ui.sheet && ui.sheet.from === 'd') openDishes(); else { var q0 = ui.fq; openFsearch(); ui.fq = q0 || ''; $('fq').value = ui.fq; $('fres').innerHTML = fresHtml(); } return true; }
+    if (t.closest('[data-fback]')) { if (ui.sheet && ui.sheet.from === 'd') openDishes(); else { var q0 = ui.fq; openFsearch(true); ui.fq = q0 || ''; $('fq').value = ui.fq; $('fres').innerHTML = fresHtml(); } return true; }
+    if ((el = t.closest('[data-fcat]'))) { ui.fcat = el.dataset.fcat; $('fres').innerHTML = fresHtml(); $('sheet').scrollTop = 0; return true; }
     if ((el = t.closest('[data-famt]'))) { ui.fpick.a = +el.dataset.famt; $('fa').value = ui.fpick.a; fpickUpd(); return true; }
     if ((el = t.closest('[data-fstep]'))) { var it0 = fItem(ui.fpick.i), stp = it0.dish ? 0.5 : 10; ui.fpick.a = Math.max(stp, Math.round((ui.fpick.a + stp * (+el.dataset.fstep)) * 10) / 10); $('fa').value = ui.fpick.a; fpickUpd(); buzz(4); return true; }
     if (t.closest('[data-fpadd]')) { var pk = ui.fpick; foodRef(pk.i, pk.a, pk.edit); return true; }
@@ -3350,7 +3382,7 @@ button.pdb-h:active { background: var(--s2); }
     if (ui.sel && ui.seg !== 'pf') return viewDetail(d, now);
     var h = '<div class="seg four rise" role="group" aria-label="Ansicht"><button data-seg="ov" aria-pressed="' + (ui.seg === 'ov') + '">' + ic('chart') + 'Überblick</button><button data-seg="ex" aria-pressed="' + (ui.seg === 'ex') + '">' + ic('pull') + 'Übungen</button><button data-seg="kp" aria-pressed="' + (ui.seg === 'kp') + '">' + ic('scale') + 'Körper</button><button data-seg="pf" aria-pressed="' + (ui.seg === 'pf') + '">' + ic('path') + 'Pfad</button></div>';
     if (ui.seg === 'pf') return h + viewPath(d);
-    if (ui.seg === 'kp') return h + viewBody(d, now);
+    if (ui.seg === 'kp') return h + viewBody(d, now) + foodStats(dayIdx(now));
     if (!state.logs.length) return h + '<div class="empty rise">' + ic('chart') + '<b>Noch leer</b></div>';
     return h + (ui.seg === 'ov' ? viewOverview(d, now) : viewList(d));
   }

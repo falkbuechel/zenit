@@ -37,24 +37,27 @@ const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data
         const vals = await p.$$eval(sel, (els, s) => [...new Set(els.map(e => e.getAttribute(s.slice(1, -1))))], sel);
         for (const v of vals) await click(`${sel.slice(0, -1)}="${v}"]`);
       }
-      // Plan: Tag ändern (tauschen, ersetzen, Urlaub eintragen und löschen, zurücksetzen)
+      // Plan: Tag ändern (Tauschen über den Kalender, Ersetzen, Aussetzen, Urlaub; jede Aktion schaltet sich beim zweiten Tippen aus)
       if (tab === 'tage' && await click('[data-cnow]') !== null) {
         if (!(await p.$('.pday.open'))) await click('[data-pchg]');
-        await click('[data-pmode="swap"]'); await click('[data-pswap]'); await click('[data-pmode="repl"]'); await click('[data-prepl]');
+        await click('[data-pmode="swap"]'); await click('.pc2.pick'); await click('[data-pmode="swap"]');
+        await click('[data-pmode="repl"]'); await click('[data-preplx]'); await click('[data-pmode="repl"]');
+        await click('[data-pmode="skip"]'); await click('[data-pmode="skip"]'); await click('[data-pmode="add"]'); await click('[data-paddx]');
         await click('[data-pmode="vac"]'); await click('[data-poff="3"]'); await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-urlaub.png`) });
-        await click('[data-offdel]'); await click('[data-pchg]'); await click('[data-creset]');
+        await click('[data-pmode="vac"]'); await click('[data-pchg]');
       }
-      // Plan: Wochenplaner (Preset, Karte antippen + Tag antippen, entfernen, Preset speichern/löschen), daraus den Editor öffnen
+      // Plan: Wochenplaner (Karte antippen + Tag antippen, entfernen, speichern, neuer Plan, aktivieren), daraus den Editor öffnen
       if (tab === 'tage' && await click('[data-pman]')) {
-        await click('[data-pwp="std"]'); await click('.pk[data-pkid]'); await click('[data-pslot="6"]'); await click('[data-punset]');
-        await click('[data-pwpsave]'); await click('[data-pwpdel]'); await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-planer.png`) });
+        await click('.pk[data-pkid]'); await click('[data-pslot="6"]'); await click('[data-punset]'); await click('[data-psave]');
+        await click('[data-wpnew]'); await click('.pk[data-pkid]'); await click('[data-pslot="0"]'); await click('[data-psave]');
+        await click('[data-wpact]'); await click('[data-wpon]'); await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-planer.png`) });
       }
       // Plan: Trainingstag-Editor öffnen, Übung an/aus, Icon, Filter, zurück
       if (tab === 'tage' && await click('[data-pedit]')) {
         await click('[data-ptog]'); await click('[data-ptog]'); await click('[data-pic="star"]'); await click('[data-pef="pull"]'); await click('[data-pef="all"]');
         await click('[data-prp="2"]'); await click('[data-pst="1"]'); await click('[data-prp="0"]'); await click('[data-prp="1"]'); await click('[data-plk]'); await click('[data-plk]');
         await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-editor.png`) }); await click('[data-pback]');
-        await click('[data-psave]');
+        await click('[data-pmanx]'); await click('[data-pdiscok]');
       }
       if (await click('[data-open]')) { await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-detail.png`) }); await click('[data-back]'); }
       if (await click('[data-pill]')) { await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-sheet.png`) }); await closeSheet(); }

@@ -13,6 +13,16 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-21 – Mehrere Wochenpläne, Sammelkarten, Tag ändern über den Kalender, nur Hochformat
+- Mehrere Pläne (Aufbau, Ausdauer …): gespeichert ≠ aktiv. Aktivieren ab heute / ab Montag / ab Datum legt einen Eintrag im Zeitstrahl `plan.act` an; erst dann übernimmt der Kalender den Plan ab diesem Tag. „Meine Pläne“ unten im Planer: Name direkt editierbar, Mini-Woche, Status (aktiv seit / ab Datum mit ✕ / gespeichert), Bearbeiten, Aktivieren, Löschen. Neue Datenform `wp[].id`, `act`, `ovk` (siehe DEVELOPMENT.md), Migration in `plan()`.
+- Einstieg nur noch über ein Karten-Icon im Kalenderkopf (eine Wochenansicht statt zwei).
+- Verwerfen: eigene Leiste unter dem Kopf statt Text im Zurück-Knopf (überlappte).
+- Sammelkarten: Verlauf, Punktmuster, Icon im leuchtenden Kreis, Glanz läuft über die hervorgehobene Karte. Alle Karten passen auf den Bildschirm (Überlappung aus Anzahl und Breite), symmetrisch gefächert. Seitlich über die Hand wischen hebt die Karte unter dem Finger hervor, nach oben ziehen legt sie.
+- Tag ändern: jede Aktion schaltet sich beim zweiten Tippen aus (kein Zurücksetzen). Tauschen hebt im Kalender die möglichen Tage hervor (ab heute, kein Urlaub, nicht dasselbe Training), Tippen tauscht beide Tage. Ausgesetzt: im Kalender durchgestrichen, in der Karte Pille mit dem ursprünglichen Training; Ersetzen/Tauschen zeigen ebenfalls eine Pille. Urlaub/Krank: nur noch die Anzahl Tage.
+- Nur Hochformat: iOS ignoriert die Ausrichtung im Manifest, daher im Querformat (Höhe ≤ 500 px) ein Hinweis statt der App.
+- CSS: alte und neue Karten-Regeln zu je einer Regel zusammengeführt (keine Schichten).
+
+
 ### 2026-10-21 – Wochenplaner (ersetzt „Woche & Tage“)
 - Idee von Falk: Woche Mo–So als Entwurf (`ui.draft`, gilt erst nach „Speichern“, Zurück fragt „Verwerfen?“), darunter Trainingstage als farbige, leicht schwebende Karten in einer seitlich scrollbaren Hand. Karte nach oben auf einen Tag ziehen (Pointer-Events, Geisterkarte) oder antippen + Tag antippen; ✕ am Tag entfernt; ✎ auf der Karte öffnet den Editor. Wochentage gibt es nur noch hier (`wdChips` im Editor entfernt).
 - Presets: Leer, Standard (`defaultPlan`), eigene Wochen speichern/löschen. Neue Datenform `plan.wp: [{n, m: {tagId: [wd]}}]`. Fast vergessen: `cleanPlan` hätte `wp` beim Laden verworfen (Presets nach Neustart weg); nachgetragen und mit Neuladen geprüft.

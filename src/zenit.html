@@ -1027,14 +1027,11 @@ button.pdb-h:active { background: var(--s2); }
 .pda button[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--bg); }
 .pdm { animation: fade .15s var(--ease); }
 .swl2, .pdur { display: grid; gap: 6px; }
-.pdur { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .swl2 button, .pdur button { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 44px; padding: 6px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
 .swl2 button:active, .pdur button:active { transform: scale(.98); }
 .swl2 b { font-family: var(--f-mono); font-size: 12px; font-weight: 600; color: var(--ink2); }
 .swl2 span { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; }
 .swl2 span .ic { width: 16px; height: 16px; }
-.pdur button { display: grid; justify-items: start; gap: 2px; }
-.pdur b { font-size: 14px; }
 .pdur span { font-family: var(--f-mono); font-size: 10px; color: var(--ink3); }
 .pc2 .ics em.off { color: var(--ink2); }
 .pdb.off { border-left-color: var(--ink3); }
@@ -1093,29 +1090,7 @@ button.pdb-h:active { background: var(--s2); }
 /* Trainingstage kompakt */
 .pm-t { margin: 0; flex: 1; font-family: var(--f-display); font-weight: 900; font-size: 26px; text-transform: uppercase; }
 /* Einstieg „Woche planen“ */
-.pwe { display: grid; gap: 8px; margin-top: 12px; }
-.pwe-b { display: grid; gap: 8px; width: 100%; padding: 10px 12px 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
-.pwe-b:active { transform: scale(.98); }
-.pwe-b .sec-h { margin: 0; }
-.pwe-b .sec-h .chv { width: 16px; height: 16px; margin-left: auto; color: var(--ink3); }
-.pwm { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
-.pwm > span { display: grid; justify-items: center; gap: 3px; }
-.pwm small { font-size: 11px; font-weight: 800; color: var(--ink3); text-transform: uppercase; }
-.pwm .t small { color: var(--ink); }
-.pwm em { display: grid; color: var(--pc); }
-.pwm em .ic { width: 17px; height: 17px; }
-.pwm em.r { color: var(--ink3); opacity: .45; }
-.pwe > .agn { justify-self: start; }
 /* Wochenplaner: Presets, Ablageplätze, Karten-Hand */
-.pe-top .btn[disabled] { opacity: .45; }
-.pps { display: flex; gap: 6px; margin: 10px -16px 0; padding: 0 16px 2px; overflow-x: auto; scrollbar-width: none; }
-.pps::-webkit-scrollbar { display: none; }
-.pps button { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: 99px; border: 1px solid var(--line); background: var(--s1); color: var(--ink2); font: inherit; font-size: 13px; font-weight: 700; transition: transform .14s var(--ease); }
-.pps button:active { transform: scale(.96); }
-.pps .ic { width: 14px; height: 14px; }
-.ppw { flex: none; display: inline-flex; }
-.ppw button:first-child { border-radius: 99px 0 0 99px; padding-right: 8px; }
-.ppw .ppx { border-left: 0; border-radius: 0 99px 99px 0; padding: 0 10px 0 6px; color: var(--ink3); }
 .pwkl { display: grid; gap: 6px; margin-top: 10px; }
 .psl { position: relative; display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 8px; min-height: 50px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--s1); transition: background-color .16s var(--ease), border-color .16s var(--ease), transform .16s var(--ease); }
 .psl > b { font-family: var(--f-display); font-weight: 800; font-size: 17px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink2); }
@@ -1135,11 +1110,8 @@ button.pdb-h:active { background: var(--s2); }
 @keyframes ptlin { from { opacity: 0; transform: scale(.9); } }
 .pdrop { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; border: 1px dashed var(--line); color: var(--ink3); }
 .pdrop .ic { width: 14px; height: 14px; }
-.pkh { display: flex; align-items: flex-end; margin: 6px -16px 0; padding: 22px 16px 16px 34px; overflow-x: auto; scrollbar-width: none; touch-action: pan-x; }
-.pkh::-webkit-scrollbar { display: none; }
-.pk { position: relative; flex: none; display: grid; align-content: space-between; justify-items: start; width: 104px; height: 136px; margin-left: -18px; padding: 12px 10px; border-radius: 16px; background: linear-gradient(160deg, color-mix(in srgb, var(--pc) 82%, #fff), var(--pc)); color: var(--on); box-shadow: 0 12px 22px -14px var(--pc), 0 2px 0 rgba(0, 0, 0, .08), inset 0 1px 0 rgba(255, 255, 255, .35); -webkit-user-select: none; user-select: none; touch-action: pan-x; rotate: calc((var(--j) - 1.5) * 2deg); animation: pkfloat 3.2s ease-in-out infinite alternate; animation-delay: calc(var(--j) * -.7s); transition: translate .2s var(--ease), rotate .2s var(--ease), opacity .2s; }
+.pk { position: relative; flex: none; display: grid; align-content: space-between; justify-items: start; width: 96px; height: 132px; margin-left: var(--ov, -18px); padding: 10px 9px; overflow: hidden; isolation: isolate; border-radius: 16px; background: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, .16) 1px, transparent 1.5px) 0 0 / 9px 9px, linear-gradient(155deg, color-mix(in srgb, var(--pc) 70%, #fff), var(--pc) 52%, color-mix(in srgb, var(--pc) 78%, #000)); color: var(--on); box-shadow: 0 12px 22px -14px var(--pc), inset 0 0 0 1.5px rgba(255, 255, 255, .28), inset 0 1px 0 rgba(255, 255, 255, .45); -webkit-user-select: none; user-select: none; touch-action: pan-x; rotate: calc(var(--j) * 1.6deg); animation: pkfloat 3.2s ease-in-out infinite alternate; animation-delay: calc(var(--j) * -.7s); transition: translate .2s var(--ease), rotate .2s var(--ease), opacity .2s; }
 @keyframes pkfloat { from { translate: 0 0; } to { translate: 0 -4px; } }
-.pki .ic { width: 30px; height: 30px; }
 .pk b { font-size: 15px; line-height: 1.15; }
 .pkd { display: flex; flex-wrap: wrap; gap: 3px; max-width: 64px; }
 .pkd i { width: 6px; height: 6px; border-radius: 50%; background: color-mix(in srgb, var(--on) 28%, transparent); }
@@ -1148,16 +1120,90 @@ button.pdb-h:active { background: var(--s2); }
 .pke { position: absolute; right: 8px; bottom: 8px; display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--on) 16%, transparent); color: var(--on); }
 .pke .ic { width: 14px; height: 14px; }
 .pkw { position: absolute; top: -8px; right: -6px; width: 24px; height: 24px; padding: 4px; border-radius: 50%; background: var(--danger); color: #fff; box-shadow: 0 0 0 2px var(--bg); }
-.pk.sel { z-index: 2; rotate: 0deg; translate: 0 -16px; animation: none; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink), 0 16px 26px -14px var(--pc); }
 .pk.full { filter: saturate(.55); opacity: .7; }
 .pk.over, .pk.clash { z-index: 1; box-shadow: 0 0 0 2px var(--danger), 0 12px 22px -14px var(--danger); animation: pkwarn 2.6s ease-in-out infinite; }
 @keyframes pkwarn { 0%, 80%, 100% { translate: 0 0; } 84% { translate: -2px 0; } 88% { translate: 2px 0; } 92% { translate: -1px 0; } }
 .pk.lift { opacity: .3; }
 .pk.ghost { position: fixed; z-index: 50; margin: 0; pointer-events: none; animation: none; rotate: 0deg; translate: none; box-shadow: 0 24px 40px -18px rgba(0, 0, 0, .55); }
-.pk.add { place-items: center; align-content: center; background: transparent; border: 1.5px dashed var(--line); box-shadow: none; color: var(--ink2); animation: none; rotate: 0deg; }
+.pk.add { width: 56px; height: 132px; place-items: center; align-content: center; background: transparent; border: 1.5px dashed var(--line); box-shadow: none; color: var(--ink2); animation: none; rotate: 0deg; }
 .pk.add .ic { width: 24px; height: 24px; }
 .pkh + .ppre { margin-top: 0; }
-@media (prefers-reduced-motion: reduce) { .agx, .agx > div { transition: none; } .pk, .pk.over, .pk.clash { animation: none; } .ptl.nw { animation: none; } .pday.fl { animation: none; } .pc2-g.in-r, .pc2-g.in-l, .pc2-g.in-m { animation: fade .15s ease; } }
+/* Kalender: Planer-Knopf, Tauschen wählt im Kalender, ausgesetzte Tage */
+.pc2-pl { width: 36px; height: 36px; color: var(--ink2); }
+.pc2-pl .ic { width: 20px; height: 20px; }
+.pc2-g.swp .pc2.nop { opacity: .3; }
+.pc2.pick { box-shadow: inset 0 0 0 1.5px var(--ink); animation: pick 1.4s ease-in-out infinite; }
+@keyframes pick { 50% { background: var(--s2); } }
+.pc2 .ics em.sk { opacity: .3; }
+.pc2.skp .ics { position: relative; }
+.pc2.skp .ics::after { content: ""; position: absolute; left: -2px; right: -2px; top: 50%; height: 1.5px; background: var(--ink2); transform: rotate(-20deg); }
+/* Tag ändern */
+.pda button.act { border-color: var(--ac); background: color-mix(in srgb, var(--ac) 18%, var(--s2)); color: var(--ink); }
+.pdh { display: flex; align-items: center; gap: 8px; margin: 0; padding: 8px 10px; border-radius: 10px; background: var(--s2); font-size: 13px; font-weight: 700; color: var(--ink2); }
+.pdh .ic { width: 16px; height: 16px; }
+.pdur { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.pdur button { display: grid; justify-items: center; gap: 2px; padding: 6px 2px; }
+.pdur b { font-size: 17px; }
+.pwas { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 13px; font-weight: 700; color: var(--ink2); }
+.pwas > .ic { width: 16px; height: 16px; }
+.pwas s { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 99px; border: 1px dashed var(--line); color: var(--ink3); text-decoration: line-through; }
+.pwas s .ic { width: 14px; height: 14px; color: var(--pc, var(--ink3)); opacity: .6; }
+.pux { justify-self: start; margin-top: 10px; }
+/* Planer: Verwerfen-Leiste, Meine Pläne */
+.pdc { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--danger) 40%, var(--line)); border-radius: 14px; background: color-mix(in srgb, var(--danger) 6%, var(--s1)); font-size: 14px; font-weight: 700; animation: fade .15s var(--ease); }
+.pdc > .ic { width: 18px; height: 18px; color: var(--danger); }
+.pdc span { flex: 1; }
+.pe-top .btn[disabled] { opacity: .45; }
+.wpl { margin-top: 18px; display: grid; gap: 8px; }
+.wpl .sec-h { margin-bottom: 0; }
+.wpc { display: grid; gap: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); }
+.wpc.cur { border-color: var(--ink2); }
+.wpc.on { box-shadow: inset 3px 0 0 var(--ac); }
+.wpc-h { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.wpn { flex: 1; min-width: 120px; height: 34px; padding: 0 8px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; font-size: 16px; font-weight: 800; }
+.wpn:focus { border-color: var(--line); background: var(--s2); outline: none; }
+.wps { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 99px; background: var(--s2); color: var(--ink3); font-size: 11px; font-weight: 700; }
+.wps .ic { width: 12px; height: 12px; }
+.wps.on { background: color-mix(in srgb, var(--ac) 18%, var(--s2)); color: var(--ac); }
+.wps.fut { background: color-mix(in srgb, var(--gold) 16%, var(--s2)); color: var(--ink2); }
+.wps button { display: grid; place-items: center; width: 18px; height: 18px; padding: 0; border: 0; background: transparent; color: var(--ink3); }
+.wps button .ic { width: 11px; height: 11px; }
+.wpm { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.wpm > span { display: grid; justify-items: center; gap: 2px; }
+.wpm small { font-size: 10px; font-weight: 800; color: var(--ink3); }
+.wpm em { display: grid; min-height: 16px; color: var(--pc); font-style: normal; }
+.wpm em .ic { width: 16px; height: 16px; }
+.wpm em.r { color: var(--ink3); }
+.wpb { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.wpb .btn.small { min-height: 36px; font-size: 13px; padding: 0 12px; }
+.wpb .x { margin-left: auto; width: 36px; height: 36px; }
+.wpe { display: inline-flex; align-items: center; gap: 6px; padding: 0 6px; font-size: 12px; font-weight: 700; color: var(--ink3); }
+.wpe .ic { width: 14px; height: 14px; }
+.wpa { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; animation: fade .15s var(--ease); }
+.wpa button, .wpa label { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--s2); color: var(--ink); font: inherit; font-size: 13px; font-weight: 700; }
+.wpa label { position: relative; overflow: hidden; }
+.wpa label .ic { width: 18px; height: 18px; }
+.wpa input { position: absolute; inset: 0; opacity: 0; }
+.wpc.new { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-style: dashed; background: transparent; color: var(--ink2); font: inherit; font-weight: 700; }
+.wpc.new .ic { width: 18px; height: 18px; }
+/* Sammelkarten: alle passen auf den Bildschirm, hervorgehobene Karte hebt sich, leuchtet und glänzt */
+.pkh { display: flex; align-items: flex-end; margin: 4px 0 0; padding: 26px 0 12px; overflow: visible; touch-action: none; }
+.pk:first-child { margin-left: 0; }
+.pk::after { content: ""; position: absolute; inset: -20%; z-index: -1; background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .55) 50%, transparent 62%); transform: translateX(-120%); pointer-events: none; }
+.pki { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: rgba(255, 255, 255, .2); box-shadow: 0 0 18px rgba(255, 255, 255, .35), inset 0 0 0 1px rgba(255, 255, 255, .35); }
+.pki .ic { width: 26px; height: 26px; }
+.pk.sel { z-index: 20; rotate: 0deg; translate: 0 -18px; scale: 1.08; animation: none; box-shadow: 0 0 0 2px var(--bg), 0 0 26px -2px var(--pc), 0 18px 28px -14px var(--pc), inset 0 0 0 1.5px rgba(255, 255, 255, .4); }
+.pk.sel::after { animation: shine 2.6s var(--ease) infinite; }
+@keyframes shine { 0% { transform: translateX(-120%); } 45%, 100% { transform: translateX(120%); } }
+/* Hochformat: im Querformat nur ein Hinweis */
+.rot { display: none; }
+@media (orientation: landscape) and (max-height: 500px) {
+  body > *:not(.rot):not(script) { display: none !important; }
+  .rot { position: fixed; inset: 0; z-index: 100; display: grid; place-content: center; justify-items: center; gap: 12px; background: var(--bg); color: var(--ink2); font-weight: 700; }
+  .rot .ic { width: 48px; height: 48px; animation: rotp 2s var(--ease) infinite; }
+  @keyframes rotp { 0%, 30% { transform: rotate(-90deg); } 60%, 100% { transform: rotate(0); } }
+}
+@media (prefers-reduced-motion: reduce) { .agx, .agx > div { transition: none; } .pk.sel::after, .pc2.pick, .rot .ic { animation: none; } .pk, .pk.over, .pk.clash { animation: none; } .ptl.nw { animation: none; } .pday.fl { animation: none; } .pc2-g.in-r, .pc2-g.in-l, .pc2-g.in-m { animation: fade .15s ease; } }
 </style>
 
 <div id="app">
@@ -1182,6 +1228,7 @@ button.pdb-h:active { background: var(--s2); }
   </div>
 </div>
 <canvas id="fx" aria-hidden="true"></canvas>
+<div class="rot" id="rot" aria-hidden="true"></div>
 
 <script>
 (function () {
@@ -1407,7 +1454,7 @@ button.pdb-h:active { background: var(--s2); }
   var DEMO = false; try { DEMO = localStorage.getItem('zenit.mode') === 'demo'; } catch (e) { /* egal */ }
   var KEY = DEMO ? 'stufenbuch.demo' : 'stufenbuch.v1';
   var state = { logs: [], u: 0, plan: null, food: null };
-  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', data: false, sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fmode: 'man', nts: [], pd: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, todo: false, pdo: {}, plk: null, pmode: null, draft: null, psel: null, pnt: null, pdisc: 0, dd: null, dp: 1, xo: {}, gx: {}, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
+  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', data: false, sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fmode: 'man', nts: [], pd: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, todo: false, pdo: {}, plk: null, pmode: null, draft: null, psel: null, pnt: null, pdisc: 0, pwe: null, pact: null, pnoclick: 0, dd: null, dp: 1, xo: {}, gx: {}, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
   var store = 'local', sync = '', ref = null, timer = null, writing = false, dirty = false;
 
   var EQUIP = [['bar', 'Klimmzugstange'], ['board', 'Push-up-Board'], ['db', 'Kurzhanteln'], ['mat', 'Matte'], ['roll', 'Blackroll'], ['ball', 'Faszienball'], ['bike', 'Homebike'], ['band', 'Widerstandsband']];
@@ -1438,11 +1485,13 @@ button.pdb-h:active { background: var(--s2); }
     if (p.ov && typeof p.ov === 'object') Object.keys(p.ov).forEach(function (k) { if (+k >= lim && Array.isArray(p.ov[k])) ov[k] = p.ov[k].filter(function (x) { return typeof x === 'string'; }); });
     if (p.ovl && typeof p.ovl === 'object') Object.keys(p.ovl).forEach(function (k) { if (+k >= lim && isFinite(p.ovl[k])) ovl[k] = +p.ovl[k]; });
     var off = (Array.isArray(p.off) ? p.off : []).filter(function (o) { return o && isFinite(o.a) && isFinite(o.b) && o.b >= o.a && o.b - o.a < 120 && (o.k === 'vac' || o.k === 'sick'); }).slice(-60).map(function (o) { return { a: Math.round(o.a), b: Math.round(o.b), k: o.k }; });
-    var wp = (Array.isArray(p.wp) ? p.wp : []).filter(function (q) { return q && typeof q.n === 'string' && q.m && typeof q.m === 'object'; }).slice(0, 6).map(function (q) {
+    var wp = (Array.isArray(p.wp) ? p.wp : []).filter(function (q) { return q && typeof q.n === 'string' && q.m && typeof q.m === 'object'; }).slice(0, 12).map(function (q, i) {
       var m = {}; Object.keys(q.m).forEach(function (k) { if (Array.isArray(q.m[k])) m[k] = q.m[k].filter(function (w) { return w >= 0 && w <= 6; }); });
-      return { n: q.n.slice(0, 18), m: m };
+      return { id: typeof q.id === 'string' ? q.id.slice(0, 20) : 'w' + (i + 2), n: q.n.slice(0, 18), m: m };
     });
-    return { days: days, v: p.v | 0, ev: p.ev | 0, cu: !!p.cu, ov: ov, ovl: ovl, off: off, wp: wp };
+    var act = (Array.isArray(p.act) ? p.act : []).filter(function (x) { return x && isFinite(x.a) && typeof x.p === 'string'; }).slice(-100).map(function (x) { return { a: Math.round(x.a), p: x.p }; });
+    var ovk = {}; if (p.ovk && typeof p.ovk === 'object') Object.keys(p.ovk).forEach(function (k) { if (ov[k] && ['swap', 'skip', 'repl', 'add'].indexOf(p.ovk[k]) >= 0) ovk[k] = p.ovk[k]; });
+    return { days: days, v: p.v | 0, ev: p.ev | 0, cu: !!p.cu, ov: ov, ovl: ovl, off: off, wp: wp, act: act, ovk: ovk };
   }
   function clean(arr) {
     if (!Array.isArray(arr)) return [];
@@ -1604,6 +1653,8 @@ button.pdb-h:active { background: var(--s2); }
   P.skip = '<circle cx="12" cy="12" r="8.500"/><path d="M6 18 18 6"/>';
   P.repl = '<path d="M5 12a7 7 0 0 1 12.200-4.700M19 12a7 7 0 0 1-12.200 4.700"/><path d="M17.500 3.500v4h-4M6.500 20.500v-4h4"/>';
   P.sick = '<path d="M10 14.200V5a2 2 0 0 1 4 0v9.200a4 4 0 1 1-4 0z"/><path d="M12 10.500v6"/>';
+  P.cards = '<rect x="7.500" y="3.500" width="12" height="16" rx="2.500"/><path d="M5 6.500 4.500 7a2 2 0 0 0-.200 2.800l6.500 10.400a2 2 0 0 0 2.700.700"/><path d="M13.500 9.500v4M11.500 11.500h4"/>';
+  P.rot = '<rect x="7" y="3" width="10" height="18" rx="2.500"/><path d="M3.500 12a8.500 8.500 0 0 0 4 7.200M20.500 12a8.500 8.500 0 0 0-4-7.200"/><path d="M16 4.300l.800.600-.900.600M8 19.700l-.800-.600.900-.600"/>';
   P.list = '<path d="M9 6.500h11M9 12h11M9 17.500h11"/><circle cx="4.800" cy="6.500" r="1"/><circle cx="4.800" cy="12" r="1"/><circle cx="4.800" cy="17.500" r="1"/>';
   function ic(n, cls) { return '<svg class="ic' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true">' + P[n] + '</svg>'; }
   var FL = '<svg class="ic fill" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 1.500c.5 2.600 4 4.200 4 8A4 4 0 0 1 9 14.500 4 4 0 0 1 5 9.500c0-1.400.6-2.400 1.400-3.300.1 1.200.6 2 1.300 2.400C7.400 6.400 8 3.900 9 1.500z"/></svg>';
@@ -1828,6 +1879,11 @@ button.pdb-h:active { background: var(--s2); }
   function plan() {
     if (!state.plan || (!state.plan.cu && state.plan.v !== PV)) { state.plan = defaultPlan(); state.plan.v = PV; state.plan.ev = EV; }
     var P = state.plan;
+    if (!P.act || !P.act.length || !P.wp || !P.wp.length) {
+      var m0 = {}; P.days.forEach(function (x) { m0[x.id] = x.wd.slice(); });
+      P.wp = (P.wp || []).map(function (q, i) { return { id: q.id || 'w' + (i + 2), n: q.n, m: q.m }; });
+      P.wp.unshift({ id: 'w1', n: 'Mein Plan', m: m0 }); P.act = [{ a: 0, p: 'w1' }]; setTimeout(persist, 0);
+    }
     if ((P.ev | 0) < EV) {
       P.ev = EV;
       NEWX.forEach(function (id) {
@@ -1869,7 +1925,7 @@ button.pdb-h:active { background: var(--s2); }
   function dSt(x) { return isFinite(x.st) ? x.st : wkOf(dayIdx(Date.now())); }
   function onDay(x, di) {
     // Trainingstag an diesem Datum? Wochentag passt und die Woche liegt im Rhythmus
-    if (x.wd.indexOf(wdOf(di)) < 0) return false;
+    if (wdAt(x, di).indexOf(wdOf(di)) < 0) return false;
     var rp = dRp(x), n = Math.round((wkOf(di) - dSt(x)) / 7);
     return rp === 1 || (rp === 0 ? n === 0 : ((n % rp) + rp) % rp === 0);
   }
@@ -2632,25 +2688,31 @@ button.pdb-h:active { background: var(--s2); }
     var l = lastBefore(e.id, before); if (!l) return '';
     return Math.max.apply(null, l.s) + (e.u === 'Wdh.' ? '' : e.u === 'Sek.' ? 's' : ' ' + e.u);
   }
-  function dayEdit(P, sd, sc, md, today) {
-    // Tag ändern: beschriftete Knöpfe, die zweite Ebene (Tag wählen, Dauer wählen) erscheint darunter
-    var m = ui.pmode, cur = sc.map(function (x) { return x.id; }), h;
+  function defIds(di) { return plan().days.filter(function (x) { return onDay(x, di); }).map(function (x) { return x.id; }); }
+  function ovKind(di) { var P = plan(); return P.ov && P.ov[di] !== undefined ? (P.ovk && P.ovk[di]) || 'repl' : ''; }
+  function ovClear(di) {
+    // Ausnahme eines Tags zurücknehmen, beim Tausch auch die des Partnertags (Heute-Tausch verknüpft nur in eine Richtung)
+    var P = plan(), o = P.ovl ? P.ovl[di] : undefined;
+    if (o !== undefined) { if (P.ov) delete P.ov[o]; delete P.ovl[o]; if (P.ovk) delete P.ovk[o]; }
+    if (P.ov) delete P.ov[di]; if (P.ovl) delete P.ovl[di]; if (P.ovk) delete P.ovk[di];
+  }
+  function ovMark(di, ids, k) { var P = plan(); P.ov = P.ov || {}; P.ovk = P.ovk || {}; P.ov[di] = ids; P.ovk[di] = k; }
+  function swapOk(sd, t, today) {
+    // Tauschpartner: ab heute, kein Urlaub/Krank, nicht derselbe Tag und nicht dasselbe Training
+    return t !== sd && t >= today && !offAt(t) && schedFor(t).map(function (x) { return x.id; }).sort().join() !== schedFor(sd).map(function (x) { return x.id; }).sort().join();
+  }
+  function dayEdit(P, sd, sc, today) {
+    // Tag ändern: jede Aktion schaltet sich beim zweiten Tippen wieder aus, daher kein Zurücksetzen
+    var m = ui.pmode, k = ovKind(sd), off = offAt(sd), cur = sc.map(function (x) { return x.id; }), h;
     var acts = sd >= today ? [['swap', 'swap', 'Tauschen'], ['skip', 'skip', 'Aussetzen'], ['repl', 'repl', 'Ersetzen'], ['add', 'plus', 'Zusätzlich'], ['vac', 'sun', 'Urlaub'], ['sick', 'sick', 'Krank']] : [['vac', 'sun', 'Urlaub'], ['sick', 'sick', 'Krank']];
-    h = '<div class="pda">' + acts.map(function (a) { return '<button data-pmode="' + a[0] + '" aria-pressed="' + (m === a[0] || (a[0] === 'skip' && md && !sc.length)) + '">' + ic(a[1]) + '<span>' + a[2] + '</span></button>'; }).join('') + '</div>';
+    h = '<div class="pda">' + acts.map(function (a) {
+      var on = a[0] === 'vac' || a[0] === 'sick' ? off && off.k === a[0] : k === a[0];
+      return '<button data-pmode="' + a[0] + '" aria-pressed="' + !!(on || m === a[0]) + '"' + (on ? ' class="act"' : '') + '>' + ic(a[1]) + '<span>' + a[2] + '</span></button>';
+    }).join('') + '</div>';
     function dchip(attr, x) { return '<button ' + attr + ' style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + '</button>'; }
-    if (m === 'swap') {
-      var opts = '';
-      for (var t = Math.max(today, sd - 7); t <= sd + 14; t++) {
-        if (t === sd || offAt(t)) continue;
-        var o = schedFor(t); if (!o.length && !sc.length) continue;
-        opts += '<button data-pswap="' + t + '"><b>' + WDN[wdOf(t)] + ' ' + fmtShort(t) + '</b><span>' + (o.length ? o.map(function (x) { return ic(dIcon(x)) + esc(x.n); }).join(' ') : ic('snow') + 'frei') + '</span></button>';
-      }
-      h += '<div class="pdm swl2">' + (opts || '<p class="agp">Kein Tag zum Tauschen.</p>') + '</div>';
-    }
-    if (m === 'repl') h += '<div class="pdm ptg">' + P.days.filter(function (x) { return cur.indexOf(x.id) < 0; }).map(function (x) { return dchip('data-prepl="' + x.id + '"', x); }).join('') + '</div>';
-    if (m === 'add') h += '<div class="pdm ptg">' + P.days.filter(function (x) { return cur.indexOf(x.id) < 0; }).map(function (x) { return dchip('data-padd2="' + x.id + '"', x); }).join('') + '</div>';
-    if (m === 'vac' || m === 'sick') h += '<div class="pdm pdur">' + [1, 2, 3, 5, 7, 14].map(function (n) { return '<button data-poff="' + n + '"><b>' + (n === 1 ? '1 Tag' : n + ' Tage') + '</b><span>bis ' + WDN[wdOf(sd + n - 1)] + ' ' + fmtShort(sd + n - 1) + '</span></button>'; }).join('') + '</div>';
-    if (md) h += '<button class="btn ghost small" data-creset="1">' + ic('undo') + 'Auf Plan zurücksetzen</button>';
+    if (m === 'swap') h += '<p class="pdh">' + ic('swap') + 'Tag im Kalender wählen</p>';
+    if (m === 'repl' || m === 'add') h += '<div class="pdm ptg">' + P.days.filter(function (x) { return cur.indexOf(x.id) < 0; }).map(function (x) { return dchip('data-p' + m + 'x="' + x.id + '"', x); }).join('') + '</div>';
+    if (m === 'vac' || m === 'sick') h += '<div class="pdm pdur">' + [1, 2, 3, 5, 7, 14].map(function (n) { return '<button data-poff="' + n + '"><b>' + n + '</b><span>' + (n === 1 ? 'Tag' : 'Tage') + '</span></button>'; }).join('') + '</div>';
     return h;
   }
   function viewPlan(d, now) {
@@ -2671,30 +2733,35 @@ button.pdb-h:active { background: var(--s2); }
     if (ui.cm) { from = Date.UTC(q.getUTCFullYear(), q.getUTCMonth(), 1) / 864e5; to = Date.UTC(q.getUTCFullYear(), q.getUTCMonth() + 1, 0) / 864e5; lead = wdOf(from); }
     else { from = a - wdOf(a); to = from + 6; }
     var tq = new Date((ui.cm ? from : from + 3) * 864e5), title = tq.toLocaleDateString('de-DE', { month: 'long', year: 'numeric', timeZone: 'UTC' });
-    var cells = '';
+    var cells = '', swp = ui.pchg && ui.pmode === 'swap';
     for (k = 0; k < lead; k++) cells += '<i></i>';
     for (k = from; k <= to; k++) {
-      var ds = schedFor(k), tr = d.byDay[k], of = offAt(k);
-      cells += '<button class="pc2' + (k === today ? ' today' : '') + (k === sd ? ' sel' : '') + (k < today ? ' past' : '') + (tr ? ' done' : '') + '" data-cday="' + k + '" aria-label="' + fmtDayL(k) + '">' +
-        '<b>' + new Date(k * 864e5).getUTCDate() + '</b><span class="ics">' + (of ? '<em class="off">' + ic(of.k === 'vac' ? 'sun' : 'sick') + '</em>' : '') + ds.slice(0, 2).map(function (x) { return '<em style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }).join('') + (ds.length > 2 ? '<small>+</small>' : '') + '</span>' +
+      var ds = schedFor(k), tr = d.byDay[k], of = offAt(k), skp = ovKind(k) === 'skip' ? P.days.filter(function (x) { return onDay(x, k); }) : [], pk = swp ? (swapOk(sd, k, today) ? ' pick' : ' nop') : '';
+      cells += '<button class="pc2' + pk + (skp.length ? ' skp' : '') + (k === today ? ' today' : '') + (k === sd ? ' sel' : '') + (k < today ? ' past' : '') + (tr ? ' done' : '') + '" data-cday="' + k + '" aria-label="' + fmtDayL(k) + '">' +
+        '<b>' + new Date(k * 864e5).getUTCDate() + '</b><span class="ics">' + skp.slice(0, 2).map(function (x) { return '<em class="sk" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }).join('') + (of ? '<em class="off">' + ic(of.k === 'vac' ? 'sun' : 'sick') + '</em>' : '') + ds.slice(0, 2).map(function (x) { return '<em style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }).join('') + (ds.length > 2 ? '<small>+</small>' : '') + '</span>' +
         (tr ? ic('check', 'dn') : '') + (k === today && todo.length ? ic('bell', 'nd') : '') + '</button>';
     }
     var showNow = sd !== today || today < from || today > to;
     h += '<section class="pcal2 rise" style="--i:1"><div class="pc2-h"><button class="x" data-cnav="-1" aria-label="Zurück">' + ic('back') + '</button>' +
       '<button class="pc2-t" data-cmode="1" aria-expanded="' + !!ui.cm + '" aria-label="' + (ui.cm ? 'Woche zeigen' : 'Monat zeigen') + '"><b>' + title + '</b>' + ic('chev') + '</button>' +
-      (showNow ? '<button class="pc2-now" data-cnow="1">Heute</button>' : '') + '<button class="x" data-cnav="1" aria-label="Weiter">' + ic('chev') + '</button></div>' +
+      (showNow ? '<button class="pc2-now" data-cnow="1">Heute</button>' : '') + '<button class="x pc2-pl" data-pman="1" aria-label="Wochenpläne">' + ic('cards') + '</button><button class="x" data-cnav="1" aria-label="Weiter">' + ic('chev') + '</button></div>' +
       '<div class="pc2-w">' + WDN.map(function (n) { return '<span>' + n + '</span>'; }).join('') + '</div>' +
-      '<div class="pc2-g' + (ui.cdir ? (ui.cdir > 0 ? ' in-r' : ' in-l') : '') + (ui.cmx ? ' in-m' : '') + '">' + cells + '</div>' +
+      '<div class="pc2-g' + (swp ? ' swp' : '') + (ui.cdir ? (ui.cdir > 0 ? ' in-r' : ' in-l') : '') + (ui.cmx ? ' in-m' : '') + '">' + cells + '</div>' +
       (wk ? '<p class="pc2-n">' + ic('cal') + esc(wk.t) + ' · ' + esc(wk.s) + '</p>' : '') + '</section>';
     ui.cdir = 0; ui.cmx = false;
 
     // Tageskarte: Zu tun (heute), Kopf mit Ändern, je Trainingstag eine kompakte Box, die Übungsliste klappt auf
-    var sc = schedFor(sd), st = d.byDay[sd], off = offAt(sd), md = !off && P.ov && P.ov[sd] !== undefined, rel = sd === today ? 'Heute' : sd === today + 1 ? 'Morgen' : sd === today - 1 ? 'Gestern' : fmtDay(sd), c = '';
+    var sc = schedFor(sd), st = d.byDay[sd], off = offAt(sd), kd = ovKind(sd), rel = sd === today ? 'Heute' : sd === today + 1 ? 'Morgen' : sd === today - 1 ? 'Gestern' : fmtDay(sd), c = '';
     if (sd === today && todo.length) c += '<div class="todo' + (ui.todo ? ' open' : '') + '"><button class="tdh" data-todo="1" aria-expanded="' + !!ui.todo + '">' + ic('bell') + '<b>Zu tun</b><span>' + todo.length + '</span>' + ic('chev', 'chv') + '</button>' +
       '<div class="agx"><div>' + todo.map(function (n) { return '<button class="tdo" data-nt="' + n.k + '">' + ic(n.i) + '<span><b>' + esc(n.t) + '</b><small>' + esc(n.s) + '</small></span>' + ic('chev', 'chv') + '</button>'; }).join('') + '</div></div></div>';
-    c += '<div class="pd-h"><b>' + WDN[wdOf(sd)] + ' · ' + rel + '</b>' + (md ? ic('swap', 'agm') : '') + (sd >= today - 14 && !off ? '<button class="pd-c" data-pchg="1" aria-expanded="' + !!ui.pchg + '" aria-label="Für diesen Tag ändern">' + ic('edit') + '</button>' : '') + '</div>';
-    if (sd >= today - 14 && !off) c += '<div class="agx pd-x"><div>' + dayEdit(P, sd, sc, md, today) + '</div></div>';
-    if (off) c += '<div class="pdb off"><div class="pdb-h"><span class="pdi">' + ic(off.k === 'vac' ? 'sun' : 'sick') + '</span><span class="nm"><b>' + (off.k === 'vac' ? 'Urlaub' : 'Krank') + '</b><small>' + fmtShort(off.a) + ' – ' + fmtShort(off.b) + ' · Serie geschützt</small></span><button class="x" data-offdel="' + off.i + '" aria-label="Zeitraum löschen">' + ic('trash') + '</button></div></div>';
+    c += '<div class="pd-h"><b>' + WDN[wdOf(sd)] + ' · ' + rel + '</b>' + (sd >= today - 14 ? '<button class="pd-c" data-pchg="1" aria-expanded="' + !!ui.pchg + '" aria-label="Für diesen Tag ändern">' + ic('edit') + '</button>' : '') + '</div>';
+    if (sd >= today - 14) c += '<div class="agx pd-x"><div>' + dayEdit(P, sd, sc, today) + '</div></div>';
+    if (kd && kd !== 'add' && !off) {
+      var was = P.days.filter(function (x) { return onDay(x, sd); }), pt = P.ovl && P.ovl[sd] !== undefined ? P.ovl[sd] : null;
+      c += '<div class="pwas">' + ic(kd === 'skip' ? 'skip' : kd === 'swap' ? 'swap' : 'repl') + '<span>' + (kd === 'skip' ? 'Ausgesetzt' : kd === 'swap' ? 'Getauscht' + (pt !== null ? ' mit ' + WDN[wdOf(pt)] + ' ' + fmtShort(pt) : '') : 'Statt') + '</span>' +
+        (was.length ? was.map(function (x) { return '<s style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + '</s>'; }).join('') : '<s>' + ic('snow') + 'Frei</s>') + '</div>';
+    }
+    if (off) c += '<div class="pdb off"><div class="pdb-h"><span class="pdi">' + ic(off.k === 'vac' ? 'sun' : 'sick') + '</span><span class="nm"><b>' + (off.k === 'vac' ? 'Urlaub' : 'Krank') + '</b><small>' + fmtShort(off.a) + ' – ' + fmtShort(off.b) + ' · Serie geschützt</small></span></div></div>';
     var shown = {};
     sc.forEach(function (x) {
       var ids = sortIds(x.ex.filter(function (id) { return d.unlocked[id]; })), dn = ids.filter(function (id) { return st && st.ex[id]; }).length, key = sd + ':' + x.id, open = !!ui.pdo[key];
@@ -2707,24 +2774,27 @@ button.pdb-h:active { background: var(--s2); }
           return '<div class="pdr' + (ok ? ' ok' : '') + '">' + ic(ok ? 'check' : 'dash') + '<span>' + esc(e.n) + '</span><small>' + esc(goalText(e)) + (lb ? '<br>zul. ' + esc(lb) : '') + '</small></div>';
         }).join('') + '</div></div></div></div>';
     });
-    if (!sc.length && !off) c += '<div class="pdb rest"><div class="pdb-h"><span class="pdi">' + ic('snow') + '</span><span class="nm"><b>Frei</b><small>' + (sd >= today ? 'Erholung · ✎ zum Ändern' : 'Kein Training geplant') + '</small></span></div></div>';
+    if (!sc.length && !off) c += '<div class="pdb rest"><div class="pdb-h"><span class="pdi">' + ic('snow') + '</span><span class="nm"><b>Frei</b><small>' + (kd === 'skip' ? 'Training ausgesetzt' : sd >= today ? 'Erholung' : 'Kein Training geplant') + '</small></span></div></div>';
     var extra = st ? Object.keys(st.ex).filter(function (id) { return !shown[id]; }) : [];
     if (extra.length) c += '<p class="agp">Außerdem: ' + extra.map(function (id) { return esc(EXB[id].n); }).join(' · ') + '</p>';
     if (sd === today && sc.length) c += '<button class="btn primary pd-go" data-gotab="heute">' + ic('play') + 'Training starten</button>';
     h += '<section class="pday rise' + (ui.pchg ? ' open' : '') + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
     ui.pfl = null; ui.pdx = false;
 
-    // Woche planen: Mini-Woche (Regel Mo–So) als Einstieg in den Planer
-    h += '<section class="pwe rise" style="--i:3"><button class="pwe-b" data-pman="1"><span class="sec-h">' + ic('cal') + 'Woche planen' + ic('chev', 'chv') + '</span><span class="pwm">' + WDN.map(function (n, w) {
-      var xs = P.days.filter(function (x) { return x.wd.indexOf(w) >= 0; });
-      return '<span' + (w === wdOf(today) ? ' class="t"' : '') + '><small>' + n + '</small>' + (xs.length ? xs.slice(0, 2).map(function (x) { return '<em style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }).join('') : '<em class="r">' + ic('snow') + '</em>') + '</span>';
-    }).join('') + '</span></button>' + (ux ? '<button class="agn gold" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>' : '') + '</section>';
+    if (ux) h += '<button class="agn gold pux rise" style="--i:3" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>';
     return h;
   }
-  // ---------- Wochenplaner: Entwurf der Wochenvorlage (welcher Trainingstag an welchem Wochentag), gilt erst nach Speichern
+  // ---------- Wochenpläne: mehrere gespeicherte Pläne (plan.wp), welcher gilt, legt der Zeitstrahl plan.act fest ([{a: ab Tag, p: Plan-id}])
   var LIM = { pull: 3, push: 3, kh: 3, core: 3, skill: 3, cardio: 4, mob: 7 };
+  function wpOf(id) { return (plan().wp || []).filter(function (q) { return q.id === id; })[0]; }
+  function actAt(di) {
+    var r = null; (plan().act || []).forEach(function (x) { if (x.a <= di && (!r || x.a >= r.a) && wpOf(x.p)) r = x; });
+    return r;
+  }
+  function wdAt(x, di) { var r = actAt(di); return r ? (wpOf(r.p).m[x.id] || []) : x.wd; }
+  function syncWd() { var t = dayIdx(Date.now()); plan().days.forEach(function (x) { x.wd = wdAt(x, t).slice(); }); }
   function draft() {
-    if (!ui.draft) { var m = {}; plan().days.forEach(function (x) { m[x.id] = x.wd.slice(); }); ui.draft = { m: m, dirty: false }; }
+    if (!ui.draft) { var r = actAt(dayIdx(Date.now())), q = wpOf(ui.pwe) || (r && wpOf(r.p)) || plan().wp[0]; ui.draft = { id: q.id, m: JSON.parse(JSON.stringify(q.m)), dirty: false }; }
     return ui.draft;
   }
   function draftWd(id) { var D = draft(); return D.m[id] || (D.m[id] = []); }
@@ -2744,14 +2814,17 @@ button.pdb-h:active { background: var(--s2); }
     }
     return { used: used, clash: clash, cclash: cclash };
   }
+  function miniWeek(P, m) {
+    return WDN.map(function (n, w) {
+      var xs = P.days.filter(function (x) { return (m[x.id] || []).indexOf(w) >= 0; });
+      return '<span><small>' + n.charAt(0) + '</small>' + (xs.length ? xs.slice(0, 2).map(function (x) { return '<em style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }).join('') : '<em class="r">·</em>') + '</span>';
+    }).join('');
+  }
   function viewPlanner(d, now) {
-    var today = dayIdx(now), P = plan(), D = draft(), chk = planCheck(P), w;
-    var h = '<div class="pe-top rise" style="--i:0"><button class="x" data-pmanx="1" aria-label="Zurück">' + (ui.pdisc ? '<b class="sure">Verwerfen?</b>' : ic('back')) + '</button><h2 class="pm-t">Woche</h2>' +
+    var today = dayIdx(now), P = plan(), D = draft(), cur = wpOf(D.id), chk = planCheck(P), ra = actAt(today), w;
+    var h = '<div class="pe-top rise" style="--i:0"><button class="x" data-pmanx="1" aria-label="Zurück">' + ic('back') + '</button><h2 class="pm-t">' + esc(cur.n) + '</h2>' +
       '<button class="btn small primary" data-psave="1"' + (D.dirty ? '' : ' disabled') + '>' + ic('check') + 'Speichern</button></div>';
-    // Presets: leeren, Standard, gespeicherte Wochen, aktuelle speichern
-    h += '<div class="pps rise" style="--i:1" data-noswipe="1"><button data-pwp="clear">' + ic('close') + 'Leer</button><button data-pwp="std">' + ic('target') + 'Standard</button>' +
-      (P.wp || []).map(function (q, j) { return '<span class="ppw"><button data-pwp="' + j + '">' + ic('cal') + esc(q.n) + '</button><button class="ppx" data-pwpdel="' + j + '" aria-label="Preset löschen">' + ic('close') + '</button></span>'; }).join('') +
-      ((P.wp || []).length < 6 ? '<button data-pwpsave="1" aria-label="Woche als Preset speichern">' + ic('plus') + '</button>' : '') + '</div>';
+    if (ui.pdisc) h += '<div class="pdc">' + ic('undo') + '<span>Änderungen verwerfen?</span><button class="btn small ghost" data-pdiscok="1">Verwerfen</button><button class="btn small primary" data-psave="1">Speichern</button></div>';
     // Woche Mo–So: Ablageplätze mit den gelegten Karten
     var slots = '';
     for (w = 0; w < 7; w++) {
@@ -2762,40 +2835,74 @@ button.pdb-h:active { background: var(--s2); }
     }
     ui.pnt = null;
     var gw = {}; for (w = 0; w < 7; w++) GORDER.forEach(function (g) { if (dayGroups(P.days.filter(function (x) { return draftWd(x.id).indexOf(w) >= 0; }), d)[g]) gw[g] = (gw[g] || 0) + 1; });
-    h += '<section class="pwkl rise" style="--i:2">' + slots + '</section><div class="pgc wvb rise" style="--i:3">' + GORDER.filter(function (g) { return gw[g] || ['pull', 'push', 'core'].indexOf(g) >= 0; }).map(function (g) {
+    h += '<section class="pwkl rise" style="--i:1">' + slots + '</section><div class="pgc wvb rise" style="--i:2">' + GORDER.filter(function (g) { return gw[g] || ['pull', 'push', 'core'].indexOf(g) >= 0; }).map(function (g) {
       return '<span class="g' + g + (gw[g] ? '' : ' z') + '" aria-label="' + gOf(g).n + ': ' + (gw[g] || 0) + ' Tage">' + ic(gOf(g).i) + (gw[g] || 0) + '×</span>'; }).join('') + '</div>';
-    // Karten-Hand: farbige Karten zum Ziehen (nach oben auf einen Tag) oder Antippen + Tag antippen; ✎ öffnet den Editor
-    h += '<section class="pkh rise" style="--i:4" data-noswipe="1">' + P.days.map(function (x, j) {
+    // Karten-Hand: alle Karten passen auf den Bildschirm (Überlappung wächst mit der Anzahl). Wischen hebt eine Karte hervor, nach oben ziehen legt sie
+    var n = P.days.length + (P.days.length < 8 ? 1 : 0), cw = 96, W = Math.min(innerWidth, 680) - 44, step = n > 1 ? Math.min(cw + 10, (W - cw) / (n - 1)) : 0;
+    h += '<section class="pkh rise" style="--i:3;--ov:' + (step - cw).toFixed(1) + 'px" data-noswipe="1">' + P.days.map(function (x, j) {
       var u = chk.used[x.id], lim = dLim(x), st = u > lim ? ' over' : u === lim ? ' full' : '';
-      return '<div class="pk' + st + (chk.cclash[x.id] ? ' clash' : '') + (ui.psel === x.id ? ' sel' : '') + '" data-pkid="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ');--j:' + j + '">' +
+      return '<div class="pk' + st + (chk.cclash[x.id] ? ' clash' : '') + (ui.psel === x.id ? ' sel' : '') + '" data-pkid="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ');--j:' + (j - (n - 1) / 2).toFixed(1) + '">' +
         '<span class="pki">' + ic(dIcon(x)) + '</span><b>' + esc(x.n) + '</b><span class="pkd" aria-label="' + u + ' von ' + lim + '">' + Array.apply(null, Array(Math.max(lim, u))).map(function (z, k) { return '<i' + (k < u ? ' class="on' + (k >= lim ? ' x' : '') + '"' : '') + '></i>'; }).join('') + '</span>' +
         ((st === ' over' || chk.cclash[x.id]) ? ic('bolt', 'pkw') : '') + '<button class="pke" data-pedit="' + x.id + '" aria-label="' + esc(x.n) + ' bearbeiten">' + ic('edit') + '</button></div>';
     }).join('') + (P.days.length < 8 ? '<button class="pk add" data-pnew="1" aria-label="Neuer Trainingstag">' + ic(ui.pnew ? 'close' : 'plus') + '</button>' : '') + '</section>';
     if (ui.pnew) h += '<div class="ppre">' + PRESETS.map(function (pr, j) { return '<button data-ppre="' + j + '" style="--pc:var(' + PCOL[pr.c] + ')">' + ic(pr.i) + pr.n + '</button>'; }).join('') + '</div>';
+    // Meine Pläne: Name ändern, Mini-Woche, Status, Bearbeiten, Aktivieren (ab heute / Montag / Datum), Löschen
+    var mon = today + 7 - wdOf(today);
+    h += '<section class="sec wpl rise" style="--i:4"><h2 class="sec-h">' + ic('cards') + 'Meine Pläne</h2>' + P.wp.map(function (q) {
+      var on = ra && ra.p === q.id, fut = (P.act || []).filter(function (x) { return x.p === q.id && x.a > today; }).sort(function (a, b) { return a.a - b.a; });
+      var st = on ? '<span class="wps on">' + ic('check') + (ra.a > 0 ? 'aktiv seit ' + fmtShort(ra.a) : 'aktiv') + '</span>' : fut.length ? '' : '<span class="wps">gespeichert</span>';
+      return '<div class="wpc' + (q.id === D.id ? ' cur' : '') + (on ? ' on' : '') + '"><div class="wpc-h"><input class="wpn" data-wpn="' + q.id + '" value="' + esc(q.n) + '" maxlength="18" aria-label="Name des Plans">' + st +
+        fut.map(function (x) { return '<span class="wps fut">ab ' + fmtShort(x.a) + '<button data-actdel="' + x.a + '" aria-label="Wechsel entfernen">' + ic('close') + '</button></span>'; }).join('') + '</div>' +
+        '<div class="wpm">' + miniWeek(P, q.id === D.id ? D.m : q.m) + '</div><div class="wpb">' +
+        (q.id !== D.id ? '<button class="btn small" data-wpopen="' + q.id + '">' + ic('edit') + 'Bearbeiten</button>' : '<span class="wpe">' + ic('edit') + 'wird bearbeitet</span>') +
+        '<button class="btn small' + (ui.pact === q.id ? ' primary' : '') + '" data-wpact="' + q.id + '">' + ic('play') + 'Aktivieren</button>' + (on ? '' : '<button class="x" data-wpdel="' + q.id + '" aria-label="Plan löschen">' + ic('trash') + '</button>') + '</div>' +
+        (ui.pact === q.id ? '<div class="wpa"><button data-wpon="' + today + '">Ab heute</button><button data-wpon="' + mon + '">Ab Mo ' + fmtShort(mon) + '</button><label>' + ic('cal') + '<input type="date" data-wpdate="' + q.id + '" min="' + new Date(today * 864e5).toISOString().slice(0, 10) + '" aria-label="Ab Datum"></label></div>' : '') + '</div>';
+    }).join('') + '<button class="wpc new" data-wpnew="1">' + ic('plus') + 'Neuer Plan</button></section>';
     return h;
   }
   function plannerPlace(id, w) {
     var a = draftWd(id); if (a.indexOf(w) >= 0) return;
-    a.push(w); a.sort(); draft().dirty = true; ui.pnt = id + ':' + w; ui.psel = null; ui.fresh = false; render(); buzz(8);
+    a.push(w); a.sort(); draft().dirty = true; ui.pnt = id + ':' + w; ui.fresh = false; render(); buzz(8);
   }
-  // Ziehen: Karte nach oben aus der Hand ziehen (seitlich scrollt die Hand), Geisterkarte folgt dem Finger, Ablage auf einem Tag
+  function planSave() {
+    var D = draft(), q = wpOf(D.id); q.m = JSON.parse(JSON.stringify(D.m)); D.dirty = false; ui.pdisc = 0;
+    plan().cu = true; syncWd(); persist();
+  }
+  function planActivate(id, a) {
+    var P = plan(); if (ui.draft && ui.draft.id === id && ui.draft.dirty) planSave();
+    P.act = (P.act || []).filter(function (x) { return x.a !== a; }).concat([{ a: a, p: id }]).sort(function (x, y) { return x.a - y.a; });
+    P.cu = true; ui.pact = null; syncWd(); persist(); ui.fresh = false; render(); toast(wpOf(id).n + ' aktiv ab ' + fmtShort(a), 'check');
+  }
+  function pkFocus(id) {
+    if (ui.psel === id) return;
+    ui.psel = id; buzz(4);
+    document.querySelectorAll('.pk[data-pkid]').forEach(function (c) { c.classList.toggle('sel', c.dataset.pkid === id); });
+  }
+  // Hand: seitlich wischen = Karte hervorheben, nach oben ziehen = Geisterkarte folgt dem Finger, Ablage auf einem Tag
   var pdrag = null;
   document.addEventListener('pointerdown', function (e) {
-    var c = e.target.closest && e.target.closest('.pk[data-pkid]');
-    if (!c || e.target.closest('[data-pedit]')) return;
-    pdrag = { id: c.dataset.pkid, el: c, x: e.clientX, y: e.clientY, on: false, pid: e.pointerId, g: null, hov: null };
+    var hand = e.target.closest && e.target.closest('.pkh');
+    if (!hand || e.target.closest('[data-pedit]') || e.target.closest('.pk.add')) return;
+    var c = e.target.closest('.pk[data-pkid]');
+    pdrag = { id: c ? c.dataset.pkid : null, el: c, x: e.clientX, y: e.clientY, mode: '', pid: e.pointerId, g: null, hov: null, hy: hand.getBoundingClientRect().top + hand.offsetHeight * 0.65 };
   });
   document.addEventListener('pointermove', function (e) {
     if (!pdrag || e.pointerId !== pdrag.pid) return;
     var dx = e.clientX - pdrag.x, dy = e.clientY - pdrag.y;
-    if (!pdrag.on) {
-      if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) { pdrag = null; return; }
-      if (Math.abs(dy) < 10) return;
-      var r = pdrag.el.getBoundingClientRect(), g = pdrag.el.cloneNode(true);
-      g.className += ' ghost'; g.style.width = r.width + 'px'; g.style.height = r.height + 'px'; g.style.left = r.left + 'px'; g.style.top = r.top + 'px';
-      document.body.appendChild(g); pdrag.g = g; pdrag.on = true; pdrag.ox = r.left; pdrag.oy = r.top; pdrag.el.classList.add('lift'); buzz(6);
+    if (!pdrag.mode) {
+      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) pdrag.mode = 'focus';
+      else if (dy < -10 && pdrag.el) {
+        var r = pdrag.el.getBoundingClientRect(), g = pdrag.el.cloneNode(true);
+        g.className += ' ghost'; g.style.width = r.width + 'px'; g.style.height = r.height + 'px'; g.style.left = r.left + 'px'; g.style.top = r.top + 'px';
+        document.body.appendChild(g); pdrag.g = g; pdrag.mode = 'drag'; pdrag.el.classList.add('lift'); pkFocus(pdrag.id); buzz(6);
+      } else return;
     }
     e.preventDefault();
+    if (pdrag.mode === 'focus') {
+      var u = document.elementFromPoint(e.clientX, pdrag.hy), c = u && u.closest ? u.closest('.pk[data-pkid]') : null;
+      if (c) pkFocus(c.dataset.pkid);
+      return;
+    }
     pdrag.g.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + Math.max(-8, Math.min(8, dx / 20)) + 'deg) scale(1.06)';
     var t = document.elementFromPoint(e.clientX, e.clientY), s = t && t.closest ? t.closest('[data-pslot]') : null;
     if (s !== pdrag.hov) { if (pdrag.hov) pdrag.hov.classList.remove('hov'); if (s) s.classList.add('hov'); pdrag.hov = s; }
@@ -2803,8 +2910,9 @@ button.pdb-h:active { background: var(--s2); }
   function pdragEnd(e) {
     if (!pdrag || (e && e.pointerId !== pdrag.pid)) return;
     var p = pdrag; pdrag = null;
-    if (!p.on) return;
-    p.el.classList.remove('lift');
+    if (p.mode === 'focus') { ui.pnoclick = Date.now(); return; }
+    if (p.mode !== 'drag') return;
+    ui.pnoclick = Date.now(); p.el.classList.remove('lift');
     // Neuaufbau erst nach dem touchend: verschwindet die berührte Karte vorher aus dem DOM, schluckt der Browser den nächsten Tipp
     if (p.hov) { p.g.remove(); var w = +p.hov.dataset.pslot; setTimeout(function () { plannerPlace(p.id, w); }, 40); return; }
     // Kein Tag getroffen: Karte fliegt zurück in die Hand
@@ -2814,30 +2922,45 @@ button.pdb-h:active { background: var(--s2); }
   document.addEventListener('pointerup', pdragEnd);
   document.addEventListener('pointercancel', pdragEnd);
   function plannerClick(t) {
-    var el, P = plan(), D;
+    var el, P = plan(), D, today = dayIdx(Date.now());
     if (t.closest('.pk.ghost')) return true;
+    if (ui.pnoclick && Date.now() - ui.pnoclick < 350 && t.closest('.pkh')) return true;
     if ((el = t.closest('[data-punset]'))) { var a = el.dataset.punset.split(':'), wd = draftWd(a[0]), i = wd.indexOf(+a[1]); if (i >= 0) wd.splice(i, 1); draft().dirty = true; ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-pslot]')) && ui.psel) { plannerPlace(ui.psel, +el.dataset.pslot); return true; }
-    if ((el = t.closest('.pk[data-pkid]')) && !t.closest('[data-pedit]')) { ui.psel = ui.psel === el.dataset.pkid ? null : el.dataset.pkid; ui.fresh = false; render(); return true; }
-    if ((el = t.closest('[data-pwp]'))) {
-      var k = el.dataset.pwp, m = {};
-      if (k === 'std') { var df = defaultPlan(); df.days.forEach(function (x) { m[x.id] = x.wd.slice(); }); }
-      else if (k !== 'clear') m = JSON.parse(JSON.stringify((P.wp[+k] || {}).m || {}));
-      P.days.forEach(function (x) { m[x.id] = (m[x.id] || []).filter(function (v) { return v >= 0 && v <= 6; }); });
-      ui.draft = { m: m, dirty: true }; ui.fresh = false; render(); return true;
-    }
-    if ((el = t.closest('[data-pwpdel]'))) { P.wp.splice(+el.dataset.pwpdel, 1); P.cu = true; persist(); ui.fresh = false; render(); return true; }
-    if (t.closest('[data-pwpsave]')) { D = draft(); P.wp = (P.wp || []).concat([{ n: 'Woche ' + ((P.wp || []).length + 1), m: JSON.parse(JSON.stringify(D.m)) }]); P.cu = true; persist(); ui.fresh = false; render(); toast('Als Preset gespeichert', 'check'); return true; }
-    if (t.closest('[data-psave]')) {
-      D = draft(); P.days.forEach(function (x) { if (D.m[x.id]) x.wd = D.m[x.id].slice().sort(); });
-      P.cu = true; ui.draft = null; ui.pman = false; ui.pdisc = 0; persist(); ui.fresh = true; render(); window.scrollTo(0, 0); toast('Woche gespeichert', 'check'); return true;
-    }
+    if ((el = t.closest('.pk[data-pkid]')) && !t.closest('[data-pedit]')) { if (ui.psel === el.dataset.pkid) { ui.psel = null; el.classList.remove('sel'); } else pkFocus(el.dataset.pkid); return true; }
+    if (t.closest('[data-psave]')) { planSave(); ui.fresh = false; render(); toast('Plan gespeichert', 'check'); return true; }
+    if (t.closest('[data-pdiscok]')) { ui.draft = null; ui.pdisc = 0; ui.pman = false; ui.pnew = false; ui.psel = null; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
     if (t.closest('[data-pmanx]')) {
-      if (ui.draft && ui.draft.dirty && !ui.pdisc) { ui.pdisc = Date.now(); ui.fresh = false; render(); setTimeout(function () { if (ui.pdisc && Date.now() - ui.pdisc > 2900) { ui.pdisc = 0; if (ui.pman) { ui.fresh = false; render(); } } }, 3000); return true; }
-      ui.pman = false; ui.pnew = false; ui.draft = null; ui.pdisc = 0; ui.psel = null; ui.fresh = true; render(); window.scrollTo(0, 0); return true;
+      if (ui.draft && ui.draft.dirty) { ui.pdisc = 1; ui.fresh = false; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); return true; }
+      ui.pman = false; ui.pnew = false; ui.draft = null; ui.psel = null; ui.pact = null; ui.fresh = true; render(); window.scrollTo(0, 0); return true;
+    }
+    if ((el = t.closest('[data-wpopen]'))) {
+      if (ui.draft && ui.draft.dirty) { ui.pdisc = 1; ui.fresh = false; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); return true; }
+      ui.pwe = el.dataset.wpopen; ui.draft = null; ui.psel = null; ui.fresh = true; render(); window.scrollTo(0, 0); return true;
+    }
+    if ((el = t.closest('[data-wpact]'))) { ui.pact = ui.pact === el.dataset.wpact ? null : el.dataset.wpact; ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-wpon]'))) { planActivate(ui.pact, +el.dataset.wpon); return true; }
+    if ((el = t.closest('[data-actdel]'))) { var aa = +el.dataset.actdel; P.act = P.act.filter(function (x) { return x.a !== aa; }); P.cu = true; syncWd(); persist(); ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-wpdel]'))) {
+      var id = el.dataset.wpdel; P.wp = P.wp.filter(function (q) { return q.id !== id; }); P.act = P.act.filter(function (x) { return x.p !== id; });
+      if (ui.draft && ui.draft.id === id) { ui.draft = null; ui.pwe = null; }
+      P.cu = true; syncWd(); persist(); ui.fresh = false; render(); toast('Plan gelöscht', 'trash'); return true;
+    }
+    if (t.closest('[data-wpnew]')) {
+      if (ui.draft && ui.draft.dirty) { ui.pdisc = 1; ui.fresh = false; render(); return true; }
+      var nq = { id: 'w' + Date.now().toString(36), n: 'Plan ' + (P.wp.length + 1), m: {} }; P.wp.push(nq); P.cu = true; persist();
+      ui.pwe = nq.id; ui.draft = null; ui.psel = null; ui.fresh = true; render(); window.scrollTo(0, 0); return true;
     }
     return false;
   }
+  document.addEventListener('change', function (ev) {
+    var t = ev.target;
+    if (t.dataset && t.dataset.wpdate && t.value) { var q = t.value.split('-'); planActivate(t.dataset.wpdate, Math.round(Date.UTC(+q[0], +q[1] - 1, +q[2]) / 864e5)); }
+  });
+  document.addEventListener('input', function (ev) {
+    var t = ev.target;
+    if (t.dataset && t.dataset.wpn) { var q = wpOf(t.dataset.wpn); if (q) { q.n = t.value.slice(0, 18) || q.n; plan().cu = true; clearTimeout(planT); planT = setTimeout(persist, 500); var h2 = document.querySelector('.pm-t'); if (h2 && ui.draft && ui.draft.id === q.id) h2.textContent = q.n; } }
+  });
   function viewPlanEdit(d, day) {
     var h = '<div class="pe-top rise" style="--i:0"><button class="x" data-pback="1" aria-label="Zurück">' + ic('back') + '</button><input id="pe-n" class="pe-n" type="text" maxlength="18" value="' + esc(day.n) + '" aria-label="Name"><button class="x" data-pdel="' + day.id + '" aria-label="Tag löschen"' + (ui.pdel ? ' style="color:var(--danger)"' : '') + '>' + (ui.pdel ? '<b class="sure">Sicher?</b>' : ic('trash')) + '</button></div>';
     // Aussehen und Rhythmus: Icon, Farbe, Wochentage, Wiederholung (jede / alle 2 / alle 3 Wochen / einmalig ab Startwoche)
@@ -2853,16 +2976,19 @@ button.pdb-h:active { background: var(--s2); }
       '<input id="pe-q" class="pe-q" type="search" placeholder="Suchen" value="' + esc(ui.pq) + '" aria-label="Übung suchen"><div id="pe-list">' + peList(d, day) + '</div></section>';
     return h;
   }
-  function ovSet(di, ids) { ovPut(di, ids); persist(); ui.fresh = false; render(); }
-  function ovPut(di, ids) {
-    var P = plan(); P.ov = P.ov || {};
-    var def = P.days.filter(function (x) { return onDay(x, di); }).map(function (x) { return x.id; }).sort().join(',');
-    if (ids.slice().sort().join(',') === def) delete P.ov[di]; else P.ov[di] = ids;
-    persist(); ui.fresh = false; render();
-  }
   function calClick(t) {
     var el, today = dayIdx(Date.now());
-    if ((el = t.closest('[data-cday]'))) { var cd = +el.dataset.cday; if (cd !== (ui.pd == null ? today : ui.pd)) { ui.pd = cd; ui.pdx = true; ui.pchg = false; ui.pmode = null; } ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-cday]'))) {
+      var cd = +el.dataset.cday, s0 = ui.pd == null ? today : ui.pd;
+      if (ui.pchg && ui.pmode === 'swap') {
+        // Tauschen: zweiter Tag im Kalender; gleiche Tage und Urlaub/Krank gehen nicht
+        if (!swapOk(s0, cd, today)) { buzz(20); return true; }
+        var a1 = schedFor(s0).map(function (x) { return x.id; }), a2 = schedFor(cd).map(function (x) { return x.id; }), P2 = plan();
+        ovClear(s0); ovClear(cd); ovMark(s0, a2, 'swap'); ovMark(cd, a1, 'swap'); P2.ovl = P2.ovl || {}; P2.ovl[s0] = cd; P2.ovl[cd] = s0;
+        ui.pmode = null; ui.pfl = s0; persist(); ui.fresh = false; render(); toast('Getauscht mit ' + WDN[wdOf(cd)] + ' ' + fmtShort(cd), 'swap'); return true;
+      }
+      if (cd !== s0) { ui.pd = cd; ui.pdx = true; ui.pchg = false; ui.pmode = null; } ui.fresh = false; render(); return true;
+    }
     if ((el = t.closest('[data-cnav]'))) { calMove(+el.dataset.cnav); return true; }
     if (t.closest('[data-cmode]')) { ui.cm = !ui.cm; ui.ca = ui.pd == null ? today : ui.pd; ui.cmx = true; ui.fresh = false; render(); return true; }
     if (t.closest('[data-cnow]')) { ui.pd = today; ui.ca = today; ui.pdx = true; ui.pchg = false; ui.fresh = false; render(); return true; }
@@ -2875,16 +3001,15 @@ button.pdb-h:active { background: var(--s2); }
     if ((el = t.closest('[data-wr]'))) { ui.wr = el.dataset.wr; ui.fresh = false; render(); return true; }
     var sd = ui.pd == null ? today : ui.pd, ids = function (di) { return schedFor(di).map(function (x) { return x.id; }); };
     if ((el = t.closest('[data-pmode]'))) {
-      var pm = el.dataset.pmode;
-      if (pm === 'skip') { ui.pfl = sd; ui.pmode = null; ovSet(sd, []); toast('Ausgesetzt', 'skip'); return true; }
+      var pm = el.dataset.pmode, of0 = offAt(sd), k0 = ovKind(sd), P3 = plan();
+      if ((pm === 'vac' || pm === 'sick') && of0 && of0.k === pm) { P3.off.splice(of0.i, 1); ui.pmode = null; persist(); ui.fresh = false; render(); toast('Zeitraum gelöscht', pm === 'vac' ? 'sun' : 'sick'); return true; }
+      if (k0 === pm) { ovClear(sd); ui.pmode = null; ui.pfl = sd; persist(); ui.fresh = false; render(); return true; }
+      if (pm === 'skip') { ovClear(sd); ovMark(sd, [], 'skip'); ui.pmode = null; ui.pfl = sd; persist(); ui.fresh = false; render(); toast('Ausgesetzt', 'skip'); return true; }
       ui.pmode = ui.pmode === pm ? null : pm; ui.fresh = false; render(); return true;
     }
-    if ((el = t.closest('[data-pswap]'))) { var t2 = +el.dataset.pswap, a1 = ids(sd), a2 = ids(t2); ovPut(sd, a2); ovPut(t2, a1); ui.pfl = sd; ui.pmode = null; ovSet(sd, a2); toast('Getauscht mit ' + WDN[wdOf(t2)] + ' ' + fmtShort(t2), 'swap'); return true; }
-    if ((el = t.closest('[data-prepl]'))) { ui.pfl = sd; ui.pmode = null; ovSet(sd, [el.dataset.prepl]); return true; }
-    if ((el = t.closest('[data-padd2]'))) { ui.pfl = sd; ui.pmode = null; ovSet(sd, ids(sd).concat([el.dataset.padd2])); return true; }
+    if ((el = t.closest('[data-preplx]'))) { ovClear(sd); ovMark(sd, [el.dataset.preplx], 'repl'); ui.pmode = null; ui.pfl = sd; persist(); ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-paddx]'))) { var cu = ids(sd); ovClear(sd); ovMark(sd, cu.concat([el.dataset.paddx]), 'add'); ui.pmode = null; ui.pfl = sd; persist(); ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-poff]'))) { var P0 = plan(), n = +el.dataset.poff; P0.off = (P0.off || []).concat([{ a: sd, b: sd + n - 1, k: ui.pmode === 'sick' ? 'sick' : 'vac' }]); toast(ui.pmode === 'sick' ? 'Krank eingetragen' : 'Urlaub eingetragen', ui.pmode === 'sick' ? 'sick' : 'sun'); ui.pmode = null; ui.pchg = false; persist(); ui.fresh = false; render(); return true; }
-    if ((el = t.closest('[data-offdel]'))) { var P1 = plan(); (P1.off || []).splice(+el.dataset.offdel, 1); persist(); ui.fresh = false; render(); toast('Zeitraum gelöscht', 'trash'); return true; }
-    if (t.closest('[data-creset]')) { var P = plan(), sd2 = ui.pd == null ? today : ui.pd; if (P.ov) delete P.ov[sd2]; ui.pfl = sd2; persist(); ui.fresh = false; render(); return true; }
     return false;
   }
   function planClick(t) {
@@ -3528,6 +3653,7 @@ button.pdb-h:active { background: var(--s2); }
     var cd = $('cd'); if (cd) cd.textContent = cdText(msToMidnight(now));
   }, 30000);
 
+  $('rot').innerHTML = ic('rot') + '<b>Hochkant halten</b>';
   $('brand').innerHTML = ic('peak') + '<span>Zenit</span>' + (DEMO ? '<button class="demo-b" data-act="opensettings">Demo</button>' : '');
   loadLocal();
   sessLoad();

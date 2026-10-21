@@ -13,6 +13,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-21 – Plan: Rhythmus, gesperrte Übungen, Tab-Leiste
+- Neue Datenform `plan.days[].rp/st` (einmalig, jede, alle 2/3 Wochen ab Startwoche). `schedFor` und `ovSet` nutzen dafür `onDay`; Editor: Rhythmus-Wahl und Startwoche ‹ ›; Rhythmus steht an Chips und in den Listen.
+- Editor: gesperrte Übungen ohne Schalter, immer ganz unten („Gesperrt“, nach Fortschritt sortiert), Fortschrittsring in Prozent (`lockPct`, Mittel der Bedingungen), Antippen zeigt die Bedingungen mit Balken (`ui.plk`). Zähler zählen nur verfügbare Übungen.
+- Trainingstage-Leiste: höchstens 3 pro Reihe (Grid statt Scrollen).
+- Wischen: Kalenderbox schneidet die mitgehenden Tage ab (`overflow: hidden`).
+- Tab-Leiste: Safari schneidet Kinder eines Elements mit `backdrop-filter` an dessen Rand ab, dadurch war der Heute-Kreis oben abgeschnitten. Unschärfe liegt jetzt auf `.tabs::before`. Markierung wird über Bounding-Rects platziert und bei `pageshow`, Viewport-Änderung und geladenen Schriften neu gesetzt (Verdacht auf Versatz auf dem iPhone, in Chromium nicht nachstellbar).
+- Fehler: `.exr span { flex: 1 }` traf auch den Ring (ebenfalls `span`), er wurde 160 px breit. Regel auf `> span:first-child` beschränkt.
+
 ### 2026-10-21 – Plan: Wischen, Tag-Icons, Glocke, Tageskarte, neuer Editor
 - Wischen im Kalender: eigener Touch-Modus `cal`. Richtung nach 8 px; seitlich folgt das Raster gedämpft dem Finger, `preventDefault` stoppt das Mitscrollen der Seite (touchmove-Listener dafür `passive: false`). Loslassen: > 50 px oder schnell = blättern, sonst zurückfedern. Mit CDP-Touch-Events getestet.
 - Neue Datenform: `plan.days[].i` (Icon, `DAYI`), `dIcon`/`domGroup`. Gesetzt in `defaultPlan`, `PRESETS`, neuem Tag, `dayObj` (g:), behalten in `cleanPlan`. Kalenderzellen und Chips zeigen das Icon.

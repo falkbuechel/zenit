@@ -359,7 +359,8 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .row { display: flex; gap: 8px; flex-wrap: wrap; }
 
 /* Navigation */
-.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 8; background: color-mix(in srgb, var(--s1) 94%, transparent); border-top: 1px solid var(--line); backdrop-filter: blur(10px); }
+.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 8; border-top: 1px solid var(--line); }
+.tabs::before { content: ""; position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--s1) 94%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 .tabs-in { max-width: 680px; margin: 0 auto; display: flex; gap: 4px; padding: 6px max(16px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
 .tabs { overflow-x: clip; }
 .tabs-in { position: relative; align-items: center; }
@@ -931,8 +932,8 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .agr.today .agd small { color: var(--ink); font-weight: 700; }
 .agx { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .22s var(--ease); }
 .agx > div { display: grid; gap: 10px; min-height: 0; overflow: hidden; padding: 0 12px 0 74px; opacity: 0; visibility: hidden; transition: opacity .12s var(--ease), padding .22s var(--ease), visibility 0s .22s; }
-.agr.open .agx, .pday.open > .pd-x, .todo.open > .agx, .pdb.open > .agx { grid-template-rows: 1fr; }
-.agr.open .agx > div, .pday.open > .pd-x > div, .todo.open > .agx > div, .pdb.open > .agx > div { padding-bottom: 12px; opacity: 1; visibility: visible; transition: opacity .2s var(--ease) .05s, padding .22s var(--ease), visibility 0s; }
+.agr.open .agx, .pday.open > .pd-x, .todo.open > .agx, .pdb.open > .agx, .exk.open > .agx { grid-template-rows: 1fr; }
+.agr.open .agx > div, .pday.open > .pd-x > div, .todo.open > .agx > div, .pdb.open > .agx > div, .exk.open > .agx > div { padding-bottom: 12px; opacity: 1; visibility: visible; transition: opacity .2s var(--ease) .05s, padding .22s var(--ease), visibility 0s; }
 .agr .ptg button { min-height: 36px; }
 .agp { margin: 0; font-size: 13px; color: var(--ink2); }
 .agb { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -961,7 +962,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .tdr.new { border: 1px dashed var(--line); background: transparent; color: var(--ink2); }
 .tdr.new .ic { width: 18px; height: 18px; }
 /* Kalender */
-.pcal2 { margin-top: 10px; padding: 8px 8px 10px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
+.pcal2 { overflow: hidden; margin-top: 10px; padding: 8px 8px 10px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
 .pc2-h { display: flex; align-items: center; gap: 4px; }
 .pc2-t { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; border: 0; background: transparent; color: var(--ink); font: inherit; }
 .pc2-t b { font-family: var(--f-display); font-weight: 800; font-size: 19px; letter-spacing: .04em; text-transform: uppercase; }
@@ -1066,14 +1067,41 @@ button.pdb-h:active { background: var(--s2); }
 .xg small { margin-left: auto; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--ink3); }
 .exl { display: grid; grid-template-columns: minmax(0, 1fr); border: 1px solid var(--line); border-radius: 14px; background: var(--s1); overflow: hidden; }
 .exr { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 54px; padding: 8px 12px; border: 0; background: transparent; color: var(--ink); font: inherit; text-align: left; transition: background-color .16s var(--ease); }
-.exr + .exr { border-top: 1px solid var(--line); }
+.exr + .exr, .exk + .exk { border-top: 1px solid var(--line); }
+.exk .agx > div { padding: 0 12px; }
+.exr b .ic { color: var(--gc, var(--ink3)); }
+.xg.lkh { color: var(--ink3); }
+/* Fortschrittsring zum Freischalten */
+.ring { position: relative; flex: none; display: grid; place-items: center; width: 38px; height: 38px; }
+.ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring circle { fill: none; stroke-width: 3.5; }
+.ring .rb { stroke: var(--s3); }
+.ring .rf { stroke: var(--gc, var(--ac)); stroke-linecap: round; }
+.ring b { font-family: var(--f-mono); font-size: 10px; font-weight: 700; color: var(--ink2); }
+.lkd { display: grid; gap: 10px; }
+.lkr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; align-items: center; font-size: 13px; }
+.lkr span { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.lkr span .ic { width: 14px; height: 14px; color: var(--ink3); flex: none; }
+.lkr.ok span .ic { color: var(--ac); }
+.lkr small { font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
+.lkr .pdp { grid-column: 1 / -1; margin: 0; }
+.lkr .pdp i { background: var(--gc, var(--ac)); }
+.lkd .agp { display: flex; align-items: center; gap: 6px; }
+.lkd .agp .ic { width: 14px; height: 14px; color: var(--ac); }
+/* Rhythmus im Editor */
+.pe-rp { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.pe-rp button { min-height: 40px; padding: 0 4px; border-radius: 10px; border: 1px solid var(--line); background: var(--s2); color: var(--ink2); font: inherit; font-size: 12px; font-weight: 700; transition: transform .14s var(--ease); }
+.pe-rp button:active { transform: scale(.96); }
+.pe-rp button[aria-pressed="true"] { border-color: var(--pc); background: color-mix(in srgb, var(--pc) 20%, var(--s2)); color: var(--ink); }
+.pe-st { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 2px; font-family: var(--f-mono); font-size: 13px; color: var(--ink2); }
+.agk em { font-style: normal; font-family: var(--f-mono); font-size: 10px; font-weight: 600; color: var(--ink3); }
 .exr:active { background: var(--s2); }
-.exr span { flex: 1; min-width: 0; }
+.exr > span:first-child { flex: 1; min-width: 0; }
 .exr b { display: flex; align-items: center; gap: 6px; font-size: 14px; }
 .exr b .ic { width: 13px; height: 13px; color: var(--ink3); flex: none; }
 .exr small { display: block; overflow: hidden; font-size: 12px; color: var(--ink3); white-space: nowrap; text-overflow: ellipsis; }
 .exr.lk b, .exr.lk small { opacity: .6; }
-.exr.lk { background: color-mix(in srgb, var(--s2) 50%, transparent); }
+.exk { background: color-mix(in srgb, var(--s2) 50%, transparent); }
 .exr i { position: relative; flex: none; width: 42px; height: 26px; border-radius: 99px; background: var(--s3); transition: background-color .2s var(--ease); }
 .exr i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink3); transition: transform .22s var(--ease), background-color .2s; }
 .exr[aria-pressed="true"] i { background: var(--gc, var(--ac)); }
@@ -1082,14 +1110,16 @@ button.pdb-h:active { background: var(--s2); }
 .pbar { margin-top: 12px; }
 .pb-h { display: flex; align-items: center; gap: 8px; }
 .pb-h .sec-h { flex: 1; margin: 0; }
-.pb-l { display: flex; gap: 8px; margin-top: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
-.pb-l::-webkit-scrollbar { display: none; }
-.pbc { flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); border-left: 3px solid var(--pc); background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
+.pb-l { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 6px; }
+.pbc { min-width: 0; display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); border-left: 3px solid var(--pc); background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
 .pbc:active { transform: scale(.97); }
 .pbc > .ic { width: 20px; height: 20px; color: var(--pc); }
+.pbc span { min-width: 0; }
+.pbc b, .pbc small { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .pbc b { display: block; font-size: 14px; }
 .pbc small { display: block; font-family: var(--f-mono); font-size: 10px; color: var(--ink3); }
 .pbc.add { border: 1px dashed var(--line); background: transparent; color: var(--ink2); }
+.pbc.add { justify-content: center; }
 .pbc.add .ic { width: 18px; height: 18px; }
 .pm-t { margin: 0; flex: 1; font-family: var(--f-display); font-weight: 900; font-size: 26px; text-transform: uppercase; }
 @media (prefers-reduced-motion: reduce) { .agx, .agx > div { transition: none; } .pday.fl { animation: none; } .pc2-g.in-r, .pc2-g.in-l, .pc2-g.in-m { animation: fade .15s ease; } }
@@ -1342,7 +1372,7 @@ button.pdb-h:active { background: var(--s2); }
   var DEMO = false; try { DEMO = localStorage.getItem('zenit.mode') === 'demo'; } catch (e) { /* egal */ }
   var KEY = DEMO ? 'stufenbuch.demo' : 'stufenbuch.v1';
   var state = { logs: [], u: 0, plan: null, food: null };
-  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', data: false, sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fmode: 'man', nts: [], pd: null, pw: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, todo: false, pdo: {}, dd: null, dp: 1, xo: {}, gx: {}, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
+  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', data: false, sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fmode: 'man', nts: [], pd: null, pw: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, todo: false, pdo: {}, plk: null, dd: null, dp: 1, xo: {}, gx: {}, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
   var store = 'local', sync = '', ref = null, timer = null, writing = false, dirty = false;
 
   var EQUIP = [['bar', 'Klimmzugstange'], ['board', 'Push-up-Board'], ['db', 'Kurzhanteln'], ['mat', 'Matte'], ['roll', 'Blackroll'], ['ball', 'Faszienball'], ['bike', 'Homebike'], ['band', 'Widerstandsband']];
@@ -1366,6 +1396,7 @@ button.pdb-h:active { background: var(--s2); }
     var days = p.days.filter(function (x) { return x && typeof x.id === 'string' && typeof x.n === 'string' && Array.isArray(x.wd) && Array.isArray(x.ex); }).slice(0, 8).map(function (x) {
       var o = { id: x.id, n: x.n.slice(0, 18), c: Math.max(0, Math.min(6, x.c | 0)), wd: x.wd.filter(function (w) { return w >= 0 && w <= 6; }).filter(function (w, i, a) { return a.indexOf(w) === i; }), ex: x.ex.filter(function (id) { return EXB[id]; }).filter(function (w, i, a) { return a.indexOf(w) === i; }) };
       if (DAYI.indexOf(x.i) >= 0) o.i = x.i;
+      if ([0, 2, 3].indexOf(x.rp) >= 0) { o.rp = x.rp; o.st = isFinite(x.st) ? Math.round(x.st) : wkOf(dayIdx(Date.now())); }
       return o;
     });
     var ov = {}, ovl = {}, lim = dayIdx(Date.now()) - 3;
@@ -1596,12 +1627,16 @@ button.pdb-h:active { background: var(--s2); }
   }
   function placeInd() {
     var tb = $('tabs'), ind = tb.querySelector('.ind'), a = tb.querySelector('[aria-current]'); if (!ind || !a) return;
-    var mid = a.classList.contains('mid'), sz = mid ? 66 : 0, w = mid ? sz : a.offsetWidth - 4, h = mid ? sz : a.offsetHeight, x = a.offsetLeft + (a.offsetWidth - w) / 2, y = mid ? a.offsetTop + a.offsetHeight / 2 - sz / 2 - 10 : a.offsetTop;
+    var r = a.getBoundingClientRect(), r0 = tb.getBoundingClientRect(), bx = r.left - r0.left, by = r.top - r0.top;
+    var mid = a.classList.contains('mid'), sz = mid ? 66 : 0, w = mid ? sz : r.width - 4, h = mid ? sz : r.height, x = bx + (r.width - w) / 2, y = mid ? by + r.height / 2 - sz / 2 - 10 : by;
     ind.style.transform = 'translate(' + x + 'px,' + y + 'px)'; ind.style.width = w + 'px'; ind.style.height = h + 'px'; ind.style.borderRadius = mid ? '50%' : '16px';
     ind.classList.toggle('mid', mid);
     if (!ind.classList.contains('on')) requestAnimationFrame(function () { requestAnimationFrame(function () { ind.classList.add('on'); }); });
   }
   window.addEventListener('resize', placeInd);
+  window.addEventListener('pageshow', placeInd);
+  if (window.visualViewport) visualViewport.addEventListener('resize', placeInd);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeInd);
   function render() {
     var now = Date.now(), d = derive(state.logs), fresh = ui.fresh;
     ui.fresh = false;
@@ -1784,8 +1819,17 @@ button.pdb-h:active { background: var(--s2); }
   function schedFor(di) {
     var o = plan().ov && plan().ov[di];
     if (o) return o.map(dayObj).filter(Boolean);
-    var w = wdOf(di); return plan().days.filter(function (x) { return x.wd.indexOf(w) >= 0; });
+    return plan().days.filter(function (x) { return onDay(x, di); });
   }
+  function dRp(x) { return [0, 2, 3].indexOf(x.rp) >= 0 ? x.rp : 1; }
+  function dSt(x) { return isFinite(x.st) ? x.st : wkOf(dayIdx(Date.now())); }
+  function onDay(x, di) {
+    // Trainingstag an diesem Datum? Wochentag passt und die Woche liegt im Rhythmus
+    if (x.wd.indexOf(wdOf(di)) < 0) return false;
+    var rp = dRp(x), n = Math.round((wkOf(di) - dSt(x)) / 7);
+    return rp === 1 || (rp === 0 ? n === 0 : ((n % rp) + rp) % rp === 0);
+  }
+  function rpText(x) { var rp = dRp(x); return rp === 1 ? '' : rp ? 'alle ' + rp + ' Wo.' : 'einmalig'; }
   function nextDayText(today) {
     for (var i = 1; i <= 7; i++) { var f = schedFor(today + i)[0]; if (f) return WDN[wdOf(today + i)] + ' · ' + f.n; }
     return '';
@@ -2472,19 +2516,39 @@ button.pdb-h:active { background: var(--s2); }
   }
   // ---------- Plan-Tab
   function reqText(e, d) { return e.req.filter(function (q) { return !reqLine(q, d).ok; }).map(function (q) { return EXB[q[0]].n + ' ' + q[1]; }).join(' · '); }
+  function lockPct(e, d) {
+    // Fortschritt zum Freischalten: Mittel über alle Bedingungen (jede auf 100 % gedeckelt)
+    var r = e.req || []; if (!r.length) return 100;
+    return Math.round(r.reduce(function (s, q) { return s + reqLine(q, d).pct; }, 0) / r.length);
+  }
+  function ring(p) {
+    return '<span class="ring" aria-label="' + p + ' %"><svg viewBox="0 0 36 36" aria-hidden="true"><circle class="rb" cx="18" cy="18" r="15"/><circle class="rf" cx="18" cy="18" r="15" pathLength="100" style="stroke-dasharray:' + p + ' 100"/></svg><b>' + p + '</b></span>';
+  }
   function peList(d, day) {
-    // Alle Übungen je Gruppe mit Schalter. Verfügbare zuerst, gesperrte gedimmt mit Schloss und Bedingung darunter
-    var q = ui.pq.trim().toLowerCase(), h = '';
+    // Verfügbare Übungen je Gruppe mit Schalter; gesperrte immer ganz unten, ohne Schalter, mit Fortschrittsring. Antippen zeigt, was fehlt
+    var q = ui.pq.trim().toLowerCase(), h = '', locked = [];
+    function hit(e) { return (ui.pf === 'all' || e.g === ui.pf) && (!q || (e.n + ' ' + e.mu).toLowerCase().indexOf(q) >= 0); }
     GORDER.forEach(function (g) {
-      if (ui.pf !== 'all' && ui.pf !== g) return;
-      var list = EX.filter(function (e) { return e.g === g && (!q || (e.n + ' ' + e.mu).toLowerCase().indexOf(q) >= 0); });
+      var list = EX.filter(function (e) { return e.g === g && hit(e); });
+      locked = locked.concat(list.filter(function (e) { return !d.unlocked[e.id]; }));
+      list = list.filter(function (e) { return d.unlocked[e.id]; });
       if (!list.length) return;
-      var av = list.filter(function (e) { return d.unlocked[e.id]; }), lk = list.filter(function (e) { return !d.unlocked[e.id]; }), on = list.filter(function (e) { return day.ex.indexOf(e.id) >= 0; }).length;
-      h += '<section class="exg g' + g + '"><h3 class="xg">' + ic(gOf(g).i) + gOf(g).n + '<small>' + on + ' von ' + list.length + '</small></h3><div class="exl">' + av.concat(lk).map(function (e) {
-        var lock = !d.unlocked[e.id];
-        return '<button class="exr' + (lock ? ' lk' : '') + '" data-ptog="' + e.id + '" aria-pressed="' + (day.ex.indexOf(e.id) >= 0) + '"><span><b>' + (lock ? ic('lock') : '') + esc(e.n) + '</b><small>' + esc(lock ? 'braucht ' + reqText(e, d) : e.mu) + '</small></span><i></i></button>';
+      var on = list.filter(function (e) { return day.ex.indexOf(e.id) >= 0; }).length;
+      h += '<section class="exg g' + g + '"><h3 class="xg">' + ic(gOf(g).i) + gOf(g).n + '<small>' + on + ' von ' + list.length + '</small></h3><div class="exl">' + list.map(function (e) {
+        return '<button class="exr" data-ptog="' + e.id + '" aria-pressed="' + (day.ex.indexOf(e.id) >= 0) + '"><span><b>' + esc(e.n) + '</b><small>' + esc(e.mu) + '</small></span><i></i></button>';
       }).join('') + '</div></section>';
     });
+    if (locked.length) {
+      locked.sort(function (x, y) { return lockPct(y, d) - lockPct(x, d); });
+      h += '<section class="exg"><h3 class="xg lkh">' + ic('lock') + 'Gesperrt<small>' + locked.length + '</small></h3><div class="exl">' + locked.map(function (e) {
+        var open = ui.plk === e.id;
+        return '<div class="exk g' + e.g + (open ? ' open' : '') + '"><button class="exr lk" data-plk="' + e.id + '" aria-expanded="' + open + '"><span><b>' + ic(gOf(e.g).i) + esc(e.n) + '</b><small>' + esc(e.mu) + '</small></span>' + ring(lockPct(e, d)) + '</button>' +
+          '<div class="agx"><div><div class="lkd">' + e.req.map(function (r) {
+            var x = reqLine(r, d);
+            return '<div class="lkr' + (x.ok ? ' ok' : '') + '"><span>' + ic(x.ok ? 'check' : 'target') + esc(x.name) + '</span><small>' + Math.min(x.cur, x.need) + ' / ' + x.need + ' ' + esc(x.u) + '</small><i class="pdp"><i style="width:' + x.pct + '%"></i></i></div>';
+          }).join('') + (day.ex.indexOf(e.id) >= 0 ? '<p class="agp">' + ic('check') + 'Kommt automatisch in diesen Plan, sobald frei.</p>' : '') + '</div></div></div></div>';
+      }).join('') + '</div></section>';
+    }
     return h || '<p class="muted">Nichts gefunden.</p>';
   }
   function wdChips(day) {
@@ -2515,7 +2579,7 @@ button.pdb-h:active { background: var(--s2); }
   }
   function pChips(ds) {
     if (!ds.length) return '<span class="agk rest">' + ic('snow') + 'Frei</span>';
-    return ds.map(function (x) { return '<span class="agk" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + '</span>'; }).join('');
+    return ds.map(function (x) { var r = rpText(x); return '<span class="agk" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + (r ? '<em>' + r + '</em>' : '') + '</span>'; }).join('');
   }
   function pToggles(P, attr, on) {
     return P.days.map(function (x) { return '<button ' + attr(x) + ' aria-pressed="' + on(x) + '" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + '</button>'; }).join('');
@@ -2595,7 +2659,7 @@ button.pdb-h:active { background: var(--s2); }
     // Trainingstage kompakt: Chip öffnet den Editor, Stift öffnet Woche & Tage
     h += '<section class="pbar rise" style="--i:3"><div class="pb-h"><h2 class="sec-h">' + ic('dumb') + 'Trainingstage</h2>' + (ux ? '<button class="agn gold" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>' : '') +
       '<button class="x" data-pman="1" aria-label="Woche und Trainingstage bearbeiten">' + ic('edit') + '</button></div><div class="pb-l">' +
-      P.days.map(function (x) { return '<button class="pbc" data-pedit="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '<span><b>' + esc(x.n) + '</b><small>' + (x.wd.length ? x.wd.map(function (v) { return WDN[v]; }).join(' ') : '–') + '</small></span></button>'; }).join('') +
+      P.days.map(function (x) { return '<button class="pbc" data-pedit="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '<span><b>' + esc(x.n) + '</b><small>' + (x.wd.length ? x.wd.map(function (v) { return WDN[v]; }).join(' ') : '–') + (rpText(x) ? ' · ' + (dRp(x) ? dRp(x) + 'W' : '1×') : '') + '</small></span></button>'; }).join('') +
       (P.days.length < 8 ? '<button class="pbc add" data-pman="new" aria-label="Neuer Trainingstag">' + ic('plus') + '</button>' : '') + '</div></section>';
     return h;
   }
@@ -2622,6 +2686,7 @@ button.pdb-h:active { background: var(--s2); }
     h += '<section class="sec rise" style="--i:2"><h2 class="sec-h">' + ic('dumb') + 'Trainingstage</h2><div class="tdl">';
     P.days.forEach(function (x) {
       var sub = [x.wd.length ? x.wd.map(function (v) { return WDN[v]; }).join(' · ') : 'nicht eingeplant', x.ex.filter(function (id) { return d.unlocked[id]; }).length + ' Üb.'];
+      if (rpText(x)) sub.push(rpText(x));
       if (dur[x.id]) sub.push('~' + dur[x.id] + '′');
       h += '<button class="tdr" data-pedit="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')"><span class="pdi">' + ic(dIcon(x)) + '</span><span class="nm"><b>' + esc(x.n) + '</b><small>' + sub.join(' · ') + '</small></span>' + ic('chev', 'chv') + '</button>';
     });
@@ -2633,18 +2698,22 @@ button.pdb-h:active { background: var(--s2); }
   }
   function viewPlanEdit(d, day) {
     var h = '<div class="pe-top rise" style="--i:0"><button class="x" data-pback="1" aria-label="Zurück">' + ic('back') + '</button><input id="pe-n" class="pe-n" type="text" maxlength="18" value="' + esc(day.n) + '" aria-label="Name"><button class="x" data-pdel="' + day.id + '" aria-label="Tag löschen"' + (ui.pdel ? ' style="color:var(--danger)"' : '') + '>' + (ui.pdel ? '<b class="sure">Sicher?</b>' : ic('trash')) + '</button></div>';
-    // Aussehen und Wochentage: Icon, Farbe, Tage
+    // Aussehen und Rhythmus: Icon, Farbe, Wochentage, Wiederholung (jede / alle 2 / alle 3 Wochen / einmalig ab Startwoche)
+    var rp = dRp(day), st = dSt(day), a = new Date(st * 864e5), b = new Date((st + 6) * 864e5);
     h += '<section class="pe-set rise" style="--i:1;--pc:var(' + PCOL[day.c] + ')"><div class="pe-ic" role="group" aria-label="Icon">' + DAYI.map(function (k) { return '<button data-pic="' + k + '" aria-pressed="' + (dIcon(day) === k) + '" aria-label="Icon ' + k + '">' + ic(k) + '</button>'; }).join('') + '</div>' +
-      '<div class="pe-c">' + PCOL.map(function (c, j) { return '<button data-pc="' + j + '" style="--pc:var(' + c + ')" aria-pressed="' + (day.c === j) + '" aria-label="Farbe ' + (j + 1) + '"><i class="pdot big"></i></button>'; }).join('') + '</div>' + wdChips(day) + '</section>';
-    // Übungen: Filter, Suche, Liste mit Schaltern
-    h += '<section class="sec rise" style="--i:2"><h2 class="sec-h">' + ic('dumb') + 'Übungen<small>' + day.ex.length + ' im Plan</small></h2><div class="pgf pgf2" role="group"><button class="pg" data-pef="all" aria-pressed="' + (ui.pf === 'all') + '">Alle</button>' +
-      GORDER.map(function (k) { var g = gOf(k), n = day.ex.filter(function (id) { return EXB[id].g === k; }).length; return '<button class="pg g' + k + '" data-pef="' + k + '" aria-pressed="' + (ui.pf === k) + '" aria-label="' + g.n + ': ' + n + ' im Plan">' + ic(g.i) + (n ? '<sup>' + n + '</sup>' : '') + '</button>'; }).join('') + '</div>' +
+      '<div class="pe-c">' + PCOL.map(function (c, j) { return '<button data-pc="' + j + '" style="--pc:var(' + c + ')" aria-pressed="' + (day.c === j) + '" aria-label="Farbe ' + (j + 1) + '"><i class="pdot big"></i></button>'; }).join('') + '</div>' + wdChips(day) +
+      '<div class="pe-rp" role="group" aria-label="Wiederholung">' + [[1, 'Jede Woche'], [2, 'Alle 2 Wo.'], [3, 'Alle 3 Wo.'], [0, 'Einmalig']].map(function (o) { return '<button data-prp="' + o[0] + '" aria-pressed="' + (rp === o[0]) + '">' + o[1] + '</button>'; }).join('') + '</div>' +
+      (rp !== 1 ? '<div class="pe-st"><button class="x" data-pst="-1" aria-label="Woche früher">' + ic('back') + '</button><span>' + (rp ? 'Ab ' : 'Nur ') + a.getUTCDate() + '.' + (a.getUTCMonth() + 1) + '. – ' + b.getUTCDate() + '.' + (b.getUTCMonth() + 1) + '.</span><button class="x" data-pst="1" aria-label="Woche später">' + ic('chev') + '</button></div>' : '') + '</section>';
+    // Übungen: Filter (Zahl = im Plan), Suche, Liste
+    var inP = day.ex.filter(function (id) { return d.unlocked[id]; });
+    h += '<section class="sec rise" style="--i:2"><h2 class="sec-h">' + ic('dumb') + 'Übungen<small>' + inP.length + ' im Plan</small></h2><div class="pgf pgf2" role="group"><button class="pg" data-pef="all" aria-pressed="' + (ui.pf === 'all') + '">Alle</button>' +
+      GORDER.map(function (k) { var g = gOf(k), n = inP.filter(function (id) { return EXB[id].g === k; }).length; return '<button class="pg g' + k + '" data-pef="' + k + '" aria-pressed="' + (ui.pf === k) + '" aria-label="' + g.n + ': ' + n + ' im Plan">' + ic(g.i) + (n ? '<sup>' + n + '</sup>' : '') + '</button>'; }).join('') + '</div>' +
       '<input id="pe-q" class="pe-q" type="search" placeholder="Suchen" value="' + esc(ui.pq) + '" aria-label="Übung suchen"><div id="pe-list">' + peList(d, day) + '</div></section>';
     return h;
   }
   function ovSet(di, ids) {
     var P = plan(); P.ov = P.ov || {};
-    var w = wdOf(di), def = P.days.filter(function (x) { return x.wd.indexOf(w) >= 0; }).map(function (x) { return x.id; }).sort().join(',');
+    var def = P.days.filter(function (x) { return onDay(x, di); }).map(function (x) { return x.id; }).sort().join(',');
     if (ids.slice().sort().join(',') === def) delete P.ov[di]; else P.ov[di] = ids;
     persist(); ui.fresh = false; render();
   }
@@ -2692,6 +2761,9 @@ button.pdb-h:active { background: var(--s2); }
     if ((el = t.closest('[data-pc]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; day.c = +el.dataset.pc; done(); } return true; }
     if ((el = t.closest('[data-ptog]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; var xi = day.ex.indexOf(el.dataset.ptog); if (xi >= 0) day.ex.splice(xi, 1); else day.ex = sortIds(day.ex.concat([el.dataset.ptog])); done(); } return true; }
     if ((el = t.closest('[data-pic]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; day.i = el.dataset.pic; done(); } return true; }
+    if ((el = t.closest('[data-prp]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; var rp = +el.dataset.prp; if (rp === 1) { delete day.rp; delete day.st; } else { day.rp = rp; day.st = dSt(day); } done(); } return true; }
+    if ((el = t.closest('[data-pst]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; day.st = dSt(day) + 7 * (+el.dataset.pst); done(); } return true; }
+    if ((el = t.closest('[data-plk]'))) { var lk = el.dataset.plk; ui.plk = ui.plk === lk ? null : lk; document.querySelectorAll('[data-plk]').forEach(function (b) { var on = b.dataset.plk === ui.plk; b.setAttribute('aria-expanded', on); b.parentNode.classList.toggle('open', on); }); return true; }
     if ((el = t.closest('[data-pef]'))) { ui.pf = el.dataset.pef; ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-pdel]'))) {
       if (!ui.pdel) { ui.pdel = Date.now(); ui.fresh = false; render(); setTimeout(function () { if (ui.pdel && Date.now() - ui.pdel > 2900) { ui.pdel = 0; if (ui.pe) { ui.fresh = false; render(); } } }, 3000); return true; }

@@ -39,6 +39,7 @@ const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data
       // Plan: Trainingstag-Editor öffnen, Übung an/aus, Icon, Filter, zurück
       if (tab === 'tage' && await click('[data-pedit]')) {
         await click('[data-ptog]'); await click('[data-ptog]'); await click('[data-pic="star"]'); await click('[data-pef="pull"]'); await click('[data-pef="all"]');
+        await click('[data-prp="2"]'); await click('[data-pst="1"]'); await click('[data-prp="0"]'); await click('[data-prp="1"]'); await click('[data-plk]'); await click('[data-plk]');
         await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-editor.png`) }); await click('[data-pback]');
       }
       if (await click('[data-open]')) { await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-detail.png`) }); await click('[data-back]'); }

@@ -13,6 +13,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-21 – Ausnahmen als Bausteine, anstehendes Wiegen, Monatstitel, Planer-Leiste, Tab-Leiste
+- Ausnahmen eines Datums als Bausteine `plan.ovk[tag] = {s, w, b, r, a}` (ausgesetzt, getauscht mit w/übernommenes Training b, ersetzt, zusätzlich); `ov[tag]` wird daraus berechnet (`ovSetF`). So gehen Ersetzen + Zusätzlich oder Tauschen + Zusätzlich gleichzeitig, jede Aktion einzeln zurücknehmbar. Aussetzen schließt alles aus, Ersetzen/Tauschen gegenseitig. Alte Einträge ohne Bausteine (Heute-Tausch) werden als „ersetzt“ gelesen.
+- Anstehend im Kalender: Wiegen fällig (letzte Messung + 7 Tage) als Waage an dem Tag; Tageskarte bietet „Jetzt eintragen“. Wird früher gewogen, wandert der Termin mit.
+- Monatstitel: Name groß, Jahr klein, „Heute“ als Icon; passt bei 375 px für alle Monate.
+- Planer: „Speichern“ oben entfernt; Leiste „Nicht gespeichert“ (Verwerfen/Speichern) erscheint ab der ersten Änderung. Zurück mit offenen Änderungen lässt die Leiste aufblinken, Verwerfen bleibt im Planer.
+- Tab-Leiste zu hoch auf dem iPhone (nicht nachstellbar): `fixBar` misst `visualViewport.height + offsetTop - innerHeight` und schiebt die Leiste an den sichtbaren Rand (nach Tastatur, Datumswähler, App-Wechsel). Wirkung auf dem Gerät noch offen.
+
 ### 2026-10-21 – Mehrere Wochenpläne, Sammelkarten, Tag ändern über den Kalender, nur Hochformat
 - Mehrere Pläne (Aufbau, Ausdauer …): gespeichert ≠ aktiv. Aktivieren ab heute / ab Montag / ab Datum legt einen Eintrag im Zeitstrahl `plan.act` an; erst dann übernimmt der Kalender den Plan ab diesem Tag. „Meine Pläne“ unten im Planer: Name direkt editierbar, Mini-Woche, Status (aktiv seit / ab Datum mit ✕ / gespeichert), Bearbeiten, Aktivieren, Löschen. Neue Datenform `wp[].id`, `act`, `ovk` (siehe DEVELOPMENT.md), Migration in `plan()`.
 - Einstieg nur noch über ein Karten-Icon im Kalenderkopf (eine Wochenansicht statt zwei).

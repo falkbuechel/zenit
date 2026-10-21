@@ -15,6 +15,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-21 – Online-Suche, Barcode, Varianten, Fast Food, Rechner ohne Worte
+- Tab-Leiste wieder nicht am Rand (iOS-Web-App, nach `html/body height: 100%`) → `html { height: 100lvh }` wie früher am body. Scrollbalken von `#app` ausgeblendet.
+- Open Food Facts (frei, ohne Schlüssel): Suche ab 3 Zeichen (600 ms nach dem Tippen) über `cgi/search.pl`; Barcode über `api/v2/product`. `search.openfoodfacts.org` ist ohne CORS, also unbrauchbar. Die cgi-Suche antwortet oft mit 503 ohne CORS-Header („Failed to fetch“) → bis zu 3 Versuche, abwechselnd de/world. Gewählte Produkte werden eigene Lebensmittel mit `b` (Marke) und `bc` (Barcode), danach offline.
+- Barcode: `BarcodeDetector`, sonst (iOS) `barcode-detector@3.2.2` (zxing-wasm) von jsDelivr, erst beim ersten Scan geladen; Service Worker (v2) cacht jsDelivr. Unbekannter Barcode → eigenes Lebensmittel mit diesem Barcode anlegen.
+- `FOODS`: `*` markiert die vorgewählte Portion (Skyr 500 g, Restaurant „Teller“). Varianten `FVAR` (Light, Fettstufen, Zero, alkoholfrei), umschaltbar in der Mengenwahl, in Kategorien nur die erste. Kategorie Fast Food (McDonald's, BK, Subway, KFC).
+- Rechner: Ruhetag (Mond) und Trainingstag (Hantel, antippen = Zuschlag an/aus) statt Schalter, Makros als P/F/K/B/Z, Regler nur mit Wert, „sitzend–körperlich“ als Skala. `palText` entfernt.
+
 ### 2026-10-21 – Seite steht fest, kein Markieren/Zoom, Rechner kompakt, Restaurant-Gerichte
 - Nur noch `#app` scrollt (`position: fixed; overflow-y: auto`), `html/body` haben `overflow: hidden`. Kurze Seiten (Plan) scrollen nicht mehr, kein Gummiband an Kopf und Tab-Leiste. Alle `window.scrollTo/scrollY` → `$('app')`. `compare.js` hebt das für Ganzseiten-Screenshots auf.
 - Markieren aus (`user-select: none` am body, Eingabefelder ausgenommen, sonst lässt iOS nicht tippen). Zoom aus: Viewport `maximum-scale=1,user-scalable=no`, `touch-action: pan-x pan-y`, `gesturestart` blockiert.

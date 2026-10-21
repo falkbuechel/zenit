@@ -556,21 +556,14 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .pe-c { display: flex; gap: 8px; margin: 12px 0; }
 .pe-c button { flex: 1; min-height: 40px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--s1); display: grid; place-items: center; }
 .pe-c button[aria-pressed="true"] { border-color: var(--pc); background: color-mix(in srgb, var(--pc) 20%, var(--s2)); }
-.xgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 8px; }
 .xg { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--gc); }
 .xg .ic { width: 15px; height: 15px; }
-.xc { display: flex; align-items: center; gap: 10px; min-height: 58px; padding: 8px 8px 8px 10px; border-radius: 14px; border: 1px solid var(--line); border-left: 3px solid var(--gc); background: linear-gradient(180deg, var(--s2), var(--s1)); }
-.xc.lk { opacity: .72; }
-.xc .gi { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: color-mix(in srgb, var(--gc) 18%, var(--s3)); color: var(--gc); flex: none; }
-.xc .gi .ic { width: 19px; height: 19px; }
 .xn { min-width: 0; flex: 1; }
 .xn b { display: block; font-size: 14px; line-height: 1.2; }
 .xn small { display: block; color: var(--ink3); font-size: 11px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.xc .lk { width: 15px; height: 15px; color: var(--ink3); flex: none; }
 .xb { flex: none; width: 38px; height: 38px; border-radius: 10px; border: 0; display: grid; place-items: center; transition: transform .16s var(--ease); }
 .xb:active { transform: scale(.92); }
 .xb .ic { width: 18px; height: 18px; }
-.xb.add { background: var(--ac); color: var(--on); }
 .xb.rem { background: var(--s3); color: var(--ink2); }
 .pgf2 { margin: 0 0 8px; }
 .pe-q { width: 100%; height: 42px; margin-bottom: 10px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--s1); color: var(--ink); font: inherit; }
@@ -631,15 +624,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .xn .st .ic { width: 12px; height: 12px; flex: none; }
 .xn .st.ok { color: var(--ac); }
 .xn .st.lock { color: var(--gold); white-space: normal; align-items: flex-start; line-height: 1.3; }
-.xc.lk { opacity: 1; background: linear-gradient(180deg, var(--s1), var(--bg)); border-style: dashed; border-left-style: solid; }
-.xc.lk .gi { filter: grayscale(.6); }
-.pe-r { display: flex; gap: 8px; margin-bottom: 6px; }
-.pe-r .pe-q { flex: 1; min-width: 0; margin: 0; }
-.pu { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 42px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--s1); color: var(--ink3); font-weight: 800; font-size: 12px; }
-.pu .ic { width: 15px; height: 15px; opacity: .35; }
-.pu[aria-pressed="true"] { border-color: var(--ac); background: color-mix(in srgb, var(--ac) 18%, var(--s2)); color: var(--ink); }
-.pu[aria-pressed="true"] .ic { opacity: 1; color: var(--ac); }
-.pe-k { margin: 0 0 10px; color: var(--ink3); font-size: 12px; }
 
 .swb { flex: none; margin-left: auto; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--s1); color: var(--ink2); transition: transform .16s var(--ease); }
 .swb:active { transform: scale(.94); }
@@ -929,7 +913,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 @media (max-width: 380px) { .sk b { font-size: 64px; } .ringw, .ringw svg { width: 92px; height: 92px; } .pill { width: 52px; } .step { grid-template-columns: 56px 1fr 56px; } }
 /* Plan: Kalender (Woche, aufklappbar zum Monat), Tageskarte, Trainingstage; dahinter Woche & Tage. Werkzeug statt Spiel: Farbe nur als Punkt/Rand, kein Glow.
    Bewegung nur mit Zweck: Woche/Monat gleitet in Blätterrichtung (200 ms), Aufklappen 220 ms, Tageswechsel blendet über (150 ms), Ausnahme gesetzt = kurzes Aufleuchten. */
-.agl { display: grid; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); overflow: hidden; }
+.agl { display: grid; grid-template-columns: minmax(0, 1fr); border: 1px solid var(--line); border-radius: 16px; background: var(--s1); overflow: hidden; }
 .agr + .agr { border-top: 1px solid var(--line); }
 .agh { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 10px; width: 100%; min-height: 52px; padding: 6px 12px; border: 0; background: transparent; color: var(--ink); font: inherit; text-align: left; -webkit-user-select: none; user-select: none; transition: background-color .16s var(--ease); }
 .agh:active { background: var(--s2); }
@@ -947,8 +931,8 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .agr.today .agd small { color: var(--ink); font-weight: 700; }
 .agx { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .22s var(--ease); }
 .agx > div { display: grid; gap: 10px; min-height: 0; overflow: hidden; padding: 0 12px 0 74px; opacity: 0; visibility: hidden; transition: opacity .12s var(--ease), padding .22s var(--ease), visibility 0s .22s; }
-.agr.open .agx, .pday.open .agx { grid-template-rows: 1fr; }
-.agr.open .agx > div, .pday.open .agx > div { padding-bottom: 12px; opacity: 1; visibility: visible; transition: opacity .2s var(--ease) .05s, padding .22s var(--ease), visibility 0s; }
+.agr.open .agx, .pday.open > .pd-x, .todo.open > .agx, .pdb.open > .agx { grid-template-rows: 1fr; }
+.agr.open .agx > div, .pday.open > .pd-x > div, .todo.open > .agx > div, .pdb.open > .agx > div { padding-bottom: 12px; opacity: 1; visibility: visible; transition: opacity .2s var(--ease) .05s, padding .22s var(--ease), visibility 0s; }
 .agr .ptg button { min-height: 36px; }
 .agp { margin: 0; font-size: 13px; color: var(--ink2); }
 .agb { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -972,6 +956,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .tdr .nm { display: grid; flex: 1; min-width: 0; }
 .tdr b { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tdr small { font-size: 12px; color: var(--ink3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tdr .pdi { width: 34px; height: 34px; }
 .tdr .chv { width: 16px; height: 16px; color: var(--ink3); flex: none; }
 .tdr.new { border: 1px dashed var(--line); background: transparent; color: var(--ink2); }
 .tdr.new .ic { width: 18px; height: 18px; }
@@ -992,16 +977,18 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .pc2.past b { color: var(--ink3); }
 .pc2.today b { background: var(--ink); color: var(--bg); font-weight: 700; }
 .pc2.sel { background: var(--s2); box-shadow: inset 0 0 0 1px var(--line); }
-.pc2 .dots { display: flex; gap: 3px; min-height: 6px; }
-.pc2 .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--pc); }
-.pc2.past .dots i { opacity: .35; }
 .pc2 .dn { width: 13px; height: 13px; margin-top: -2px; color: var(--ac); }
-.pc2 .nd { position: absolute; top: 4px; right: calc(50% - 19px); width: 8px; height: 8px; border-radius: 50%; background: var(--ink2); box-shadow: 0 0 0 2px var(--s1); }
-.pc2 .nd.hot { background: var(--flame); }
 .pc2-g.in-r { animation: pcin-r .2s var(--ease); } .pc2-g.in-l { animation: pcin-l .2s var(--ease); } .pc2-g.in-m { animation: pcin-m .2s var(--ease); }
-@keyframes pcin-r { from { opacity: 0; transform: translateX(16px); } }
-@keyframes pcin-l { from { opacity: 0; transform: translateX(-16px); } }
+@keyframes pcin-r { from { opacity: 0; transform: translateX(28px); } }
+@keyframes pcin-l { from { opacity: 0; transform: translateX(-28px); } }
 @keyframes pcin-m { from { opacity: 0; transform: translateY(-6px); } }
+.pc2 .ics { display: flex; align-items: center; gap: 1px; min-height: 17px; }
+.pc2 .ics em { display: grid; color: var(--pc); }
+.pc2 .ics .ic { width: 17px; height: 17px; }
+.pc2 .ics small { font-size: 10px; font-weight: 800; color: var(--ink3); }
+.pc2.past .ics em { opacity: .4; }
+.pc2 .nd { position: absolute; top: 1px; right: calc(50% - 23px); width: 15px; height: 15px; padding: 1.5px; border-radius: 50%; background: var(--s1); color: var(--danger); stroke-width: 2.4; }
+.pc2-g { touch-action: pan-y; will-change: transform; }
 .pc2-n { display: flex; align-items: center; gap: 6px; margin: 6px 4px 0; font-size: 12px; font-weight: 700; color: var(--flame); }
 .pc2-n .ic { width: 14px; height: 14px; }
 /* Tageskarte */
@@ -1010,7 +997,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .pday > * + * { margin-top: 10px; }
 .pday > .agx { margin-top: 0; }
 .pday .agx > div { padding: 0; }
-.pday.open .agx > div { padding: 10px 0 2px; }
 .pday .ptg button { min-height: 36px; }
 .pday.in-d { animation: fade .15s var(--ease); }
 .pday.fl { animation: agfl .7s var(--ease); }
@@ -1023,15 +1009,75 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .pd-c .ic { width: 16px; height: 16px; }
 .pd-f { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .agk.rest { gap: 6px; color: var(--ink3); }
-.todo { display: grid; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-.tdo { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; min-height: 46px; padding: 6px 10px; border: 0; background: var(--s2); color: var(--ink); font: inherit; text-align: left; transition: background-color .16s var(--ease); }
-.tdo + .tdo { border-top: 1px solid var(--line); }
-.tdo:active { background: var(--s3); }
+.agk .ic, .ptg button .ic { width: 16px; height: 16px; color: var(--pc, var(--ink3)); }
+.pd-h .agm { margin-left: 6px; }
+.pday > .pd-x > div { padding: 0; }
+.pday.open > .pd-x > div { padding: 10px 0 2px; }
+/* Zu tun: rote Glocke, aufklappbar */
+.todo { display: grid; grid-template-columns: minmax(0, 1fr); border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--line)); border-radius: 12px; overflow: hidden; background: color-mix(in srgb, var(--danger) 6%, var(--s1)); }
+.tdh { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: 0; background: transparent; color: var(--ink); font: inherit; text-align: left; }
+.tdh > .ic:first-child { width: 18px; height: 18px; color: var(--danger); }
+.tdh b { font-size: 14px; }
+.tdh span { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 99px; background: var(--danger); color: #fff; font-family: var(--f-mono); font-size: 11px; font-weight: 700; display: grid; place-items: center; }
+.tdh .chv { width: 14px; height: 14px; margin-left: auto; color: var(--ink3); transform: rotate(90deg); transition: transform .2s var(--ease); }
+.todo.open .tdh .chv { transform: rotate(-90deg); }
+.todo .agx > div { gap: 0; }
+.tdo { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; min-height: 46px; padding: 6px 12px; border: 0; border-top: 1px solid var(--line); background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: background-color .16s var(--ease); }
+.tdo:active { background: var(--s2); }
 .tdo > .ic { width: 18px; height: 18px; color: var(--ink2); }
-.tdo.hot > .ic:first-child { color: var(--flame); }
 .tdo b { display: block; font-size: 14px; }
 .tdo small { display: block; font-size: 12px; color: var(--ink3); }
 .tdo .chv { width: 14px; height: 14px; color: var(--ink3); }
+/* Trainingstag-Box in der Tageskarte: kompakt, Übungsliste klappt auf */
+.pdb { border: 1px solid var(--line); border-left: 3px solid var(--pc, var(--line)); border-radius: 12px; overflow: hidden; }
+.pdb-h { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; border: 0; background: transparent; color: var(--ink); font: inherit; text-align: left; transition: background-color .16s var(--ease); }
+button.pdb-h:active { background: var(--s2); }
+.pdi { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: color-mix(in srgb, var(--pc, var(--ink3)) 16%, var(--s2)); color: var(--pc, var(--ink3)); flex: none; }
+.pdi .ic { width: 20px; height: 20px; }
+.pdb-h .nm { display: grid; gap: 2px; min-width: 0; }
+.pdb-h b { font-size: 15px; }
+.pdb-h small { font-size: 12px; color: var(--ink3); }
+.pdp { display: block; height: 4px; margin-top: 4px; border-radius: 99px; background: var(--s3); overflow: hidden; }
+.pdp i { display: block; height: 100%; border-radius: inherit; background: var(--pc); }
+.pdb-h .chv { width: 14px; height: 14px; color: var(--ink3); transform: rotate(90deg); transition: transform .2s var(--ease); }
+.pdb.open .pdb-h .chv { transform: rotate(-90deg); }
+.pdb .agx > div { gap: 0; }
+.pdl { display: grid; grid-template-columns: minmax(0, 1fr); }
+.todo.open > .agx > div, .pdb.open > .agx > div { padding-bottom: 0; }
+.pgf2 .pg { position: relative; }
+.pg sup { position: absolute; top: 3px; right: 5px; font-family: var(--f-mono); font-size: 9px; font-weight: 700; line-height: 1; color: var(--gc, var(--ink3)); }
+.pdr { display: grid; grid-template-columns: 18px 1fr auto; align-items: center; gap: 10px; padding: 7px 12px; border-top: 1px solid var(--line); font-size: 14px; }
+.pdr > .ic { width: 16px; height: 16px; color: var(--ink3); }
+.pdr.ok > .ic { color: var(--ac); }
+.pdr.ok span { color: var(--ink2); }
+.pdr small { font-family: var(--f-mono); font-size: 11px; line-height: 1.3; color: var(--ink3); text-align: right; }
+.pdb.rest { border-left-color: var(--line); }
+.pd-go { width: 100%; }
+/* Editor: Aussehen (Icon, Farbe, Tage) und Übungen mit Schaltern */
+.pe-set { display: grid; gap: 10px; margin-top: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
+.pe-set .pe-c { margin: 0; }
+.pe-ic { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+.pe-ic button { display: grid; place-items: center; min-height: 44px; border-radius: 10px; border: 1px solid var(--line); background: var(--s2); color: var(--ink2); transition: transform .14s var(--ease); }
+.pe-ic button:active { transform: scale(.95); }
+.pe-ic button .ic { width: 22px; height: 22px; }
+.pe-ic button[aria-pressed="true"] { border-color: var(--pc); background: color-mix(in srgb, var(--pc) 20%, var(--s2)); color: var(--pc); }
+.exg { margin-top: 14px; }
+.exg .xg { margin: 0 0 6px; }
+.xg small { margin-left: auto; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--ink3); }
+.exl { display: grid; grid-template-columns: minmax(0, 1fr); border: 1px solid var(--line); border-radius: 14px; background: var(--s1); overflow: hidden; }
+.exr { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 54px; padding: 8px 12px; border: 0; background: transparent; color: var(--ink); font: inherit; text-align: left; transition: background-color .16s var(--ease); }
+.exr + .exr { border-top: 1px solid var(--line); }
+.exr:active { background: var(--s2); }
+.exr span { flex: 1; min-width: 0; }
+.exr b { display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.exr b .ic { width: 13px; height: 13px; color: var(--ink3); flex: none; }
+.exr small { display: block; overflow: hidden; font-size: 12px; color: var(--ink3); white-space: nowrap; text-overflow: ellipsis; }
+.exr.lk b, .exr.lk small { opacity: .6; }
+.exr.lk { background: color-mix(in srgb, var(--s2) 50%, transparent); }
+.exr i { position: relative; flex: none; width: 42px; height: 26px; border-radius: 99px; background: var(--s3); transition: background-color .2s var(--ease); }
+.exr i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink3); transition: transform .22s var(--ease), background-color .2s; }
+.exr[aria-pressed="true"] i { background: var(--gc, var(--ac)); }
+.exr[aria-pressed="true"] i::after { transform: translateX(16px); background: #fff; }
 /* Trainingstage kompakt */
 .pbar { margin-top: 12px; }
 .pb-h { display: flex; align-items: center; gap: 8px; }
@@ -1040,7 +1086,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .pb-l::-webkit-scrollbar { display: none; }
 .pbc { flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); border-left: 3px solid var(--pc); background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
 .pbc:active { transform: scale(.97); }
-.pbc .pdot { display: none; }
+.pbc > .ic { width: 20px; height: 20px; color: var(--pc); }
 .pbc b { display: block; font-size: 14px; }
 .pbc small { display: block; font-family: var(--f-mono); font-size: 10px; color: var(--ink3); }
 .pbc.add { border: 1px dashed var(--line); background: transparent; color: var(--ink2); }
@@ -1296,7 +1342,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
   var DEMO = false; try { DEMO = localStorage.getItem('zenit.mode') === 'demo'; } catch (e) { /* egal */ }
   var KEY = DEMO ? 'stufenbuch.demo' : 'stufenbuch.v1';
   var state = { logs: [], u: 0, plan: null, food: null };
-  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', data: false, sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fmode: 'man', nts: [], pd: null, pw: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, dd: null, dp: 1, xo: {}, gx: {}, pu: false, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
+  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', data: false, sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fmode: 'man', nts: [], pd: null, pw: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, todo: false, pdo: {}, dd: null, dp: 1, xo: {}, gx: {}, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
   var store = 'local', sync = '', ref = null, timer = null, writing = false, dirty = false;
 
   var EQUIP = [['bar', 'Klimmzugstange'], ['board', 'Push-up-Board'], ['db', 'Kurzhanteln'], ['mat', 'Matte'], ['roll', 'Blackroll'], ['ball', 'Faszienball'], ['bike', 'Homebike'], ['band', 'Widerstandsband']];
@@ -1318,7 +1364,9 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
   function cleanPlan(p) {
     if (!p || !Array.isArray(p.days)) return null;
     var days = p.days.filter(function (x) { return x && typeof x.id === 'string' && typeof x.n === 'string' && Array.isArray(x.wd) && Array.isArray(x.ex); }).slice(0, 8).map(function (x) {
-      return { id: x.id, n: x.n.slice(0, 18), c: Math.max(0, Math.min(6, x.c | 0)), wd: x.wd.filter(function (w) { return w >= 0 && w <= 6; }).filter(function (w, i, a) { return a.indexOf(w) === i; }), ex: x.ex.filter(function (id) { return EXB[id]; }).filter(function (w, i, a) { return a.indexOf(w) === i; }) };
+      var o = { id: x.id, n: x.n.slice(0, 18), c: Math.max(0, Math.min(6, x.c | 0)), wd: x.wd.filter(function (w) { return w >= 0 && w <= 6; }).filter(function (w, i, a) { return a.indexOf(w) === i; }), ex: x.ex.filter(function (id) { return EXB[id]; }).filter(function (w, i, a) { return a.indexOf(w) === i; }) };
+      if (DAYI.indexOf(x.i) >= 0) o.i = x.i;
+      return o;
     });
     var ov = {}, ovl = {}, lim = dayIdx(Date.now()) - 3;
     if (p.ov && typeof p.ov === 'object') Object.keys(p.ov).forEach(function (k) { if (+k >= lim && Array.isArray(p.ov[k])) ov[k] = p.ov[k].filter(function (x) { return typeof x === 'string'; }); });
@@ -1481,6 +1529,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
   P.dumb = '<path d="M6.500 8v8M17.500 8v8M3.500 10v4M20.500 10v4M6.500 12h11"/>';
   P.gear = '<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>';
   P.user = '<circle cx="12" cy="8.500" r="3.800"/><path d="M4.500 20c.8-3.800 3.700-6 7.500-6s6.700 2.200 7.500 6"/>';
+  P.bell = '<path d="M6 16.500V11a6 6 0 0 1 12 0v5.500l1.500 1.500h-15z"/><path d="M10 20.500a2 2 0 0 0 4 0"/>';
   P.list = '<path d="M9 6.500h11M9 12h11M9 17.500h11"/><circle cx="4.800" cy="6.500" r="1"/><circle cx="4.800" cy="12" r="1"/><circle cx="4.800" cy="17.500" r="1"/>';
   function ic(n, cls) { return '<svg class="ic' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true">' + P[n] + '</svg>'; }
   var FL = '<svg class="ic fill" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 1.500c.5 2.600 4 4.200 4 8A4 4 0 0 1 9 14.500 4 4 0 0 1 5 9.500c0-1.400.6-2.400 1.400-3.300.1 1.200.6 2 1.300 2.400C7.400 6.400 8 3.900 9 1.500z"/></svg>';
@@ -1681,9 +1730,9 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
   GORDER.forEach(function (k, i) { GRANK[k] = i; });
   EX.forEach(function (e, i) { EXI[e.id] = i; });
   var PRESETS = [
-    { n: 'Zug', c: 0, f: ['pull'] }, { n: 'Druck', c: 1, f: ['push'] }, { n: 'Core', c: 2, f: ['core'] },
-    { n: 'Hantel', c: 3, f: ['kh'] }, { n: 'Skills', c: 4, f: ['skill'] }, { n: 'Bike', c: 5, f: ['cardio'] }, { n: 'Blackroll', c: 6, f: ['mob'] },
-    { n: 'Ganzkörper', c: 0, ids: ['chin', 'hang', 'push', 'plank', 'goblet', 'row', 'hollow'] }, { n: 'Eigener Tag', c: 1, f: [] }
+    { n: 'Zug', c: 0, i: 'pull', f: ['pull'] }, { n: 'Druck', c: 1, i: 'push', f: ['push'] }, { n: 'Core', c: 2, i: 'core', f: ['core'] },
+    { n: 'Hantel', c: 3, i: 'dumbbell', f: ['kh'] }, { n: 'Skills', c: 4, i: 'star', f: ['skill'] }, { n: 'Bike', c: 5, i: 'bike', f: ['cardio'] }, { n: 'Blackroll', c: 6, i: 'roll', f: ['mob'] },
+    { n: 'Ganzkörper', c: 0, i: 'bolt', ids: ['chin', 'hang', 'push', 'plank', 'goblet', 'row', 'hollow'] }, { n: 'Eigener Tag', c: 1, i: 'target', f: [] }
   ];
   function sortIds(ids) {
     return ids.filter(function (id) { return EXB[id]; }).sort(function (x, y) { return GRANK[EXB[x].g] - GRANK[EXB[y].g] || EXI[x] - EXI[y]; });
@@ -1691,10 +1740,10 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
   function defaultPlan() {
     function ids(f) { return EX.filter(f).map(function (e) { return e.id; }); }
     return { days: [
-      { id: 'p1', n: 'Zug', c: 0, wd: [0, 3], ex: ids(function (e) { return dayOf(e) === 'a'; }) },
-      { id: 'p2', n: 'Druck', c: 1, wd: [1, 4], ex: ids(function (e) { return dayOf(e) === 'b'; }) },
-      { id: 'p3', n: 'Bike', c: 5, wd: [5], ex: ids(function (e) { return e.g === 'cardio'; }) },
-      { id: 'p4', n: 'Blackroll', c: 6, wd: [2, 6], ex: ids(function (e) { return e.g === 'mob'; }) }
+      { id: 'p1', n: 'Zug', c: 0, i: 'pull', wd: [0, 3], ex: ids(function (e) { return dayOf(e) === 'a'; }) },
+      { id: 'p2', n: 'Druck', c: 1, i: 'push', wd: [1, 4], ex: ids(function (e) { return dayOf(e) === 'b'; }) },
+      { id: 'p3', n: 'Bike', c: 5, i: 'bike', wd: [5], ex: ids(function (e) { return e.g === 'cardio'; }) },
+      { id: 'p4', n: 'Blackroll', c: 6, i: 'roll', wd: [2, 6], ex: ids(function (e) { return e.g === 'mob'; }) }
     ] };
   }
   var PV = 4, EV = 2, NEWX = ['expl', 'c2b', 'toes', 'vup', 'bicy', 'twist', 'bird', 'flut', 'dia', 'hindu', 'bulg', 'step', 'hipt', 'arnold', 'pullo', 'rrow', 'sumo', 'thr', 'wallw', 'hsfree', 'planl', 'tplan', 'blever', 'sfl', 'mun', 'mu', 'pistol', 'oap', 'burp', 'bikel', 'st_hip', 'st_ham', 'st_thor', 'st_door', 'st_child', 'st_90', 'st_wgs'];
@@ -1713,10 +1762,23 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     return P;
   }
   function pDay(id) { return plan().days.filter(function (x) { return x.id === id; })[0]; }
+  var DAYI = ['pull', 'push', 'core', 'dumbbell', 'star', 'bike', 'roll', 'bolt', 'sun', 'target', 'peak', 'trophy'];
+  function domGroup(x) {
+    // Gruppe mit den meisten Übungen eines Trainingstags (für Icon und Startfilter im Editor)
+    var cn = {}, best = null;
+    if (x) x.ex.forEach(function (id) { var e = EXB[id]; if (!e) return; cn[e.g] = (cn[e.g] || 0) + 1; if (!best || cn[e.g] > cn[best]) best = e.g; });
+    return best;
+  }
+  function dIcon(x) {
+    // Icon eines Trainingstags: selbst gewählt, sonst das der Gruppe mit den meisten Übungen
+    if (x.i && DAYI.indexOf(x.i) >= 0) return x.i;
+    var best = domGroup(x);
+    return best ? gOf(best).i : 'cal';
+  }
   function wdOf(di) { return (di + 3) % 7; }
   var PCI = { pull: 0, push: 1, core: 2, kh: 3, skill: 4, cardio: 5, mob: 6 };
   function dayObj(id) {
-    if (id.indexOf('g:') === 0) { var k = id.slice(2), g = gOf(k); return g ? { id: id, n: g.n, c: PCI[k], wd: [], ex: EX.filter(function (e) { return e.g === k; }).map(function (e) { return e.id; }) } : null; }
+    if (id.indexOf('g:') === 0) { var k = id.slice(2), g = gOf(k); return g ? { id: id, n: g.n, c: PCI[k], i: g.i, wd: [], ex: EX.filter(function (e) { return e.g === k; }).map(function (e) { return e.id; }) } : null; }
     return pDay(id);
   }
   function schedFor(di) {
@@ -2409,27 +2471,21 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     return false;
   }
   // ---------- Plan-Tab
-  function xcard(e, d, mode) {
-    var lk = !d.unlocked[e.id], st;
-    if (lk) { var rq = e.req.filter(function (q) { return !reqLine(q, d).ok; }).map(function (q) { return EXB[q[0]].n + ' ' + q[1]; }).join(' · '); st = '<em class="st lock">' + ic('lock') + 'Gesperrt · braucht ' + esc(rq) + '</em>'; }
-    else st = '<em class="st ok">' + ic('check') + 'Verfügbar</em>';
-    return '<div class="xc g' + e.g + (lk ? ' lk' : '') + '"><span class="gi">' + ic(gOf(e.g).i) + '</span><div class="xn"><b>' + esc(e.n) + '</b><small>' + esc(e.mu) + '</small>' + st + '</div>' +
-      '<button class="xb ' + mode + '" data-' + (mode === 'add' ? 'padd' : 'prem') + '="' + e.id + '" aria-label="' + (mode === 'add' ? 'Hinzufügen' : 'Entfernen') + '">' + ic(mode === 'add' ? 'plus' : 'close') + '</button></div>';
-  }
-  function grouped(ids, d, mode) {
-    var h = '', last = '';
-    sortIds(ids).forEach(function (id) {
-      var e = EXB[id];
-      if (e.g !== last) { last = e.g; h += '<div class="xg g' + e.g + '">' + ic(gOf(e.g).i) + gOf(e.g).n + '</div>'; }
-      h += xcard(e, d, mode);
-    });
-    return h;
-  }
+  function reqText(e, d) { return e.req.filter(function (q) { return !reqLine(q, d).ok; }).map(function (q) { return EXB[q[0]].n + ' ' + q[1]; }).join(' · '); }
   function peList(d, day) {
-    var q = ui.pq.trim().toLowerCase(), ids = EX.filter(function (e) {
-      return day.ex.indexOf(e.id) < 0 && (!ui.pu || d.unlocked[e.id]) && (ui.pf === 'all' || e.g === ui.pf) && (!q || (e.n + ' ' + e.mu).toLowerCase().indexOf(q) >= 0);
-    }).map(function (e) { return e.id; });
-    return ids.length ? '<div class="xgrid">' + grouped(ids, d, 'add') + '</div>' : '<p class="muted">Nichts gefunden.</p>';
+    // Alle Übungen je Gruppe mit Schalter. Verfügbare zuerst, gesperrte gedimmt mit Schloss und Bedingung darunter
+    var q = ui.pq.trim().toLowerCase(), h = '';
+    GORDER.forEach(function (g) {
+      if (ui.pf !== 'all' && ui.pf !== g) return;
+      var list = EX.filter(function (e) { return e.g === g && (!q || (e.n + ' ' + e.mu).toLowerCase().indexOf(q) >= 0); });
+      if (!list.length) return;
+      var av = list.filter(function (e) { return d.unlocked[e.id]; }), lk = list.filter(function (e) { return !d.unlocked[e.id]; }), on = list.filter(function (e) { return day.ex.indexOf(e.id) >= 0; }).length;
+      h += '<section class="exg g' + g + '"><h3 class="xg">' + ic(gOf(g).i) + gOf(g).n + '<small>' + on + ' von ' + list.length + '</small></h3><div class="exl">' + av.concat(lk).map(function (e) {
+        var lock = !d.unlocked[e.id];
+        return '<button class="exr' + (lock ? ' lk' : '') + '" data-ptog="' + e.id + '" aria-pressed="' + (day.ex.indexOf(e.id) >= 0) + '"><span><b>' + (lock ? ic('lock') : '') + esc(e.n) + '</b><small>' + esc(lock ? 'braucht ' + reqText(e, d) : e.mu) + '</small></span><i></i></button>';
+      }).join('') + '</div></section>';
+    });
+    return h || '<p class="muted">Nichts gefunden.</p>';
   }
   function wdChips(day) {
     return '<div class="wds">' + WDN.map(function (n, w) { return '<button data-wd="' + day.id + ':' + w + '" aria-pressed="' + (day.wd.indexOf(w) >= 0) + '" style="--pc:var(' + PCOL[day.c] + ')">' + n + '</button>'; }).join('') + '</div>';
@@ -2453,26 +2509,27 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     days.forEach(function (x) { x.ex.forEach(function (id) { if (d.unlocked[id]) gc[EXB[id].g] = (gc[EXB[id].g] || 0) + 1; }); });
     return gc;
   }
-  function gPills(gc) {
-    return '<div class="pgc">' + GORDER.filter(function (g) { return gc[g]; }).map(function (g) { return '<span class="g' + g + '">' + ic(gOf(g).i) + gc[g] + '</span>'; }).join('') + '</div>';
-  }
   function rowToggle(btn, open, sel) {
     // Nur die Zeilen umschalten, kein Neuaufbau: das Aufklappen läuft als CSS-Übergang
     btn.closest('.agl').querySelectorAll(sel).forEach(function (b) { var on = open && b === btn; b.setAttribute('aria-expanded', on); b.parentNode.classList.toggle('open', on); });
   }
   function pChips(ds) {
     if (!ds.length) return '<span class="agk rest">' + ic('snow') + 'Frei</span>';
-    return ds.map(function (x) { return '<span class="agk" style="--pc:var(' + PCOL[x.c] + ')"><i class="pdot"></i>' + esc(x.n) + '</span>'; }).join('');
+    return ds.map(function (x) { return '<span class="agk" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + '</span>'; }).join('');
   }
   function pToggles(P, attr, on) {
-    return P.days.map(function (x) { return '<button ' + attr(x) + ' aria-pressed="' + on(x) + '" style="--pc:var(' + PCOL[x.c] + ')"><i class="pdot"></i>' + esc(x.n) + '</button>'; }).join('');
+    return P.days.map(function (x) { return '<button ' + attr(x) + ' aria-pressed="' + on(x) + '" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + '</button>'; }).join('');
   }
   function calMove(dir) {
     // Woche: 7 Tage weiter, Monat: auf den 1. des nächsten/vorigen Monats. Grenzen: 6 Monate zurück, 6 voraus
     var today = dayIdx(Date.now()), a = ui.ca == null ? today : ui.ca, q = new Date(a * 864e5);
     var n = ui.cm ? Date.UTC(q.getUTCFullYear(), q.getUTCMonth() + dir, 1) / 864e5 : a + dir * 7;
-    if (n < today - 183 || n > today + 183) return;
-    ui.ca = n; ui.cdir = dir; ui.fresh = false; render();
+    if (n < today - 183 || n > today + 183) return false;
+    ui.ca = n; ui.cdir = dir; ui.fresh = false; render(); return true;
+  }
+  function lastBest(e, before) {
+    var l = lastBefore(e.id, before); if (!l) return '';
+    return Math.max.apply(null, l.s) + (e.u === 'Wdh.' ? '' : e.u === 'Sek.' ? 's' : ' ' + e.u);
   }
   function viewPlan(d, now) {
     var today = dayIdx(now), P = plan();
@@ -2487,7 +2544,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     var todo = ['st', 'tr', 'wg', 'f0', 'fp'].map(nt).filter(Boolean), wk = nt('wk'), ux = nt('ux');
     var h = '<div class="pt-h rise" style="--i:0"><h2>Plan</h2></div>';
 
-    // Kalender: Wochenstreifen, aufklappbar zum Monat
+    // Kalender: Wochenstreifen, aufklappbar zum Monat. Zellen zeigen das Icon des Trainingstags, die Glocke Meldungen
     var q = new Date(a * 864e5), from, to, lead = 0;
     if (ui.cm) { from = Date.UTC(q.getUTCFullYear(), q.getUTCMonth(), 1) / 864e5; to = Date.UTC(q.getUTCFullYear(), q.getUTCMonth() + 1, 0) / 864e5; lead = wdOf(from); }
     else { from = a - wdOf(a); to = from + 6; }
@@ -2495,10 +2552,10 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     var cells = '';
     for (k = 0; k < lead; k++) cells += '<i></i>';
     for (k = from; k <= to; k++) {
-      var ds = schedFor(k), tr = d.byDay[k], past = k < today;
-      cells += '<button class="pc2' + (k === today ? ' today' : '') + (k === sd ? ' sel' : '') + (past ? ' past' : '') + (tr ? ' done' : '') + '" data-cday="' + k + '" aria-label="' + fmtDayL(k) + '">' +
-        '<b>' + new Date(k * 864e5).getUTCDate() + '</b><span class="dots">' + ds.slice(0, 3).map(function (x) { return '<i style="--pc:var(' + PCOL[x.c] + ')"></i>'; }).join('') + '</span>' +
-        (tr ? ic('check', 'dn') : '') + (k === today && todo.length ? '<s class="nd' + (todo.some(function (n) { return n.hot; }) ? ' hot' : '') + '"></s>' : '') + '</button>';
+      var ds = schedFor(k), tr = d.byDay[k];
+      cells += '<button class="pc2' + (k === today ? ' today' : '') + (k === sd ? ' sel' : '') + (k < today ? ' past' : '') + (tr ? ' done' : '') + '" data-cday="' + k + '" aria-label="' + fmtDayL(k) + '">' +
+        '<b>' + new Date(k * 864e5).getUTCDate() + '</b><span class="ics">' + ds.slice(0, 2).map(function (x) { return '<em style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }).join('') + (ds.length > 2 ? '<small>+</small>' : '') + '</span>' +
+        (tr ? ic('check', 'dn') : '') + (k === today && todo.length ? ic('bell', 'nd') : '') + '</button>';
     }
     var showNow = sd !== today || today < from || today > to;
     h += '<section class="pcal2 rise" style="--i:1"><div class="pc2-h"><button class="x" data-cnav="-1" aria-label="Zurück">' + ic('back') + '</button>' +
@@ -2509,27 +2566,36 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
       (wk ? '<p class="pc2-n">' + ic('cal') + esc(wk.t) + ' · ' + esc(wk.s) + '</p>' : '') + '</section>';
     ui.cdir = 0; ui.cmx = false;
 
-    // Tageskarte des gewählten Tags
-    var sc = schedFor(sd), st = d.byDay[sd], md = P.ov && P.ov[sd] !== undefined, rel = sd === today ? 'Heute' : sd === today + 1 ? 'Morgen' : sd === today - 1 ? 'Gestern' : fmtDay(sd), mn = 0, stat = '';
-    sc.forEach(function (y) { mn += dur[y.id] || 0; });
-    if (st) stat = ic('check') + '<span>' + Object.keys(st.ex).length + ' Üb.</span>';
-    else if (sd >= today && mn) stat = ic('clock') + '<span>' + mn + '′</span>';
-    var c = '<div class="pd-h"><b>' + WDN[wdOf(sd)] + ' · ' + rel + '</b><span class="ags">' + stat + '</span></div>';
-    if (sd === today && todo.length) c += '<div class="todo">' + todo.map(function (n) { return '<button class="tdo' + (n.hot ? ' hot' : '') + '" data-nt="' + n.k + '">' + ic(n.i) + '<span><b>' + esc(n.t) + '</b><small>' + esc(n.s) + '</small></span>' + ic('chev', 'chv') + '</button>'; }).join('') + '</div>';
-    if (sd < today) c += '<div class="pd-p">' + pChips(sc) + '</div><p class="agp">' + (st ? Object.keys(st.ex).map(function (id) { return esc(EXB[id].n); }).join(' · ') : sc.length ? 'Nicht trainiert' : '') + '</p>';
-    else {
-      c += '<div class="pd-p">' + pChips(sc) + (md ? ic('swap', 'agm') : '') + '<button class="pd-c" data-pchg="1" aria-expanded="' + !!ui.pchg + '" aria-label="Für diesen Tag ändern">' + ic('edit') + '</button></div>' +
-        '<div class="agx"><div><div class="ptg">' + pToggles(P, function (y) { return 'data-ctog="' + y.id + '"'; }, function (y) { return sc.some(function (z) { return z.id === y.id; }); }) +
-        '<button class="rs" data-crest="1" aria-pressed="' + !sc.length + '" aria-label="Frei">' + ic('snow') + '</button></div>' + (md ? '<button class="btn ghost small" data-creset="1">' + ic('undo') + 'Zurücksetzen</button>' : '') + '</div></div>';
-      if (sc.length) c += '<div class="pd-f">' + gPills(dayGroups(sc, d)) + (sd === today ? '<button class="btn small primary" data-gotab="heute">' + ic('dumb') + 'Training</button>' : '') + '</div>';
-    }
+    // Tageskarte: Zu tun (heute), Kopf mit Ändern, je Trainingstag eine kompakte Box, die Übungsliste klappt auf
+    var sc = schedFor(sd), st = d.byDay[sd], md = P.ov && P.ov[sd] !== undefined, rel = sd === today ? 'Heute' : sd === today + 1 ? 'Morgen' : sd === today - 1 ? 'Gestern' : fmtDay(sd), c = '';
+    if (sd === today && todo.length) c += '<div class="todo' + (ui.todo ? ' open' : '') + '"><button class="tdh" data-todo="1" aria-expanded="' + !!ui.todo + '">' + ic('bell') + '<b>Zu tun</b><span>' + todo.length + '</span>' + ic('chev', 'chv') + '</button>' +
+      '<div class="agx"><div>' + todo.map(function (n) { return '<button class="tdo" data-nt="' + n.k + '">' + ic(n.i) + '<span><b>' + esc(n.t) + '</b><small>' + esc(n.s) + '</small></span>' + ic('chev', 'chv') + '</button>'; }).join('') + '</div></div></div>';
+    c += '<div class="pd-h"><b>' + WDN[wdOf(sd)] + ' · ' + rel + '</b>' + (md ? ic('swap', 'agm') : '') + (sd >= today ? '<button class="pd-c" data-pchg="1" aria-expanded="' + !!ui.pchg + '" aria-label="Für diesen Tag ändern">' + ic('edit') + '</button>' : '') + '</div>';
+    if (sd >= today) c += '<div class="agx pd-x"><div><div class="ptg">' + pToggles(P, function (y) { return 'data-ctog="' + y.id + '"'; }, function (y) { return sc.some(function (z) { return z.id === y.id; }); }) +
+      '<button class="rs" data-crest="1" aria-pressed="' + !sc.length + '" aria-label="Frei">' + ic('snow') + '</button></div>' + (md ? '<button class="btn ghost small" data-creset="1">' + ic('undo') + 'Zurücksetzen</button>' : '') + '</div></div>';
+    var shown = {};
+    sc.forEach(function (x) {
+      var ids = sortIds(x.ex.filter(function (id) { return d.unlocked[id]; })), dn = ids.filter(function (id) { return st && st.ex[id]; }).length, key = sd + ':' + x.id, open = !!ui.pdo[key];
+      var sub = [ids.length + ' Übungen']; if (dur[x.id] && sd >= today) sub.push('~' + dur[x.id] + '′'); if (sd <= today) sub.push(dn + '/' + ids.length + ' ✓');
+      ids.forEach(function (id) { shown[id] = 1; });
+      c += '<div class="pdb' + (open ? ' open' : '') + '" style="--pc:var(' + PCOL[x.c] + ')"><button class="pdb-h" data-pdb="' + key + '" aria-expanded="' + open + '"><span class="pdi">' + ic(dIcon(x)) + '</span><span class="nm"><b>' + esc(x.n) + '</b><small>' + sub.join(' · ') + '</small>' +
+        (sd <= today && ids.length ? '<i class="pdp"><i style="width:' + Math.round(dn / ids.length * 100) + '%"></i></i>' : '') + '</span>' + ic('chev', 'chv') + '</button>' +
+        '<div class="agx"><div><div class="pdl">' + ids.map(function (id) {
+          var e = EXB[id], ok = !!(st && st.ex[id]), lb = lastBest(e, sd);
+          return '<div class="pdr' + (ok ? ' ok' : '') + '">' + ic(ok ? 'check' : 'dash') + '<span>' + esc(e.n) + '</span><small>' + esc(goalText(e)) + (lb ? '<br>zul. ' + esc(lb) : '') + '</small></div>';
+        }).join('') + '</div></div></div></div>';
+    });
+    if (!sc.length) c += '<div class="pdb rest"><div class="pdb-h"><span class="pdi">' + ic('snow') + '</span><span class="nm"><b>Frei</b><small>' + (sd >= today ? 'Erholung · ✎ zum Ändern' : 'Kein Training geplant') + '</small></span></div></div>';
+    var extra = st ? Object.keys(st.ex).filter(function (id) { return !shown[id]; }) : [];
+    if (extra.length) c += '<p class="agp">Außerdem: ' + extra.map(function (id) { return esc(EXB[id].n); }).join(' · ') + '</p>';
+    if (sd === today && sc.length) c += '<button class="btn primary pd-go" data-gotab="heute">' + ic('play') + 'Training starten</button>';
     h += '<section class="pday rise' + (ui.pchg ? ' open' : '') + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
     ui.pfl = null; ui.pdx = false;
 
     // Trainingstage kompakt: Chip öffnet den Editor, Stift öffnet Woche & Tage
     h += '<section class="pbar rise" style="--i:3"><div class="pb-h"><h2 class="sec-h">' + ic('dumb') + 'Trainingstage</h2>' + (ux ? '<button class="agn gold" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>' : '') +
       '<button class="x" data-pman="1" aria-label="Woche und Trainingstage bearbeiten">' + ic('edit') + '</button></div><div class="pb-l">' +
-      P.days.map(function (x) { return '<button class="pbc" data-pedit="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')"><i class="pdot"></i><span><b>' + esc(x.n) + '</b><small>' + (x.wd.length ? x.wd.map(function (v) { return WDN[v]; }).join(' ') : '–') + '</small></span></button>'; }).join('') +
+      P.days.map(function (x) { return '<button class="pbc" data-pedit="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '<span><b>' + esc(x.n) + '</b><small>' + (x.wd.length ? x.wd.map(function (v) { return WDN[v]; }).join(' ') : '–') + '</small></span></button>'; }).join('') +
       (P.days.length < 8 ? '<button class="pbc add" data-pman="new" aria-label="Neuer Trainingstag">' + ic('plus') + '</button>' : '') + '</div></section>';
     return h;
   }
@@ -2557,22 +2623,23 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     P.days.forEach(function (x) {
       var sub = [x.wd.length ? x.wd.map(function (v) { return WDN[v]; }).join(' · ') : 'nicht eingeplant', x.ex.filter(function (id) { return d.unlocked[id]; }).length + ' Üb.'];
       if (dur[x.id]) sub.push('~' + dur[x.id] + '′');
-      h += '<button class="tdr" data-pedit="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')"><i class="pdot big"></i><span class="nm"><b>' + esc(x.n) + '</b><small>' + sub.join(' · ') + '</small></span>' + ic('chev', 'chv') + '</button>';
+      h += '<button class="tdr" data-pedit="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')"><span class="pdi">' + ic(dIcon(x)) + '</span><span class="nm"><b>' + esc(x.n) + '</b><small>' + sub.join(' · ') + '</small></span>' + ic('chev', 'chv') + '</button>';
     });
     if (P.days.length < 8) {
       h += '<button class="tdr new" data-pnew="1">' + ic(ui.pnew ? 'close' : 'plus') + '<span class="nm"><b>' + (ui.pnew ? 'Abbrechen' : 'Neuer Tag') + '</b></span></button>';
-      if (ui.pnew) h += '<div class="ppre">' + PRESETS.map(function (pr, j) { return '<button data-ppre="' + j + '" style="--pc:var(' + PCOL[pr.c] + ')"><i class="pdot"></i>' + pr.n + '</button>'; }).join('') + '</div>';
+      if (ui.pnew) h += '<div class="ppre">' + PRESETS.map(function (pr, j) { return '<button data-ppre="' + j + '" style="--pc:var(' + PCOL[pr.c] + ')">' + ic(pr.i) + pr.n + '</button>'; }).join('') + '</div>';
     }
     return h + '</div></section>';
   }
   function viewPlanEdit(d, day) {
     var h = '<div class="pe-top rise" style="--i:0"><button class="x" data-pback="1" aria-label="Zurück">' + ic('back') + '</button><input id="pe-n" class="pe-n" type="text" maxlength="18" value="' + esc(day.n) + '" aria-label="Name"><button class="x" data-pdel="' + day.id + '" aria-label="Tag löschen"' + (ui.pdel ? ' style="color:var(--danger)"' : '') + '>' + (ui.pdel ? '<b class="sure">Sicher?</b>' : ic('trash')) + '</button></div>';
-    h += '<div class="pe-c rise" style="--i:1">' + PCOL.map(function (c, j) { return '<button data-pc="' + j + '" style="--pc:var(' + c + ')" aria-pressed="' + (day.c === j) + '" aria-label="Farbe ' + (j + 1) + '"><i class="pdot big"></i></button>'; }).join('') + '</div>';
-    h += '<div class="rise" style="--i:2">' + wdChips(day) + '</div>';
-    h += '<section class="sec rise" style="--i:3"><h2 class="sec-h">Im Plan<small>' + day.ex.length + ' · automatisch sortiert</small></h2>' + (day.ex.length ? '<div class="xgrid">' + grouped(day.ex, d, 'rem') + '</div>' : '<p class="muted">Noch leer. Füge unten Übungen hinzu.</p>') + '</section>';
-    h += '<section class="sec rise" style="--i:4"><h2 class="sec-h">Hinzufügen<small>' + EX.filter(function (e) { return day.ex.indexOf(e.id) < 0 && d.unlocked[e.id]; }).length + ' verfügbar · ' + EX.filter(function (e) { return day.ex.indexOf(e.id) < 0 && !d.unlocked[e.id]; }).length + ' gesperrt</small></h2><div class="pgf pgf2" role="group"><button class="pg" data-pf="all" aria-pressed="' + (ui.pf === 'all') + '">Alle</button>' +
-      GORDER.map(function (k) { var g = gOf(k); return '<button class="pg g' + k + '" data-pf="' + k + '" aria-pressed="' + (ui.pf === k) + '" aria-label="' + g.n + '">' + ic(g.i) + '</button>'; }).join('') + '</div>' +
-      '<div class="pe-r"><input id="pe-q" class="pe-q" type="search" placeholder="Suchen" value="' + esc(ui.pq) + '" aria-label="Übung suchen"><button class="pu" data-pu="1" aria-pressed="' + ui.pu + '">' + ic('check') + 'Nur verfügbar</button></div><p class="pe-k">Gesperrte Übungen erscheinen in Heute automatisch, sobald du sie freischaltest.</p><div id="pe-list">' + peList(d, day) + '</div></section>';
+    // Aussehen und Wochentage: Icon, Farbe, Tage
+    h += '<section class="pe-set rise" style="--i:1;--pc:var(' + PCOL[day.c] + ')"><div class="pe-ic" role="group" aria-label="Icon">' + DAYI.map(function (k) { return '<button data-pic="' + k + '" aria-pressed="' + (dIcon(day) === k) + '" aria-label="Icon ' + k + '">' + ic(k) + '</button>'; }).join('') + '</div>' +
+      '<div class="pe-c">' + PCOL.map(function (c, j) { return '<button data-pc="' + j + '" style="--pc:var(' + c + ')" aria-pressed="' + (day.c === j) + '" aria-label="Farbe ' + (j + 1) + '"><i class="pdot big"></i></button>'; }).join('') + '</div>' + wdChips(day) + '</section>';
+    // Übungen: Filter, Suche, Liste mit Schaltern
+    h += '<section class="sec rise" style="--i:2"><h2 class="sec-h">' + ic('dumb') + 'Übungen<small>' + day.ex.length + ' im Plan</small></h2><div class="pgf pgf2" role="group"><button class="pg" data-pef="all" aria-pressed="' + (ui.pf === 'all') + '">Alle</button>' +
+      GORDER.map(function (k) { var g = gOf(k), n = day.ex.filter(function (id) { return EXB[id].g === k; }).length; return '<button class="pg g' + k + '" data-pef="' + k + '" aria-pressed="' + (ui.pf === k) + '" aria-label="' + g.n + ': ' + n + ' im Plan">' + ic(g.i) + (n ? '<sup>' + n + '</sup>' : '') + '</button>'; }).join('') + '</div>' +
+      '<input id="pe-q" class="pe-q" type="search" placeholder="Suchen" value="' + esc(ui.pq) + '" aria-label="Übung suchen"><div id="pe-list">' + peList(d, day) + '</div></section>';
     return h;
   }
   function ovSet(di, ids) {
@@ -2587,6 +2654,8 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     if ((el = t.closest('[data-cnav]'))) { calMove(+el.dataset.cnav); return true; }
     if (t.closest('[data-cmode]')) { ui.cm = !ui.cm; ui.ca = ui.pd == null ? today : ui.pd; ui.cmx = true; ui.fresh = false; render(); return true; }
     if (t.closest('[data-cnow]')) { ui.pd = today; ui.ca = today; ui.pdx = true; ui.pchg = false; ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-todo]'))) { ui.todo = !ui.todo; el.setAttribute('aria-expanded', ui.todo); el.parentNode.classList.toggle('open', ui.todo); return true; }
+    if ((el = t.closest('[data-pdb]'))) { var pk = el.dataset.pdb; ui.pdo[pk] = !ui.pdo[pk]; el.setAttribute('aria-expanded', ui.pdo[pk]); el.parentNode.classList.toggle('open', ui.pdo[pk]); return true; }
     if ((el = t.closest('[data-pchg]'))) { ui.pchg = !ui.pchg; el.setAttribute('aria-expanded', ui.pchg); el.closest('.pday').classList.toggle('open', ui.pchg); return true; }
     if ((el = t.closest('[data-pman]'))) { ui.pman = true; ui.pnew = el.dataset.pman === 'new'; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
     if (t.closest('[data-pmanx]')) { ui.pman = false; ui.pnew = false; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
@@ -2607,12 +2676,12 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     if (calClick(t)) return true;
     var el, P = plan(), day, a;
     function done(keepScroll) { persist(); ui.fresh = false; render(); }
-    if ((el = t.closest('[data-pedit]'))) { ui.pe = el.dataset.pedit; ui.pdel = 0; ui.pf = 'all'; ui.pq = ''; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
+    if ((el = t.closest('[data-pedit]'))) { ui.pe = el.dataset.pedit; ui.pdel = 0; ui.pf = domGroup(pDay(ui.pe)) || 'all'; ui.pq = ''; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
     if (t.closest('[data-pback]')) { ui.pe = null; ui.pdel = 0; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
     if (t.closest('[data-pnew]')) { ui.pnew = !ui.pnew; ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-ppre]'))) {
       var pr = PRESETS[+el.dataset.ppre], ids = pr.ids ? pr.ids.slice() : EX.filter(function (e) { return pr.f.indexOf(e.g) >= 0; }).map(function (e) { return e.id; });
-      var nd = { id: 'p' + Date.now().toString(36), n: pr.n === 'Eigener Tag' ? 'Tag ' + (P.days.length + 1) : pr.n, c: pr.c, wd: [], ex: ids };
+      var nd = { id: 'p' + Date.now().toString(36), n: pr.n === 'Eigener Tag' ? 'Tag ' + (P.days.length + 1) : pr.n, c: pr.c, i: pr.i, wd: [], ex: ids };
       P.cu = true; P.days.push(nd); ui.pnew = false; ui.pe = nd.id; ui.pf = 'all'; ui.pq = ''; ui.fresh = true; persist(); render(); window.scrollTo(0, 0); return true;
     }
     if ((el = t.closest('[data-wd]'))) {
@@ -2621,10 +2690,9 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
       day.wd.sort(); done(); return true;
     }
     if ((el = t.closest('[data-pc]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; day.c = +el.dataset.pc; done(); } return true; }
-    if ((el = t.closest('[data-padd]')) && ui.pe) { day = pDay(ui.pe); if (day && day.ex.indexOf(el.dataset.padd) < 0) { P.cu = true; day.ex.push(el.dataset.padd); day.ex = sortIds(day.ex); done(); } return true; }
-    if ((el = t.closest('[data-prem]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; day.ex = day.ex.filter(function (id) { return id !== el.dataset.prem; }); done(); } return true; }
-    if (t.closest('[data-pu]')) { ui.pu = !ui.pu; ui.fresh = false; render(); return true; }
-    if ((el = t.closest('[data-pf]'))) { ui.pf = el.dataset.pf; ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-ptog]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; var xi = day.ex.indexOf(el.dataset.ptog); if (xi >= 0) day.ex.splice(xi, 1); else day.ex = sortIds(day.ex.concat([el.dataset.ptog])); done(); } return true; }
+    if ((el = t.closest('[data-pic]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; day.i = el.dataset.pic; done(); } return true; }
+    if ((el = t.closest('[data-pef]'))) { ui.pf = el.dataset.pef; ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-pdel]'))) {
       if (!ui.pdel) { ui.pdel = Date.now(); ui.fresh = false; render(); setTimeout(function () { if (ui.pdel && Date.now() - ui.pdel > 2900) { ui.pdel = 0; if (ui.pe) { ui.fresh = false; render(); } } }, 3000); return true; }
       P.cu = true; P.days = P.days.filter(function (x) { return x.id !== el.dataset.pdel; }); ui.pe = null; ui.pdel = 0; ui.fresh = true; persist(); render(); window.scrollTo(0, 0); return true;
@@ -3195,13 +3263,14 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
   // ---------- Slide-Steuerung
   var TABS = ['tage', 'food', 'heute', 'fort', 'profil'];
   function goTab(k, dir) { if (k === ui.tab || TABS.indexOf(k) < 0) return; ui.sw = dir || (TABS.indexOf(k) - TABS.indexOf(ui.tab)); ui.fdrawn = false; ui.tab = k; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); window.scrollTo(0, 0); }
-  var sx = 0, sy = 0, st0 = 0, sEl = null, sMode = '', sheetDy = 0;
+  var sx = 0, sy = 0, st0 = 0, sEl = null, sMode = '', sheetDy = 0, calLock = '';
   document.addEventListener('touchstart', function (e) {
     sMode = ''; if (e.touches.length !== 1) return;
     var t = e.touches[0], tg = e.target; sx = t.clientX; sy = t.clientY; st0 = Date.now(); sEl = tg; sheetDy = 0;
     if (tg.closest('#tabs')) sMode = 'bar';
     else if (tg.closest('#sheet .grab, #sheet .sh-h')) sMode = 'sheet';
     else if (tg.closest('.fch')) sMode = 'chart';
+    else if (!ui.sheet && tg.closest('.pcal2')) { sMode = 'cal'; calLock = ''; }
     else if (!ui.sheet && tg.closest('#view') && !tg.closest('input,textarea,select,.wsp,[data-noswipe]')) sMode = 'page';
     if (sMode === 'chart') scrub(t.clientX);
   }, { passive: true });
@@ -3215,14 +3284,26 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     if (sMode === 'bar') { var el = document.elementFromPoint(t.clientX, t.clientY), b = el && el.closest ? el.closest('#tabs [data-tab]') : null; if (b && b.dataset.tab !== ui.tab) { goTab(b.dataset.tab); buzz(5); } }
     else if (sMode === 'chart') scrub(t.clientX);
     else if (sMode === 'sheet') { sheetDy = Math.max(0, t.clientY - sy); var sh = $('sheet'); sh.style.transition = 'none'; sh.style.transform = 'translateY(' + sheetDy + 'px)'; }
-  }, { passive: true });
+    else if (sMode === 'cal') {
+      // Richtung nach 8 px festlegen; seitlich: Kalender folgt gedämpft dem Finger, Seite scrollt nicht mit
+      var cdx = t.clientX - sx, cdy = t.clientY - sy, cg = document.querySelector('.pc2-g');
+      if (!calLock && (Math.abs(cdx) > 8 || Math.abs(cdy) > 8)) calLock = Math.abs(cdx) > Math.abs(cdy) ? 'x' : 'y';
+      if (calLock === 'x') { e.preventDefault(); if (cg) { cg.style.transition = 'none'; cg.style.transform = 'translateX(' + cdx * 0.55 + 'px)'; cg.style.opacity = Math.max(0.4, 1 - Math.abs(cdx) / 500); } }
+    }
+  }, { passive: false });
   document.addEventListener('touchend', function (e) {
     var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy, m = sMode; sMode = '';
     if (m === 'sheet') { var sh = $('sheet'); sh.style.transition = ''; sh.style.transform = ''; if (sheetDy > 90) closeSheet(); return; }
+    if (m === 'cal') {
+      if (calLock !== 'x') return;
+      var fast = Math.abs(dx) / Math.max(1, Date.now() - st0) > 0.35, cg = document.querySelector('.pc2-g');
+      if ((Math.abs(dx) > 50 || fast) && calMove(dx < 0 ? 1 : -1)) return;
+      if (cg) { cg.style.transition = 'transform .25s var(--ease), opacity .25s var(--ease)'; cg.style.transform = ''; cg.style.opacity = ''; }
+      return;
+    }
     if (m !== 'page') return;
     if (Math.abs(dx) < 56 || Math.abs(dx) < Math.abs(dy) * 1.6 || Date.now() - st0 > 700) return;
     var dir = dx < 0 ? 1 : -1;
-    if (sEl && sEl.closest && sEl.closest('.pcal2')) { calMove(dir); return; }
     var i = TABS.indexOf(ui.tab) + dir; if (i >= 0 && i < TABS.length) goTab(TABS[i], dir);
   }, { passive: true });
   var lastDay = dayIdx(Date.now());

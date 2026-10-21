@@ -13,6 +13,16 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-21 – Plan: Wischen, Tag-Icons, Glocke, Tageskarte, neuer Editor
+- Wischen im Kalender: eigener Touch-Modus `cal`. Richtung nach 8 px; seitlich folgt das Raster gedämpft dem Finger, `preventDefault` stoppt das Mitscrollen der Seite (touchmove-Listener dafür `passive: false`). Loslassen: > 50 px oder schnell = blättern, sonst zurückfedern. Mit CDP-Touch-Events getestet.
+- Neue Datenform: `plan.days[].i` (Icon, `DAYI`), `dIcon`/`domGroup`. Gesetzt in `defaultPlan`, `PRESETS`, neuem Tag, `dayObj` (g:), behalten in `cleanPlan`. Kalenderzellen und Chips zeigen das Icon.
+- Meldungen: rote Glocke an der Heute-Zelle, „Zu tun“ mit Zähler, aufklappbar (`ui.todo`).
+- Tageskarte: je Trainingstag eine kompakte Box (Icon, Übungen, Dauer, Fortschritt), Übungsliste mit Ziel und letztem Bestwert klappt auf (`ui.pdo`), „Außerdem“ für ungeplant Trainiertes, „Training starten“.
+- Editor: Icon-Wahl, Farbe, Tage in einem Block; Übungen als Liste mit Schaltern je Gruppe, gesperrte gedimmt mit Schloss und Bedingung; Start im Filter der Hauptgruppe, Zähler an den Filter-Chips. Alte Karten (`xcard`, `.xc`, „Nur verfügbar“) entfernt.
+- Fehler (alt): `data-pf` war doppelt belegt (Profil-Sheet und Editor-Filter), der Profil-Handler kam zuerst, der Filter öffnete ein Profil-Sheet. Lösung: Editor nutzt `data-pef`; `check.py` meldet jetzt doppelte Klick-Attribute.
+- Fehler: Grid-Listen wurden durch lange `nowrap`-Untertitel breiter als der Platz (Schalter abgeschnitten). Lösung: `grid-template-columns: minmax(0, 1fr)`.
+- Demo-Rauchtest klickt jetzt auch Editor, Zu tun und Tag-Boxen.
+
 ### 2026-10-21 – Plan-Tab als Kalender (ersetzt die Agenda-Liste)
 - Falk wollte eine Kalenderansicht (vertrauter, besser zu navigieren); die Liste war ein Missverständnis. Form diesmal vorher per Skizze abgestimmt.
 - Kalender: Wochenstreifen, Tipp auf den Monat klappt zum Monat auf (`ui.cm`), ‹ › und Wischen blättern (`calMove`, ±6 Monate), Anker `ui.ca`, gewählter Tag `ui.pd`. Zellen: Farbpunkte der geplanten Tage, ✓ bei Training, Punkt an heute bei Meldungen.

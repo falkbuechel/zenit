@@ -8,7 +8,7 @@ const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const SCEN = ['mid', 'gold', 'broken', 'fresh', 'empty'];
 const TABS = ['heute', 'tage', 'food', 'fort', 'profil'];
 // Je Tab: Schalter, von denen jeweils jeder Wert einmal angeklickt wird (alle harmlos, nichts löscht)
-const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data-xr]', '[data-xm]', '[data-pg]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-pchg]', '[data-pman]', '[data-wv]', '[data-pmanx]'];
+const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data-xr]', '[data-xm]', '[data-pg]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]', '[data-pman]', '[data-wv]', '[data-pmanx]'];
 
 (async () => {
   const b = await chromium.launch();
@@ -35,6 +35,11 @@ const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data
       for (const sel of TOGGLES) {
         const vals = await p.$$eval(sel, (els, s) => [...new Set(els.map(e => e.getAttribute(s.slice(1, -1))))], sel);
         for (const v of vals) await click(`${sel.slice(0, -1)}="${v}"]`);
+      }
+      // Plan: Trainingstag-Editor öffnen, Übung an/aus, Icon, Filter, zurück
+      if (tab === 'tage' && await click('[data-pedit]')) {
+        await click('[data-ptog]'); await click('[data-ptog]'); await click('[data-pic="star"]'); await click('[data-pef="pull"]'); await click('[data-pef="all"]');
+        await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-editor.png`) }); await click('[data-pback]');
       }
       if (await click('[data-open]')) { await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-detail.png`) }); await click('[data-back]'); }
       if (await click('[data-pill]')) { await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-sheet.png`) }); await closeSheet(); }

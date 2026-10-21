@@ -27,7 +27,7 @@ docs/              DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 - localStorage `stufenbuch.v1`: `{u, logs, plan, food}`. Demo-Modus nutzt `stufenbuch.demo` (Profil > Zahnrad > Testdaten, 5 Szenarien, `demoData(kind)`).
 - logs: `{t, e, s:[…], k?}`; `e` = Übungs-id, `'warm'` oder `'sess'`.
 - food: `{g:{k,p}, e:[{t,n,k,p}], d:[Gerichte], w:[{t,kg}], pr:{h,a,s,act,go,tw,ex,inj,eq}, m:[Maße]}`.
-- plan: `{days:[{id,n,c,wd,ex}], v, ev, cu, ov, ovl}`.
+- plan: `{days:[{id,n,c,i?,wd,ex}], v, ev, cu, ov, ovl}`. `i` = Icon des Trainingstags (Schlüssel aus `DAYI`), fehlt es, nimmt `dIcon` das Icon der Hauptgruppe. `ov[tag]` = Ausnahme für ein Datum (Liste von Tag-ids oder `g:gruppe`).
 - Neue Übungen: in `EX` ergänzen, in `NEWX` eintragen, `EV` erhöhen (Migration hängt sie an bestehende Pläne), `DAYB` für Druck-Tag.
 - Backup: Profil > Zahnrad > Backup (Teilen-Dialog/Datei).
 

@@ -15,7 +15,7 @@ Sprache: Deutsch (UI und Antworten). Antworten kurz, ohne Einleitung/Recap. Änd
 
 ## Konventionen
 - `<!--PWA-->` in zenit.html ist der Platzhalter für den Head, nicht entfernen. Die gleiche Datei läuft auch als Claude-Artifact (dort `window.claude` mit db/downloads).
-- Funktionsnamen nicht doppelt vergeben (es gab schon `spark` doppelt). Nach Änderungen auf Duplikate prüfen.
+- Funktionsnamen und Klick-Attribute (`data-x`) nicht doppelt vergeben (es gab schon `spark` und `data-pf` doppelt). `tools/check.py` prüft beides.
 - Ändert sich eine Datenform (Tupel/Objekt), alle Aufrufstellen per grep prüfen.
 - Klassenname `x` ist belegt (Button 40px). Icons: Objekt `P` + `ic(name)`.
 - Design: ruhiges Salbeigrün + Anthrazit, wenig Grün, wenig Text, Icons statt Beschriftung, klare Grenzen zwischen Bereichen.

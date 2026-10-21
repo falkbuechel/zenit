@@ -1,6 +1,6 @@
 # Prüft src/zenit.html und baut dist/. Aufruf: python tools/check.py (vor jedem Push, läuft auch in der GitHub Action)
 # 1. Syntax: Script-Blöcke extrahieren, node --check
-# 2. Doppelte Namen auf oberster Ebene des IIFE (2 Leerzeichen Einzug), z. B. zweimal function spark
+# 2. Doppelte Namen auf oberster Ebene des IIFE (2 Leerzeichen Einzug), z. B. zweimal function spark; doppelte Klick-Attribute (data-x)
 # 3. python build.py
 import os, re, sys, shutil, subprocess, tempfile
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
@@ -32,6 +32,15 @@ dup = {k: v for k, v in names.items() if len(v) > 1}
 for k, v in dup.items(): print('FEHLER doppelt: %s in Zeilen %s' % (k, ', '.join(map(str, v))))
 fail = fail or bool(dup)
 print('Namen: %d auf oberster Ebene, %d doppelt' % (len(names), len(dup)))
+
+# Klick-Attribute: jedes data-x darf nur einen Handler haben (data-pf war doppelt: Profil-Sheet fing den Editor-Filter ab)
+att = {}
+for n, line in enumerate(src.split('\n'), 1):
+    for m in re.finditer(r"if \(\(?(?:el = )?t\.closest\('\[data-([a-z0-9-]+)\]'\)", line): att.setdefault(m.group(1), []).append(n)
+dupa = {k: v for k, v in att.items() if len(v) > 1}
+for k, v in dupa.items(): print('FEHLER Klick-Attribut doppelt: data-%s in Zeilen %s' % (k, ', '.join(map(str, v))))
+fail = fail or bool(dupa)
+print('Klick-Attribute: %d, %d doppelt' % (len(att), len(dupa)))
 
 long_ = sum(1 for l in src.split('\n') if len(l) > 400)
 print('Hinweis: %d Zeilen über 400 Zeichen (beim Anfassen umbrechen)' % long_)

@@ -5,9 +5,8 @@ Home-Workout-Game als PWA fürs iPhone. Eine Quelldatei (`src/zenit.html`), kein
 **Für AI-gestützte Arbeit:** zuerst [`CLAUDE.md`](./CLAUDE.md), dann [`docs/DEVELOPMENT.md`](./docs/DEVELOPMENT.md) und bei Bedarf [`docs/DEVELOPMENT_LOG.md`](./docs/DEVELOPMENT_LOG.md).
 
 ## Bauen und veröffentlichen
-1. `python build.py` → `dist/`
-2. `dist/` auf Netlify Drop / GitHub Pages hochladen
-3. Safari → Teilen → Zum Home-Bildschirm
+1. Push auf `main` → GitHub Action baut mit `build.py` und veröffentlicht auf https://falkbuechel.github.io/zenit/
+2. iPhone: Safari → Teilen → Zum Home-Bildschirm (Adresse nicht wechseln, die Daten hängen an ihr)
 
 Lokal testen: `python -m http.server 8000 -d dist` → http://localhost:8000
 

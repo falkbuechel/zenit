@@ -15,6 +15,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-22 – Wasser-Regler, Farben für zu wenig, Nochmal, Suchfeld über der Tastatur
+- Wasser: Schieberegler in der Zeile (`#fw-r`, 0 bis Ziel) und im Sheet (`#wa-r`); beim Ziehen nur Anzeige, beim Loslassen (`change`) speichern (`waSet`), sonst zerstört `render()` den Regler mitten im Ziehen.
+- Farben: grün ab 90 % (Protein/Ballaststoffe), orange = deutlich hinter dem Tagesstand (`fExp`: heute 8–20 Uhr linear, vergangene Tage 1; orange wenn < 60 % davon), rot = zu viel. Tagesleiste: vergangene Tage orange bei Protein < 60 % oder kcal < 60 %.
+- „Nochmal“ bei nicht erreichbarer Online-Suche und Markenliste (`fbrLoad`).
+- Suche-Sheet mit fester Höhe (`.sheet.fs`, 88dvh), sonst schrumpft es bei wenig Treffern und das Feld liegt hinter der Tastatur.
+- Eigenes Lebensmittel: Feld „Barcode (optional)“ mit Scan-Knopf.
+- Fehler beim Patchen: `waSet` doppelt statt `fSd` – `check.py` hat es gefunden.
+
 ### 2026-10-22 – Wasser genau, Tagesleiste mit Balken, Zutaten suchen, „zu viel“ in Rot
 - Wasser: Zeile mit fester Breite (Wert 92 px, tabellarische Ziffern), + = 250 ml, Antippen öffnet Sheet (`waHtml`): Chips +150…+750 ml, ±50 ml, Feld für den genauen Wert. `data-fwa` addiert jetzt ml.
 - Tagesleiste: kcal-Balken je Tag statt Punkt; grün = Protein erreicht und kcal im Rahmen, rot = über 110 %.

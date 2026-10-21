@@ -754,6 +754,8 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .fsum.two b { font-family: var(--f-display); }
 .sheet.tall { max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 .sheet.tall::-webkit-scrollbar { display: none; }
+/* Suche: feste Höhe, sonst schrumpft das Sheet bei wenig Treffern und das Feld rutscht hinter die Tastatur */
+.sheet.fs { height: 88dvh; align-content: start; }
 .dg { display: grid; gap: 6px; margin-bottom: 10px; padding: 10px; border-radius: 14px; border: 1px solid var(--line); background: var(--s2); }
 .dg-h { display: flex; gap: 6px; }
 .dg-h input { flex: 1; min-width: 0; height: 42px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--s1); color: var(--ink); font: inherit; }
@@ -1126,6 +1128,9 @@ button.pdb-h:active { background: var(--s2); }
 .fmb.over .fbt > i, .fbk.over .fbt > i, .ffb.over i + i { background: repeating-linear-gradient(-45deg, var(--danger) 0 4px, color-mix(in srgb, var(--danger) 60%, var(--s3)) 4px 8px); }
 .fmb.over b, .fmb.over span { color: var(--danger); }
 .fmb.hit b { color: var(--ac); }
+.fmb.hit .fbt > i { background: var(--ac); }
+.fmb.low .fbt > i, .fbk.low .fbt > i { background: var(--flame); }
+.fmb.low b, .fmb.low span, .fbk.low > em { color: var(--flame); }
 .ftl { display: flex; gap: 8px; margin: 12px -16px 0; padding: 0 16px 2px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; scrollbar-width: none; }
 .ftl::-webkit-scrollbar { display: none; }
 .fti { flex: 0 0 calc((100% - 32px - 24px) / 4.3); scroll-snap-align: start; display: grid; align-content: space-between; gap: 4px; min-width: 0; min-height: 84px; padding: 9px 9px 8px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
@@ -1166,8 +1171,11 @@ button.pdb-h:active { background: var(--s2); }
 .fqw .fnm { flex: 1; min-width: 0; margin: 0; }
 .fon { display: flex; align-items: center; gap: 6px; font-size: 13px; }
 .fon .ic { width: 16px; height: 16px; }
+.fon .fre { margin-left: auto; }
 .seg.fvs { margin: 0; padding: 3px; }
 .sh-h .x.on { background: var(--ink); color: var(--bg); }
+.own2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.own2 .fnm, .own2 .fqw { margin: 0; }
 .fpcn b { font-family: var(--f-display); font-size: 24px; font-weight: 900; text-align: center; }
 .ffit { display: grid; gap: 6px; margin-top: -4px; }
 .ffb { display: flex; height: 6px; overflow: hidden; border-radius: 3px; background: var(--s3); }
@@ -1186,12 +1194,13 @@ button.pdb-h:active { background: var(--s2); }
 .fdd i { width: 20px; height: 3px; margin-top: 2px; border-radius: 2px; background: linear-gradient(90deg, var(--fc, var(--ink3)) calc(var(--p) * 100%), var(--s3) 0); }
 .fdd.ok { --fc: var(--ac); }
 .fdd.over { --fc: var(--danger); }
+.fdd.low { --fc: var(--flame); }
 .fdd.over b { color: var(--danger); }
 .fdd.sel { background: var(--s2); }
 .fdd.sel b { color: var(--ink); }
-.fwa { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
-.fwv { display: grid; grid-template-columns: auto minmax(0, 1fr) 92px; align-items: center; gap: 8px; min-width: 0; min-height: 34px; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; }
-.fwv > .ic { width: 18px; height: 18px; color: var(--ink3); }
+.fwa { display: grid; grid-template-columns: auto minmax(0, 1fr) 92px auto; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
+.fwv { display: block; min-width: 0; min-height: 34px; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; }
+.fwa > .ic { width: 18px; height: 18px; color: var(--ink3); }
 .fwb { position: relative; height: 6px; overflow: hidden; border-radius: 3px; background: var(--s3); }
 .fwb > i { position: absolute; inset: 0; background: #6f9fbf; transform: scaleX(var(--p)); transform-origin: left; transition: transform .4s var(--ease); }
 .fwa b { font-family: var(--f-mono); font-size: 13px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -1200,7 +1209,12 @@ button.pdb-h:active { background: var(--s2); }
 .wab { display: grid; grid-template-columns: auto 1fr; align-items: baseline; gap: 8px; }
 .wab b { font-family: var(--f-display); font-size: 40px; font-weight: 900; line-height: .9; font-variant-numeric: tabular-nums; }
 .wab span { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
-.wab .fwb { grid-column: 1 / -1; height: 8px; }
+.wab .fwr { grid-column: 1 / -1; }
+.fwr { -webkit-appearance: none; appearance: none; width: 100%; height: 26px; margin: 0; background: transparent; touch-action: pan-y; }
+.fwr::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: linear-gradient(90deg, #6f9fbf calc(var(--p) * 100%), var(--s3) 0); }
+.fwr::-moz-range-track { height: 6px; border-radius: 3px; background: linear-gradient(90deg, #6f9fbf calc(var(--p) * 100%), var(--s3) 0); }
+.fwr::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -7px; border: 2px solid #6f9fbf; border-radius: 50%; background: var(--s1); box-shadow: 0 1px 4px rgba(0, 0, 0, .35); }
+.fwr::-moz-range-thumb { width: 16px; height: 16px; border: 2px solid #6f9fbf; border-radius: 50%; background: var(--s1); }
 .seg.fvs button { min-height: 34px; font-size: 13px; }
 .seg.fvs button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 .fscan { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 16px; background: #000; }
@@ -2698,10 +2712,11 @@ button.cday:active { transform: scale(.97); }
     TILEDEF.forEach(function (d) { if (arr.length < 12 && !arr.some(function (y) { return y.i === d[0]; })) arr.push({ i: d[0], g: d[1], c: 0 }); });
     return arr;
   }
-  function fbar(k, v, g) {
+  function fbar(k, v, g, ex) {
     // Mini-Balken: hit = im Ziel (grün), over = zu viel mit negativer Wirkung (rot, gestreift): Fett/Kohlenhydrate über 110 %, Zucker über der Grenze. Protein und Ballaststoffe dürfen drüber
-    var su = k === 'su', p = g ? v / g : 0, bad = k !== 'p' && k !== 'fb' && p > (su ? 1 : 1.1), hit = !bad && (k === 'p' || k === 'fb' ? p >= 1 : !su && p >= 0.85);
-    return '<div class="fmb ' + k + (bad ? ' over' : hit ? ' hit' : '') + '"><span>' + NSH[k] + '</span><i class="fbt"><i' + pv('fm' + k, Math.min(1, p)) + '></i></i><b>' + Math.round(v) + '<small>/' + (su ? '≤' : '') + g + '</small></b></div>';
+    // low = orange: Protein/Ballaststoffe weit hinter dem, was zur Tageszeit zu erwarten ist (ex = erwarteter Anteil, fExp)
+    var su = k === 'su', p = g ? v / g : 0, bad = k !== 'p' && k !== 'fb' && p > (su ? 1 : 1.1), hit = !bad && (k === 'p' || k === 'fb' ? p >= 0.9 : !su && p >= 0.85), low = !bad && !hit && (k === 'p' || k === 'fb') && ex >= 0.3 && p < ex * 0.6;
+    return '<div class="fmb ' + k + (bad ? ' over' : hit ? ' hit' : low ? ' low' : '') + '"><span>' + NSH[k] + '</span><i class="fbt"><i' + pv('fm' + k, Math.min(1, p)) + '></i></i><b>' + Math.round(v) + '<small>/' + (su ? '≤' : '') + g + '</small></b></div>';
   }
   function fchart(today) {
     var N = 14, W = 360, H = 190, L = 34, R = 40, T = 14, B = 22, step = (W - L - R) / (N - 1), rows = [], i, g0 = foodGoal(today);
@@ -2739,29 +2754,39 @@ button.cday:active { transform: scale(.97); }
   }
   function fN(x) { return String(Math.round(x * 10) / 10).replace('.', ','); }
   // Gewählter Tag (Leiste oben, letzte 7 Tage); Wasserziel 35 ml je kg in 250-ml-Schritten
+  function fExp(di) {
+    // Erwarteter Anteil des Tagesziels: vergangene Tage 1, heute von 8 bis 20 Uhr linear 0 → 1
+    var t = dayIdx(Date.now()); if (di < t) return 1; var n = new Date(); return Math.max(0, Math.min(1, (n.getHours() + n.getMinutes() / 60 - 8) / 12));
+  }
   function fSd() { var t = dayIdx(Date.now()); return ui.fsd != null && ui.fsd <= t && ui.fsd > t - 7 ? ui.fsd : t; }
   function waGoal(di) { var kg = wAt(di) || 75; return Math.max(1500, Math.min(4000, Math.round(kg * 35 / 250) * 250)); }
+  function waSet(v) {
+    // Wasser des gewählten Tags setzen (ml), Seite neu zeichnen; gibt den gespeicherten Wert zurück
+    var wd = fSd(), fs = foodState(); v = Math.max(0, Math.min(8000, Math.round(v || 0)));
+    if (v) fs.wa[wd] = v; else delete fs.wa[wd]; persist(); ui.fresh = false; render(); return v;
+  }
   function waHtml() {
-    // Wasser genau: Chips addieren, Stepper ±50 ml, Feld setzt den Wert
+    // Wasser genau: Regler, Chips addieren, Stepper ±50 ml, Feld setzt den Wert
     var sd = fSd(), wa = foodState().wa[sd] || 0, wg = waGoal(sd);
     return shHead('drop', 'Wasser', (sd === dayIdx(Date.now()) ? 'Heute' : fmtDayL(sd)) + ' · Ziel ' + fN(wg / 1000) + ' l') +
-      '<div class="wab"><b id="wa-n">' + fN2(wa / 1000) + '</b><span>/ ' + fN(wg / 1000) + ' l</span><i class="fwb"><i id="wa-b" style="--p:' + Math.min(1, wa / wg).toFixed(3) + '"></i></i></div>' +
+      '<div class="wab"><b id="wa-n">' + fN2(wa / 1000) + '</b><span>/ ' + fN(wg / 1000) + ' l</span><input id="wa-r" class="fwr" type="range" min="0" max="' + Math.max(wg, Math.ceil(wa / 500) * 500) + '" step="50" value="' + wa + '" style="--p:' + Math.min(1, wa / Math.max(wg, Math.ceil(wa / 500) * 500)).toFixed(3) + '" aria-label="Wasser"></div>' +
       '<div class="fpc">' + [150, 250, 330, 500, 750].map(function (m) { return '<button data-fwa="' + m + '">+' + m + ' ml</button>'; }).join('') + '</div>' +
       '<div class="fstep"><button class="sb" data-fwa="-50" aria-label="50 ml weniger">' + ic('minus') + '</button><label><input id="wa-v" type="number" inputmode="numeric" min="0" step="50" value="' + wa + '" aria-label="Wasser in ml"><span>ml</span></label><button class="sb" data-fwa="50" aria-label="50 ml mehr">' + ic('plus') + '</button></div>';
   }
   function viewFood(d, now) {
-    var today = dayIdx(now), sd = fSd(), g = foodGoal(sd), s = foodSum(sd), tl = fTiles(), kp = s.k / g.k, wa = foodState().wa[sd] || 0, wg = waGoal(sd);
+    var today = dayIdx(now), sd = fSd(), ex = fExp(sd), g = foodGoal(sd), s = foodSum(sd), tl = fTiles(), kp = s.k / g.k, wa = foodState().wa[sd] || 0, wg = waGoal(sd);
     ui.ftiles = tl;
     var h = '<div class="fd-h rise" style="--i:0"><h2>Essen</h2><button class="x" data-fgoal="1" aria-label="Ziele und Rechner">' + ic('target') + '</button></div>';
-    // Tagesleiste: 7 Tage, Balken = kcal vom Ziel; grün = Protein erreicht und kcal im Rahmen, rot = über 110 %
-    var ds = ''; for (var i = 6; i >= 0; i--) { var di = today - i, sm = foodSum(di), gd = foodGoal(di), kq = sm.k / gd.k, dc = !sm.items.length ? '' : kq > 1.1 ? ' over' : sm.p >= gd.p && kq >= 0.85 ? ' ok' : '';
+    // Tagesleiste: 7 Tage, Balken = kcal vom Ziel; grün = Protein (fast) erreicht und kcal im Rahmen, orange = deutlich zu wenig, rot = über 110 %
+    var ds = ''; for (var i = 6; i >= 0; i--) { var di = today - i, sm = foodSum(di), gd = foodGoal(di), kq = sm.k / gd.k, dc = !sm.items.length ? '' : kq > 1.1 ? ' over' : sm.p >= gd.p * 0.9 && kq >= 0.85 ? ' ok' : di < today && (sm.p < gd.p * 0.6 || kq < 0.6) ? ' low' : '';
       ds += '<button class="fdd' + (di === sd ? ' sel' : '') + dc + '" data-fsd="' + di + '" aria-label="' + esc(fmtDayL(di)) + '"><small>' + WDN[wdOf(di)].slice(0, 2) + '</small><b>' + new Date(di * 864e5).getUTCDate() + '</b><i style="--p:' + Math.min(1, kq).toFixed(2) + '"></i></button>'; }
     h += '<nav class="fds rise" style="--i:0">' + ds + '</nav>';
     // Bilanz: kcal groß mit Balken, darunter Protein, Fett, Kohlenhydrate, Ballaststoffe, Zucker
-    h += '<section class="fbal rise" style="--i:1"><div class="fbk' + (kp > 1.1 ? ' over' : kp >= 0.9 ? ' hit' : '') + '"><b data-n="' + s.k + '" data-nk="fkv">' + s.k + '</b><span>/ ' + g.k + ' kcal</span>' +
+    h += '<section class="fbal rise" style="--i:1"><div class="fbk' + (kp > 1.1 ? ' over' : kp >= 0.9 ? ' hit' : ex >= 0.3 && kp < ex * 0.6 ? ' low' : '') + '"><b data-n="' + s.k + '" data-nk="fkv">' + s.k + '</b><span>/ ' + g.k + ' kcal</span>' +
       (g.tb ? '<span class="ftb">' + ic('dumb') + '+' + g.tb + '</span>' : '') + '<em>' + (g.k - s.k >= 0 ? (g.k - s.k) + ' offen' : (s.k - g.k) + ' drüber') + '</em><i class="fbt"><i' + pv('fkb', Math.min(1, kp)) + '></i></i></div>' +
-      '<div class="fbm">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return fbar(k, s[k], g[k]); }).join('') + '</div>' +
-      '<div class="fwa"><button class="fwv" data-fwao="1" aria-label="Wasser genau eintragen">' + ic('drop') + '<i class="fwb"><i style="--p:' + Math.min(1, wa / wg).toFixed(3) + '"></i></i><b>' + fN2(wa / 1000) + '<small> / ' + fN(wg / 1000) + ' l</small></b></button>' +
+      '<div class="fbm">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return fbar(k, s[k], g[k], ex); }).join('') + '</div>' +
+      '<div class="fwa">' + ic('drop') + '<input id="fw-r" class="fwr" type="range" min="0" max="' + wg + '" step="50" value="' + Math.min(wa, wg) + '" style="--p:' + Math.min(1, wa / wg).toFixed(3) + '" aria-label="Wasser" data-noswipe="1">' +
+      '<button class="fwv" data-fwao="1" aria-label="Wasser genau eintragen"><b id="fw-t">' + fN2(wa / 1000) + '<small> / ' + fN(wg / 1000) + ' l</small></b></button>' +
       '<button class="x" data-fwa="250" aria-label="Ein Glas Wasser (250 ml)">' + ic('plus') + '</button></div></section>';    // Schnell-Kacheln
     h += '<section class="ftl rise" style="--i:2" data-noswipe="1">' + tl.map(function (x, j) {
       var it = fItem(x.i), v = fNut(it, x.g);
@@ -2800,6 +2825,7 @@ button.cday:active { transform: scale(.97); }
   function openFsearch(keep) {
     ui.sheet = { fsearch: true }; ui.fq = ''; ui.fcat = keep ? ui.fcat : ''; ui.fpick = null; ui.fday = dayIdx(Date.now()) - fSd();
     sheetOpen(shHead('search', ui.ingm ? 'Zutat' : 'Eintragen', ui.ingm ? 'Für das Gericht' : 'Lebensmittel oder Gericht suchen', !!ui.ingm) + '<div class="fqw"><input id="fq" class="fnm fq" type="search" placeholder="Suchen, z. B. Skyr" autocomplete="off" aria-label="Suchen"><button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button></div><div id="fres" class="fsr">' + fresHtml() + '</div>', true);
+    $('sheet').classList.add('fs');
     setTimeout(function () { var i = $('fq'); if (i && !('ontouchstart' in window)) i.focus(); }, 350);
   }
   function fresHtml() {
@@ -2847,7 +2873,7 @@ button.cday:active { transform: scale(.97); }
     if (q.length < 3) return '';
     if (!navigator.onLine) return w + 'Offline</p>';
     if (!o || o.q !== q || o.st === 'load') return w + '…</p>';
-    if (o.st === 'err') return w + 'Nicht erreichbar</p>';
+    if (o.st === 'err') return w + 'Nicht erreichbar<button class="btn small fre" data-fonr="1">' + ic('undo') + 'Nochmal</button></p>';
     if (!o.r.length) return w + 'Online nichts gefunden</p>';
     return '<h3 class="xg">' + ic('globe') + 'Online</h3>' + o.r.map(function (x, i) {
       return '<button class="fsi web" data-foff="' + i + '"><span><b>' + esc(x.n) + '</b><small>' + esc([x.b, x.qt].filter(Boolean).join(' · ')) + '</small></span><em>' + x.k + '</em></button>';
@@ -2947,6 +2973,10 @@ button.cday:active { transform: scale(.97); }
     return '<div class="ffb' + (rest < 0 ? ' over' : '') + '"><i style="width:' + (a * 100).toFixed(1) + '%"></i><i style="width:' + (b * 100).toFixed(1) + '%"></i></div>' +
       '<p><b>' + Math.abs(rest) + ' kcal</b>' + (rest >= 0 ? 'danach noch frei' : 'über dem Ziel') + '<span>Protein ' + Math.round(s.p + (v.p || 0)) + ' / ' + g.p + ' g</span></p>' + (wn.length ? '<div class="ffw">' + wn.join('') + '</div>' : '');
   }
+  function fbrLoad() {
+    var bi = ui.fpick.i, bit = fItem(bi), bw = fnorm(fName(bit)).split(' ')[0]; ui.fbr = { i: bi, st: 'load', r: [] }; $('fbr').innerHTML = fbrHtml(); document.querySelector('[data-fbr]').classList.add('on');
+    offSearch(fEn(bit), function (r) { if (!ui.fbr || ui.fbr.i !== bi) return; ui.fbr.st = r ? 'ok' : 'err'; ui.fbr.r = r ? r.filter(function (x) { return fnorm(x.n).indexOf(bw) >= 0; }).slice(0, 10) : []; var e = $('fbr'); if (e) e.innerHTML = fbrHtml(); });
+  }
   function fbrHtml() {
     // Marke wählen: Open-Food-Facts-Produkte zum Grundnamen (nur eingebaute Lebensmittel, nicht Restaurant/Fast Food)
     var b = ui.fbr, pk = ui.fpick, it = pk && FOODB[pk.i];
@@ -2954,7 +2984,7 @@ button.cday:active { transform: scale(.97); }
     if (!b || b.i !== pk.i) return '';
     var foot = '<div class="fsb"><button class="btn small" data-fscan="1">' + ic('scan') + 'Barcode</button><button class="btn small" data-fownb="1">' + ic('plus') + 'Fehlt? Anlegen</button></div>';
     if (b.st === 'load') return '<p class="muted fon">' + ic('globe') + 'Marken …</p>';
-    if (!b.r.length) return '<p class="muted fon">' + ic('globe') + (b.st === 'err' ? 'Nicht erreichbar' : 'Keine Marken gefunden') + '</p>' + foot;
+    if (!b.r.length) return '<p class="muted fon">' + ic('globe') + (b.st === 'err' ? 'Nicht erreichbar<button class="btn small fre" data-fbrr="1">' + ic('undo') + 'Nochmal</button>' : 'Keine Marken gefunden') + '</p>' + foot;
     return '<h3 class="xg">' + ic('globe') + 'Marken</h3>' + b.r.map(function (x, i) { return '<button class="fsi web" data-fbrp="' + i + '"><span><b>' + esc(x.n) + '</b><small>' + esc([x.b, x.qt].filter(Boolean).join(' · ')) + '</small></span><em>' + x.k + '</em></button>'; }).join('') + foot;
   }
   function ftotHtml(v) {
@@ -2981,15 +3011,15 @@ button.cday:active { transform: scale(.97); }
     function f(k, lab) { return '<label>' + lab + '<input id="o-' + k + '" type="number" inputmode="decimal" min="0" value="' + (src[k] != null ? src[k] : '') + '"></label>'; }
     var un = dr ? dr.un : o && o.u[0] ? o.u[0][0] : '', ug = dr ? dr.ug : o && o.u[0] ? o.u[0][1] : '';
     sheetOpen(shHead('plus', o ? 'Lebensmittel' : 'Eigenes Lebensmittel', 'Werte je 100 g bzw. 100 ml, z. B. von der Packung') +
-      '<div class="fqw"><input id="o-n" class="fnm" type="text" maxlength="30" placeholder="Name, z. B. Proteinbrot" value="' + esc(src.n || '') + '" aria-label="Name"><button class="x" data-fscan="own" aria-label="Barcode scannen">' + ic('scan') + '</button></div>' +
-      '<input id="o-b" class="fnm" type="text" maxlength="24" placeholder="Marke (optional)" value="' + esc(src.b || '') + '" aria-label="Marke">' +
-      (code ? '<p class="muted fon">' + ic('check') + 'Barcode ' + esc(code) + '</p>' : '') +
+      '<input id="o-n" class="fnm" type="text" maxlength="30" placeholder="Name, z. B. Proteinbrot" value="' + esc(src.n || '') + '" aria-label="Name">' +
+      '<div class="own2"><input id="o-b" class="fnm" type="text" maxlength="24" placeholder="Marke (optional)" value="' + esc(src.b || '') + '" aria-label="Marke">' +
+      '<div class="fqw"><input id="o-bc" class="fnm" type="text" inputmode="numeric" maxlength="14" placeholder="Barcode (optional)" value="' + esc(code) + '" aria-label="Barcode"><button class="x" data-fscan="own" aria-label="Barcode scannen">' + ic('scan') + '</button></div></div>' +
       '<div class="seg fvs"><button data-oml="0" aria-pressed="' + !ui.sheet.ml + '">g</button><button data-oml="1" aria-pressed="' + !!ui.sheet.ml + '">ml</button></div>' +
       '<div class="dg3">' + f('k', 'kcal') + f('p', 'Protein') + f('f', 'Fett') + f('c', 'Kohlenh.') + f('fb', 'Ballast.') + f('su', 'Zucker') + '</div>' +
       '<div class="dg3 two"><label>Portion<input id="o-un" type="text" maxlength="12" placeholder="z. B. Scheibe" value="' + esc(String(un)) + '"></label><label>Menge<input id="o-ug" type="number" inputmode="decimal" min="0" value="' + ug + '"></label></div>' +
       '<button class="btn primary big" data-fownsave="1">' + ic('check') + 'Speichern</button>' + (o ? '<button class="btn ghost small" data-fowndel="1">' + ic('trash') + 'Löschen</button>' : ''), true);
   }
-  function ownDraft() { var d = { n: $('o-n').value, b: $('o-b').value, un: $('o-un').value, ug: $('o-ug').value, ml: ui.sheet.ml, bc: ui.sheet.bc }; NK.forEach(function (k) { d[k] = $('o-' + k).value; }); return d; }
+  function ownDraft() { var d = { n: $('o-n').value, b: $('o-b').value, un: $('o-un').value, ug: $('o-ug').value, ml: ui.sheet.ml, bc: $('o-bc').value }; NK.forEach(function (k) { d[k] = $('o-' + k).value; }); return d; }
   function openDishes() {
     ui.sheet = { fdishes: true }; var st = foodState();
     sheetOpen(shHead('food', 'Gerichte', 'Aus Zutaten, durch Portionen geteilt') + '<div class="fsr">' + st.d.map(function (x) {
@@ -3189,10 +3219,10 @@ button.cday:active { transform: scale(.97); }
     if (t.closest('[data-fownb]')) { var bt0 = fItem(ui.fpick.i), dr0 = { n: fName(bt0), un: bt0.u[0] ? bt0.u[0][0] : '', ug: bt0.u[0] ? bt0.u[0][1] : '', ml: bt0.ml ? 1 : 0 }; NK.forEach(function (k) { dr0[k] = bt0[k] != null ? bt0[k] : ''; }); openOwn('new', null, dr0); return true; }
     if (t.closest('[data-fbr]')) {
       if (ui.fbr && ui.fbr.i === ui.fpick.i) { ui.fbr = null; $('fbr').innerHTML = ''; document.querySelector('[data-fbr]').classList.remove('on'); return true; }
-      var bi = ui.fpick.i, bit = fItem(bi), bw = fnorm(fName(bit)).split(' ')[0]; ui.fbr = { i: bi, st: 'load', r: [] }; $('fbr').innerHTML = fbrHtml(); document.querySelector('[data-fbr]').classList.add('on');
-      offSearch(fEn(bit), function (r) { if (!ui.fbr || ui.fbr.i !== bi) return; ui.fbr.st = r ? 'ok' : 'err'; ui.fbr.r = r ? r.filter(function (x) { return fnorm(x.n).indexOf(bw) >= 0; }).slice(0, 10) : []; var e = $('fbr'); if (e) e.innerHTML = fbrHtml(); });
-      return true;
+      fbrLoad(); return true;
     }
+    if (t.closest('[data-fbrr]')) { fbrLoad(); return true; }
+    if (t.closest('[data-fonr]')) { ui.fon = null; fonSearch(); return true; }
     if ((el = t.closest('[data-fbrp]'))) { var bx = ui.fbr && ui.fbr.r[+el.dataset.fbrp]; if (bx) pickFrom(offSave(bx)); return true; }
     if ((el = t.closest('[data-fcat]'))) { ui.fcat = el.dataset.fcat; $('fres').innerHTML = fresHtml(); $('sheet').scrollTop = 0; return true; }
     if ((el = t.closest('[data-famt]'))) { ui.fpick.a = +el.dataset.famt; if ($('fa')) $('fa').value = ui.fpick.a; fpickUpd(); return true; }
@@ -3206,7 +3236,7 @@ button.cday:active { transform: scale(.97); }
       var oid = ui.sheet.fown !== 'new' ? ui.sheet.fown : 'u' + Date.now().toString(36), o = { id: oid, n: nm.slice(0, 30), u: [] };
       NK.forEach(function (k) { o[k] = ov(k); }); var un = $('o-un').value.trim(), ug = ov('ug'); if (un && ug) o.u.push([un.slice(0, 12), ug]);
       var o0 = fOwn(oid); if (o0) { if (o0.b) o.b = o0.b; if (o0.bc) o.bc = o0.bc; o.u = o.u.concat(o0.u.slice(1)); } if (ui.sheet.bc) o.bc = ui.sheet.bc; if (ui.sheet.ml) o.ml = 1; else delete o.ml;
-      var bv = $('o-b').value.trim(); if (bv) o.b = bv.slice(0, 24); else delete o.b;
+      var bv = $('o-b').value.trim(), bcv = $('o-bc').value.replace(/\D/g, ''); if (bv) o.b = bv.slice(0, 24); else delete o.b; if (/^\d{6,14}$/.test(bcv)) o.bc = bcv; else delete o.bc;
       if (o.bc) st.o.forEach(function (y) { if (y.id !== oid && y.bc === o.bc) delete y.bc; });
       var oi = st.o.map(function (y) { return y.id; }).indexOf(oid); if (oi >= 0) st.o[oi] = o; else st.o.push(o);
       persist(); ui.fresh = false; render(); toast('Gespeichert', 'check'); openPick(oid); return true;
@@ -4209,13 +4239,15 @@ button.cday:active { transform: scale(.97); }
     var t = ev.target;
     if (t.id === 'sv') updSheetXp();
     if (/^c-/.test(t.id || '') && $('c-res')) calcUpd();
-    if (t.id === 'wa-v') { var wd2 = fSd(), wv = Math.max(0, Math.min(8000, Math.round(+t.value || 0))), fs = foodState(); if (wv) fs.wa[wd2] = wv; else delete fs.wa[wd2]; persist(); $('wa-n').textContent = fN2(wv / 1000); $('wa-b').style.setProperty('--p', Math.min(1, wv / waGoal(wd2)).toFixed(3)); ui.fresh = false; render(); }
+    if (t.id === 'wa-v') { var wv = waSet(+t.value); $('wa-n').textContent = fN2(wv / 1000); var wr = $('wa-r'); wr.value = wv; wr.style.setProperty('--p', Math.min(1, wv / +wr.max).toFixed(3)); }
+    if (t.id === 'fw-r' || t.id === 'wa-r') { var rv = +t.value; t.style.setProperty('--p', (rv / +t.max).toFixed(3)); if (t.id === 'fw-r') $('fw-t').firstChild.textContent = fN2(rv / 1000); else { $('wa-n').textContent = fN2(rv / 1000); $('wa-v').value = rv; } }
     if (t.id === 'fq') { ui.fq = t.value; $('fres').innerHTML = fresHtml(); clearTimeout(fonT); fonT = setTimeout(fonSearch, 600); }
     if (t.id === 'fa' && ui.fpick) { var fa = parseFloat(t.value); if (fa > 0) { ui.fpick.a = fa; fpickUpd(); } }
     if (ui.dd && /^(dd|di)-/.test(t.id)) { readDraft(); var tt = $('dd-tot'); if (tt) tt.innerHTML = dishTotHtml(dishTot(ui.dd)); }
   });
   document.addEventListener('change', function (ev) {
     var t = ev.target, m = /^di-n-(\d+)$/.exec(t.id || '');
+    if (t.id === 'fw-r' || t.id === 'wa-r') { waSet(+t.value); buzz(6); }
     if (m && ui.dd) {
       // Zutat aus der Datenbank gewählt: alle Nährwerte je 100 g übernehmen
       var hit = libFind(t.value), i = +m[1];

@@ -1300,6 +1300,44 @@ button.cday:active { transform: scale(.97); }
 #c-way .sub { font-size: 12px; color: var(--ink3); }
 .sheet .btn:disabled { opacity: .45; }
 @media (prefers-reduced-motion: reduce) { .agx, .agx > div { transition: none; } .fti.done { animation: none; } .pk.sel::after, .pc2.pick, .rot .ic { animation: none; } .pk, .pk.over, .pk.clash { animation: none; } .ptl.nw { animation: none; } .pday.fl { animation: none; } .pc2-g.in-r, .pc2-g.in-l, .pc2-g.in-m { animation: fade .15s ease; } }
+/* Heute: Kopfzeile, Karten-Reihe, Karten-Fortschritt, aufklappbare Belohnungen */
+.hsl { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); }
+.hsl > b { overflow: hidden; font-size: 15px; font-weight: 800; white-space: nowrap; text-overflow: ellipsis; }
+.hsl-f { display: inline-flex; align-items: center; gap: 3px; font-family: var(--f-mono); font-weight: 700; color: var(--flame); }
+.hsl-f svg { width: 16px; height: 16px; }
+.hsl-f.none, .hsl-f.lost { color: var(--ink3); }
+.hsl-l { display: grid; gap: 3px; font-family: var(--f-mono); font-size: 12px; font-weight: 700; }
+.hsl-l > i { display: block; width: 54px; height: 4px; overflow: hidden; border-radius: 2px; background: var(--s3); }
+.hsl-l > i > i { display: block; width: calc(var(--p) * 100%); height: 100%; background: var(--ac); }
+.hcr { display: flex; gap: 8px; margin: 12px -16px 0; padding: 4px 16px 6px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; scrollbar-width: none; }
+.hcr::-webkit-scrollbar { display: none; }
+.hc { --rc: #8fa39a; position: relative; flex: 0 0 112px; display: grid; grid-template-rows: auto 1fr auto auto; gap: 4px; min-height: 132px; padding: 10px 10px 9px; scroll-snap-align: start; border: 1px solid var(--line); border-top: 3px solid var(--rc); border-radius: 14px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease), border-color .2s var(--ease), opacity .2s; }
+.hc:active { transform: scale(.97); }
+.hc small { padding-right: 28px; font-size: 9.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--rc); }
+.hc b { display: -webkit-box; overflow: hidden; font-size: 13px; line-height: 1.2; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.hc span { position: absolute; top: 8px; right: 9px; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
+.hc span .ic { width: 15px; height: 15px; color: var(--ac); }
+.hc em { font-family: var(--f-mono); font-size: 12px; font-style: normal; font-weight: 700; }
+.hcb { display: block; height: 4px; overflow: hidden; border-radius: 2px; background: var(--s3); }
+.hcb > i { display: block; width: calc(var(--p) * 100%); height: 100%; background: var(--rc); }
+.hc.on { border-color: var(--rc); box-shadow: 0 0 0 1px var(--rc), 0 10px 20px -14px var(--rc); }
+.hc.dn { opacity: .55; }
+.hc.r1 { --rc: #5b8fd6; }
+.hc.r2 { --rc: #a374d8; }
+.hc.r3 { --rc: var(--gold); }
+.cpg { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 10px 2px 8px; font-size: 12px; color: var(--ink3); }
+.cpg b { font-family: var(--f-mono); color: var(--ink); }
+.cpg span { display: inline-flex; align-items: center; gap: 4px; font-family: var(--f-mono); }
+.cpg .ic { width: 14px; height: 14px; }
+.cpg .ok { color: var(--ac); }
+.hrw { margin-top: 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
+.hrw summary { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 14px; cursor: pointer; list-style: none; }
+.hrw summary::-webkit-details-marker { display: none; }
+.hrw summary b { font-size: 14px; }
+.hrw summary span { margin-left: auto; font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
+.hrw summary > .ic:last-child { width: 14px; height: 14px; transition: transform .2s var(--ease); }
+.hrw[open] summary > .ic:last-child { transform: rotate(90deg); }
+.hrw > section { margin: 0 10px 10px; }
 </style>
 
 <div id="app">
@@ -1469,10 +1507,47 @@ button.cday:active { transform: scale(.97); }
   function dayIdx(ms) { var d = new Date(ms); return Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5); }
   function wkOf(d) { return d - (d + 3) % 7; }
   function moOf(d) { var q = new Date(d * 864e5); return q.getUTCFullYear() * 12 + q.getUTCMonth(); }
+  // ---------- Karten (Übungen) und Muskelgruppen: alles aus den Logs berechnet, nichts gespeichert
+  // Seltenheit bestimmt Startlevel (Max 10). Level-Up braucht Leistung (Satzziel des nächsten Levels in einer Einheit) UND Fleiß (KP).
+  // KP je Satz = 10 × Leistung / Ziel des aktuellen Levels (max 15). Muskeln bekommen KP × Anteil (Hauptmuskel 1, weitere 0,5)
+  var RAR = [['Gewöhnlich', 1, 'r0'], ['Selten', 3, 'r1'], ['Episch', 5, 'r2'], ['Legendär', 7, 'r3']], CMAX = 10, MMAX = 20;
+  // Einheiten am Ziel bis zum nächsten Level, je Seltenheit ab ihrem Startlevel
+  var CSES = [[2, 3, 4, 5, 6, 8, 10, 12, 15], [4, 6, 8, 10, 13, 16, 20], [8, 12, 16, 20, 25], [20, 28, 36]];
+  var MUS = [['ru', 'Rücken'], ['br', 'Brust'], ['sh', 'Schultern'], ['ar', 'Arme'], ['co', 'Core'], ['be', 'Beine'], ['gr', 'Griff'], ['mo', 'Beweglichkeit'], ['au', 'Ausdauer']];
+  var MUW = { 'Rücken': 'ru', 'Latissimus': 'ru', 'Breite': 'ru', 'unterer Rücken': 'ru', 'Unterer Rücken': 'ru', 'Trapez': 'ru', 'Nacken': 'ru', 'Schulterblätter': 'ru',
+    'Schulter': 'sh', 'Schulter vorn': 'sh', 'Schulter hinten': 'sh', 'Brust': 'br', 'Obere Brust': 'br', 'Bizeps': 'ar', 'Trizeps': 'ar', 'Arme': 'ar',
+    'Griff': 'gr', 'Unterarme': 'gr', 'Unterarm': 'gr', 'Handgelenke': 'gr', 'Core': 'co', 'tiefer Bauch': 'co', 'Seitliche Core': 'co', 'Schräge Bauchmuskeln': 'co', 'Unterer Bauch': 'co', 'Hüftbeuger': 'co',
+    'Beine': 'be', 'Po': 'be', 'Waden': 'be', 'Quadrizeps': 'be', 'Beinbeuger': 'be', 'Oberschenkel vorn': 'be', 'Oberschenkel hinten': 'be', 'Beine innen': 'be', 'Hintere Kette': 'be', 'hintere Kette': 'be', 'Hüfte': 'be',
+    'Kondition': 'au', 'Ausdauer': 'au', 'Ganzkörper': 'au', 'Explosivkraft': 'au', 'Balance': 'mo', 'Beweglichkeit': 'mo', 'Brustwirbelsäule': 'mo', 'Hüftrotation': 'mo' };
+  function musOf(e) {
+    if (e._mw) return e._mw;
+    var w = {}, first = true;
+    if (e.g === 'mob') { w.mo = 1; first = false; }
+    if (e.g === 'cardio') { w.au = 1; first = false; }
+    e.mu.split(/ · | \(|\) ?|: /).forEach(function (t) { var k = MUW[t.trim()]; if (k && !w[k]) { w[k] = first ? 1 : 0.5; first = false; } });
+    return (e._mw = w);
+  }
+  function rarOf(e) {
+    // nach Tiefe im Freischalt-Pfad; Hanteln, Mobilität und Cardio eine Stufe milder, Skills mindestens episch
+    var st = stageOf(e);
+    if (e.g === 'mob' || e.g === 'cardio') return st ? 1 : 0;
+    if (e.g === 'kh') return st <= 1 ? 0 : st === 2 ? 1 : 2;
+    if (e.g === 'skill') return st >= 4 ? 3 : 2;
+    return st === 0 ? 0 : st === 1 ? 1 : st <= 3 ? 2 : 3;
+  }
+  function cTarget(e, lv) {
+    // Satzziel je Level: 30 % des Grundziels beim Startlevel bis 150 % bei Level 10, geometrisch (seltene Karten: weniger, größere Schritte)
+    var l0 = RAR[rarOf(e)][1], st = e.u === 'Sek.' ? 5 : 1;
+    return Math.max(st, Math.round(e.goal * 0.3 * Math.pow(5, (lv - l0) / (CMAX - l0)) / st) * st);
+  }
+  function cCost(e, lv) { var r = rarOf(e); return lv >= CMAX ? 0 : CSES[r][lv - RAR[r][1]] * 10 * e.sets; }
+  function mCost(lv) { return Math.round(150 * Math.pow(1.18, lv - 1)); }
+  function mLevel(mp) { var lv = 1; while (lv < MMAX && mp >= mCost(lv)) { mp -= mCost(lv); lv++; } return { lv: lv, mp: Math.round(mp), need: lv < MMAX ? mCost(lv) : 0 }; }
+  function cardOf(d, e) { return d.cards[e.id] || { lv: RAR[rarOf(e)][1], kp: 0, n: 0 }; }
   function derive(logs) {
     var sorted = logs.slice().sort(function (a, b) { return a.t - b.t; });
     var best = {}, bestRaw = {}, unlocked = {}, goalHit = {}, xp = 0, tl = [], days = [], byDay = {};
-    var cur = null, streak = 0, prev = null, longest = 0, wkc = {}, moc = {}, wkHit = {}, moHit = {}, warm = {};
+    var cur = null, streak = 0, prev = null, longest = 0, wkc = {}, moc = {}, wkHit = {}, moHit = {}, warm = {}, cards = {}, mp = {};
     EX.forEach(function (e) { if (!e.req) unlocked[e.id] = 1; });
     function add(v) { xp += v; if (cur) cur.all += v; }
     function close() {
@@ -1506,6 +1581,11 @@ button.cday:active { transform: scale(.97); }
         cur.gx[e.g] = (cur.gx[e.g] || 0) + sx;
       });
       cur.ex[e.id] = 1;
+      // Karte: KP gegen das Ziel des aktuellen Levels, Level-Up bei Leistung (diese Einheit) + genug KP; Muskeln bekommen KP × Anteil
+      var cd = cards[e.id] || (cards[e.id] = { lv: RAR[rarOf(e)][1], kp: 0, n: 0 }), ctg = cTarget(e, cd.lv), kp = 0, mw = musOf(e), cm = metric(e, l.s);
+      l.s.forEach(function (x) { kp += Math.round(10 * Math.min(x / ctg, 1.5)); });
+      cd.kp += kp; cd.n++; Object.keys(mw).forEach(function (k) { mp[k] = (mp[k] || 0) + kp * mw[k]; });
+      while (cd.lv < CMAX && cd.kp >= cCost(e, cd.lv) && cm.full && cm.val >= cTarget(e, cd.lv + 1)) { cd.kp -= cCost(e, cd.lv); cd.lv++; cd.up = l.t; }
       if (l.s.length >= e.sets && l.s.slice(0, e.sets).every(function (x) { return x >= e.goal; })) { cur.sx += 10; add(10); }
       var r = metric(e, l.s);
       if (r.full) {
@@ -1520,7 +1600,7 @@ button.cday:active { transform: scale(.97); }
       }
     });
     close();
-    return { best: best, bestRaw: bestRaw, unlocked: unlocked, goalHit: goalHit, xp: xp, tl: tl, days: days, byDay: byDay, longest: longest, wkc: wkc, moc: moc, wkHit: wkHit, moHit: moHit, warm: warm };
+    return { best: best, bestRaw: bestRaw, unlocked: unlocked, goalHit: goalHit, xp: xp, tl: tl, days: days, byDay: byDay, longest: longest, wkc: wkc, moc: moc, wkHit: wkHit, moHit: moHit, warm: warm, cards: cards, mp: mp };
   }
   function level(xp) { return Math.floor(Math.sqrt(xp / 120)) + 1; }
   function lvXp(lv) { return 120 * (lv - 1) * (lv - 1); }
@@ -1871,7 +1951,7 @@ button.cday:active { transform: scale(.97); }
     var snap = snapshot();
     var tr = tierOfLevel(level(d.xp));
     document.documentElement.setAttribute('data-tier', tr);
-    $('hud').innerHTML = ui.tab === 'heute' ? hudHtml(d, now) : '';
+    $('hud').innerHTML = ui.tab === 'heute' ? hudSlim(d, now) : '';
     $('hudw').classList.toggle('nohud', ui.tab !== 'heute');
     var T = [['tage', 'Plan', 'cal'], ['food', 'Essen', 'food'], ['heute', 'Heute', 'dumb'], ['fort', 'Verlauf', 'chart'], ['profil', 'Profil', 'user']];
     var tb = $('tabs');
@@ -1888,6 +1968,20 @@ button.cday:active { transform: scale(.97); }
     hydrate(snap, fresh);
     if (ui.scroll) { var sc = ui.scroll; ui.scroll = null; setTimeout(function () { scrollToEl(sc); }, 60); }
     jumpMode = ''; updJump();
+  }
+  function hudSlim(d, now) {
+    // Heute: eine Zeile mit Tag, Serie und Konto-Level (Antippen = XP im Verlauf)
+    var lv = level(d.xp), c0 = lvXp(lv), c1 = lvXp(lv + 1), ss = streakInfo(now);
+    return '<div class="hsl go" data-go="xp" role="button" tabindex="0" aria-label="Level und XP im Verlauf"><b>' + esc(dayHead(dayIdx(now))) + '</b><span class="hsl-f ' + ss.mode + '">' + FL + ss.n + '</span>' +
+      '<span class="hsl-l">Lv ' + lv + '<i><i style="--p:' + ((d.xp - c0) / (c1 - c0)).toFixed(3) + '"></i></i></span></div>';
+  }
+  function cardProg(d, e) {
+    // gewählte Karte: nächstes Level braucht Leistung (Satzziel in einer Einheit) und Fleiß (KP)
+    var c = cardOf(d, e);
+    if (c.lv >= CMAX) return '<div class="cpg"><b>Lv ' + c.lv + ' · Maximum</b></div>';
+    var nt = cTarget(e, c.lv + 1), b = d.best[e.id] || 0, cc = cCost(e, c.lv), ok1 = b >= nt, ok2 = c.kp >= cc;
+    return '<div class="cpg"><b>Lv ' + c.lv + ' → ' + (c.lv + 1) + '</b><span' + (ok1 ? ' class="ok"' : '') + '>' + ic(ok1 ? 'check' : 'target') + nt + ' ' + esc(e.u) + (ok1 ? '' : ' · Best ' + b) + '</span>' +
+      '<span' + (ok2 ? ' class="ok"' : '') + '>' + ic(ok2 ? 'check' : 'bolt') + Math.min(c.kp, cc) + ' / ' + cc + ' KP</span></div>';
   }
   function hudHtml(d, now) {
     var lv = level(d.xp), cur = lvXp(lv), nxt = lvXp(lv + 1), tr = tierOfLevel(lv), ss = streakInfo(now);
@@ -1933,10 +2027,10 @@ button.cday:active { transform: scale(.97); }
     else if (ss.mode === 'lost') status = '<div class="status">' + ic('bolt') + 'Neue Serie starten</div>';
     else status = '<div class="status">' + ic('bolt') + 'Erster Satz startet deine Serie</div>';
     var ringP = Math.min(n / DAILY, 1);
-    var h = '<section class="hero rise" style="--i:0"><div class="hero-main"><div class="sk go ' + ss.mode + '" data-go="cal" role="button" tabindex="0" aria-label="Serie: ' + ss.n + ' Tage. Kalender öffnen"><span class="fln" style="--s:92px">' + FL + '<b data-n="' + ss.n + '" data-nk="streak">' + ss.n + '</b></span></div>' +
+    var rwd = '<section class="hero"><div class="hero-main"><div class="sk go ' + ss.mode + '" data-go="cal" role="button" tabindex="0" aria-label="Serie: ' + ss.n + ' Tage. Kalender öffnen"><span class="fln" style="--s:92px">' + FL + '<b data-n="' + ss.n + '" data-nk="streak">' + ss.n + '</b></span></div>' +
       '<div class="ringw go" data-go="plan" role="button" tabindex="0" aria-label="Zum heutigen Plan"><svg viewBox="0 0 100 100"><circle class="rb" cx="50" cy="50" r="40"/><circle class="rf' + (reached ? ' gold' : '') + '" cx="50" cy="50" r="40"' + pv('ring', ringP) + '/></svg>' +
       '<div class="mid"><b>' + n + (n < DAILY ? '/' + DAILY : '') + '</b><small>' + (reached ? (extra ? '+' + extra + ' Bonus' : 'Ziel') : 'Übungen') + '</small></div></div></div>' +
-      '<div class="go" data-go="cal" role="button" tabindex="0" aria-label="Kalender öffnen">' + weekStrip(ss, today, now) + '</div>' + status +
+      '<div class="go" data-go="cal" role="button" tabindex="0" aria-label="Kalender öffnen">' + weekStrip(ss, today, now) + '</div>' +
       '<div class="rw">' +
       rwTile(reached ? 'got' : '', 'target', '+40', 'Tagesziel', Math.min(n, DAILY) + ' / ' + DAILY) +
       rwTile(reached ? 'hot' : '', 'bolt', '+30', 'Bonus-Übung', extra ? extra + '× heute' : 'je Extra') +
@@ -1944,23 +2038,29 @@ button.cday:active { transform: scale(.97); }
     var w0 = today - (new Date(now).getDay() + 6) % 7, wx = 0, lw = 0;
     d.days.forEach(function (x) { if (x.d >= w0) wx += x.all; else if (x.d >= w0 - 7) lw += x.all; });
     var tgt = Math.max(lw, 150), beat = wx >= tgt;
-    h += '<section class="chase go rise" data-go="xp" role="button" tabindex="0" style="--i:1"><div class="ch-h"><span class="disp">' + ic(beat ? 'trophy' : 'up') + (beat ? 'Vorwoche besiegt' : 'Vorwoche jagen') + '</span><span class="mono"><b data-n="' + wx + '" data-nk="wk">' + wx + '</b> / ' + tgt + ' XP</span></div><div class="bar' + (beat ? ' gold' : '') + '"><i' + pv('wk', wx / tgt) + '></i></div></section>';
+    rwd += '<section class="chase go" data-go="xp" role="button" tabindex="0" style="--i:1"><div class="ch-h"><span class="disp">' + ic(beat ? 'trophy' : 'up') + (beat ? 'Vorwoche besiegt' : 'Vorwoche jagen') + '</span><span class="mono"><b data-n="' + wx + '" data-nk="wk">' + wx + '</b> / ' + tgt + ' XP</span></div><div class="bar' + (beat ? ' gold' : '') + '"><i' + pv('wk', wx / tgt) + '></i></div></section>';
+    var h = ss.mode === 'open' || ss.mode === 'last' ? status : '';
     var tot = 0, doneS = 0, sel = todaySel(today);
     function vis0(e) { return (d.unlocked[e.id] && (!sel.set || sel.set[e.id])) || !!todayLog(e.id, today); }
     var gAv = {}; EX.forEach(function (e) { if (vis0(e)) gAv[e.g] = 1; });
     if (ui.pg !== 'all' && !gAv[ui.pg]) ui.pg = 'all';
     function vis(e) { return (ui.pg === 'all' || e.g === ui.pg) && vis0(e); }
     EX.forEach(function (e) { if (!vis(e)) return; tot += e.sets; var tl = todayLog(e.id, today); doneS += tl ? Math.min(tl.s.length, e.sets) : 0; });
-    h += '<div class="plan-h rise" style="--i:3"><div><small>' + ic('cal') + 'Heute · ' + esc(sel.key === 'all' ? 'Alle' : sel.days.length ? sel.days.map(function (x) { return x.n; }).join(' + ') : 'Frei') + '</small><h2>' + fmtDayL(today) + '</h2></div><button class="swb" data-swap="1" aria-label="Heute ändern">' + ic('swap') + '</button><div class="plan-c"><b data-n="' + doneS + '" data-nk="ps">' + doneS + '</b><span>/ ' + tot + ' Sätze</span></div></div><div class="bar plan-b rise" style="--i:3"><i' + pv('plan', tot ? doneS / tot : 0) + '></i></div>';
+    h += '<div class="plan-h rise" style="--i:3"><div><small>' + ic('cal') + 'Training heute</small><h2>' + esc(sel.key === 'all' ? 'Alle' : sel.days.length ? sel.days.map(function (x) { return x.n; }).join(' + ') : 'Frei') + '</h2></div><button class="swb" data-swap="1" aria-label="Heute ändern">' + ic('swap') + '</button><div class="plan-c"><b data-n="' + doneS + '" data-nk="ps">' + doneS + '</b><span>/ ' + tot + ' Sätze</span></div></div><div class="bar plan-b rise" style="--i:3"><i' + pv('plan', tot ? doneS / tot : 0) + '></i></div>';
     h += toolRow(today, gAv) + (sel.key === 'rest' ? restCard(today) : '') + warmHtml(d, today);
-    todayVis = EX.filter(vis).length;
-    var i = 6;
-    GORDER.map(gOf).forEach(function (g) {
-      var list = EX.filter(function (e) { return e.g === g.k && vis(e); });
-      if (!list.length) return;
-      var dn = list.filter(function (e) { return !!todayLog(e.id, today); }).length;
-      h += '<section class="sec gp g' + g.k + '"><h2 class="sec-h">' + ic(g.i) + g.n + '<small>' + dn + ' / ' + list.length + '</small></h2><div class="gpb"><i style="width:' + Math.round(dn / list.length * 100) + '%"></i></div>' + list.map(function (e) { return card(e, d, today, i++); }).join('') + '</section>';
-    });
+    todayVis = 0;
+    // Karten-Reihe: heutige Übungen als Karten (Seltenheit, Level, KP-Balken); darunter Fortschritt und Sätze der gewählten Karte
+    var L = []; GORDER.forEach(function (k) { EX.forEach(function (e) { if (e.g === k && vis(e)) L.push(e); }); });
+    function dn(e) { var tl = todayLog(e.id, today); return !!tl && tl.s.length >= e.sets; }
+    var cur = L.filter(function (e) { return e.id === ui.hsel; })[0] || L.filter(function (e) { return !dn(e); })[0] || L[0];
+    if (cur) {
+      h += '<section class="hcr rise" style="--i:5" data-noswipe="1">' + L.map(function (e) {
+        var c = cardOf(d, e), r = rarOf(e), cc = cCost(e, c.lv), tl = todayLog(e.id, today), k = tl ? Math.min(tl.s.length, e.sets) : 0;
+        return '<button class="hc ' + RAR[r][2] + (dn(e) ? ' dn' : '') + (e === cur ? ' on' : '') + '" data-hsel="' + e.id + '"><small>' + RAR[r][0] + '</small><b>' + esc(e.n) + '</b><span>' + (dn(e) ? ic('check') : k + '/' + e.sets) + '</span>' +
+          '<em>Lv ' + c.lv + '</em><i class="hcb"><i style="--p:' + (cc ? Math.min(1, c.kp / cc) : 1).toFixed(3) + '"></i></i></button>';
+      }).join('') + '</section>' + cardProg(d, cur) + card(cur, d, today, 6);
+    }
+    h += '<details class="hrw rise" style="--i:7"><summary>' + ic('trophy') + '<b>Serie und Belohnungen</b><span>' + ss.n + ' Tage · ×' + fx(mu) + '</span>' + ic('chev') + '</summary>' + rwd + '</details>';
     return h;
   }
   // ---------- Plan
@@ -2445,6 +2545,7 @@ button.cday:active { transform: scale(.97); }
     if (dq.length) { setTimeout(nextDialog, 450); }
     else if (goalNow) { toast('Tagesziel erreicht · +40 XP', 'target', true); confetti(90); }
     else if (extraNow) toast('Bonus-Übung · +30 XP', 'bolt', true);
+    else if (cardOf(after, e).lv > cardOf(before, e).lv) { toast(e.n + ' · Level ' + cardOf(after, e).lv, 'up', true); confetti(70); }
     else if (goalEx) { toast('Ziel erreicht: ' + e.n, 'trophy', true); confetti(90); }
     else if (exT) toast(e.n + ' ist jetzt ' + TIERS[exTier(after, e)], 'up', true);
     else if (pb) toast('Neuer Rekord: ' + after.bestRaw[e.id], 'trophy', true);
@@ -4187,6 +4288,7 @@ button.cday:active { transform: scale(.97); }
     if ((el = t.closest('[data-xt]'))) { ui.xo[el.dataset.xt] = !ui.xo[el.dataset.xt]; ui.fresh = false; render(); return; }
     if ((el = t.closest('[data-gx]'))) { ui.gx[el.dataset.gx] = !ui.gx[el.dataset.gx]; ui.fresh = false; render(); return; }
     if ((el = t.closest('[data-pday]'))) { dsel = el.dataset.pday; try { localStorage.setItem('zenit.day', JSON.stringify({ d: dayIdx(Date.now()), v: dsel })); } catch (err) { /* egal */ } ui.fresh = false; render(); return; }
+    if ((el = t.closest('[data-hsel]'))) { ui.hsel = el.dataset.hsel; ui.fresh = false; render(); return; }
     if ((el = t.closest('[data-pg]'))) { ui.pg = el.dataset.pg; ui.fresh = false; render(); return; }
     if (foodClick(t)) return;
     if (profClick(t)) return;

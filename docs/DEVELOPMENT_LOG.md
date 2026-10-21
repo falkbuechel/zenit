@@ -15,6 +15,12 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-22 – Kartensystem Phase 1 und Heute im Layout B
+Mit Falk festgelegt: Übungen sind Karten mit Seltenheit (Gewöhnlich/Selten/Episch/Legendär, Startlevel 1/3/5/7, Max 10, später Kraftstufen 11+). Level-Up braucht Leistung (Satzziel des nächsten Levels in einer Einheit) UND Fleiß (KP). Muskelgruppen (Rücken, Brust, Schultern, Arme, Core, Beine, Griff, Beweglichkeit, Ausdauer) leveln über alle Übungen (Level 1–20, Kosten 150 × 1,18^(L−1)). Skills sollen später über Muskel-Level freischalten. Heute-Layout B (Karten-Reihe) gewählt.
+- Umsetzung: alles in `derive()` aus den Logs berechnet (`cards`, `mp`), keine neue Datenform. KP je Satz = 10 × Leistung / Ziel des aktuellen Levels (max 15). Satzziel `cTarget`: 30 % → 150 % des Grundziels, geometrisch ab Startlevel. Kosten `cCost` = Einheiten (`CSES`) × 10 × Sätze. Seltenheit `rarOf` aus der Tiefe im Freischalt-Pfad. Muskeln `musOf` aus `e.mu` (erstes Wort 1,0, weitere 0,5).
+- Heute: schlanke Kopfzeile (`hudSlim`: Tag, Serie, Level), Status nur bei offener Serie, Karten-Reihe (`.hc`, Farbe je Seltenheit, KP-Balken), darunter `cardProg` (Lv → Lv+1: Leistung, KP) und die Sätze der gewählten Karte. Alter Hero und „Vorwoche jagen“ in „Serie und Belohnungen“ (aufklappbar). Toast bei Karten-Level-Up.
+- Offen: Muskel-Ansicht/Sammelbuch, Skills über Muskel-Level, Sätze je Level, Tages-Drop, Aufgaben, Saison.
+
 ### 2026-10-22 – Wasser ohne Knopf, Zahl wischen, Icons, einheitliche Tagesüberschrift
 - Wasser-Regler ohne sichtbaren Knopf (Thumb transparent, 28 px greifbar).
 - Zahl wischen: waagerecht über Menge (`#fa`, `#fpcn`) oder Wasser (`#wa-n`) ziehen ändert den Wert (Pointer-Events, ab 8 px, je 10 px ein Schritt). Fehler: Name `scrub` gab es schon (Diagramm) → `nsw`; `check.py` hat es gefunden.

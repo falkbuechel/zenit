@@ -27,7 +27,12 @@ docs/              DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 ## 3. Daten
 - localStorage `stufenbuch.v1`: `{u, logs, plan, food}`. Demo-Modus nutzt `stufenbuch.demo` (Profil > Zahnrad > Testdaten, 5 Szenarien, `demoData(kind)`).
 - logs: `{t, e, s:[…], k?}`; `e` = Übungs-id, `'warm'` oder `'sess'`.
-- food: `{g:{k,p}, e:[{t,n,k,p}], d:[Gerichte], w:[{t,kg}], pr:{h,a,s,act,go,tw,ex,inj,eq}, m:[Maße]}`.
+- food: `{g, e, d, o, w, pr, m}`
+  - `e: [{t, n, k, p, f?, c?, fb?, su?, r?: {i, g}}]` – Einträge: kcal, Protein, Fett, Kohlenhydrate, Ballaststoffe, Zucker (fehlende = unbekannt, alte Einträge haben nur k/p). `r` = Quelle (`FOODS`-id, eigenes `u…`, Gericht `d…`) und Menge (Gramm, beim Gericht Portionen); daraus entstehen die Schnell-Kacheln (`fTiles`).
+  - `FOODS` im Code: ca. 100 Lebensmittel je 100 g mit Portionen (Richtwerte). `o: [{id: 'u…', n, k, p, f, c, fb, su, u: [[Portion, g]]}]` eigene Lebensmittel. `d: [{id, n, por, ing: [{n, a, k, p, f?, c?, fb?, su?, i?}]}]` Gerichte (Zutatenwerte je 100 g).
+  - `g` – Ziele: `{a: 1}` = automatisch aus dem Rechner (je Tag, `foodGoal(tag)`), sonst eigene Werte `{k, p, f?, c?, fb?, su?}` (fehlende aus kcal abgeleitet).
+  - `pr` – Körper + Rechner: `h, a, s, go, tw, ex, inj, eq` (Profil) und `pal` (Alltag ohne Sport), `rt` (kg/Woche), `pkg` (Protein g/kg), `fp` (Fett %), `tb` (Trainingszuschlag 0/1), `adj` (Korrektur aus dem Verlauf). Altes `act` wird nur noch zu `pal` umgerechnet.
+  - Rechner (`calcWith`): Mifflin-St Jeor × `pal` + Training (MET 5/7 × kg × Dauer, `trainKcal`) + `rt` × 1100 + `adj`. Makros: Protein g/kg, Fett %, Kohlenhydrate Rest, Ballaststoffe 14 g/1000 kcal, Zucker ≤ 10 %. Lernen (`tdeeEst`): 28 Tage, Ø gegessen − Gewichtstrend × 7700; nur bei ≥ 10 Tagen, ≥ 3 Messungen über ≥ 10 Tage und höchstens 30 % Abweichung von der Formel.
 - plan: `{days, v, ev, cu, ov, ovl, ovk, off, wp, act}`
   - `days: [{id, n, c, i?, rp?, st?, wd, ex}]` – Trainingstage. `i` Icon (`DAYI`, sonst Hauptgruppe via `dIcon`), `rp` Rhythmus (fehlt = jede Woche, 2/3 = alle n Wochen, 0 = einmalig) ab Startwoche `st` (Montag als Tagesindex), `ex` Übungen (gesperrte dürfen drinstehen, erscheinen nach dem Freischalten).
   - `wp: [{id, n, m: {tagId: [wd]}}]` – gespeicherte Wochenpläne. `act: [{a, p}]` – Zeitstrahl: Plan `p` gilt ab Tag `a` (`actAt`). Wochentage eines Trainingstags an einem Datum: `wdAt`; `days[].wd` ist nur der heutige Stand (`syncWd`). Migration: alte Wochentage = Plan `w1` „Mein Plan“, aktiv ab 0.

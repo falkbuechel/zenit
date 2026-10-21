@@ -37,6 +37,13 @@ const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data
         const vals = await p.$$eval(sel, (els, s) => [...new Set(els.map(e => e.getAttribute(s.slice(1, -1))))], sel);
         for (const v of vals) await click(`${sel.slice(0, -1)}="${v}"]`);
       }
+      // Essen: Kachel, Suche → Menge → Eintragen, Schnell, Ziele (beide Modi), Gerichte, eigenes Lebensmittel
+      if (tab === 'food') {
+        await click('[data-ftile="0"]'); await click('[data-fsearch]'); await p.fill('#fq', 'ei').catch(() => {}); await click('[data-fpick]'); await click('[data-fstep="1"]'); await click('[data-fpadd]');
+        await click('[data-fquick]'); await closeSheet(); await click('[data-fgoal]'); await click('[data-ctb]'); await click('[data-gmode="m"]'); await click('[data-gmode="a"]'); await closeSheet();
+        await click('[data-fdishes]'); await click('[data-fde]'); await closeSheet(); await click('[data-fsearch]'); await click('[data-fown="new"]'); await closeSheet();
+        await click('[data-fedit]'); await closeSheet();
+      }
       // Plan: Tag ändern (Tauschen über den Kalender, Ersetzen, Aussetzen, Urlaub; jede Aktion schaltet sich beim zweiten Tippen aus)
       if (tab === 'tage' && await click('[data-cnow]') !== null) {
         if (!(await p.$('.pday.open'))) await click('[data-pchg]');

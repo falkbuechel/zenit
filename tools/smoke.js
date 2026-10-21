@@ -36,6 +36,13 @@ const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data
         const vals = await p.$$eval(sel, (els, s) => [...new Set(els.map(e => e.getAttribute(s.slice(1, -1))))], sel);
         for (const v of vals) await click(`${sel.slice(0, -1)}="${v}"]`);
       }
+      // Plan: Tag ändern (tauschen, ersetzen, Urlaub eintragen und löschen, zurücksetzen)
+      if (tab === 'tage' && await click('[data-cnow]') !== null) {
+        if (!(await p.$('.pday.open'))) await click('[data-pchg]');
+        await click('[data-pmode="swap"]'); await click('[data-pswap]'); await click('[data-pmode="repl"]'); await click('[data-prepl]');
+        await click('[data-pmode="vac"]'); await click('[data-poff="3"]'); await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-urlaub.png`) });
+        await click('[data-offdel]'); await click('[data-pchg]'); await click('[data-creset]');
+      }
       // Plan: Trainingstag-Editor öffnen, Übung an/aus, Icon, Filter, zurück
       if (tab === 'tage' && await click('[data-pedit]')) {
         await click('[data-ptog]'); await click('[data-ptog]'); await click('[data-pic="star"]'); await click('[data-pef="pull"]'); await click('[data-pef="all"]');

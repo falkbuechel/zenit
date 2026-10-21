@@ -17,7 +17,7 @@ boot='''<script>
 if ('serviceWorker' in navigator) addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
 </script>'''
-base = '<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.4 system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>'
+base = '<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px)}body{margin:0;font:14px/1.4 system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>'
 verjs='<script>window.ZENIT_V='+repr(ver)+'</script>' if ver else ''
 s='<!doctype html>\n<html lang="de"><head><meta charset="utf-8">'+head+base+verjs+'</head><body>\n'+s.replace('<!--PWA-->','')+boot+'\n</body></html>'
 os.makedirs('dist',exist_ok=True)

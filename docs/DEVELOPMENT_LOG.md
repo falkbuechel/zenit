@@ -13,6 +13,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-21 – Tag ändern, Urlaub/Krank, kein unnötiges Scrollen
+- Tag ändern (✎ in der Tageskarte): beschriftete Knöpfe Tauschen, Aussetzen, Ersetzen, Zusätzlich, Urlaub, Krank (`dayEdit`, `ui.pmode`); zweite Ebene darunter (Tag zum Tauschen, Trainingstag, Dauer 1–14 Tage). Vergangene Tage (bis 14 zurück): nur Urlaub/Krank. `ovSet` aufgeteilt in `ovPut` (ohne Neuaufbau) + Rendern.
+- Neue Datenform `plan.off: [{a, b, k: 'vac'|'sick'}]`. `schedFor` gibt dort nichts zurück; Kalender zeigt ☀/Thermometer; Karte zeigt Zeitraum mit Löschen.
+- Serie geschützt, Ziele bleiben (Falks Wahl): `streakCalc` und `derive` zählen Urlaub/Krank-Tage nicht als Lücke (`offCount`, liegt außerhalb des PURE-Teils, wird zur Laufzeit gefunden). Test: Szenario „Serie gerissen“ + 7 Tage Urlaub über die Lücke = Serie 0 → 52.
+- Fehler: Seite scrollte, obwohl alles passte. Der untere Sicherheitsabstand (Home-Leiste) wurde doppelt gerechnet (`:root` in `build.py` und `.page`), dazu 112 px Puffer. Jetzt nur in `.page`, Puffer 80 px; `overscroll-behavior: none` gegen Gummiband.
+- WebKit (Playwright) installiert, um iPhone-Fehler nachzustellen: `pw.webkit` + `devices['iPhone 14']`. Tab-Leiste dort korrekt; Falk schickt Screenshot.
+
 ### 2026-10-21 – Plan: Rhythmus, gesperrte Übungen, Tab-Leiste
 - Neue Datenform `plan.days[].rp/st` (einmalig, jede, alle 2/3 Wochen ab Startwoche). `schedFor` und `ovSet` nutzen dafür `onDay`; Editor: Rhythmus-Wahl und Startwoche ‹ ›; Rhythmus steht an Chips und in den Listen.
 - Editor: gesperrte Übungen ohne Schalter, immer ganz unten („Gesperrt“, nach Fortschritt sortiert), Fortschrittsring in Prozent (`lockPct`, Mittel der Bedingungen), Antippen zeigt die Bedingungen mit Balken (`ui.plk`). Zähler zählen nur verfügbare Übungen.

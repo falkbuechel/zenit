@@ -15,6 +15,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-21 – Seite steht fest, kein Markieren/Zoom, Rechner kompakt, Restaurant-Gerichte
+- Nur noch `#app` scrollt (`position: fixed; overflow-y: auto`), `html/body` haben `overflow: hidden`. Kurze Seiten (Plan) scrollen nicht mehr, kein Gummiband an Kopf und Tab-Leiste. Alle `window.scrollTo/scrollY` → `$('app')`. `compare.js` hebt das für Ganzseiten-Screenshots auf.
+- Markieren aus (`user-select: none` am body, Eingabefelder ausgenommen, sonst lässt iOS nicht tippen). Zoom aus: Viewport `maximum-scale=1,user-scalable=no`, `touch-action: pan-x pan-y`, `gesturestart` blockiert.
+- Fehler: `.rng` war doppelt (Zeitraum-Knöpfe im Verlauf + Rechner-Regler) → Regler lagen in grünen Kästen. Rechner nutzt jetzt `.crg`; Ergebnis oben (Ruhetag/Training groß, Makros in einer Zeile, Rechenweg aufklappbar), Eingaben in einer Zeile.
+- Kachel antippen öffnet die Mengenwahl mit der letzten Menge (statt sofort einzutragen).
+- 12 Restaurant-Gerichte mit Tellergröße klein/normal/groß (mittlere vorgewählt), Kategorie „Restaurant & Imbiss“.
+
 ### 2026-10-21 – Essen: Kachelreihe zum Wischen, Kategorien, Statistik im Verlauf
 - Schnell-Kacheln: eine Reihe mit bis zu 12, wischbar (Scroll-Snap, 4 sichtbar, die 5. lugt hervor, `data-noswipe`).
 - Suche ohne Eingabe: 5 × „Zuletzt“, darunter Kategorien (`FCATS`, setzt `FOODB[id].cat`) plus Eigene und Gerichte; `ui.fcat` bleibt beim Zurück aus der Mengenwahl erhalten.

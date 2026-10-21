@@ -29,7 +29,7 @@ const VIEWS = [['heute'], ['food'], ['fort'], ['profil'], ['tage'], ['tage', '[d
       for (const [t, extra] of VIEWS) {
         await p.click(`#tabs [data-tab="${t}"]`); await p.waitForTimeout(900);
         if (extra) { await p.click(extra, { force: true }).catch(() => {}); await p.waitForTimeout(400); }
-        await p.addStyleTag({ content: NOANIM }); await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(150);
+        await p.addStyleTag({ content: NOANIM }); await p.addStyleTag({ content: 'html, body { height: auto !important; overflow: visible !important; } #app { position: static !important; overflow: visible !important; }' }); await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(150);
         const key = cs + '-' + t + (extra ? '-' + extra.replace(/[^a-z]/g, '') : '');
         (shots[key] = shots[key] || {})[lab] = (await p.screenshot({ fullPage: true })).toString('base64');
         if (extra === '[data-pman]') await p.click('[data-pmanx]').catch(() => {});

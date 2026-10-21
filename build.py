@@ -8,7 +8,7 @@ ver=git('rev-parse','--short','HEAD')
 if ver: ver+=('+' if git('status','--porcelain') else '')+' · '+git('log','-1','--format=%cd','--date=format:%d.%m.%y %H:%M')
 # utf-8 + newline='' explizit: Windows würde sonst cp1252 lesen und CRLF schreiben
 s=open('src/zenit.html',encoding='utf-8').read()
-head='''<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+head='''<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#0c1110">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Zenit">

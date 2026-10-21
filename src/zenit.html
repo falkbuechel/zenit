@@ -72,7 +72,7 @@
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 /* iOS-Web-App: ist die Seite kürzer als der Bildschirm, sitzen feste Leisten unten zu hoch. Deshalb immer mindestens bildschirmhoch,
    der obere Sicherheitsabstand (Statusleiste) liegt innerhalb dieser Höhe statt zusätzlich an :root (sonst scrollt die Seite) */
-body { background: radial-gradient(90% 38% at 50% -4%, color-mix(in srgb, var(--ac) 8%, transparent), transparent 72%) no-repeat, var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.45; min-height: 100vh; min-height: 100lvh; padding-top: env(safe-area-inset-top, 0px); }
+body { background: radial-gradient(90% 38% at 50% -4%, color-mix(in srgb, var(--ac) 8%, transparent), transparent 72%) no-repeat, var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.45; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); background: var(--bg); z-index: 10; }
 button, input { font: inherit; color: inherit; }
 button { cursor: pointer; touch-action: manipulation; }
@@ -120,7 +120,10 @@ button { cursor: pointer; touch-action: manipulation; }
 .bar.t5 > i { background-size: 300% 100%; animation: holo 6s linear infinite; }
 
 .page { padding-top: 4px; padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
-html, body { overscroll-behavior: none; }
+/* Nur #app scrollt (nicht die Seite): Leisten oben/unten stehen fest, kein Gummiband, kurze Seiten scrollen nicht. Kein Zoom per Geste */
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; touch-action: pan-x pan-y; }
+#app { position: fixed; inset: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch; padding-top: env(safe-area-inset-top, 0px); }
+input, textarea { -webkit-user-select: text; user-select: text; }
 .fresh .rise { animation: rise .42s var(--ease) both; animation-delay: calc(min(var(--i, 0), 12) * 40ms); }
 @keyframes rise { from { opacity: 0; transform: translateY(10px) scale(.985); } to { opacity: 1; transform: none; } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
@@ -1177,21 +1180,38 @@ button.pdb-h:active { background: var(--s2); }
 .dg3.two { grid-template-columns: 1fr 1fr; margin: 10px 0; }
 .dgl { display: flex; align-items: center; gap: 6px; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
 .dgl .ic { width: 13px; height: 13px; }
-.rng { display: grid; gap: 6px; margin-top: 14px; }
-.rng > span { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; font-weight: 800; }
-.rng b { font-size: 12px; font-weight: 600; color: var(--ink2); text-align: right; }
-.rng input[type="range"] { width: 100%; accent-color: var(--ac); }
-.rng .seg { margin-top: 0; }
+.crg { display: grid; gap: 2px; margin-top: 10px; }
+.crg > span { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; font-weight: 800; color: var(--ink3); text-transform: uppercase; letter-spacing: .06em; }
+.crg b { font-family: var(--f-mono); font-size: 12px; font-weight: 600; color: var(--ink); text-transform: none; letter-spacing: 0; text-align: right; }
+.crg input[type="range"] { width: 100%; height: 28px; margin: 0; accent-color: var(--ac); }
+.crg .seg { margin: 4px 0 0; }
+.cin { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) 84px; gap: 6px; align-items: end; margin-top: 12px; }
+.cin label { display: grid; gap: 3px; font-size: 10.5px; font-weight: 800; color: var(--ink3); text-transform: uppercase; letter-spacing: .06em; }
+.cin input { width: 100%; height: 42px; padding: 0 8px; border-radius: 10px; border: 1px solid var(--line); background: var(--s1); color: var(--ink); font-family: var(--f-mono); font-size: 16px; }
+.cin .seg { margin: 0; padding: 3px; }
+.cin .seg button { min-height: 34px; }
+.ctop { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ctop.one { grid-template-columns: 1fr; }
+.ctop small { display: block; font-size: 10.5px; font-weight: 800; color: var(--ink3); text-transform: uppercase; letter-spacing: .06em; }
+.ctop b { font-family: var(--f-display); font-size: 30px; font-weight: 900; line-height: 1.05; }
+.ctop em { margin-left: 4px; font-style: normal; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
+.cmac { display: flex; justify-content: space-between; margin: 8px 0 0; padding-top: 8px; border-top: 1px solid var(--line); font-family: var(--f-mono); font-size: 13px; font-weight: 700; }
+.cmac small { margin-left: 2px; font-size: 10px; color: var(--ink3); }
+.cres2 details { margin-top: 6px; }
+.cres2 summary { cursor: pointer; font-size: 12px; font-weight: 700; color: var(--ink3); list-style: none; }
+.cres2 summary::-webkit-details-marker { display: none; }
+.cres2 details[open] summary { margin-bottom: 4px; }
 .seg.six { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .seg.six button { min-height: 38px; padding: 0; font-size: 12px; }
-.clearn { display: grid; gap: 8px; margin-top: 14px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 12px; }
+.clearn { display: grid; gap: 8px; margin-top: 8px; padding: 8px 12px; border: 1px dashed var(--line); border-radius: 12px; }
+.clearn:empty { display: none; }
 .clearn > div { display: flex; align-items: flex-start; gap: 10px; }
 .clearn .ic { flex: none; width: 20px; height: 20px; color: var(--ink2); }
-.clearn b { display: block; font-size: 14px; }
+.clearn b { display: block; font-size: 13px; }
 .clearn small { display: block; font-size: 12px; color: var(--ink3); }
 .clearn .ok { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--ac); }
 .clearn .ok .ic { width: 15px; height: 15px; color: var(--ac); }
-.cres2 { display: grid; gap: 4px; margin: 12px 0; padding: 10px 12px; border-radius: 12px; background: var(--s2); }
+.cres2 { display: grid; gap: 4px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--s2); }
 .cres2 > div { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink2); }
 .cres2 > div b { font-family: var(--f-mono); color: var(--ink); }
 .cres2 .tot { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--line); font-size: 15px; font-weight: 800; color: var(--ink); }
@@ -2440,7 +2460,20 @@ button.pdb-h:active { background: var(--s2); }
     ['doener', 'Döner', 215, 12, 10, 19, 1.5, 2, 'Stück:350'],
     ['burger', 'Cheeseburger', 260, 13, 12, 24, 1.5, 5, 'Stück:120'],
     ['pommes', 'Pommes', 290, 3.4, 15, 35, 3, 0.5, 'Portion:150'],
-    ['lasag', 'Lasagne', 160, 8, 8, 13, 1, 2.5, 'Portion:350']
+    ['lasag', 'Lasagne', 160, 8, 8, 13, 1, 2.5, 'Portion:350'],
+    // Restaurant: Werte je 100 g inkl. üblichem Fett der Küche, Portionen klein / normal / groß
+    ['schnitz', 'Schnitzel mit Pommes', 230, 11, 12, 20, 2, 0.5, 'klein:350|Teller:500|groß:650'],
+    ['spagb', 'Spaghetti Bolognese', 150, 7, 5, 19, 1.5, 3, 'klein:350|Teller:500|groß:650'],
+    ['pcarb', 'Pasta Carbonara', 210, 8, 10, 22, 1, 1.5, 'klein:350|Teller:500|groß:650'],
+    ['curryr', 'Curry mit Reis', 155, 6, 6, 19, 1.5, 3, 'klein:400|Teller:550|groß:700'],
+    ['gyros', 'Gyros-Teller', 190, 11, 11, 13, 1.5, 1.5, 'klein:400|Teller:550|groß:700'],
+    ['rburg', 'Burger mit Pommes', 260, 11, 14, 23, 2, 4, 'klein:400|Teller:550|groß:700'],
+    ['steakb', 'Steak mit Beilage', 170, 14, 9, 8, 1.5, 1, 'klein:400|Teller:550|groß:700'],
+    ['cwurst', 'Currywurst mit Pommes', 250, 7, 15, 22, 2, 5, 'klein:350|Teller:450|groß:550'],
+    ['bowl', 'Bowl mit Hähnchen', 140, 9, 6, 13, 2.5, 3, 'klein:400|Bowl:550|groß:700'],
+    ['csalat', 'Salat mit Hähnchen', 120, 9, 7, 5, 2, 3, 'klein:300|Teller:400|groß:550'],
+    ['sushi', 'Sushi', 150, 6, 2, 28, 1, 5, '8 Stück:200|12 Stück:300|16 Stück:400'],
+    ['ramen', 'Ramen', 90, 4.5, 3.5, 10, 0.8, 1, 'klein:500|Schale:700|groß:900']
   ].map(function (r) {
     var o = { id: r[0], n: r[1], k: r[2], p: r[3], f: r[4], c: r[5], fb: r[6], su: r[7], u: [] };
     r[8].split('|').forEach(function (s) { var q = s.split(':'); o.u.push([q[0], +q[1]]); });
@@ -2458,7 +2491,7 @@ button.pdb-h:active { background: var(--s2); }
     ['n', 'Nüsse, Samen & Öl', 'mandeln walnuss erdnuss ernmus cashew leins chia olivoel rapsoel'],
     ['s', 'Süßes & Snacks', 'zbschok mschok priegel chips gummi honig marm nusscr vaneis'],
     ['d', 'Getränke', 'osaft cola bier'],
-    ['r', 'Fertiges & Imbiss', 'pizza doener burger pommes lasag']
+    ['r', 'Restaurant & Imbiss', 'schnitz spagb pcarb curryr gyros rburg steakb cwurst bowl csalat sushi ramen pizza doener burger pommes lasag']
   ];
   FCATS.forEach(function (c) { c[2].split(' ').forEach(function (id) { if (FOODB[id]) FOODB[id].cat = c[0]; }); });
   var NK = ['k', 'p', 'f', 'c', 'fb', 'su'], NSH = { k: 'kcal', p: 'Protein', f: 'Fett', c: 'Kohlenh.', fb: 'Ballast.', su: 'Zucker' };
@@ -2664,7 +2697,7 @@ button.pdb-h:active { background: var(--s2); }
   }
   function openPick(id, a, edit) {
     var it = fItem(id); if (!it) return;
-    ui.sheet = { fpick: true }; ui.fpick = { i: id, a: a != null ? a : it.dish ? 1 : it.u.length ? it.u[0][1] : 100, edit: edit };
+    ui.sheet = { fpick: true }; ui.fpick = { i: id, a: a != null ? a : it.dish ? 1 : it.u.length ? it.u[it.u.length === 3 ? 1 : 0][1] : 100, edit: edit };
     sheetOpen(fpickHtml(), true);
   }
   function fpickHtml() {
@@ -2798,14 +2831,13 @@ button.pdb-h:active { background: var(--s2); }
     if (ui.gmode === 'm') {
       return h + '<div class="dg3">' + NK.map(function (k) { return '<label>' + (k === 'k' ? 'kcal' : NSH[k] + ' g') + '<input id="g-' + k + '" type="number" inputmode="numeric" min="0" value="' + g[k] + '"></label>'; }).join('') + '</div><p class="muted fnote">Leere Felder rechnet die App aus den kcal (Fett 25 %, Ballaststoffe 14 g je 1000 kcal, Zucker höchstens 10 %).</p><button class="btn primary big" data-fgsave="1">' + ic('check') + 'Speichern</button>';
     }
-    return h + '<div class="dg3"><label>Größe cm<input id="c-h" type="number" inputmode="numeric" value="' + c.h + '"></label><label>Alter<input id="c-a" type="number" inputmode="numeric" value="' + c.a + '"></label><label>Gewicht kg<input id="c-w" type="number" inputmode="decimal" step="0.1" value="' + c.w + '"></label></div>' +
-      '<div class="seg"><button data-csx="m" aria-pressed="' + (c.s !== 'f') + '">Mann</button><button data-csx="f" aria-pressed="' + (c.s === 'f') + '">Frau</button></div>' +
-      '<label class="rng"><span>Alltag ohne Sport<b id="c-palv">' + palText(c.pal) + '</b></span><input id="c-pal" type="range" min="1.2" max="1.9" step="0.05" value="' + c.pal + '"></label>' +
-      '<div class="rng"><span>Tempo<b>kg pro Woche</b></span><div class="seg six">' + RATES.map(function (r) { return '<button data-crt="' + r + '" aria-pressed="' + (r === c.rt) + '">' + rateText(r) + '</button>'; }).join('') + '</div></div>' +
-      '<label class="rng"><span>Protein<b id="c-pkgv">' + fN(c.pkg) + ' g je kg</b></span><input id="c-pkg" type="range" min="1.4" max="2.6" step="0.1" value="' + c.pkg + '"></label>' +
-      '<label class="rng"><span>Fett<b id="c-fpv">' + c.fp + ' % der kcal</b></span><input id="c-fp" type="range" min="20" max="40" step="5" value="' + c.fp + '"></label>' +
-      '<button class="sw" data-ctb="1" aria-pressed="' + !!c.tb + '"><span>Trainingstage mehr<small>Zuschlag aus Dauer, Gewicht und Belastung</small></span><i></i></button>' +
-      '<div class="clearn" id="c-learn"></div><div class="cres2" id="c-res"></div>' +
+    function crg(id, lab, v, min, max, st) { return '<label class="crg"><span>' + lab + '<b id="c-' + id + 'v"></b></span><input id="c-' + id + '" type="range" min="' + min + '" max="' + max + '" step="' + st + '" value="' + v + '"></label>'; }
+    return h + '<div class="cres2" id="c-res"></div><div class="clearn" id="c-learn"></div>' +
+      '<div class="cin"><label>cm<input id="c-h" type="number" inputmode="numeric" value="' + c.h + '"></label><label>Jahre<input id="c-a" type="number" inputmode="numeric" value="' + c.a + '"></label><label>kg<input id="c-w" type="number" inputmode="decimal" step="0.1" value="' + c.w + '"></label>' +
+      '<div class="seg"><button data-csx="m" aria-pressed="' + (c.s !== 'f') + '">M</button><button data-csx="f" aria-pressed="' + (c.s === 'f') + '">W</button></div></div>' +
+      '<div class="crg"><span>Tempo<b>kg / Woche</b></span><div class="seg six">' + RATES.map(function (r) { return '<button data-crt="' + r + '" aria-pressed="' + (r === c.rt) + '">' + rateText(r) + '</button>'; }).join('') + '</div></div>' +
+      crg('pal', 'Alltag', c.pal, 1.2, 1.9, 0.05) + crg('pkg', 'Protein', c.pkg, 1.4, 2.6, 0.1) + crg('fp', 'Fett', c.fp, 20, 40, 5) +
+      '<button class="sw" data-ctb="1" aria-pressed="' + !!c.tb + '"><span>Trainingstage mehr</span><i></i></button>' +
       '<button class="btn primary big" data-cuse="1" id="c-use">' + ic('check') + 'Übernehmen</button>';
   }
   function calcRead() {
@@ -2816,23 +2848,25 @@ button.pdb-h:active { background: var(--s2); }
   function calcUpd() {
     var r = $('c-res'); if (!r) return;
     var c = calcRead(), today = dayIdx(Date.now()), ok = c.h >= 120 && c.a >= 14 && c.w >= 20;
-    $('c-palv').textContent = palText(c.pal); $('c-pkgv').textContent = fN(c.pkg) + ' g je kg'; $('c-fpv').textContent = c.fp + ' % der kcal';
+    $('c-palv').textContent = palText(c.pal); $('c-pkgv').textContent = fN(c.pkg) + ' g / kg'; $('c-fpv').textContent = c.fp + ' % der kcal';
     if (!ok) { r.innerHTML = '<p class="muted">Größe, Alter und Gewicht eintragen.</p>'; $('c-learn').innerHTML = ''; $('c-use').disabled = true; return; }
     $('c-use').disabled = false;
     var pr = { h: c.h, a: c.a, s: c.s, pal: c.pal, rt: c.rt, pkg: c.pkg, fp: c.fp, tb: c.tb, adj: c.adj }, rest = calcWith(Object.assign({}, pr, { tb: 0 }), c.w, today);
     var tday = null; for (var i = 0; i < 8 && !tday; i++) if (schedFor(today + i).length) tday = calcWith(pr, c.w, today + i);
     function row(lab, v, cls) { return '<div' + (cls ? ' class="' + cls + '"' : '') + '><span>' + lab + '</span><b>' + v + '</b></div>'; }
-    function mac(x) { return 'P ' + x.p + ' · F ' + x.f + ' · K ' + x.c + ' · B ' + x.fb + ' · Z ≤' + x.su; }
-    r.innerHTML = row('Grundumsatz', Math.round(rest.bmr)) + row('× Alltag ' + fN2(c.pal), Math.round(rest.bmr * c.pal)) +
+    function mac(x) { return '<p class="cmac">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return '<span class="' + k + '">' + (k === 'su' ? '≤' : '') + x[k] + '<small>' + NSH[k] + '</small></span>'; }).join('') + '</p>'; }
+    function big(lab, x, pre) { return '<div><small>' + lab + '</small><b>' + pre + x.k + '</b><em>kcal</em></div>'; }
+    var tr = c.tb && tday && tday.k !== rest.k;
+    r.innerHTML = '<div class="ctop' + (tr ? '' : ' one') + '">' + big('Ruhetag', rest, '') + (tr ? big('Training', tday, '≈ ') : '') + '</div>' + mac(rest) +
+      '<details><summary>Rechenweg</summary>' + row('Grundumsatz', Math.round(rest.bmr)) + row('× Alltag ' + fN2(c.pal), Math.round(rest.bmr * c.pal)) +
       (c.rt ? row('Tempo ' + rateText(c.rt) + ' kg/Wo.', (c.rt > 0 ? '+' : '−') + Math.round(Math.abs(c.rt) * 1100)) : '') + (c.adj ? row('Korrektur aus Verlauf', (c.adj > 0 ? '+' : '−') + Math.abs(c.adj)) : '') +
-      row('Ruhetag', rest.k + ' kcal', 'tot') + '<small>' + mac(rest) + '</small>' +
-      (c.tb && tday ? row('Trainingstag', '≈ ' + tday.k + ' kcal', 'tot') + '<small>inkl. +' + tday.tb + ' kcal Training · ' + mac(tday) + '</small>' : '');
+      (tr ? row('Training (Schnitt)', '+' + tday.tb) : '') + '</details>';
     var e = tdeeEst(pr), L = $('c-learn');
-    if (e.off) L.innerHTML = '<div>' + ic('chart') + '<span><b>Verlauf passt nicht zur Formel</b><small>Aus Essen und Gewicht ergäben sich ' + e.est + ' kcal statt ' + e.maint + '. Meist fehlen Einträge. Keine Korrektur, bis die Daten zusammenpassen.</small></span></div>';
-    else if (!e.ok) L.innerHTML = '<div>' + ic('chart') + '<span><b>Lernt aus deinem Verlauf</b><small>Braucht 10 Tage mit Einträgen (' + Math.min(e.n, 10) + '/10) und 3 Messungen über 10 Tage (' + Math.min(e.wn, 3) + '/3) im letzten Monat.</small></span></div>';
+    if (e.off) L.innerHTML = '<div>' + ic('chart') + '<span><b>Verlauf passt nicht zur Formel</b><small>Verlauf ergibt ' + e.est + ' statt ' + e.maint + ' kcal, meist fehlen Einträge.</small></span></div>';
+    else if (!e.ok) L.innerHTML = '<div>' + ic('chart') + '<span><b>Lernt aus dem Verlauf</b><small>Tage ' + Math.min(e.n, 10) + '/10 · Wiegen ' + Math.min(e.wn, 3) + '/3</small></span></div>';
     else {
       var diff = e.adj - c.adj;
-      L.innerHTML = '<div>' + ic('chart') + '<span><b>Dein Verlauf: Bedarf ≈ ' + e.est + ' kcal</b><small>' + e.n + ' Tage, Gewicht ' + (e.wk >= 0 ? '+' : '−') + fN(Math.abs(e.wk)) + ' kg/Woche. Formel ohne Korrektur: ' + e.maint + ' kcal.</small></span></div>' +
+      L.innerHTML = '<div>' + ic('chart') + '<span><b>Verlauf: Bedarf ≈ ' + e.est + ' kcal</b><small>' + e.n + ' Tage · ' + (e.wk >= 0 ? '+' : '−') + fN(Math.abs(e.wk)) + ' kg/Wo. · Formel ' + e.maint + '</small></span></div>' +
         (Math.abs(diff) >= 50 ? '<button class="btn small" data-cadj="' + e.adj + '">' + ic('check') + 'Korrektur ' + (e.adj > 0 ? '+' : '−') + Math.abs(e.adj) + ' kcal übernehmen</button>' : '<small class="ok">' + ic('check') + 'Passt zur Formel' + (c.adj ? ' mit Korrektur' : '') + '.</small>');
     }
   }
@@ -2866,7 +2900,7 @@ button.pdb-h:active { background: var(--s2); }
       ui.undo = '#' + JSON.stringify(st); st.e.splice(i, 1); persist(); ui.fresh = false; render(); toast('Gelöscht', 'close', true); return true;
     }
     if ((el = t.closest('[data-fedit]'))) { var x = st.e[+el.dataset.fedit]; if (x && x.r && fItem(x.r.i)) openPick(x.r.i, x.r.g, +el.dataset.fedit); else openQuick(+el.dataset.fedit); return true; }
-    if ((el = t.closest('[data-ftile]'))) { var tl = (ui.ftiles || [])[+el.dataset.ftile]; if (tl) { ui.fday = 0; ui.ftok = +el.dataset.ftile; buzz(8); foodRef(tl.i, tl.g); } return true; }
+    if ((el = t.closest('[data-ftile]'))) { var tl = (ui.ftiles || [])[+el.dataset.ftile]; if (tl) { ui.fday = 0; buzz(8); openPick(tl.i, tl.g); } return true; }
     if (t.closest('[data-fsearch]')) { openFsearch(); return true; }
     if (t.closest('[data-fdishes]')) { openDishes(); return true; }
     if (t.closest('[data-fquick]')) { openQuick(null); return true; }
@@ -3261,12 +3295,12 @@ button.pdb-h:active { background: var(--s2); }
     if (t.closest('[data-psave]')) { planSave(); ui.fresh = false; render(); toast('Plan gespeichert', 'check'); return true; }
     if (t.closest('[data-pdiscok]')) { ui.pwe = draft().id; ui.draft = null; ui.pdisc = 0; ui.fresh = false; render(); toast('Verworfen', 'undo'); return true; }
     if (t.closest('[data-pmanx]')) {
-      if (ui.draft && ui.draft.dirty) { ui.pdisc = 1; ui.fresh = false; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); return true; }
-      ui.pman = false; ui.pnew = false; ui.draft = null; ui.psel = null; ui.pact = null; ui.fresh = true; render(); window.scrollTo(0, 0); return true;
+      if (ui.draft && ui.draft.dirty) { ui.pdisc = 1; ui.fresh = false; render(); $('app').scrollTo({ top: 0, behavior: 'smooth' }); return true; }
+      ui.pman = false; ui.pnew = false; ui.draft = null; ui.psel = null; ui.pact = null; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true;
     }
     if ((el = t.closest('[data-wpopen]'))) {
-      if (ui.draft && ui.draft.dirty) { ui.pdisc = 1; ui.fresh = false; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); return true; }
-      ui.pwe = el.dataset.wpopen; ui.draft = null; ui.psel = null; ui.fresh = true; render(); window.scrollTo(0, 0); return true;
+      if (ui.draft && ui.draft.dirty) { ui.pdisc = 1; ui.fresh = false; render(); $('app').scrollTo({ top: 0, behavior: 'smooth' }); return true; }
+      ui.pwe = el.dataset.wpopen; ui.draft = null; ui.psel = null; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true;
     }
     if ((el = t.closest('[data-wpact]'))) { ui.pact = ui.pact === el.dataset.wpact ? null : el.dataset.wpact; ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-wpon]'))) { planActivate(ui.pact, +el.dataset.wpon); return true; }
@@ -3279,7 +3313,7 @@ button.pdb-h:active { background: var(--s2); }
     if (t.closest('[data-wpnew]')) {
       if (ui.draft && ui.draft.dirty) { ui.pdisc = 1; ui.fresh = false; render(); return true; }
       var nq = { id: 'w' + Date.now().toString(36), n: wpName(), m: {} }; P.wp.push(nq); P.cu = true; persist();
-      ui.pwe = nq.id; ui.draft = null; ui.psel = null; ui.fresh = true; render(); window.scrollTo(0, 0); return true;
+      ui.pwe = nq.id; ui.draft = null; ui.psel = null; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true;
     }
     return false;
   }
@@ -3327,7 +3361,7 @@ button.pdb-h:active { background: var(--s2); }
     if ((el = t.closest('[data-todo]'))) { ui.todo = !ui.todo; el.setAttribute('aria-expanded', ui.todo); el.parentNode.classList.toggle('open', ui.todo); return true; }
     if ((el = t.closest('[data-pdb]'))) { var pk = el.dataset.pdb; ui.pdo[pk] = !ui.pdo[pk]; el.setAttribute('aria-expanded', ui.pdo[pk]); el.parentNode.classList.toggle('open', ui.pdo[pk]); return true; }
     if ((el = t.closest('[data-pchg]'))) { ui.pchg = !ui.pchg; el.setAttribute('aria-expanded', ui.pchg); el.closest('.pday').classList.toggle('open', ui.pchg); return true; }
-    if ((el = t.closest('[data-pman]'))) { ui.pman = true; ui.draft = null; ui.psel = null; ui.pdisc = 0; ui.pnew = el.dataset.pman === 'new'; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
+    if ((el = t.closest('[data-pman]'))) { ui.pman = true; ui.draft = null; ui.psel = null; ui.pdisc = 0; ui.pnew = el.dataset.pman === 'new'; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true; }
     if ((el = t.closest('[data-gotab]'))) { goTab(el.dataset.gotab); return true; }
     if ((el = t.closest('[data-rm]'))) { ui.rm = Math.max(-11, Math.min(0, ui.rm + (+el.dataset.rm))); ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-wr]'))) { ui.wr = el.dataset.wr; ui.fresh = false; render(); return true; }
@@ -3350,13 +3384,13 @@ button.pdb-h:active { background: var(--s2); }
     if (calClick(t)) return true;
     var el, P = plan(), day, a;
     function done(keepScroll) { persist(); ui.fresh = false; render(); }
-    if ((el = t.closest('[data-pedit]'))) { ui.pe = el.dataset.pedit; ui.pdel = 0; ui.pf = domGroup(pDay(ui.pe)) || 'all'; ui.pq = ''; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
-    if (t.closest('[data-pback]')) { ui.pe = null; ui.pdel = 0; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
+    if ((el = t.closest('[data-pedit]'))) { ui.pe = el.dataset.pedit; ui.pdel = 0; ui.pf = domGroup(pDay(ui.pe)) || 'all'; ui.pq = ''; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true; }
+    if (t.closest('[data-pback]')) { ui.pe = null; ui.pdel = 0; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true; }
     if (t.closest('[data-pnew]')) { ui.pnew = !ui.pnew; ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-ppre]'))) {
       var pr = PRESETS[+el.dataset.ppre], ids = pr.ids ? pr.ids.slice() : EX.filter(function (e) { return pr.f.indexOf(e.g) >= 0; }).map(function (e) { return e.id; });
       var nd = { id: 'p' + Date.now().toString(36), n: pr.n === 'Eigener Tag' ? 'Tag ' + (P.days.length + 1) : pr.n, c: pr.c, i: pr.i, wd: [], ex: ids };
-      P.cu = true; P.days.push(nd); ui.pnew = false; ui.pe = nd.id; ui.pf = 'all'; ui.pq = ''; ui.fresh = true; persist(); render(); window.scrollTo(0, 0); return true;
+      P.cu = true; P.days.push(nd); ui.pnew = false; ui.pe = nd.id; ui.pf = 'all'; ui.pq = ''; ui.fresh = true; persist(); render(); $('app').scrollTo(0, 0); return true;
     }
     if ((el = t.closest('[data-pc]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; day.c = +el.dataset.pc; done(); } return true; }
     if ((el = t.closest('[data-ptog]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; var xi = day.ex.indexOf(el.dataset.ptog); if (xi >= 0) day.ex.splice(xi, 1); else day.ex = sortIds(day.ex.concat([el.dataset.ptog])); done(); } return true; }
@@ -3367,7 +3401,7 @@ button.pdb-h:active { background: var(--s2); }
     if ((el = t.closest('[data-pef]'))) { ui.pf = el.dataset.pef; ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-pdel]'))) {
       if (!ui.pdel) { ui.pdel = Date.now(); ui.fresh = false; render(); setTimeout(function () { if (ui.pdel && Date.now() - ui.pdel > 2900) { ui.pdel = 0; if (ui.pe) { ui.fresh = false; render(); } } }, 3000); return true; }
-      P.cu = true; P.days = P.days.filter(function (x) { return x.id !== el.dataset.pdel; }); ui.pe = null; ui.pdel = 0; ui.fresh = true; persist(); render(); window.scrollTo(0, 0); return true;
+      P.cu = true; P.days = P.days.filter(function (x) { return x.id !== el.dataset.pdel; }); ui.pe = null; ui.pdel = 0; ui.fresh = true; persist(); render(); $('app').scrollTo(0, 0); return true;
     }
     return false;
   }
@@ -3781,15 +3815,15 @@ button.pdb-h:active { background: var(--s2); }
   function scrollToEl(el) {
     if (typeof el === 'string') el = document.querySelector(el);
     if (!el) return;
-    var y = el.getBoundingClientRect().top + window.scrollY - $('hud').offsetHeight - 10;
-    window.scrollTo({ top: Math.max(0, y), behavior: reduce ? 'auto' : 'smooth' });
+    var y = el.getBoundingClientRect().top + $('app').scrollTop - $('hud').offsetHeight - 10;
+    $('app').scrollTo({ top: Math.max(0, y), behavior: reduce ? 'auto' : 'smooth' });
   }
   function go(k) {
     if (k === 'plan') { scrollToEl('.plan-h'); return; }
     ui.sel = null; ui.del = null; ui.fresh = true; ui.hd = null;
     if (k === 'cal') { ui.tab = 'fort'; ui.seg = 'ov'; ui.scroll = '#calw'; }
-    else if (k === 'xp') { ui.tab = 'fort'; ui.seg = 'ov'; ui.met = 'xp'; ui.scroll = null; window.scrollTo(0, 0); }
-    else if (k === 'pfad') { ui.tab = 'fort'; ui.seg = 'pf'; ui.sel = null; ui.scroll = null; window.scrollTo(0, 0); }
+    else if (k === 'xp') { ui.tab = 'fort'; ui.seg = 'ov'; ui.met = 'xp'; ui.scroll = null; $('app').scrollTo(0, 0); }
+    else if (k === 'pfad') { ui.tab = 'fort'; ui.seg = 'pf'; ui.sel = null; ui.scroll = null; $('app').scrollTo(0, 0); }
     render();
   }
   var jumpMode = '', todayN = 0, todayVis = 0;
@@ -3797,7 +3831,7 @@ button.pdb-h:active { background: var(--s2); }
     var j = $('jump'), ph = ui.tab === 'heute' && todayN < DAILY && todayVis > 0 ? document.querySelector('.plan-h') : null, m = '';
     if (ph) {
       var top = ph.getBoundingClientRect().top, hb = $('hudw').getBoundingClientRect().bottom;
-      if (top > innerHeight * 0.72) m = 'plan'; else if (top < hb - 40 && window.scrollY > 300) m = 'top';
+      if (top > innerHeight * 0.72) m = 'plan'; else if (top < hb - 40 && $('app').scrollTop > 300) m = 'top';
     }
     if (m !== jumpMode) {
       jumpMode = m;
@@ -3806,7 +3840,9 @@ button.pdb-h:active { background: var(--s2); }
     }
     j.classList.toggle('on', !!m);
   }
-  window.addEventListener('scroll', updJump, { passive: true });
+  $('app').addEventListener('scroll', updJump, { passive: true });
+  // iOS: Pinch-Zoom sperren (Safari ignoriert user-scalable=no)
+  document.addEventListener('gesturestart', function (ev) { ev.preventDefault(); });
   window.addEventListener('resize', updJump);
   document.addEventListener('keydown', function (ev) {
     if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.dataset && ev.target.dataset.go) { ev.preventDefault(); go(ev.target.dataset.go); }
@@ -3828,15 +3864,15 @@ button.pdb-h:active { background: var(--s2); }
     if ((el = t.closest('[data-tm]'))) { tmAct(el.dataset.tm); return; }
     if ((el = t.closest('[data-sess]'))) { if (el.dataset.sess === 'start') sessStart(); else sessEndTap(); return; }
     if (t.closest('[data-warm]')) { warmToggle(); return; }
-    if (t.closest('[data-jump]')) { if (jumpMode === 'plan') scrollToEl('.plan-h'); else window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); return; }
+    if (t.closest('[data-jump]')) { if (jumpMode === 'plan') scrollToEl('.plan-h'); else $('app').scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); return; }
     if ((el = t.closest('[data-go]')) && !t.closest('a')) { go(el.dataset.go); return; }
     if ((el = t.closest('[data-nt]'))) {
       var nt = ui.nts.filter(function (x) { return x.k === el.dataset.nt; })[0]; if (!nt) return;
-      ui.tab = nt.tab; ui.sel = null; ui.pe = null; if (nt.k === 'ux') ui.seg = 'pf'; ui.fresh = true; closeSheet(); render(); window.scrollTo(0, 0);
+      ui.tab = nt.tab; ui.sel = null; ui.pe = null; if (nt.k === 'ux') ui.seg = 'pf'; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0);
       if (nt.k === 'wg') openWeight();
       return;
     }
-    if ((el = t.closest('[data-tab]'))) { ui.sw = TABS.indexOf(el.dataset.tab) - TABS.indexOf(ui.tab); ui.fdrawn = false; ui.tab = el.dataset.tab; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); window.scrollTo(0, 0); return; }
+    if ((el = t.closest('[data-tab]'))) { ui.sw = TABS.indexOf(el.dataset.tab) - TABS.indexOf(ui.tab); ui.fdrawn = false; ui.tab = el.dataset.tab; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0); return; }
     if ((el = t.closest('[data-pill]'))) { var pr = el.dataset.pill.split(':'); openSheet(pr[0], +pr[1]); return; }
     if (t.closest('[data-sheet-close]') || t.id === 'shade') { closeSheet(); return; }
     if ((el = t.closest('[data-step]'))) { var inp = $('sv'), nv = Math.max(0, sheetVal() + (+el.dataset.step) * ui.sheet.step); inp.value = nv; updSheetXp(); buzz(6); return; }
@@ -3855,7 +3891,7 @@ button.pdb-h:active { background: var(--s2); }
     if ((el = t.closest('[data-xr]'))) { ui.xr = el.dataset.xr; ui.pt = null; ui.fresh = true; render(); return; }
     if ((el = t.closest('[data-xm]'))) { ui.xm = el.dataset.xm; ui.fresh = true; render(); return; }
     if ((el = t.closest('[data-pt]'))) { ui.pt = +el.dataset.pt; render(); return; }
-    if ((el = t.closest('[data-open]'))) { ui.sel = el.dataset.open; ui.pt = null; ui.del = null; ui.fresh = true; render(); window.scrollTo(0, 0); return; }
+    if ((el = t.closest('[data-open]'))) { ui.sel = el.dataset.open; ui.pt = null; ui.del = null; ui.fresh = true; render(); $('app').scrollTo(0, 0); return; }
     if (t.closest('[data-back]')) { ui.sel = null; ui.del = null; ui.fresh = true; render(); return; }
     if ((el = t.closest('[data-demo]'))) { demoSwitch(el.dataset.demo); return; }
     var b = t.closest('[data-act]');
@@ -3936,7 +3972,7 @@ button.pdb-h:active { background: var(--s2); }
 
   // ---------- Slide-Steuerung
   var TABS = ['tage', 'food', 'heute', 'fort', 'profil'];
-  function goTab(k, dir) { if (k === ui.tab || TABS.indexOf(k) < 0) return; ui.sw = dir || (TABS.indexOf(k) - TABS.indexOf(ui.tab)); ui.fdrawn = false; ui.tab = k; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); window.scrollTo(0, 0); }
+  function goTab(k, dir) { if (k === ui.tab || TABS.indexOf(k) < 0) return; ui.sw = dir || (TABS.indexOf(k) - TABS.indexOf(ui.tab)); ui.fdrawn = false; ui.tab = k; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0); }
   var sx = 0, sy = 0, st0 = 0, sEl = null, sMode = '', sheetDy = 0, calLock = '';
   document.addEventListener('touchstart', function (e) {
     sMode = ''; if (e.touches.length !== 1) return;

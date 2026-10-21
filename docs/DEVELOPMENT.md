@@ -14,6 +14,7 @@ tools/
   smoke.js         Rauchtest: 5 Demo-Szenarien x 5 Tabs + Ansichten/Dialoge, Screenshots -> tools/out/
   make-icons.js    Icons aus SVG -> public/ (Playwright)
 .github/workflows/pages.yml   Push auf main -> check + smoke -> GitHub Pages
+.claude/skills/               Design-Skills von Emil Kowalski (MIT), Quelle in .claude/skills/README.md
 docs/              DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 ```
 - `<!--PWA-->` in zenit.html wird beim Build entfernt, der Head kommt aus `build.py`.

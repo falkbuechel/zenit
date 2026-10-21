@@ -7,7 +7,8 @@
     "check": "python tools/check.py",
     "serve": "python -m http.server 8000 -d dist",
     "icons": "node tools/make-icons.js",
-    "test": "node tools/smoke.js"
+    "test": "node tools/smoke.js",
+    "compare": "node tools/compare.js"
   },
   "devDependencies": {
     "playwright": "^1.48.0"

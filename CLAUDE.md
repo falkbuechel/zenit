@@ -28,3 +28,5 @@ Sprache: Deutsch (UI und Antworten). Antworten kurz, ohne Einleitung/Recap. Änd
 - Commit-Nachrichten: Deutsch, ein kurzer Satz, was sich für die App ändert.
 - Datenform-Änderungen: Migration muss alte Daten behalten (`clean*`-Funktionen verwerfen sonst still). Vorher Falk an ein Backup erinnern.
 - Lange Zeilen (>400 Zeichen) beim Anfassen umbrechen, keine neuen anlegen.
+- Aufräumen (CSS zusammenführen, toten Code entfernen): danach `node tools/compare.js` muss „Alles gleich“ melden. Klassen aus Code-Teilen (`'g' + k`, `'t' + tier`, `'l' + n`) erkennt kein Scan.
+- Ein Selektor nur einmal im CSS definieren; neue Werte in die bestehende Regel, keine zweite Regel darunter.

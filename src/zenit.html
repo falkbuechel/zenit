@@ -526,12 +526,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .tmb2 .stop { background: var(--danger); color: #fff; }
 @media (max-height: 700px) { .tmw { width: 190px; } }
 
-.pdays { display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
-.pdays::-webkit-scrollbar { display: none; }
-.pd { flex: none; position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--s1); color: var(--ink2); font-weight: 800; transition: transform .16s var(--ease), background .2s; }
-.pd:active { transform: scale(.97); }
-.pd[aria-pressed="true"] { background: color-mix(in srgb, var(--pc, var(--ac)) 20%, var(--s2)); border-color: var(--pc, var(--ac)); color: var(--ink); }
-.pd em { font-style: normal; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
 .pdot { width: 10px; height: 10px; border-radius: 50%; background: var(--pc, var(--ac)); flex: none; }
 .pdot.big { width: 14px; height: 14px; }
 .pgf { display: flex; gap: 6px; margin-top: 8px; }
@@ -545,8 +539,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .restday b { display: block; font-size: 17px; }
 .restday small { color: var(--ink3); font-size: 13px; }
 .pt-h h2 { margin: 4px 0 0; font-family: var(--f-display); font-weight: 900; font-size: 36px; text-transform: uppercase; line-height: 1; }
-.pday { margin-top: 10px; padding: 12px; border-radius: 16px; border: 1px solid var(--line); border-left: 4px solid var(--pc); background: linear-gradient(180deg, var(--s2), var(--s1)); display: grid; gap: 10px; }
-.pday-h { display: flex; align-items: center; gap: 10px; }
 .wds { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
 .wds button { min-height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--s3); color: var(--ink3); font-weight: 800; font-size: 13px; transition: transform .16s var(--ease), background .2s; }
 .wds button:active { transform: scale(.95); }
@@ -554,7 +546,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .pgc { display: flex; gap: 8px; flex-wrap: wrap; }
 .pgc span { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 99px; background: color-mix(in srgb, var(--gc) 16%, var(--s3)); color: var(--gc); font-size: 12px; font-weight: 800; }
 .pgc .ic { width: 14px; height: 14px; }
-.pnew { width: 100%; margin-top: 12px; }
 .ppre { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
 .ppre button { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--s1); color: var(--ink); font-weight: 800; transition: transform .16s var(--ease); }
 .ppre button:active { transform: scale(.97); }
@@ -936,8 +927,8 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
   .sheet, .toast, .unlock { transition-duration: .01ms; }
 }
 @media (max-width: 380px) { .sk b { font-size: 64px; } .ringw, .ringw svg { width: 92px; height: 92px; } .pill { width: 52px; } .step { grid-template-columns: 56px 1fr 56px; } }
-/* Plan: Agenda, Woche, Trainingstage. Werkzeug statt Spiel: Liste statt Kalender, Farbe nur als Punkt/Rand, kein Glow.
-   Bewegung nur mit Zweck: Aufklappen 220 ms (Zeilen darunter gleiten statt zu springen), Ausnahme gesetzt = kurzes Aufleuchten. */
+/* Plan: Kalender (Woche, aufklappbar zum Monat), Tageskarte, Trainingstage; dahinter Woche & Tage. Werkzeug statt Spiel: Farbe nur als Punkt/Rand, kein Glow.
+   Bewegung nur mit Zweck: Woche/Monat gleitet in Blätterrichtung (200 ms), Aufklappen 220 ms, Tageswechsel blendet über (150 ms), Ausnahme gesetzt = kurzes Aufleuchten. */
 .agl { display: grid; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); overflow: hidden; }
 .agr + .agr { border-top: 1px solid var(--line); }
 .agh { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 10px; width: 100%; min-height: 52px; padding: 6px 12px; border: 0; background: transparent; color: var(--ink); font: inherit; text-align: left; -webkit-user-select: none; user-select: none; transition: background-color .16s var(--ease); }
@@ -952,29 +943,21 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .agm { width: 14px; height: 14px; color: var(--ink3); }
 .ags { display: inline-flex; align-items: center; gap: 4px; font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
 .ags .ic { width: 14px; height: 14px; }
-.agr.past .agh { min-height: 44px; }
-.agr.past .agd b, .agr.past .agk { color: var(--ink3); }
-.agr.past .agk .pdot { opacity: .45; }
-.agr.past .ags .ic { color: var(--ac); }
 .agr.today { background: var(--s2); box-shadow: inset 3px 0 0 var(--ink); }
 .agr.today .agd small { color: var(--ink); font-weight: 700; }
-.agr.today.due .agd small { color: var(--flame); }
 .agx { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .22s var(--ease); }
 .agx > div { display: grid; gap: 10px; min-height: 0; overflow: hidden; padding: 0 12px 0 74px; opacity: 0; visibility: hidden; transition: opacity .12s var(--ease), padding .22s var(--ease), visibility 0s .22s; }
-.agr.open .agx { grid-template-rows: 1fr; }
-.agr.open .agx > div { padding-bottom: 12px; opacity: 1; visibility: visible; transition: opacity .2s var(--ease) .05s, padding .22s var(--ease), visibility 0s; }
+.agr.open .agx, .pday.open .agx { grid-template-rows: 1fr; }
+.agr.open .agx > div, .pday.open .agx > div { padding-bottom: 12px; opacity: 1; visibility: visible; transition: opacity .2s var(--ease) .05s, padding .22s var(--ease), visibility 0s; }
 .agr .ptg button { min-height: 36px; }
 .agp { margin: 0; font-size: 13px; color: var(--ink2); }
 .agb { display: flex; flex-wrap: wrap; gap: 8px; }
-.agns { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 10px 74px; }
 .agn { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 10px; border-radius: 99px; border: 1px solid var(--line); background: var(--s1); color: var(--ink2); font: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: none; transition: transform .14s var(--ease); }
 .agn:active { transform: scale(.97); }
 .agn .ic { width: 14px; height: 14px; color: currentColor; }
 .agn.hot { border-color: color-mix(in srgb, var(--flame) 55%, var(--line)); color: var(--flame); }
 .agn.gold { border-color: color-mix(in srgb, var(--gold) 55%, var(--line)); color: var(--gold); }
 .sec-h small.hot { color: var(--flame); }
-.agmore { width: 100%; margin-top: 8px; }
-.agr.fl .agh { animation: agfl .7s var(--ease); }
 @keyframes agfl { from { background-color: color-mix(in srgb, var(--ac) 22%, transparent); } }
 .wvr .agh { min-height: 46px; }
 .wvw { display: inline-flex; align-items: center; gap: 4px; font-family: var(--f-body); font-size: 11px; font-style: normal; font-weight: 700; color: var(--flame); }
@@ -992,7 +975,78 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .tdr .chv { width: 16px; height: 16px; color: var(--ink3); flex: none; }
 .tdr.new { border: 1px dashed var(--line); background: transparent; color: var(--ink2); }
 .tdr.new .ic { width: 18px; height: 18px; }
-@media (prefers-reduced-motion: reduce) { .agx, .agx > div { transition: none; } .agr.fl .agh { animation: none; } }
+/* Kalender */
+.pcal2 { margin-top: 10px; padding: 8px 8px 10px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
+.pc2-h { display: flex; align-items: center; gap: 4px; }
+.pc2-t { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; border: 0; background: transparent; color: var(--ink); font: inherit; }
+.pc2-t b { font-family: var(--f-display); font-weight: 800; font-size: 19px; letter-spacing: .04em; text-transform: uppercase; }
+.pc2-t .ic { width: 16px; height: 16px; color: var(--ink3); transform: rotate(90deg); transition: transform .2s var(--ease); }
+.pc2-t[aria-expanded="true"] .ic { transform: rotate(-90deg); }
+.pc2-now { min-height: 30px; padding: 0 10px; border-radius: 99px; border: 1px solid var(--line); background: var(--s2); color: var(--ink2); font: inherit; font-size: 12px; font-weight: 700; }
+.pc2-w, .pc2-g { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.pc2-w span { padding: 6px 0 4px; text-align: center; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
+.pc2-g { row-gap: 2px; }
+.pc2 { position: relative; display: grid; justify-items: center; align-content: start; gap: 4px; min-height: 54px; padding: 4px 0; border: 0; border-radius: 12px; background: transparent; color: var(--ink); font: inherit; -webkit-user-select: none; user-select: none; transition: background-color .16s var(--ease); }
+.pc2:active { background: var(--s2); }
+.pc2 b { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; font-family: var(--f-mono); font-size: 14px; font-weight: 600; }
+.pc2.past b { color: var(--ink3); }
+.pc2.today b { background: var(--ink); color: var(--bg); font-weight: 700; }
+.pc2.sel { background: var(--s2); box-shadow: inset 0 0 0 1px var(--line); }
+.pc2 .dots { display: flex; gap: 3px; min-height: 6px; }
+.pc2 .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--pc); }
+.pc2.past .dots i { opacity: .35; }
+.pc2 .dn { width: 13px; height: 13px; margin-top: -2px; color: var(--ac); }
+.pc2 .nd { position: absolute; top: 4px; right: calc(50% - 19px); width: 8px; height: 8px; border-radius: 50%; background: var(--ink2); box-shadow: 0 0 0 2px var(--s1); }
+.pc2 .nd.hot { background: var(--flame); }
+.pc2-g.in-r { animation: pcin-r .2s var(--ease); } .pc2-g.in-l { animation: pcin-l .2s var(--ease); } .pc2-g.in-m { animation: pcin-m .2s var(--ease); }
+@keyframes pcin-r { from { opacity: 0; transform: translateX(16px); } }
+@keyframes pcin-l { from { opacity: 0; transform: translateX(-16px); } }
+@keyframes pcin-m { from { opacity: 0; transform: translateY(-6px); } }
+.pc2-n { display: flex; align-items: center; gap: 6px; margin: 6px 4px 0; font-size: 12px; font-weight: 700; color: var(--flame); }
+.pc2-n .ic { width: 14px; height: 14px; }
+/* Tageskarte */
+.pday { display: grid; margin-top: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
+/* Abstände über Ränder statt gap: so nimmt der zugeklappte Bereich (0fr) keinen Platz ein */
+.pday > * + * { margin-top: 10px; }
+.pday > .agx { margin-top: 0; }
+.pday .agx > div { padding: 0; }
+.pday.open .agx > div { padding: 10px 0 2px; }
+.pday .ptg button { min-height: 36px; }
+.pday.in-d { animation: fade .15s var(--ease); }
+.pday.fl { animation: agfl .7s var(--ease); }
+.pd-h { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.pd-h b { font-family: var(--f-display); font-weight: 800; font-size: 19px; letter-spacing: .04em; text-transform: uppercase; }
+.pd-p { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; min-height: 36px; }
+.pd-c { margin-left: auto; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line); background: var(--s2); color: var(--ink2); transition: transform .14s var(--ease); }
+.pd-c:active { transform: scale(.95); }
+.pd-c[aria-expanded="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.pd-c .ic { width: 16px; height: 16px; }
+.pd-f { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.agk.rest { gap: 6px; color: var(--ink3); }
+.todo { display: grid; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.tdo { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; min-height: 46px; padding: 6px 10px; border: 0; background: var(--s2); color: var(--ink); font: inherit; text-align: left; transition: background-color .16s var(--ease); }
+.tdo + .tdo { border-top: 1px solid var(--line); }
+.tdo:active { background: var(--s3); }
+.tdo > .ic { width: 18px; height: 18px; color: var(--ink2); }
+.tdo.hot > .ic:first-child { color: var(--flame); }
+.tdo b { display: block; font-size: 14px; }
+.tdo small { display: block; font-size: 12px; color: var(--ink3); }
+.tdo .chv { width: 14px; height: 14px; color: var(--ink3); }
+/* Trainingstage kompakt */
+.pbar { margin-top: 12px; }
+.pb-h { display: flex; align-items: center; gap: 8px; }
+.pb-h .sec-h { flex: 1; margin: 0; }
+.pb-l { display: flex; gap: 8px; margin-top: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.pb-l::-webkit-scrollbar { display: none; }
+.pbc { flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); border-left: 3px solid var(--pc); background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
+.pbc:active { transform: scale(.97); }
+.pbc .pdot { display: none; }
+.pbc b { display: block; font-size: 14px; }
+.pbc small { display: block; font-family: var(--f-mono); font-size: 10px; color: var(--ink3); }
+.pbc.add { border: 1px dashed var(--line); background: transparent; color: var(--ink2); }
+.pbc.add .ic { width: 18px; height: 18px; }
+.pm-t { margin: 0; flex: 1; font-family: var(--f-display); font-weight: 900; font-size: 26px; text-transform: uppercase; }
+@media (prefers-reduced-motion: reduce) { .agx, .agx > div { transition: none; } .pday.fl { animation: none; } .pc2-g.in-r, .pc2-g.in-l, .pc2-g.in-m { animation: fade .15s ease; } }
 </style>
 
 <div id="app">
@@ -1242,7 +1296,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
   var DEMO = false; try { DEMO = localStorage.getItem('zenit.mode') === 'demo'; } catch (e) { /* egal */ }
   var KEY = DEMO ? 'stufenbuch.demo' : 'stufenbuch.v1';
   var state = { logs: [], u: 0, plan: null, food: null };
-  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', data: false, sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fmode: 'man', nts: [], pd: null, pw: null, pa: 6, pfl: null, dd: null, dp: 1, xo: {}, gx: {}, pu: false, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
+  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', data: false, sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fmode: 'man', nts: [], pd: null, pw: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, dd: null, dp: 1, xo: {}, gx: {}, pu: false, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
   var store = 'local', sync = '', ref = null, timer = null, writing = false, dirty = false;
 
   var EQUIP = [['bar', 'Klimmzugstange'], ['board', 'Push-up-Board'], ['db', 'Kurzhanteln'], ['mat', 'Matte'], ['roll', 'Blackroll'], ['ball', 'Faszienball'], ['bike', 'Homebike'], ['band', 'Widerstandsband']];
@@ -1312,7 +1366,8 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     }
     // Essen
     var meals = [['Haferflocken mit Skyr', 560, 38], ['Hähnchen-Reis-Bowl', 720, 52], ['Quark mit Beeren', 280, 32], ['Eier auf Vollkornbrot', 480, 28], ['Proteinshake', 220, 30], ['Linsen-Curry mit Reis', 640, 28], ['Nüsse und Banane', 330, 9], ['Lachs mit Kartoffeln', 690, 42]], fd = kind === 'mid' ? 70 : kind === 'empty' ? 0 : Math.min(N, 21);
-    for (k = fd; k >= 0; k--) {
+    // Leer: wirklich nichts eingetragen, damit die Hinweise (Gewicht, Essen) im Plan sichtbar werden
+    for (k = fd; k >= 0 && kind !== 'empty'; k--) {
       if (k > 0 && rnd() < 0.1) continue;
       var c = 3 + Math.round(rnd() * 1.5), j2;
       if (k === 0) c = kind === 'fresh' ? 0 : 2;
@@ -1321,7 +1376,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     food.d = [{ id: 'dm1', n: 'Overnight Oats', por: 1, ing: [{ n: 'Haferflocken 80 g', a: 80, k: 296, p: 11 }, { n: 'Skyr 200 g', a: 200, k: 124, p: 22 }, { n: 'Banane', a: 1, k: 90, p: 1 }] }, { id: 'dm2', n: 'Hähnchen-Reis-Pfanne', por: 3, ing: [{ n: 'Hähnchenbrust 600 g', a: 600, k: 660, p: 138 }, { n: 'Reis 300 g roh', a: 300, k: 1080, p: 21 }, { n: 'Gemüse', a: 1, k: 150, p: 8 }] }];
     // Gewicht und Maße
     var wk = kind === 'mid' ? 120 : kind === 'empty' || kind === 'fresh' ? 0 : 30;
-    for (k = wk; k >= 0; k -= (k > 30 ? 3 : 2)) food.w.push({ t: at(k, 7, 30), kg: Math.round((78 + 2.4 * (wk - k) / Math.max(1, wk) + (rnd() - 0.5) * 0.9) * 10) / 10 });
+    for (k = wk; k >= 0 && kind !== 'empty'; k -= (k > 30 ? 3 : 2)) food.w.push({ t: at(k, 7, 30), kg: Math.round((78 + 2.4 * (wk - k) / Math.max(1, wk) + (rnd() - 0.5) * 0.9) * 10) / 10 });
     if (kind === 'mid') [[100, 83, 101, 33.5, 56, 112], [70, 83.5, 102, 34, 57, 113], [40, 84, 103, 34.5, 57.5, 114], [10, 84.5, 104, 35, 58, 115]].forEach(function (r) { food.m.push({ t: at(r[0], 7, 45), w: r[1], c: r[2], a: r[3], th: r[4], sh: r[5] }); });
     if (kind === 'empty' || kind === 'fresh') { food.g = null; food.pr = null; }
     return { u: Date.now(), logs: logs, plan: null, food: food };
@@ -2405,6 +2460,20 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     // Nur die Zeilen umschalten, kein Neuaufbau: das Aufklappen läuft als CSS-Übergang
     btn.closest('.agl').querySelectorAll(sel).forEach(function (b) { var on = open && b === btn; b.setAttribute('aria-expanded', on); b.parentNode.classList.toggle('open', on); });
   }
+  function pChips(ds) {
+    if (!ds.length) return '<span class="agk rest">' + ic('snow') + 'Frei</span>';
+    return ds.map(function (x) { return '<span class="agk" style="--pc:var(' + PCOL[x.c] + ')"><i class="pdot"></i>' + esc(x.n) + '</span>'; }).join('');
+  }
+  function pToggles(P, attr, on) {
+    return P.days.map(function (x) { return '<button ' + attr(x) + ' aria-pressed="' + on(x) + '" style="--pc:var(' + PCOL[x.c] + ')"><i class="pdot"></i>' + esc(x.n) + '</button>'; }).join('');
+  }
+  function calMove(dir) {
+    // Woche: 7 Tage weiter, Monat: auf den 1. des nächsten/vorigen Monats. Grenzen: 6 Monate zurück, 6 voraus
+    var today = dayIdx(Date.now()), a = ui.ca == null ? today : ui.ca, q = new Date(a * 864e5);
+    var n = ui.cm ? Date.UTC(q.getUTCFullYear(), q.getUTCMonth() + dir, 1) / 864e5 : a + dir * 7;
+    if (n < today - 183 || n > today + 183) return;
+    ui.ca = n; ui.cdir = dir; ui.fresh = false; render();
+  }
   function viewPlan(d, now) {
     var today = dayIdx(now), P = plan();
     if (ui.pe) {
@@ -2412,65 +2481,79 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
       if (day) return viewPlanEdit(d, day);
       ui.pe = null;
     }
-    var NT = ui.nts || [], dur = durEst(), i = 0, di, w;
-    function nt(k) { return NT.filter(function (n) { return n.k === k; })[0]; }
-    function ntChip(n) { return '<button class="agn' + (n.hot ? ' hot' : n.gold ? ' gold' : '') + '" data-nt="' + n.k + '">' + ic(n.i) + '<span>' + esc(n.t) + '</span></button>'; }
-    function chips(ds) {
-      if (!ds.length) return '<span class="agk rest" aria-label="Frei">' + ic('snow') + '</span>';
-      return ds.map(function (x) { return '<span class="agk" style="--pc:var(' + PCOL[x.c] + ')"><i class="pdot"></i>' + esc(x.n) + '</span>'; }).join('');
-    }
-    function toggles(attr, on) {
-      return P.days.map(function (x) { return '<button ' + attr(x) + ' aria-pressed="' + on(x) + '" style="--pc:var(' + PCOL[x.c] + ')"><i class="pdot"></i>' + esc(x.n) + '</button>'; }).join('');
-    }
-    var h = '<div class="pt-h rise" style="--i:' + (i++) + '"><h2>Plan</h2></div>';
+    if (ui.pman) return viewPlanManage(d, now);
+    var NT = ui.nts || [], dur = durEst(), sd = ui.pd == null ? today : ui.pd, a = ui.ca == null ? today : ui.ca, k;
+    function nt(x) { return NT.filter(function (n) { return n.k === x; })[0]; }
+    var todo = ['st', 'tr', 'wg', 'f0', 'fp'].map(nt).filter(Boolean), wk = nt('wk'), ux = nt('ux');
+    var h = '<div class="pt-h rise" style="--i:0"><h2>Plan</h2></div>';
 
-    // Agenda: vorgestern bis heute + ui.pa Tage, ein Tag pro Zeile, Antippen klappt auf
-    var wk = nt('wk'), due = !!nt('tr'), ns0 = ['st', 'wg', 'f0', 'fp'].map(nt).filter(Boolean), rows = '';
-    for (di = today - 2; di <= today + ui.pa; di++) {
-      var ds = schedFor(di), tr = d.byDay[di], past = di < today, md = P.ov && P.ov[di] !== undefined, open = ui.pd === di;
-      var rel = di === today ? 'Heute' : di === today + 1 ? 'Morgen' : di === today - 1 ? 'Gestern' : '', mn = 0, st = '', x;
-      ds.forEach(function (y) { mn += dur[y.id] || 0; });
-      if (tr) st = ic('check') + '<span>' + Object.keys(tr.ex).length + '</span>';
-      else if (past) st = ds.length ? '<span>–</span>' : '';
-      else if (mn) st = ic('clock') + '<span>' + mn + '′</span>';
-      if (past) x = '<p class="agp">' + (tr ? Object.keys(tr.ex).map(function (id) { return esc(EXB[id].n); }).join(' · ') : ds.length ? 'Nicht trainiert' : 'Frei') + '</p>';
-      else {
-        x = gPills(dayGroups(ds, d)) + '<div class="ptg">' + toggles(function (y) { return 'data-ctog="' + y.id + '"'; }, function (y) { return ds.some(function (z) { return z.id === y.id; }); }) +
-          '<button class="rs" data-crest="1" aria-pressed="' + !ds.length + '" aria-label="Frei">' + ic('snow') + '</button></div>';
-        var bt = (md ? '<button class="btn ghost small" data-creset="1">' + ic('undo') + 'Zurücksetzen</button>' : '') + (di === today && ds.length ? '<button class="btn small primary" data-gotab="heute">' + ic('dumb') + 'Training</button>' : '');
-        if (bt) x += '<div class="agb">' + bt + '</div>';
-      }
-      rows += '<div class="agr' + (past ? ' past' : '') + (di === today ? ' today' + (due ? ' due' : '') : '') + (open ? ' open' : '') + (ui.pfl === di ? ' fl' : '') + '">' +
-        '<button class="agh" data-ag="' + di + '" aria-expanded="' + open + '"><span class="agd"><b>' + WDN[wdOf(di)] + '</b><small>' + (rel || fmtShort(di)) + '</small></span>' +
-        '<span class="agc">' + chips(ds) + (md ? ic('swap', 'agm') : '') + '</span><span class="ags">' + st + '</span></button>' +
-        (di === today && ns0.length ? '<div class="agns">' + ns0.map(ntChip).join('') + '</div>' : '') +
-        '<div class="agx"><div>' + x + '</div></div></div>';
+    // Kalender: Wochenstreifen, aufklappbar zum Monat
+    var q = new Date(a * 864e5), from, to, lead = 0;
+    if (ui.cm) { from = Date.UTC(q.getUTCFullYear(), q.getUTCMonth(), 1) / 864e5; to = Date.UTC(q.getUTCFullYear(), q.getUTCMonth() + 1, 0) / 864e5; lead = wdOf(from); }
+    else { from = a - wdOf(a); to = from + 6; }
+    var tq = new Date((ui.cm ? from : from + 3) * 864e5), title = tq.toLocaleDateString('de-DE', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+    var cells = '';
+    for (k = 0; k < lead; k++) cells += '<i></i>';
+    for (k = from; k <= to; k++) {
+      var ds = schedFor(k), tr = d.byDay[k], past = k < today;
+      cells += '<button class="pc2' + (k === today ? ' today' : '') + (k === sd ? ' sel' : '') + (past ? ' past' : '') + (tr ? ' done' : '') + '" data-cday="' + k + '" aria-label="' + fmtDayL(k) + '">' +
+        '<b>' + new Date(k * 864e5).getUTCDate() + '</b><span class="dots">' + ds.slice(0, 3).map(function (x) { return '<i style="--pc:var(' + PCOL[x.c] + ')"></i>'; }).join('') + '</span>' +
+        (tr ? ic('check', 'dn') : '') + (k === today && todo.length ? '<s class="nd' + (todo.some(function (n) { return n.hot; }) ? ' hot' : '') + '"></s>' : '') + '</button>';
     }
-    ui.pfl = null;
-    h += '<section class="sec rise" style="--i:' + (i++) + '"><h2 class="sec-h">' + ic('list') + 'Agenda' + (wk ? '<small class="hot">' + esc(wk.t) + '</small>' : '') + '</h2><div class="agl">' + rows + '</div>' +
-      (ui.pa < 27 ? '<button class="btn ghost small agmore" data-pmore="1">' + ic('down') + '7 Tage</button>' : '') + '</section>';
+    var showNow = sd !== today || today < from || today > to;
+    h += '<section class="pcal2 rise" style="--i:1"><div class="pc2-h"><button class="x" data-cnav="-1" aria-label="Zurück">' + ic('back') + '</button>' +
+      '<button class="pc2-t" data-cmode="1" aria-expanded="' + !!ui.cm + '" aria-label="' + (ui.cm ? 'Woche zeigen' : 'Monat zeigen') + '"><b>' + title + '</b>' + ic('chev') + '</button>' +
+      (showNow ? '<button class="pc2-now" data-cnow="1">Heute</button>' : '') + '<button class="x" data-cnav="1" aria-label="Weiter">' + ic('chev') + '</button></div>' +
+      '<div class="pc2-w">' + WDN.map(function (n) { return '<span>' + n + '</span>'; }).join('') + '</div>' +
+      '<div class="pc2-g' + (ui.cdir ? (ui.cdir > 0 ? ' in-r' : ' in-l') : '') + (ui.cmx ? ' in-m' : '') + '">' + cells + '</div>' +
+      (wk ? '<p class="pc2-n">' + ic('cal') + esc(wk.t) + ' · ' + esc(wk.s) + '</p>' : '') + '</section>';
+    ui.cdir = 0; ui.cmx = false;
 
-    // Woche: die Regel (welcher Trainingstag an welchem Wochentag), dazu Balance und Erholung
+    // Tageskarte des gewählten Tags
+    var sc = schedFor(sd), st = d.byDay[sd], md = P.ov && P.ov[sd] !== undefined, rel = sd === today ? 'Heute' : sd === today + 1 ? 'Morgen' : sd === today - 1 ? 'Gestern' : fmtDay(sd), mn = 0, stat = '';
+    sc.forEach(function (y) { mn += dur[y.id] || 0; });
+    if (st) stat = ic('check') + '<span>' + Object.keys(st.ex).length + ' Üb.</span>';
+    else if (sd >= today && mn) stat = ic('clock') + '<span>' + mn + '′</span>';
+    var c = '<div class="pd-h"><b>' + WDN[wdOf(sd)] + ' · ' + rel + '</b><span class="ags">' + stat + '</span></div>';
+    if (sd === today && todo.length) c += '<div class="todo">' + todo.map(function (n) { return '<button class="tdo' + (n.hot ? ' hot' : '') + '" data-nt="' + n.k + '">' + ic(n.i) + '<span><b>' + esc(n.t) + '</b><small>' + esc(n.s) + '</small></span>' + ic('chev', 'chv') + '</button>'; }).join('') + '</div>';
+    if (sd < today) c += '<div class="pd-p">' + pChips(sc) + '</div><p class="agp">' + (st ? Object.keys(st.ex).map(function (id) { return esc(EXB[id].n); }).join(' · ') : sc.length ? 'Nicht trainiert' : '') + '</p>';
+    else {
+      c += '<div class="pd-p">' + pChips(sc) + (md ? ic('swap', 'agm') : '') + '<button class="pd-c" data-pchg="1" aria-expanded="' + !!ui.pchg + '" aria-label="Für diesen Tag ändern">' + ic('edit') + '</button></div>' +
+        '<div class="agx"><div><div class="ptg">' + pToggles(P, function (y) { return 'data-ctog="' + y.id + '"'; }, function (y) { return sc.some(function (z) { return z.id === y.id; }); }) +
+        '<button class="rs" data-crest="1" aria-pressed="' + !sc.length + '" aria-label="Frei">' + ic('snow') + '</button></div>' + (md ? '<button class="btn ghost small" data-creset="1">' + ic('undo') + 'Zurücksetzen</button>' : '') + '</div></div>';
+      if (sc.length) c += '<div class="pd-f">' + gPills(dayGroups(sc, d)) + (sd === today ? '<button class="btn small primary" data-gotab="heute">' + ic('dumb') + 'Training</button>' : '') + '</div>';
+    }
+    h += '<section class="pday rise' + (ui.pchg ? ' open' : '') + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
+    ui.pfl = null; ui.pdx = false;
+
+    // Trainingstage kompakt: Chip öffnet den Editor, Stift öffnet Woche & Tage
+    h += '<section class="pbar rise" style="--i:3"><div class="pb-h"><h2 class="sec-h">' + ic('dumb') + 'Trainingstage</h2>' + (ux ? '<button class="agn gold" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>' : '') +
+      '<button class="x" data-pman="1" aria-label="Woche und Trainingstage bearbeiten">' + ic('edit') + '</button></div><div class="pb-l">' +
+      P.days.map(function (x) { return '<button class="pbc" data-pedit="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')"><i class="pdot"></i><span><b>' + esc(x.n) + '</b><small>' + (x.wd.length ? x.wd.map(function (v) { return WDN[v]; }).join(' ') : '–') + '</small></span></button>'; }).join('') +
+      (P.days.length < 8 ? '<button class="pbc add" data-pman="new" aria-label="Neuer Trainingstag">' + ic('plus') + '</button>' : '') + '</div></section>';
+    return h;
+  }
+  function viewPlanManage(d, now) {
+    var today = dayIdx(now), P = plan(), dur = durEst(), w;
+    var h = '<div class="pe-top rise" style="--i:0"><button class="x" data-pmanx="1" aria-label="Zurück">' + ic('back') + '</button><h2 class="pm-t">Woche & Tage</h2></div>';
+    // Woche: welcher Trainingstag an welchem Wochentag, dazu Balance und Erholung
     var wg = WDN.map(function (n, w2) { return dayGroups(P.days.filter(function (x) { return x.wd.indexOf(w2) >= 0; }), d); }), gw = {}, busy = 0, wv = '';
     for (w = 0; w < 7; w++) {
-      var dw = P.days.filter(function (x) { return x.wd.indexOf(w) >= 0; }), pg = wg[(w + 6) % 7], wo = ui.pw === w;
+      var dw = P.days.filter(function (x) { return x.wd.indexOf(w) >= 0; }), pg = wg[(w + 6) % 7], wo = ui.pw === w, ww = w;
       // Erholung: Pull oder Push (mind. 2 Übungen) an zwei Tagen hintereinander. Hantel nicht, die mischt Zug- und Druckmuskeln
       var rep = ['pull', 'push'].filter(function (g) { return (wg[w][g] || 0) >= 2 && (pg[g] || 0) >= 2; });
       if (dw.length) busy++;
       GORDER.forEach(function (g) { if (wg[w][g]) gw[g] = (gw[g] || 0) + 1; });
-      var ww = w;
       wv += '<div class="agr wvr' + (w === wdOf(today) ? ' today' : '') + (wo ? ' open' : '') + '"><button class="agh" data-wv="' + w + '" aria-expanded="' + wo + '"><span class="agd"><b>' + WDN[w] + '</b></span>' +
-        '<span class="agc">' + chips(dw) + '</span><span class="ags">' + rep.map(function (g) { return '<em class="wvw" aria-label="' + gOf(g).n + ' ohne Pausentag">' + ic(gOf(g).i) + 'ohne Pause</em>'; }).join('') + '</span></button>' +
-        '<div class="agx"><div>' + (P.days.length ? '<div class="ptg">' + toggles(function (y) { return 'data-wd="' + y.id + ':' + ww + '"'; }, function (y) { return y.wd.indexOf(ww) >= 0; }) + '</div>' : '<p class="agp">Erst einen Trainingstag anlegen.</p>') + '</div></div></div>';
+        '<span class="agc">' + pChips(dw) + '</span><span class="ags">' + rep.map(function (g) { return '<em class="wvw" aria-label="' + gOf(g).n + ' ohne Pausentag">' + ic(gOf(g).i) + 'ohne Pause</em>'; }).join('') + '</span></button>' +
+        '<div class="agx"><div>' + (P.days.length ? '<div class="ptg">' + pToggles(P, function (y) { return 'data-wd="' + y.id + ':' + ww + '"'; }, function (y) { return y.wd.indexOf(ww) >= 0; }) + '</div>' : '<p class="agp">Erst einen Trainingstag anlegen.</p>') + '</div></div></div>';
     }
     var bal = GORDER.filter(function (g) { return gw[g] || ['pull', 'push', 'core'].indexOf(g) >= 0; }).map(function (g) {
       return '<span class="g' + g + (gw[g] ? '' : ' z') + '" aria-label="' + gOf(g).n + ': ' + (gw[g] || 0) + ' Tage pro Woche">' + ic(gOf(g).i) + (gw[g] || 0) + '×</span>';
     }).join('');
-    h += '<section class="sec rise" style="--i:' + (i++) + '"><h2 class="sec-h">' + ic('cal') + 'Woche<small>' + busy + '/7</small></h2><div class="agl">' + wv + '</div><div class="pgc wvb">' + bal + '</div></section>';
-
-    // Trainingstage: die Bausteine, Antippen öffnet den Editor
-    var ux = nt('ux');
-    h += '<section class="sec rise" style="--i:' + (i++) + '"><h2 class="sec-h">' + ic('dumb') + 'Trainingstage' + (ux ? '<small>' + ntChip(ux) + '</small>' : '') + '</h2><div class="tdl">';
+    h += '<section class="sec rise" style="--i:1"><h2 class="sec-h">' + ic('cal') + 'Woche<small>' + busy + '/7</small></h2><div class="agl">' + wv + '</div><div class="pgc wvb">' + bal + '</div></section>';
+    // Trainingstage: Antippen öffnet den Editor
+    h += '<section class="sec rise" style="--i:2"><h2 class="sec-h">' + ic('dumb') + 'Trainingstage</h2><div class="tdl">';
     P.days.forEach(function (x) {
       var sub = [x.wd.length ? x.wd.map(function (v) { return WDN[v]; }).join(' · ') : 'nicht eingeplant', x.ex.filter(function (id) { return d.unlocked[id]; }).length + ' Üb.'];
       if (dur[x.id]) sub.push('~' + dur[x.id] + '′');
@@ -2500,9 +2583,14 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
   }
   function calClick(t) {
     var el, today = dayIdx(Date.now());
-    if ((el = t.closest('[data-ag]'))) { var ag = +el.dataset.ag; ui.pd = ui.pd === ag ? null : ag; rowToggle(el, ui.pd === ag, '[data-ag]'); return true; }
+    if ((el = t.closest('[data-cday]'))) { var cd = +el.dataset.cday; if (cd !== (ui.pd == null ? today : ui.pd)) { ui.pd = cd; ui.pdx = true; ui.pchg = false; } ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-cnav]'))) { calMove(+el.dataset.cnav); return true; }
+    if (t.closest('[data-cmode]')) { ui.cm = !ui.cm; ui.ca = ui.pd == null ? today : ui.pd; ui.cmx = true; ui.fresh = false; render(); return true; }
+    if (t.closest('[data-cnow]')) { ui.pd = today; ui.ca = today; ui.pdx = true; ui.pchg = false; ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-pchg]'))) { ui.pchg = !ui.pchg; el.setAttribute('aria-expanded', ui.pchg); el.closest('.pday').classList.toggle('open', ui.pchg); return true; }
+    if ((el = t.closest('[data-pman]'))) { ui.pman = true; ui.pnew = el.dataset.pman === 'new'; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
+    if (t.closest('[data-pmanx]')) { ui.pman = false; ui.pnew = false; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
     if ((el = t.closest('[data-wv]'))) { var wv = +el.dataset.wv; ui.pw = ui.pw === wv ? null : wv; rowToggle(el, ui.pw === wv, '[data-wv]'); return true; }
-    if (t.closest('[data-pmore]')) { ui.pa = Math.min(27, ui.pa + 7); ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-gotab]'))) { goTab(el.dataset.gotab); return true; }
     if ((el = t.closest('[data-rm]'))) { ui.rm = Math.max(-11, Math.min(0, ui.rm + (+el.dataset.rm))); ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-wr]'))) { ui.wr = el.dataset.wr; ui.fresh = false; render(); return true; }
@@ -3008,7 +3096,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
       if (nt.k === 'wg') openWeight();
       return;
     }
-    if ((el = t.closest('[data-tab]'))) { ui.sw = TABS.indexOf(el.dataset.tab) - TABS.indexOf(ui.tab); ui.fdrawn = false; ui.tab = el.dataset.tab; ui.sel = null; ui.del = null; ui.pe = null; ui.pnew = false; ui.fresh = true; closeSheet(); render(); window.scrollTo(0, 0); return; }
+    if ((el = t.closest('[data-tab]'))) { ui.sw = TABS.indexOf(el.dataset.tab) - TABS.indexOf(ui.tab); ui.fdrawn = false; ui.tab = el.dataset.tab; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); window.scrollTo(0, 0); return; }
     if ((el = t.closest('[data-pill]'))) { var pr = el.dataset.pill.split(':'); openSheet(pr[0], +pr[1]); return; }
     if (t.closest('[data-sheet-close]') || t.id === 'shade') { closeSheet(); return; }
     if ((el = t.closest('[data-step]'))) { var inp = $('sv'), nv = Math.max(0, sheetVal() + (+el.dataset.step) * ui.sheet.step); inp.value = nv; updSheetXp(); buzz(6); return; }
@@ -3106,7 +3194,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 
   // ---------- Slide-Steuerung
   var TABS = ['tage', 'food', 'heute', 'fort', 'profil'];
-  function goTab(k, dir) { if (k === ui.tab || TABS.indexOf(k) < 0) return; ui.sw = dir || (TABS.indexOf(k) - TABS.indexOf(ui.tab)); ui.fdrawn = false; ui.tab = k; ui.sel = null; ui.del = null; ui.pe = null; ui.pnew = false; ui.fresh = true; closeSheet(); render(); window.scrollTo(0, 0); }
+  function goTab(k, dir) { if (k === ui.tab || TABS.indexOf(k) < 0) return; ui.sw = dir || (TABS.indexOf(k) - TABS.indexOf(ui.tab)); ui.fdrawn = false; ui.tab = k; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); window.scrollTo(0, 0); }
   var sx = 0, sy = 0, st0 = 0, sEl = null, sMode = '', sheetDy = 0;
   document.addEventListener('touchstart', function (e) {
     sMode = ''; if (e.touches.length !== 1) return;
@@ -3134,6 +3222,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
     if (m !== 'page') return;
     if (Math.abs(dx) < 56 || Math.abs(dx) < Math.abs(dy) * 1.6 || Date.now() - st0 > 700) return;
     var dir = dx < 0 ? 1 : -1;
+    if (sEl && sEl.closest && sEl.closest('.pcal2')) { calMove(dir); return; }
     var i = TABS.indexOf(ui.tab) + dir; if (i >= 0 && i < TABS.length) goTab(TABS[i], dir);
   }, { passive: true });
   var lastDay = dayIdx(Date.now());

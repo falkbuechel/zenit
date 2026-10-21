@@ -13,6 +13,15 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-21 – Plan-Tab als Kalender (ersetzt die Agenda-Liste)
+- Falk wollte eine Kalenderansicht (vertrauter, besser zu navigieren); die Liste war ein Missverständnis. Form diesmal vorher per Skizze abgestimmt.
+- Kalender: Wochenstreifen, Tipp auf den Monat klappt zum Monat auf (`ui.cm`), ‹ › und Wischen blättern (`calMove`, ±6 Monate), Anker `ui.ca`, gewählter Tag `ui.pd`. Zellen: Farbpunkte der geplanten Tage, ✓ bei Training, Punkt an heute bei Meldungen.
+- Tageskarte: „Zu tun“ (Meldungen st/tr/wg/f0/fp) bei heute, geplante Tage, ✎ klappt die Ausnahme für das Datum auf (`ui.pchg`), Gruppen, „Training“. „Wochenziel wackelt“ unter dem Kalender, neue Übungen bei Trainingstage.
+- Alles auf einen Bildschirm: Trainingstage als Chip-Leiste (Tipp = Editor), ✎/+ öffnet „Woche & Tage“ (`ui.pman`, `viewPlanManage`) mit Wochenvorlage, Balance, Liste.
+- Demo „Leer“ trägt jetzt wirklich nichts ein (vorher heutiges Gewicht + Essen), sonst sah man nie eine Meldung.
+- Fehler: zugeklappter Bereich (`grid-template-rows: 0fr`) belegte in der Karte 10 px, weil ein negativer Rand im Grid per `stretch` zur Höhe wird. Lösung: Abstände in `.pday` über Ränder statt `gap`.
+- Weitere tote CSS-Reste entfernt (`.pdays`, `.pd`, alte `.pday`, `.pnew`).
+
 ### 2026-10-21 – Plan-Tab neu: Agenda, Woche, Trainingstage
 - Ziel (mit Falk besprochen): Plan ist Werkzeug, kein Spiel. Flammen/XP/Monatsziel raus, Serien-Kalender bleibt im Verlauf (`#calw`).
 - Agenda: vorgestern bis +6 Tage (`ui.pa`, „7 Tage“ verlängert bis +27), Tag antippen klappt auf: Gruppen, Ausnahme für das Datum (`data-ctog`/`crest`/`creset`, wie vorher über `plan.ov`), heute „Training“. Hinweise (`notices`) sitzen jetzt im Plan: Tages-Hinweise an der Heute-Zeile, „Wochenziel wackelt“ im Agenda-Kopf, neue Übungen bei Trainingstage.

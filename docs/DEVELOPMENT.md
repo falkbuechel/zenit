@@ -7,16 +7,19 @@ Home-Workout-Game als PWA für das iPhone, nur für Falk. Eine einzige Quelldate
 ```
 src/zenit.html     Quelle, EINE Datei (CSS + HTML + IIFE-Script, ~3200 Zeilen)
 public/            manifest, Service Worker (sw.js, Netz zuerst, Cache offline), Icons
-build.py           python build.py -> dist/index.html (PWA-Head, Wrapper) + Kopie von public/*
+build.py           python build.py -> dist/index.html (PWA-Head, Wrapper, window.ZENIT_V) + Kopie von public/*
 dist/              Build-Ausgabe zum Hosten (gitignored)
 tools/
+  check.py         Syntax (node --check), doppelte Namen, Build; Exit 1 bei Fehler
+  smoke.js         Rauchtest: 5 Demo-Szenarien x 5 Tabs + Ansichten/Dialoge, Screenshots -> tools/out/
   make-icons.js    Icons aus SVG -> public/ (Playwright)
-  test-example.js  Playwright-Beispieltest gegen dist/, Screenshots -> tools/out/
+.github/workflows/pages.yml   Push auf main -> check + smoke -> GitHub Pages
 docs/              DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 ```
 - `<!--PWA-->` in zenit.html wird beim Build entfernt, der Head kommt aus `build.py`.
 - Die gleiche Datei läuft auch als Claude-Artifact (dort `window.claude` mit db/downloads).
-- Hosting: `dist/` auf Netlify Drop / GitHub Pages / Cloudflare Pages.
+- Hosting: GitHub Pages https://falkbuechel.github.io/zenit/ (öffentliches Repo). Adresse nicht wechseln, localStorage hängt an ihr.
+- Version: `build.py` setzt `window.ZENIT_V` (Commit · Datum, `+` = lokale ungesicherte Änderungen), sichtbar unten im Zahnrad-Menü.
 - Service-Worker-Cache heißt `zenit-v1` (`public/sw.js`). Netz zuerst, daher kein Versions-Bump für neue Builds nötig.
 
 ## 3. Daten

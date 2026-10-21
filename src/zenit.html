@@ -2962,7 +2962,7 @@ button.pc:active { transform: scale(.93); }
     h += '</section><section class="sec"><h2 class="sec-h">' + ic('play') + 'Testdaten<small>' + (DEMO ? 'Demo aktiv, echte Daten sicher' : 'getrennt von deinen Daten') + '</small></h2><div class="row demo-r">' +
       [['mid', 'Seit 5 Monaten'], ['gold', 'Goldene Serie'], ['broken', 'Serie gerissen'], ['fresh', 'Neu dabei'], ['empty', 'Leer']].map(function (o) { return '<button class="btn small" data-demo="' + o[0] + '">' + o[1] + '</button>'; }).join('') +
       (DEMO ? '<button class="btn small primary" data-demo="off">Demo beenden</button>' : '') + '</div>';
-    return h + '</section>';
+    return h + '</section>' + (window.ZENIT_V ? '<p class="hint mono">Version ' + esc(window.ZENIT_V) + '</p>' : '');
   }
   function openSettings() { ui.sheet = { settings: true }; $('sheet').className = 'sheet tall'; $('sheet').innerHTML = setHtml(); $('shade').classList.add('open'); $('sheet').classList.add('open'); }
 

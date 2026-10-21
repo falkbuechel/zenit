@@ -21,6 +21,9 @@ Sprache: Deutsch (UI und Antworten). Antworten kurz, ohne Einleitung/Recap. Änd
 - Design: ruhiges Salbeigrün + Anthrazit, wenig Grün, wenig Text, Icons statt Beschriftung, klare Grenzen zwischen Bereichen.
 - Keine Abhängigkeiten/Frameworks/Server einführen ohne Rückfrage. Node nur für Dev-Tools.
 
-## Prüfen
-- Syntaxcheck: Script extrahieren und `node --check`.
-- `python build.py` muss durchlaufen.
+## Prüfen und veröffentlichen
+- `python tools/check.py` (Syntax, doppelte Namen, Build) und `node tools/smoke.js` (alle Demo-Szenarien und Tabs, schlägt bei JS-Fehlern fehl) müssen durchlaufen.
+- Push auf `main` = live auf Falks iPhone (GitHub Pages, die Action prüft vorher noch einmal). Nur nach bestandenen Prüfungen committen und pushen.
+- Commit-Nachrichten: Deutsch, ein kurzer Satz, was sich für die App ändert.
+- Datenform-Änderungen: Migration muss alte Daten behalten (`clean*`-Funktionen verwerfen sonst still). Vorher Falk an ein Backup erinnern.
+- Lange Zeilen (>400 Zeichen) beim Anfassen umbrechen, keine neuen anlegen.

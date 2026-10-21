@@ -15,6 +15,15 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-22 – Wasser genau, Tagesleiste mit Balken, Zutaten suchen, „zu viel“ in Rot
+- Wasser: Zeile mit fester Breite (Wert 92 px, tabellarische Ziffern), + = 250 ml, Antippen öffnet Sheet (`waHtml`): Chips +150…+750 ml, ±50 ml, Feld für den genauen Wert. `data-fwa` addiert jetzt ml.
+- Tagesleiste: kcal-Balken je Tag statt Punkt; grün = Protein erreicht und kcal im Rahmen, rot = über 110 %.
+- Zu viel: `fbar` kennt `over` für Fett/Kohlenhydrate (> 110 %) und Zucker (> Grenze), rot gestreift; Protein/Ballaststoffe dürfen drüber. Mengenwahl warnt mit roten Chips („Fett +50 g“).
+- Gericht: „Zutat suchen“ öffnet die normale Suche im Zutat-Modus (`ui.ingm`, `ingAdd`, `ingBack`) inkl. Kategorien, Online, Marke, Barcode; „Von Hand“ wie bisher.
+- Marke: Icon oben im Kopf der Mengenwahl, Liste darunter mit „Barcode“ und „Fehlt? Anlegen“ (eigenes Lebensmittel mit Werten des Grundprodukts vorbefüllt). Eigenes Lebensmittel hat ein Feld „Marke“.
+- Listen zeigen „x g Protein“ statt P/F/K. Suche ohne „Zuletzt“ (nur Kategorien).
+- Rauchtest: Open Food Facts wird per `ctx.route` mit leerer Antwort ersetzt (sonst echte Anfragen und CORS-Fehler aus `file://`).
+
 ### 2026-10-21 – Rechner klarer, Tagesleiste, Wasser, „Passt das noch?“, Marken, Fast Food je Portion
 - Rechner: Ergebnis klebt oben im Sheet (sticky, feste Höhe, Ziffern gleich breit) → kein Springen beim Schieben; Lernen und Rechenweg unter den Reglern. Ruhetag/Training mit Beschriftung, Training mit Kästchen (Zuschlag an/aus). Makros als 5 Spalten mit Namen. Rechenweg als Tabelle inkl. Makro-Herleitung. Echter Bedarf geprüft: est = Ø gegessen − Gewichtstrend × 7700, Anpassung = est − Formel (ohne Anpassung), wird zu `pr.adj`; „Anpassung entfernen“ setzt 0.
 - Fehler: `.cres2 > div` überschrieb `.ctop` (Spezifität) → Rechner-CSS neu (`.cres`, `.cday`, `.cmac`, `#c-way`).

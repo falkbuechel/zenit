@@ -16,6 +16,8 @@ const NOANIM = '*, *::before, *::after { animation: none !important; transition:
 async function scenario(b, sc, errs) {
   const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, hasTouch: true, reducedMotion: 'reduce' });
   await ctx.addInitScript(css => { document.addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = css; document.head.appendChild(s); }); }, NOANIM);
+  // Open Food Facts nicht wirklich fragen (Suche ab 3 Zeichen): leere Antwort, Test bleibt offline und gleich
+  await ctx.route(/openfoodfacts\.org/, r => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: '{"products":[],"status":0}' }));
   const p = await ctx.newPage(); let where = sc;
   p.on('pageerror', e => errs.push(where + ': ' + e.message));
   p.on('console', m => { if (m.type() === 'error' && !/fonts\.g/.test(m.text())) errs.push(where + ': ' + m.text()); });
@@ -41,6 +43,9 @@ async function scenario(b, sc, errs) {
       await click('[data-fquick]'); await closeSheet(); await click('[data-fgoal]'); await click('[data-ctb]'); await click('[data-gmode="m"]'); await click('[data-gmode="a"]'); await closeSheet();
       await click('[data-fdishes]'); await click('[data-fde]'); await closeSheet(); await click('[data-fsearch]'); await click('[data-fown="new"]'); await closeSheet();
       await click('[data-fedit]'); await closeSheet();
+      // Wasser genau, Gericht: Zutat über die Suche hinzufügen
+      await click('[data-fwao]'); await click('[data-fwa="500"]'); await closeSheet();
+      await click('[data-fdishes]'); await click('[data-fde="new"]'); await click('[data-dgs]'); await p.fill('#fq', 'skyr').catch(() => {}); await click('[data-fpick]'); await click('[data-fpadd]'); await closeSheet();
     }
     // Plan: Tag ändern (Tauschen über den Kalender, Ersetzen, Aussetzen, Urlaub; jede Aktion schaltet sich beim zweiten Tippen aus)
     if (tab === 'tage') {

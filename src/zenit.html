@@ -752,7 +752,8 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .fsel .k, .fsum .k b { color: var(--g-push); font-family: var(--f-mono); }
 .fsum.two { grid-template-columns: 1fr 1fr; }
 .fsum.two b { font-family: var(--f-display); }
-.sheet.tall { max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; }
+.sheet.tall { max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.sheet.tall::-webkit-scrollbar { display: none; }
 .dg { display: grid; gap: 6px; margin-bottom: 10px; padding: 10px; border-radius: 14px; border: 1px solid var(--line); background: var(--s2); }
 .dg-h { display: flex; gap: 6px; }
 .dg-h input { flex: 1; min-width: 0; height: 42px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--s1); color: var(--ink); font: inherit; }
@@ -1166,6 +1167,33 @@ button.pdb-h:active { background: var(--s2); }
 .fon { display: flex; align-items: center; gap: 6px; font-size: 13px; }
 .fon .ic { width: 16px; height: 16px; }
 .seg.fvs { margin: 0; padding: 3px; }
+.fpcn b { font-family: var(--f-display); font-size: 24px; font-weight: 900; text-align: center; }
+.ffit { display: grid; gap: 6px; margin-top: -4px; }
+.ffb { display: flex; height: 6px; overflow: hidden; border-radius: 3px; background: var(--s3); }
+.ffb i { height: 100%; background: var(--ink3); transition: width .2s var(--ease); }
+.ffb i + i { background: var(--ac); }
+.ffb.over i + i { background: var(--danger); }
+.ffit p { display: flex; align-items: baseline; gap: 5px; margin: 0; font-size: 12px; color: var(--ink3); }
+.ffit p b { font-family: var(--f-mono); font-size: 13px; color: var(--ink); }
+.ffb.over + p b { color: var(--danger); }
+.ffit p span { margin-left: auto; font-family: var(--f-mono); }
+.fds { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; margin-top: 6px; }
+.fdd { display: grid; justify-items: center; gap: 1px; padding: 4px 0 5px; border: 0; border-radius: 10px; background: transparent; color: var(--ink3); font: inherit; transition: background-color .16s var(--ease); }
+.fdd small { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.fdd b { font-family: var(--f-mono); font-size: 13px; font-weight: 600; color: var(--ink2); }
+.fdd i { width: 4px; height: 4px; border-radius: 50%; }
+.fdd.on i { background: var(--ink3); }
+.fdd.ok i { background: var(--ac); }
+.fdd.sel { background: var(--s2); }
+.fdd.sel b { color: var(--ink); }
+.fwa { display: grid; grid-template-columns: auto 1fr auto auto auto; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
+.fwa > .ic { width: 18px; height: 18px; color: var(--ink3); }
+.fwb { position: relative; height: 6px; overflow: hidden; border-radius: 3px; background: var(--s3); }
+.fwb > i { position: absolute; inset: 0; background: #6f9fbf; transform: scaleX(var(--p)); transform-origin: left; transition: transform .4s var(--ease); }
+.fwa b { font-family: var(--f-mono); font-size: 13px; white-space: nowrap; }
+.fwa b small { font-size: 11px; color: var(--ink3); }
+.fwa .x { width: 34px; height: 34px; }
+.fwa .x.off { opacity: .35; }
 .seg.fvs button { min-height: 34px; font-size: 13px; }
 .seg.fvs button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 .fscan { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 16px; background: #000; }
@@ -1204,25 +1232,28 @@ button.pdb-h:active { background: var(--s2); }
 .cin input { width: 100%; height: 42px; padding: 0 8px; border-radius: 10px; border: 1px solid var(--line); background: var(--s1); color: var(--ink); font-family: var(--f-mono); font-size: 16px; }
 .cin .seg { margin: 0; padding: 3px; }
 .cin .seg button { min-height: 34px; }
-.ctop { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.ctop > * { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; }
-.ctop .ic { flex: none; width: 18px; height: 18px; color: var(--ink3); }
-.ctop b { font-family: var(--f-display); font-size: 30px; font-weight: 900; line-height: 1.05; }
-.ctop em, .ctop small { font-style: normal; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
-.ctop small { color: var(--ac); font-weight: 700; }
-.ctop button { transition: opacity .2s var(--ease), transform .14s var(--ease); }
-.ctop button:active { transform: scale(.97); }
-.ctop button[aria-pressed="false"] { opacity: .35; }
-.ctop button[aria-pressed="false"] b { text-decoration: line-through; text-decoration-thickness: 2px; }
-.cmac { display: flex; justify-content: space-between; margin: 8px 0 0; padding-top: 8px; border-top: 1px solid var(--line); font-family: var(--f-mono); font-size: 13px; font-weight: 700; }
-.cmac i { margin-right: 3px; font-style: normal; font-size: 10px; color: var(--ink3); }
-.cres2 details { margin-top: 6px; }
-.cres2 summary { cursor: pointer; font-size: 12px; font-weight: 700; color: var(--ink3); list-style: none; }
-.cres2 summary::-webkit-details-marker { display: none; }
-.cres2 details[open] summary { margin-bottom: 4px; }
 .seg.six { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .seg.six button { min-height: 38px; padding: 0; font-size: 12px; }
-.clearn { display: grid; gap: 8px; margin-top: 8px; padding: 8px 12px; border: 1px dashed var(--line); border-radius: 12px; }
+/* Ergebnis bleibt beim Schieben oben stehen (sticky im Sheet), feste Höhe, Ziffern gleich breit: nichts springt */
+.cres { position: sticky; top: -10px; z-index: 3; display: grid; gap: 10px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--s2); box-shadow: 0 12px 18px -16px rgba(0, 0, 0, .7); }
+.cres > .muted { margin: 0; }
+.ctop { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cday { display: grid; gap: 3px; justify-items: start; min-width: 0; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
+button.cday:active { transform: scale(.97); }
+.cday small { display: flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
+.cday small .ic { width: 15px; height: 15px; }
+.cday b { font-family: var(--f-display); font-size: 30px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+.cday b em { margin-left: 4px; font-family: var(--f-mono); font-size: 11px; font-style: normal; font-weight: 400; color: var(--ink3); }
+.cday[aria-pressed="false"] b { color: var(--ink3); }
+.ctg { display: grid; place-items: center; width: 16px; height: 16px; border: 1.5px solid var(--ink3); border-radius: 5px; }
+.ctg .ic { width: 12px; height: 12px; }
+.cday[aria-pressed="true"] .ctg { border-color: var(--ac); background: var(--ac); color: var(--on); }
+.cmac { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; padding-top: 10px; border-top: 1px solid var(--line); }
+.cmac div { display: grid; justify-items: center; gap: 1px; min-width: 0; }
+.cmac b { font-family: var(--f-mono); font-size: 14px; font-variant-numeric: tabular-nums; }
+.cmac b small { margin-left: 1px; font-size: 10px; font-weight: 400; color: var(--ink3); }
+.cmac span { font-size: 9px; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; color: var(--ink3); }
+.clearn { display: grid; gap: 8px; margin-top: 14px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 12px; }
 .clearn:empty { display: none; }
 .clearn > div { display: flex; align-items: flex-start; gap: 10px; }
 .clearn .ic { flex: none; width: 20px; height: 20px; color: var(--ink2); }
@@ -1230,11 +1261,19 @@ button.pdb-h:active { background: var(--s2); }
 .clearn small { display: block; font-size: 12px; color: var(--ink3); }
 .clearn .ok { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--ac); }
 .clearn .ok .ic { width: 15px; height: 15px; color: var(--ac); }
-.cres2 { display: grid; gap: 4px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--s2); }
-.cres2 > div { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink2); }
-.cres2 > div b { font-family: var(--f-mono); color: var(--ink); }
-.cres2 .tot { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--line); font-size: 15px; font-weight: 800; color: var(--ink); }
-.cres2 > small, .cres2 > p { margin: 0; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
+.cprg { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
+.cprg i { width: 64px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--ac) calc(var(--p) * 100%), var(--s3) 0); }
+.cway { margin-top: 10px; padding: 0 12px; border: 1px solid var(--line); border-radius: 12px; }
+.cway summary { display: flex; align-items: center; gap: 6px; min-height: 40px; cursor: pointer; list-style: none; font-size: 13px; font-weight: 700; color: var(--ink2); }
+.cway summary::-webkit-details-marker { display: none; }
+.cway summary .ic { width: 14px; height: 14px; transition: transform .2s var(--ease); }
+.cway[open] summary .ic { transform: rotate(90deg); }
+#c-way { display: grid; gap: 5px; padding-bottom: 12px; }
+#c-way > div { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--ink2); }
+#c-way b { font-family: var(--f-mono); font-weight: 600; color: var(--ink); white-space: nowrap; }
+#c-way .tot { padding-top: 5px; border-top: 1px solid var(--line); font-weight: 800; color: var(--ink); }
+#c-way .tot + .sub { margin-top: 8px; }
+#c-way .sub { font-size: 12px; color: var(--ink3); }
 .sheet .btn:disabled { opacity: .45; }
 @media (prefers-reduced-motion: reduce) { .agx, .agx > div { transition: none; } .fti.done { animation: none; } .pk.sel::after, .pc2.pick, .rot .ic { animation: none; } .pk, .pk.over, .pk.clash { animation: none; } .ptl.nw { animation: none; } .pday.fl { animation: none; } .pc2-g.in-r, .pc2-g.in-l, .pc2-g.in-m { animation: fade .15s ease; } }
 </style>
@@ -1507,6 +1546,7 @@ button.pdb-h:active { background: var(--s2); }
       if (Array.isArray(x.u)) x.u.slice(0, 4).forEach(function (q) { if (Array.isArray(q) && typeof q[0] === 'string' && +q[1] > 0) r.u.push([q[0].slice(0, 12), nv(q[1], 5000)]); });
       if (typeof x.b === 'string' && x.b) r.b = x.b.slice(0, 24);
       if (typeof x.bc === 'string' && /^\d{6,14}$/.test(x.bc)) r.bc = x.bc;
+      if (x.ml) r.ml = 1;
       return r;
     });
     var d = (Array.isArray(f.d) ? f.d : []).filter(function (x) { return x && typeof x.id === 'string' && typeof x.n === 'string' && Array.isArray(x.ing); }).slice(0, 60).map(function (x) {
@@ -1521,7 +1561,9 @@ button.pdb-h:active { background: var(--s2); }
     if (q && (f.pr.tb === 0 || f.pr.tb === 1)) q.tb = f.pr.tb;
     function mv(v) { return Math.max(0, Math.min(250, Math.round((+v || 0) * 10) / 10)); }
     var m = (Array.isArray(f.m) ? f.m : []).filter(function (x) { return x && isFinite(x.t); }).slice(-400).map(function (x) { return { t: x.t, w: mv(x.w), c: mv(x.c), a: mv(x.a), th: mv(x.th), sh: mv(x.sh) }; });
-    return { g: g, e: e, d: d, w: w, pr: q, m: m, o: o };
+    // Wasser: {Tagesindex: ml}
+    var wa = {}; if (f.wa && typeof f.wa === 'object') Object.keys(f.wa).forEach(function (k) { var v = +f.wa[k]; if (/^\d+$/.test(k) && v > 0) wa[k] = Math.min(8000, Math.round(v)); });
+    return { g: g, e: e, d: d, w: w, pr: q, m: m, o: o, wa: wa };
   }
   function cleanPlan(p) {
     if (!p || !Array.isArray(p.days)) return null;
@@ -1681,6 +1723,7 @@ button.pdb-h:active { background: var(--s2); }
     core: '<rect x="8" y="3.500" width="8" height="17" rx="3.500"/><path d="M8 9h8M8 14.500h8M12 3.500v17"/>',
     dumbbell: '<path d="M6.500 7.500v9M17.500 7.500v9M3.500 10v4M20.500 10v4M6.500 12h11"/>',
     star: '<path d="m12 3.500 2.600 5.400 5.900.8-4.300 4.100 1 5.900L12 16.900l-5.200 2.800 1-5.900L3.500 9.700l5.900-.8L12 3.500z"/>',
+    drop: '<path d="M12 3.500c3 3.800 5.500 7 5.500 10a5.500 5.500 0 0 1-11 0c0-3 2.500-6.200 5.500-10z"/>',
     scan: '<path d="M4 8.500V5.500A1.500 1.500 0 0 1 5.500 4H8.500M15.500 4h3A1.500 1.500 0 0 1 20 5.500V8.500M20 15.500v3a1.500 1.500 0 0 1-1.500 1.500h-3M8.500 20h-3A1.500 1.500 0 0 1 4 18.500v-3"/><path d="M8 8.500v7M11 8.500v7M13.500 8.500v7M16 8.500v7"/>',
     globe: '<circle cx="12" cy="12" r="8.500"/><path d="M3.500 12h17M12 3.500c2.600 2.600 2.600 14.400 0 17M12 3.500c-2.600 2.600-2.600 14.400 0 17"/>',
     moon: '<path d="M19 14.500A7.500 7.500 0 0 1 9.500 5 7.500 7.500 0 1 0 19 14.500z"/>',
@@ -2485,7 +2528,7 @@ button.pdb-h:active { background: var(--s2); }
     ['burger', 'Cheeseburger', 260, 13, 12, 24, 1.5, 5, 'Stück:120'],
     ['pommes', 'Pommes', 290, 3.4, 15, 35, 3, 0.5, 'Portion:150'],
     ['lasag', 'Lasagne', 160, 8, 8, 13, 1, 2.5, 'Portion:350'],
-    // Varianten (Light, Fettstufen) und Fast Food; Fast Food nach veröffentlichten Herstellerangaben, gerundet
+    // Varianten (Light, Fettstufen) und Fast Food; Fast Food je Verkaufsportion nach Herstellerangaben (gerundet, über Nährwert-Datenbanken), ~ = Grundeinheit
     ['milch03', 'Milch 0,3 %', 35, 3.4, 0.3, 4.9, 0, 4.9, 'Glas:200'],
     ['quark20', 'Quark 20 %', 109, 12.5, 5, 3, 0, 3, 'Becher:250'],
     ['joghurt35', 'Naturjoghurt 3,5 %', 65, 3.5, 3.5, 4.5, 0, 4.5, 'Portion:150|*Becher:500'],
@@ -2502,15 +2545,15 @@ button.pdb-h:active { background: var(--s2); }
     ['rhack5', 'Rinderhack mager 5 %', 125, 21, 5, 0, 0, 0, 'Portion:125'],
     ['colaz', 'Cola Zero', 0.3, 0, 0, 0, 0, 0, 'Dose:330'],
     ['bieraf', 'Bier alkoholfrei', 25, 0.4, 0, 5.5, 0, 3, 'Flasche:500|Flasche 0,33:330'],
-    ['mc_bigmac', "Big Mac (McDonald's)", 230, 11.9, 11.4, 19.2, 1.6, 4.1, 'Stück:219'],
-    ['mc_cheese', "Cheeseburger (McDonald's)", 259, 13.4, 10.9, 26.4, 1.6, 6, 'Stück:116'],
+    ['mc_bigmac', "Big Mac (McDonald's)", 235, 11.4, 12.1, 19, 1.5, 4, 'Stück:232'],
+    ['mc_cheese', "Cheeseburger (McDonald's)", 254, 13, 10.7, 26, 1.6, 5.8, 'Stück:121'],
     ['mc_hamb', "Hamburger (McDonald's)", 240, 12.4, 8, 28.6, 1.7, 6, 'Stück:105'],
     ['mc_chick', "McChicken (McDonald's)", 243, 9.5, 11.7, 24, 1.5, 2.8, 'Stück:179'],
-    ['mc_nug', 'Chicken McNuggets', 248, 13.6, 13.6, 17.5, 1, 0.3, '6er:103|9er:155|20er:345'],
-    ['mc_pom', "Pommes (McDonald's)", 290, 3.4, 14.5, 36, 3.5, 0.3, 'klein:80|*mittel:114|groß:150'],
-    ['bk_whop', 'Whopper (Burger King)', 235, 10.4, 13.7, 17.4, 1.1, 4.1, 'Stück:270'],
-    ['sub_chick', 'Sub Chicken Teriyaki (Subway)', 143, 10.4, 2, 21, 2, 7, '15 cm:230|30 cm:460'],
-    ['kfc_strip', 'Crispy Strips (KFC)', 250, 19, 13, 14, 1, 0.5, '3 Stück:120|5 Stück:200'],
+    ['mc_nug', 'Chicken McNuggets', 245, 13.8, 12.8, 16.5, 1, 0.3, '~Nugget:18.2|*6er-Box:109.2|9er-Box:163.8|20er-Box:364'],
+    ['mc_pom', "Pommes (McDonald's)", 289, 3.4, 14.5, 36, 3.5, 0.3, 'Portion klein:80|*Portion mittel:114|Portion groß:150'],
+    ['bk_whop', 'Whopper (Burger King)', 218, 9.8, 12.4, 17, 1.1, 4, 'Stück:275'],
+    ['sub_chick', 'Sub Chicken Teriyaki (Subway)', 143, 10.4, 2, 21, 2, 7, 'Sub 15 cm:230|Sub 30 cm:460'],
+    ['kfc_strip', 'Crispy Strips (KFC)', 250, 19, 13, 14, 1, 0.5, '~Strip:40|*3er:120|5er:200'],
     // Restaurant: Werte je 100 g inkl. üblichem Fett der Küche, Portionen klein / normal / groß
     ['schnitz', 'Schnitzel mit Pommes', 230, 11, 12, 20, 2, 0.5, 'klein:350|*Teller:500|groß:650'],
     ['spagb', 'Spaghetti Bolognese', 150, 7, 5, 19, 1.5, 3, 'klein:350|*Teller:500|groß:650'],
@@ -2526,7 +2569,7 @@ button.pdb-h:active { background: var(--s2); }
     ['ramen', 'Ramen', 90, 4.5, 3.5, 10, 0.8, 1, 'klein:500|*Schale:700|groß:900']
   ].map(function (r) {
     var o = { id: r[0], n: r[1], k: r[2], p: r[3], f: r[4], c: r[5], fb: r[6], su: r[7], u: [] };
-    r[8].split('|').forEach(function (s) { var q = s.split(':'), nm = q[0]; if (nm[0] === '*') { nm = nm.slice(1); o.d = +q[1]; } o.u.push([nm, +q[1]]); });
+    r[8].split('|').forEach(function (s) { var q = s.split(':'), nm = q[0]; if (nm[0] === '*') { nm = nm.slice(1); o.d = +q[1]; } if (nm[0] === '~') { nm = nm.slice(1); o.ub = 1; } o.u.push([nm, +q[1]]); });
     return o;
   });
   var FOODB = {}; FOODS.forEach(function (x) { FOODB[x.id] = x; });
@@ -2545,17 +2588,25 @@ button.pdb-h:active { background: var(--s2); }
     ['r', 'Restaurant & Imbiss', 'schnitz spagb pcarb curryr gyros rburg steakb cwurst bowl csalat sushi ramen pizza doener burger pommes lasag']
   ];
   FCATS.forEach(function (c) { c[2].split(' ').forEach(function (id) { if (FOODB[id]) FOODB[id].cat = c[0]; }); });
-  // Varianten: in der Mengenwahl umschaltbar (vg), in den Kategorien steht nur die erste (vh = versteckt)
-  var FVAR = [[['milch35', '3,5 %'], ['milch15', '1,5 %'], ['milch03', '0,3 %']], [['quark40', '40 %'], ['quark20', '20 %'], ['mquark', 'Mager']], [['joghurt35', '3,5 %'], ['joghurt', '1,5 %'], ['joghurt01', '0,1 %']], [['grjog', '10 %'], ['grjog2', '2 %']],
-    [['gouda', 'Normal'], ['goudal', 'Light']], [['mozz', 'Normal'], ['mozzl', 'Light']], [['feta', 'Normal'], ['fetal', 'Light']], [['frisch', 'Normal'], ['frischl', 'Light']], [['sahne', '30 %'], ['sahnel', '15 %']], [['butter', 'Butter'], ['halbf', 'Halbfett']],
-    [['salami', 'Normal'], ['salamil', 'Light']], [['rhack', 'Normal'], ['rhack5', 'Mager']], [['cola', 'Normal'], ['colaz', 'Zero']], [['bier', 'Normal'], ['bieraf', 'Alkoholfrei']]];
-  FVAR.forEach(function (g) { g.forEach(function (v, i) { var x = FOODB[v[0]]; if (x) { x.vg = g; if (i) x.vh = 1; } }); });
+  // Varianten: Grundname (bn) in Listen ohne Fett-Angabe, Variante (vl) in der Mengenwahl umschaltbar (vg); in Kategorien und Suche nur die erste (vh = versteckt)
+  var FVAR = [['Milch', [['milch15', '1,5 %'], ['milch35', '3,5 %'], ['milch03', '0,3 %']]], ['Quark', [['mquark', 'Mager'], ['quark20', '20 %'], ['quark40', '40 %']]], ['Naturjoghurt', [['joghurt', '1,5 %'], ['joghurt35', '3,5 %'], ['joghurt01', '0,1 %']]],
+    ['Griechischer Joghurt', [['grjog', '10 %'], ['grjog2', '2 %']]], ['Gouda', [['gouda', 'Normal'], ['goudal', 'Light']]], ['Mozzarella', [['mozz', 'Normal'], ['mozzl', 'Light']]], ['Feta', [['feta', 'Normal'], ['fetal', 'Light']]],
+    ['Frischkäse', [['frisch', 'Normal'], ['frischl', 'Light']]], ['Sahne', [['sahne', '30 %'], ['sahnel', '15 %']]], ['Butter', [['butter', 'Normal'], ['halbf', 'Halbfett']]], ['Salami', [['salami', 'Normal'], ['salamil', 'Light']]],
+    ['Rinderhack', [['rhack', 'Normal'], ['rhack5', 'Mager']]], ['Cola', [['cola', 'Normal'], ['colaz', 'Zero']]], ['Bier', [['bier', 'Normal'], ['bieraf', 'Alkoholfrei']]]];
+  FVAR.forEach(function (g) { g[1].forEach(function (v, i) { var x = FOODB[v[0]]; if (x) { x.vg = g[1]; x.bn = g[0]; x.vl = v[1]; if (i) x.vh = 1; } }); });
+  // Getränke in ml; Fast Food (pc) nur in Verkaufsportionen
+  'milch15 milch35 milch03 hafmil sojmil osaft cola colaz bier bieraf'.split(' ').forEach(function (id) { FOODB[id].ml = 1; });
+  FOODS.forEach(function (x) { if (x.cat === 'f') x.pc = 1; });
+  function fName(it) { return it.bn || it.n; }
+  function fEn(it) { return it.bn ? it.bn + (it.vl === 'Normal' ? '' : ' ' + it.vl) : it.n; }
+  function fHay(it) { return it.vg ? it.bn + ' ' + it.vg.map(function (v) { return FOODB[v[0]].n + ' ' + v[1]; }).join(' ') : it.n + (it.b ? ' ' + it.b : ''); }
   var NK = ['k', 'p', 'f', 'c', 'fb', 'su'], NSH = { k: 'kcal', p: 'Protein', f: 'Fett', c: 'Kohlenh.', fb: 'Ballast.', su: 'Zucker' };
   // Kacheln, solange es noch wenig Verlauf gibt: [Lebensmittel, Gramm]
   var TILEDEF = [['skyr', 150], ['hafer', 80], ['ei', 180], ['banane', 120], ['whey', 30], ['haehn', 150], ['reis_g', 200], ['mandeln', 25], ['vkbrot', 100], ['apfel', 150], ['mquark', 250], ['brok', 150]];
   function foodState() {
     if (!state.food) state.food = { g: null, e: [], d: [] };
     ['d', 'w', 'm', 'o'].forEach(function (k) { if (!state.food[k]) state.food[k] = []; });
+    if (!state.food.wa) state.food.wa = {};
     return state.food;
   }
   function fDish(id) { return foodState().d.filter(function (x) { return x.id === id; })[0]; }
@@ -2575,7 +2626,7 @@ button.pdb-h:active { background: var(--s2); }
     if (it.dish) return fN(a) + (a === 1 ? ' Portion' : ' Portionen');
     var best = null;
     if (!grams) it.u.forEach(function (u) { var n = a / u[1]; if (n >= 0.5 && n <= 12 && Math.abs(n * 2 - Math.round(n * 2)) < 0.01 && (!best || n < best[0])) best = [n, u[0]]; });
-    return best ? (best[0] === 1 ? '1 ' : fN(best[0]) + '× ') + best[1] : Math.round(a) + ' g';
+    return best ? (best[0] === 1 ? '1 ' : fN(best[0]) + '× ') + best[1] : Math.round(a) + (it.ml ? ' ml' : ' g');
   }
   function fnorm(s) { return String(s).toLowerCase().replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss'); }
   function foodSum(di) {
@@ -2679,24 +2730,32 @@ button.pdb-h:active { background: var(--s2); }
     return { k: o.k, p: o.p, f: o.f, c: o.c, fb: o.fb, su: o.su, pk: o.k / n, pp: o.p / n, pf: o.f / n, pc: o.c / n, pfb: o.fb / n, psu: o.su / n };
   }
   function fN(x) { return String(Math.round(x * 10) / 10).replace('.', ','); }
+  // Gewählter Tag (Leiste oben, letzte 7 Tage); Wasserziel 35 ml je kg in 250-ml-Schritten
+  function fSd() { var t = dayIdx(Date.now()); return ui.fsd != null && ui.fsd <= t && ui.fsd > t - 7 ? ui.fsd : t; }
+  function waGoal(di) { var kg = wAt(di) || 75; return Math.max(1500, Math.min(4000, Math.round(kg * 35 / 250) * 250)); }
   function viewFood(d, now) {
-    var today = dayIdx(now), g = foodGoal(today), s = foodSum(today), tl = fTiles(), kp = s.k / g.k;
+    var today = dayIdx(now), sd = fSd(), g = foodGoal(sd), s = foodSum(sd), tl = fTiles(), kp = s.k / g.k, wa = foodState().wa[sd] || 0, wg = waGoal(sd);
     ui.ftiles = tl;
     var h = '<div class="fd-h rise" style="--i:0"><h2>Essen</h2><button class="x" data-fgoal="1" aria-label="Ziele und Rechner">' + ic('target') + '</button></div>';
+    // Tagesleiste: 7 Tage, Punkt = etwas eingetragen, grün = Protein erreicht und kcal nicht über 110 %
+    var ds = ''; for (var i = 6; i >= 0; i--) { var di = today - i, sm = foodSum(di), gd = foodGoal(di), dc = !sm.items.length ? '' : sm.p >= gd.p && sm.k <= gd.k * 1.1 ? ' ok' : ' on';
+      ds += '<button class="fdd' + (di === sd ? ' sel' : '') + dc + '" data-fsd="' + di + '" aria-label="' + esc(fmtDayL(di)) + '"><small>' + WDN[wdOf(di)].slice(0, 2) + '</small><b>' + new Date(di * 864e5).getUTCDate() + '</b><i></i></button>'; }
+    h += '<nav class="fds rise" style="--i:0">' + ds + '</nav>';
     // Bilanz: kcal groß mit Balken, darunter Protein, Fett, Kohlenhydrate, Ballaststoffe, Zucker
     h += '<section class="fbal rise" style="--i:1"><div class="fbk' + (kp > 1.1 ? ' over' : kp >= 0.9 ? ' hit' : '') + '"><b data-n="' + s.k + '" data-nk="fkv">' + s.k + '</b><span>/ ' + g.k + ' kcal</span>' +
       (g.tb ? '<span class="ftb">' + ic('dumb') + '+' + g.tb + '</span>' : '') + '<em>' + (g.k - s.k >= 0 ? (g.k - s.k) + ' offen' : (s.k - g.k) + ' drüber') + '</em><i class="fbt"><i' + pv('fkb', Math.min(1, kp)) + '></i></i></div>' +
-      '<div class="fbm">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return fbar(k, s[k], g[k]); }).join('') + '</div></section>';
+      '<div class="fbm">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return fbar(k, s[k], g[k]); }).join('') + '</div>' +
+      '<div class="fwa">' + ic('drop') + '<i class="fwb"><i style="--p:' + Math.min(1, wa / wg).toFixed(3) + '"></i></i><b>' + fN(wa / 1000) + '<small> / ' + fN(wg / 1000) + ' l</small></b><button class="x' + (wa ? '' : ' off') + '" data-fwa="-1" aria-label="Weniger Wasser">' + ic('minus') + '</button><button class="x" data-fwa="1" aria-label="Ein Glas Wasser (250 ml)">' + ic('plus') + '</button></div></section>';
     // Schnell-Kacheln
     h += '<section class="ftl rise" style="--i:2" data-noswipe="1">' + tl.map(function (x, j) {
       var it = fItem(x.i), v = fNut(it, x.g);
-      return '<button class="fti' + (ui.ftok === j ? ' done' : '') + '" data-ftile="' + j + '"><b>' + esc(it.n) + '</b><small>' + fAmt(it, x.g) + '</small><span>' + Math.round(v.k) + '<em>kcal</em></span></button>';
+      return '<button class="fti' + (ui.ftok === j ? ' done' : '') + '" data-ftile="' + j + '"><b>' + esc(fEn(it)) + '</b><small>' + fAmt(it, x.g) + '</small><span>' + Math.round(v.k) + '<em>kcal</em></span></button>';
     }).join('') + '</section>';
     ui.ftok = null;
     h += '<div class="fact2 rise" style="--i:3"><button class="btn" data-fsearch="1">' + ic('search') + 'Suchen</button><button class="btn" data-fdishes="1">' + ic('food') + 'Gerichte</button><button class="btn" data-fquick="1">' + ic('bolt') + 'Schnell</button></div>';
     // Heute
-    var cp = !s.items.length && foodSum(today - 1).items.length;
-    h += '<section class="sec rise" style="--i:4"><h2 class="sec-h">Heute<small>' + s.items.length + ' Einträge</small></h2>' + (cp ? '<button class="agn fcp" data-fcopy="1">' + ic('swap') + '<span>Wie gestern eintragen</span></button>' : '') +
+    var cp = !s.items.length && foodSum(sd - 1).items.length;
+    h += '<section class="sec rise" style="--i:4"><h2 class="sec-h">' + (sd === today ? 'Heute' : esc(fmtDayL(sd))) + '<small>' + s.items.length + ' Einträge</small></h2>' + (cp ? '<button class="agn fcp" data-fcopy="1">' + ic('swap') + '<span>Wie gestern eintragen</span></button>' : '') +
       (s.items.length ? '<div class="fl">' + s.items.slice().reverse().map(function (o) {
         var it = o.x.r && fItem(o.x.r.i);
         return '<div class="fe" data-fedit="' + o.i + '" role="button" tabindex="0"><div class="fn"><b>' + esc(o.x.n || 'Mahlzeit') + '</b><small>' + (it ? fAmt(it, o.x.r.g) + ' · ' : '') + new Date(o.x.t).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + '</small></div>' +
@@ -2723,7 +2782,7 @@ button.pdb-h:active { background: var(--s2); }
   }
   function sheetOpen(html, tall) { $('sheet').className = 'sheet' + (tall ? ' tall' : ''); $('sheet').innerHTML = html; $('shade').classList.add('open'); $('sheet').classList.add('open'); }
   function openFsearch(keep) {
-    ui.sheet = { fsearch: true }; ui.fq = ''; ui.fcat = keep ? ui.fcat : ''; ui.fpick = null; ui.fday = 0;
+    ui.sheet = { fsearch: true }; ui.fq = ''; ui.fcat = keep ? ui.fcat : ''; ui.fpick = null; ui.fday = dayIdx(Date.now()) - fSd();
     sheetOpen(shHead('search', 'Eintragen', 'Lebensmittel oder Gericht suchen') + '<div class="fqw"><input id="fq" class="fnm fq" type="search" placeholder="Suchen, z. B. Skyr" autocomplete="off" aria-label="Suchen"><button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button></div><div id="fres" class="fsr">' + fresHtml() + '</div>', true);
     setTimeout(function () { var i = $('fq'); if (i && !('ontouchstart' in window)) i.focus(); }, 350);
   }
@@ -2737,15 +2796,15 @@ button.pdb-h:active { background: var(--s2); }
       st.e.slice().reverse().forEach(function (x) { if (x.r && !seen[x.r.i] && fItem(x.r.i) && list.length < 5) { seen[x.r.i] = 1; list.push(x.r.i); } });
     } else {
       var sc = [];
-      st.o.map(function (x) { return x.id; }).concat(st.d.map(function (x) { return x.id; }), FOODS.map(function (x) { return x.id; })).forEach(function (id) {
-        var it0 = fItem(id), n = fnorm(it0.n + (it0.b ? ' ' + it0.b : '')), i = n.indexOf(q); if (i >= 0) sc.push([id, i === 0 ? 0 : n.indexOf(' ' + q) >= 0 ? 1 : 2]);
+      st.o.map(function (x) { return x.id; }).concat(st.d.map(function (x) { return x.id; }), FOODS.filter(function (x) { return !x.vh; }).map(function (x) { return x.id; })).forEach(function (id) {
+        var it0 = fItem(id), n = fnorm(fHay(it0)), i = n.indexOf(q); if (i >= 0) sc.push([id, i === 0 ? 0 : n.indexOf(' ' + q) >= 0 ? 1 : 2]);
       });
       sc.sort(function (a, b) { return a[1] - b[1]; }); list = sc.slice(0, 30).map(function (x) { return x[0]; });
     }
     var cat = !q && ui.fcat ? (ui.fcat === 'u' ? 'Eigene' : ui.fcat === 'dish' ? 'Gerichte' : FCATS.filter(function (c) { return c[0] === ui.fcat; })[0][1]) : '';
     var h = (cat ? '<button class="fcb" data-fcat="">' + ic('back') + '<b>' + cat + '</b></button>' : '') + (list.length ? (q || cat ? '' : '<h3 class="xg">Zuletzt</h3>') + list.map(function (id) {
-      var it = fItem(id);
-      return '<button class="fsi' + (it.dish ? ' dish' : /^u/.test(id) ? ' own' : '') + '" data-fpick="' + id + '"><span><b>' + esc(it.n) + '</b><small>' + (it.b ? esc(it.b) + ' · ' : '') + (it.dish ? 'Portion' : '100 g') + ' · P ' + fN(it.p) + ' · F ' + fV(it.f) + ' · K ' + fV(it.c) + '</small></span><em>' + Math.round(it.k) + '</em></button>';
+      var it = fItem(id), pa = it.pc ? it.d || it.u[it.ub ? 1 : 0][1] : 0, v = pa ? fNut(it, pa) : it;
+      return '<button class="fsi' + (it.dish ? ' dish' : /^u/.test(id) ? ' own' : '') + '" data-fpick="' + id + '"><span><b>' + esc(fName(it)) + '</b><small>' + (it.b ? esc(it.b) + ' · ' : '') + (it.dish ? 'Portion' : pa ? fAmt(it, pa) : it.ml ? '100 ml' : '100 g') + ' · P ' + fN(v.p) + ' · F ' + fV(v.f) + ' · K ' + fV(v.c) + '</small></span><em>' + Math.round(v.k) + '</em></button>';
     }).join('') : q ? '<p class="muted">Nichts gefunden. Lege es als eigenes Lebensmittel an.</p>' : cat ? '<p class="muted">Noch leer.</p>' : '');
     if (!q && !cat) h += '<h3 class="xg">Kategorien</h3><div class="fcg">' + FCATS.map(function (c) { return '<button data-fcat="' + c[0] + '"><b>' + c[1] + '</b><small>' + FOODS.filter(function (x) { return x.cat === c[0] && !x.vh; }).length + '</small></button>'; }).join('') +
       '<button data-fcat="u"><b>Eigene</b><small>' + st.o.length + '</small></button><button data-fcat="dish"><b>Gerichte</b><small>' + st.d.length + '</small></button></div>';
@@ -2763,11 +2822,11 @@ button.pdb-h:active { background: var(--s2); }
     var u = [], sq = +p.serving_quantity, pq = +p.product_quantity;
     if (sq > 0 && sq <= 2000) u.push(['Portion', Math.round(sq)]);
     if (pq > 0 && pq <= 3000 && Math.round(pq) !== Math.round(sq)) u.push(['Packung', Math.round(pq)]);
-    return { bc: String(p.code), n: n.slice(0, 30), b: String(p.brands || '').split(',')[0].trim().slice(0, 24), qt: String(p.quantity || '').slice(0, 16), k: Math.round(+k), p: v('proteins'), f: v('fat'), c: v('carbohydrates'), fb: v('fiber'), su: v('sugars'), u: u };
+    return { bc: String(p.code), n: n.slice(0, 30), b: String(p.brands || '').split(',')[0].trim().slice(0, 24), qt: String(p.quantity || '').slice(0, 16), k: Math.round(+k), p: v('proteins'), f: v('fat'), c: v('carbohydrates'), fb: v('fiber'), su: v('sugars'), u: u, ml: /\d\s*(ml|cl|l)\b/i.test(String(p.quantity || '')) ? 1 : 0 };
   }
   function offSave(x) {
     var st = foodState(), ex = st.o.filter(function (o) { return o.bc === x.bc; })[0]; if (ex) return ex.id;
-    var o = { id: 'u' + Date.now().toString(36), n: x.n, b: x.b, bc: x.bc, u: x.u.slice(0, 4) };
+    var o = { id: 'u' + Date.now().toString(36), n: x.n, b: x.b, bc: x.bc, u: x.u.slice(0, 4) }; if (x.ml) o.ml = 1;
     NK.forEach(function (k) { o[k] = x[k] || 0; }); st.o.push(o); persist(); return o.id;
   }
   function fonHtml() {
@@ -2782,15 +2841,22 @@ button.pdb-h:active { background: var(--s2); }
     }).join('');
   }
   function fonUpd() { var e = $('fon'); if (e) e.innerHTML = fonHtml(); }
-  function fonSearch(again) {
+  function offSearch(q, done, n) {
     // Die Suche von Open Food Facts antwortet oft mit 503 (ohne CORS = „Failed to fetch“): bis zu 3 Versuche, abwechselnd de/world
-    again = again || 0; var q = ui.fq.trim(); if (q.length < 3 || !navigator.onLine || (!again && ui.fon && ui.fon.q === q && ui.fon.st !== 'err')) return;
+    n = n || 0;
+    fetch((n % 2 ? 'https://world.openfoodfacts.org/' : OFF) + 'cgi/search.pl?search_terms=' + encodeURIComponent(q) + '&search_simple=1&json=1&page_size=24&sort_by=unique_scans_n&fields=' + OFF_F)
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (d) { done((d.products || []).map(offMap).filter(Boolean)); }, function () { if (n < 2) setTimeout(function () { offSearch(q, done, n + 1); }, 800 + n * 800); else done(null); });
+  }
+  function fonSearch() {
+    var q = ui.fq.trim(); if (q.length < 3 || !navigator.onLine || (ui.fon && ui.fon.q === q && ui.fon.st !== 'err')) return;
     ui.fon = { q: q, st: 'load', r: [] }; fonUpd();
-    fetch((again % 2 ? 'https://world.openfoodfacts.org/' : OFF) + 'cgi/search.pl?search_terms=' + encodeURIComponent(q) + '&search_simple=1&json=1&page_size=24&sort_by=unique_scans_n&fields=' + OFF_F).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
+    offSearch(q, function (r) {
       if (!ui.fon || ui.fon.q !== q) return;
+      if (!r) { ui.fon.st = 'err'; fonUpd(); return; }
       var have = {}; foodState().o.forEach(function (x) { if (x.bc) have[x.bc] = 1; });
-      ui.fon.r = (d.products || []).map(offMap).filter(function (x) { return x && !have[x.bc]; }).slice(0, 12); ui.fon.st = 'ok'; fonUpd();
-    }).catch(function () { if (!ui.fon || ui.fon.q !== q) return; if (again < 2) setTimeout(function () { if (ui.fon && ui.fon.q === q) fonSearch(again + 1); }, 800 + again * 800); else { ui.fon.st = 'err'; fonUpd(); } });
+      ui.fon.r = r.filter(function (x) { return !have[x.bc]; }).slice(0, 12); ui.fon.st = 'ok'; fonUpd();
+    });
   }
   // Barcode: eingebauter BarcodeDetector, sonst (iOS) zxing über jsDelivr, erst beim ersten Scan geladen und danach vom Service Worker gecacht
   var scan = null, BCLIB = 'https://cdn.jsdelivr.net/npm/barcode-detector@3.2.2/dist/iife/ponyfill.js';
@@ -2802,8 +2868,8 @@ button.pdb-h:active { background: var(--s2); }
   }
   function scanEnd(me) { me.on = false; if (me.s) me.s.getTracks().forEach(function (tr) { tr.stop(); }); if (scan === me) scan = null; }
   function scanStop() { if (scan) scanEnd(scan); }
-  function openScan() {
-    scanStop(); ui.sheet = { fscan: true, from: 's' };
+  function openScan(mode) {
+    scanStop(); ui.sheet = { fscan: true, from: mode === 'own' ? 'o' : 's', mode: mode };
     sheetOpen(shHead('scan', 'Barcode', 'Packung vor die Kamera halten', true) + '<div class="fscan"><video id="fsv" playsinline muted autoplay></video><i></i></div><p class="muted fon" id="fsm">…</p>', true);
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { $('fsm').textContent = 'Keine Kamera'; return; }
     var me = scan = { on: true, s: null };
@@ -2820,6 +2886,7 @@ button.pdb-h:active { background: var(--s2); }
   }
   function pickFrom(id) { openPick(id); ui.sheet.from = 's'; $('sheet').innerHTML = fpickHtml(); }
   function scanHit(code) {
+    if (ui.sheet && ui.sheet.mode === 'own') { buzz(20); openOwn(ui.odraft.id, code, ui.odraft); toast('Barcode erkannt', 'check'); return; }
     buzz(20); var ex = foodState().o.filter(function (o) { return o.bc === code; })[0];
     if (ex) { pickFrom(ex.id); return; }
     if (!navigator.onLine) { openOwn('new', code); toast('Offline · einmal selbst eintragen', 'bolt'); return; }
@@ -2836,45 +2903,75 @@ button.pdb-h:active { background: var(--s2); }
   }
   function openPick(id, a, edit) {
     var it = fItem(id); if (!it) return;
-    ui.sheet = { fpick: true }; ui.fpick = { i: id, a: a != null ? a : it.dish ? 1 : it.d || (it.u.length ? it.u[0][1] : 100), edit: edit };
+    ui.sheet = { fpick: true }; ui.fpick = { i: id, a: a != null ? a : it.dish ? 1 : it.d || (it.u.length ? it.u[it.ub && it.u[1] ? 1 : 0][1] : 100), edit: edit };
     sheetOpen(fpickHtml(), true);
   }
   function fpickHtml() {
-    var pk = ui.fpick, it = fItem(pk.i), back = !!(ui.sheet && ui.sheet.from);
-    // Knöpfe: Portionen (1× und 2×) als Portion, dazu feste Grammwerte in Gramm
-    var ch = it.dish ? [[0.5], [1], [1.5], [2]] : it.u.map(function (u) { return [u[1]]; }).concat(it.u.map(function (u) { return [u[1] * 2]; }));
-    if (!it.dish) [50, 100, 150, 200].forEach(function (g) { ch.push([g, 1]); });
+    var pk = ui.fpick, it = fItem(pk.i), back = !!(ui.sheet && ui.sheet.from), un = it.ml ? 'ml' : 'g', b0 = it.u[0];
+    // Knöpfe: Portionen (1× und 2×), dazu feste Mengen in g/ml. Fast Food (pc): nur Verkaufsportionen, Schritte in der kleinsten Einheit
+    var ch = it.dish ? [[0.5], [1], [1.5], [2]] : it.pc ? (it.u.length > 1 ? it.u.slice(it.ub ? 1 : 0).map(function (u) { return [u[1]]; }) : [1, 2, 3].map(function (n) { return [b0[1] * n]; })) :
+      it.u.map(function (u) { return [u[1]]; }).concat(it.u.map(function (u) { return [u[1] * 2]; }));
+    if (!it.dish && !it.pc) [50, 100, 150, 200].forEach(function (g) { ch.push([g, 1]); });
     ch = ch.filter(function (x, i, a) { return !a.slice(0, i).some(function (y) { return y[0] === x[0]; }); }).slice(0, 8);
-    return shHead('food', it.n, it.dish ? 'Gericht · Werte je Portion' : (it.b ? it.b + ' · ' : '') + 'je 100 g: ' + Math.round(it.k) + ' kcal · P ' + fN(it.p), back) + fvarHtml(it, pk.i) +
+    var sub = it.dish ? 'Gericht · Werte je Portion' : (it.b ? it.b + ' · ' : '') + (it.pc ? 'je ' + b0[0] + ': ' + Math.round(it.k * b0[1] / 100) + ' kcal · P ' + fN(it.p * b0[1] / 100) : 'je 100 ' + un + ': ' + Math.round(it.k) + ' kcal · P ' + fN(it.p));
+    var amt = it.pc ? '<label class="fpcn"><b id="fpcn">' + fAmt(it, pk.a) + '</b></label>' :
+      '<label><input id="fa" type="number" inputmode="decimal" min="0" step="' + (it.dish ? 0.5 : 5) + '" value="' + pk.a + '" aria-label="Menge"><span>' + (it.dish ? 'Port.' : un) + '</span></label>';
+    return shHead('food', fName(it), sub, back) + fvarHtml(it, pk.i) +
       '<div class="fpc">' + ch.map(function (c) { return '<button data-famt="' + c[0] + '" aria-pressed="' + (c[0] === pk.a) + '">' + fAmt(it, c[0], c[1]) + '</button>'; }).join('') + '</div>' +
-      '<div class="fstep"><button class="sb" data-fstep="-1" aria-label="Weniger">' + ic('minus') + '</button><label><input id="fa" type="number" inputmode="decimal" min="0" step="' + (it.dish ? 0.5 : 5) + '" value="' + pk.a + '" aria-label="Menge"><span>' + (it.dish ? 'Port.' : 'g') + '</span></label><button class="sb" data-fstep="1" aria-label="Mehr">' + ic('plus') + '</button></div>' +
-      '<div class="ftot" id="ftot">' + ftotHtml(fNut(it, pk.a)) + '</div>' + (pk.edit == null ? dayTog() : '') +
-      '<button class="btn primary big" data-fpadd="1">' + ic('check') + (pk.edit != null ? 'Ändern' : 'Eintragen') + '</button>' + (/^u/.test(pk.i) ? '<button class="btn ghost small" data-fown="' + pk.i + '">' + ic('edit') + 'Lebensmittel bearbeiten</button>' : '');
+      '<div class="fstep"><button class="sb" data-fstep="-1" aria-label="Weniger">' + ic('minus') + '</button>' + amt + '<button class="sb" data-fstep="1" aria-label="Mehr">' + ic('plus') + '</button></div>' +
+      '<div class="ftot" id="ftot">' + ftotHtml(fNut(it, pk.a)) + '</div><div class="ffit" id="ffit">' + ffitHtml() + '</div>' + (pk.edit == null ? dayTog() : '') +
+      '<button class="btn primary big" data-fpadd="1">' + ic('check') + (pk.edit != null ? 'Ändern' : 'Eintragen') + '</button>' + (/^u/.test(pk.i) ? '<button class="btn ghost small" data-fown="' + pk.i + '">' + ic('edit') + 'Lebensmittel bearbeiten</button>' : '') +
+      '<div id="fbr">' + fbrHtml() + '</div>';
+  }
+  function ffitHtml() {
+    // Passt das noch? Tagessumme (ohne den Eintrag, der gerade geändert wird) + diese Menge gegen das Tagesziel
+    var pk = ui.fpick, it = fItem(pk.i), di = dayIdx(Date.now()) - (ui.fday || 0), s = foodSum(di), g = foodGoal(di), v = fNut(it, pk.a), ox = pk.edit != null ? foodState().e[pk.edit] : null;
+    if (ox) { s.k -= ox.k || 0; s.p -= ox.p || 0; }
+    var k1 = s.k + (v.k || 0), rest = Math.round(g.k - k1), a = Math.min(1, s.k / g.k), b = Math.max(0, Math.min(1, k1 / g.k) - a);
+    return '<div class="ffb' + (rest < 0 ? ' over' : '') + '"><i style="width:' + (a * 100).toFixed(1) + '%"></i><i style="width:' + (b * 100).toFixed(1) + '%"></i></div>' +
+      '<p><b>' + Math.abs(rest) + ' kcal</b>' + (rest >= 0 ? 'danach noch frei' : 'über dem Ziel') + '<span>Protein ' + Math.round(s.p + (v.p || 0)) + ' / ' + g.p + ' g</span></p>';
+  }
+  function fbrHtml() {
+    // Marke wählen: Open-Food-Facts-Produkte zum Grundnamen (nur eingebaute Lebensmittel, nicht Restaurant/Fast Food)
+    var b = ui.fbr, pk = ui.fpick, it = pk && FOODB[pk.i];
+    if (!it || it.pc || it.cat === 'r') return '';
+    if (!b || b.i !== pk.i) return '<button class="btn ghost small" data-fbr="1">' + ic('globe') + 'Marke wählen</button>';
+    if (b.st === 'load') return '<p class="muted fon">' + ic('globe') + 'Marken …</p>';
+    if (!b.r.length) return '<p class="muted fon">' + ic('globe') + (b.st === 'err' ? 'Nicht erreichbar' : 'Keine Marken gefunden') + '</p>';
+    return '<h3 class="xg">' + ic('globe') + 'Marken</h3>' + b.r.map(function (x, i) { return '<button class="fsi web" data-fbrp="' + i + '"><span><b>' + esc(x.n) + '</b><small>' + esc([x.b, x.qt].filter(Boolean).join(' · ')) + '</small></span><em>' + x.k + '</em></button>'; }).join('');
   }
   function ftotHtml(v) {
     return '<div class="k"><b>' + Math.round(v.k) + '</b><small>kcal</small></div>' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return '<div class="' + k + '"><b>' + fV(v[k]) + '</b><small>' + NSH[k] + '</small></div>'; }).join('');
   }
   function fpickUpd() {
     var pk = ui.fpick, it = fItem(pk.i); if (!it) return;
-    $('ftot').innerHTML = ftotHtml(fNut(it, pk.a));
+    $('ftot').innerHTML = ftotHtml(fNut(it, pk.a)); $('ffit').innerHTML = ffitHtml();
+    var pc = $('fpcn'); if (pc) pc.textContent = fAmt(it, pk.a);
     document.querySelectorAll('[data-famt]').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.famt === pk.a)); });
   }
   function openQuick(idx) {
-    var x = idx != null ? foodState().e[idx] : null; ui.sheet = { food: true, idx: idx }; ui.fday = 0;
+    var x = idx != null ? foodState().e[idx] : null; ui.sheet = { food: true, idx: idx }; ui.fday = dayIdx(Date.now()) - fSd();
     function f(id, lab, k, u) { return '<label>' + lab + '<input id="f-' + id + '" type="number" inputmode="decimal" min="0" value="' + (x && x[k] != null ? x[k] : '') + '" placeholder="0"><span>' + u + '</span></label>'; }
     sheetOpen(shHead('bolt', x ? 'Eintrag ändern' : 'Schnell eintragen', 'Ohne Lebensmittel, z. B. Restaurant') + '<div class="finp">' + f('k', 'Kalorien', 'k', 'kcal') + f('p', 'Protein', 'p', 'g') + '</div>' +
       '<div class="finp four">' + f('f', 'Fett', 'f', 'g') + f('c', 'Kohlenh.', 'c', 'g') + f('fb', 'Ballast.', 'fb', 'g') + f('su', 'Zucker', 'su', 'g') + '</div>' +
       '<input id="f-n" class="fnm" type="text" maxlength="30" placeholder="Name (optional)" value="' + (x ? esc(x.n) : '') + '" aria-label="Name">' + (x ? '' : dayTog()) +
       '<button class="btn primary big" data-fsave="1">' + ic('check') + (x ? 'Ändern' : 'Speichern') + '</button>', true);
   }
-  function openOwn(id, bc) {
-    var o = id && id !== 'new' ? fOwn(id) : null; ui.sheet = { fown: o ? o.id : 'new', bc: bc };
-    function f(k, lab) { return '<label>' + lab + '<input id="o-' + k + '" type="number" inputmode="decimal" min="0" value="' + (o ? o[k] : '') + '"></label>'; }
-    sheetOpen(shHead('plus', o ? 'Lebensmittel' : 'Eigenes Lebensmittel', 'Werte je 100 g, z. B. von der Packung') + '<input id="o-n" class="fnm" type="text" maxlength="30" placeholder="Name, z. B. Proteinbrot" value="' + (o ? esc(o.n) : '') + '" aria-label="Name">' +
+  function openOwn(id, bc, dr) {
+    // dr: Entwurf aus dem Formular (zurück vom Barcode-Scan)
+    var o = id && id !== 'new' ? fOwn(id) : null, src = dr || o || {}, code = bc || (dr && dr.bc) || (o && o.bc) || '';
+    ui.sheet = { fown: o ? o.id : 'new', bc: code, ml: src.ml ? 1 : 0 };
+    function f(k, lab) { return '<label>' + lab + '<input id="o-' + k + '" type="number" inputmode="decimal" min="0" value="' + (src[k] != null ? src[k] : '') + '"></label>'; }
+    var un = dr ? dr.un : o && o.u[0] ? o.u[0][0] : '', ug = dr ? dr.ug : o && o.u[0] ? o.u[0][1] : '';
+    sheetOpen(shHead('plus', o ? 'Lebensmittel' : 'Eigenes Lebensmittel', 'Werte je 100 g bzw. 100 ml, z. B. von der Packung') +
+      '<div class="fqw"><input id="o-n" class="fnm" type="text" maxlength="30" placeholder="Name, z. B. Proteinbrot" value="' + esc(src.n || '') + '" aria-label="Name"><button class="x" data-fscan="own" aria-label="Barcode scannen">' + ic('scan') + '</button></div>' +
+      (code ? '<p class="muted fon">' + ic('check') + 'Barcode ' + esc(code) + '</p>' : '') +
+      '<div class="seg fvs"><button data-oml="0" aria-pressed="' + !ui.sheet.ml + '">g</button><button data-oml="1" aria-pressed="' + !!ui.sheet.ml + '">ml</button></div>' +
       '<div class="dg3">' + f('k', 'kcal') + f('p', 'Protein') + f('f', 'Fett') + f('c', 'Kohlenh.') + f('fb', 'Ballast.') + f('su', 'Zucker') + '</div>' +
-      '<div class="dg3 two"><label>Portion<input id="o-un" type="text" maxlength="12" placeholder="z. B. Scheibe" value="' + (o && o.u[0] ? esc(o.u[0][0]) : '') + '"></label><label>Gramm<input id="o-ug" type="number" inputmode="decimal" min="0" value="' + (o && o.u[0] ? o.u[0][1] : '') + '"></label></div>' +
+      '<div class="dg3 two"><label>Portion<input id="o-un" type="text" maxlength="12" placeholder="z. B. Scheibe" value="' + esc(String(un)) + '"></label><label>Menge<input id="o-ug" type="number" inputmode="decimal" min="0" value="' + ug + '"></label></div>' +
       '<button class="btn primary big" data-fownsave="1">' + ic('check') + 'Speichern</button>' + (o ? '<button class="btn ghost small" data-fowndel="1">' + ic('trash') + 'Löschen</button>' : ''), true);
   }
+  function ownDraft() { var d = { n: $('o-n').value, un: $('o-un').value, ug: $('o-ug').value, ml: ui.sheet.ml, bc: ui.sheet.bc }; NK.forEach(function (k) { d[k] = $('o-' + k).value; }); return d; }
   function openDishes() {
     ui.sheet = { fdishes: true }; var st = foodState();
     sheetOpen(shHead('food', 'Gerichte', 'Aus Zutaten, durch Portionen geteilt') + '<div class="fsr">' + st.d.map(function (x) {
@@ -2952,7 +3049,11 @@ button.pdb-h:active { background: var(--s2); }
     }
     return h + '</div></section>';
   }
-  function dayTog() { return '<div class="seg fday"><button data-fday="0" aria-pressed="' + (!ui.fday) + '">Heute</button><button data-fday="1" aria-pressed="' + (!!ui.fday) + '">Gestern</button></div>'; }
+  function dayTog() {
+    // Heute / Gestern, bei älterem gewähltem Tag zusätzlich dieser Tag
+    var b = dayIdx(Date.now()) - fSd(), o = [[0, 'Heute'], [1, 'Gestern']]; if (b > 1) o.push([b, fmtDayL(fSd())]);
+    return '<div class="seg fday' + (o.length > 2 ? ' three' : '') + '">' + o.map(function (x) { return '<button data-fday="' + x[0] + '" aria-pressed="' + ((ui.fday || 0) === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>';
+  }
   function lastW() { var w = foodState().w; return w.length ? w[w.length - 1] : null; }
 
   // Ziele: automatisch (Rechner) oder eigene Werte
@@ -2970,11 +3071,12 @@ button.pdb-h:active { background: var(--s2); }
       return h + '<div class="dg3">' + NK.map(function (k) { return '<label>' + (k === 'k' ? 'kcal' : NSH[k] + ' g') + '<input id="g-' + k + '" type="number" inputmode="numeric" min="0" value="' + g[k] + '"></label>'; }).join('') + '</div><p class="muted fnote">Leere Felder rechnet die App aus den kcal (Fett 25 %, Ballaststoffe 14 g je 1000 kcal, Zucker höchstens 10 %).</p><button class="btn primary big" data-fgsave="1">' + ic('check') + 'Speichern</button>';
     }
     function crg(id, lab, v, min, max, st, lo, hi) { return '<label class="crg"><span>' + lab + '<b id="c-' + id + 'v"></b></span><input id="c-' + id + '" type="range" min="' + min + '" max="' + max + '" step="' + st + '" value="' + v + '">' + (lo ? '<i class="crl"><em>' + lo + '</em><em>' + hi + '</em></i>' : '') + '</label>'; }
-    return h + '<div class="cres2" id="c-res"></div><div class="clearn" id="c-learn"></div>' +
+    return h + '<div class="cres" id="c-res"></div>' +
       '<div class="cin"><label>cm<input id="c-h" type="number" inputmode="numeric" value="' + c.h + '"></label><label>Jahre<input id="c-a" type="number" inputmode="numeric" value="' + c.a + '"></label><label>kg<input id="c-w" type="number" inputmode="decimal" step="0.1" value="' + c.w + '"></label>' +
       '<div class="seg"><button data-csx="m" aria-pressed="' + (c.s !== 'f') + '">M</button><button data-csx="f" aria-pressed="' + (c.s === 'f') + '">W</button></div></div>' +
       '<div class="crg"><span>Tempo<b>kg / Woche</b></span><div class="seg six">' + RATES.map(function (r) { return '<button data-crt="' + r + '" aria-pressed="' + (r === c.rt) + '">' + rateText(r) + '</button>'; }).join('') + '</div></div>' +
       crg('pal', 'Alltag', c.pal, 1.2, 1.9, 0.05, 'sitzend', 'körperlich') + crg('pkg', 'Protein', c.pkg, 1.4, 2.6, 0.1) + crg('fp', 'Fett', c.fp, 20, 40, 5) +
+      '<div class="clearn" id="c-learn"></div><details class="cway"><summary>' + ic('chev') + 'Rechenweg</summary><div id="c-way"></div></details>' +
       '<button class="btn primary big" data-cuse="1" id="c-use">' + ic('check') + 'Übernehmen</button>';
   }
   function calcRead() {
@@ -2986,25 +3088,32 @@ button.pdb-h:active { background: var(--s2); }
     var r = $('c-res'); if (!r) return;
     var c = calcRead(), today = dayIdx(Date.now()), ok = c.h >= 120 && c.a >= 14 && c.w >= 20;
     $('c-palv').textContent = fN2(c.pal); $('c-pkgv').textContent = fN(c.pkg) + ' g/kg'; $('c-fpv').textContent = c.fp + ' %';
-    if (!ok) { r.innerHTML = '<p class="muted">Größe, Alter und Gewicht eintragen.</p>'; $('c-learn').innerHTML = ''; $('c-use').disabled = true; return; }
+    if (!ok) { r.innerHTML = '<p class="muted">Größe, Alter und Gewicht eintragen.</p>'; $('c-learn').innerHTML = ''; $('c-way').innerHTML = ''; $('c-use').disabled = true; return; }
     $('c-use').disabled = false;
     var pr = { h: c.h, a: c.a, s: c.s, pal: c.pal, rt: c.rt, pkg: c.pkg, fp: c.fp, tb: c.tb, adj: c.adj }, rest = calcWith(Object.assign({}, pr, { tb: 0 }), c.w, today);
-    var tday = null; for (var i = 0; i < 8 && !tday; i++) if (schedFor(today + i).length) tday = calcWith(Object.assign({}, pr, { tb: 1 }), c.w, today + i);
+    var tday = null, tdi = 0; for (var i = 0; i < 8 && !tday; i++) if (schedFor(today + i).length) { tdi = today + i; tday = calcWith(Object.assign({}, pr, { tb: 1 }), c.w, tdi); }
+    function sg(v) { return (v >= 0 ? '+' : '−') + Math.abs(Math.round(v)); }
+    // Oben (sticky): Ruhetag, Trainingstag mit Kästchen (Zuschlag an/aus), Makros des Ruhetags
+    var on = !!(c.tb && tday);
+    r.innerHTML = '<div class="ctop"><div class="cday"><small>' + ic('moon') + 'Ruhetag</small><b>' + rest.k + '<em>kcal</em></b></div>' +
+      '<button class="cday" data-ctb="1" aria-pressed="' + on + '"' + ' aria-label="Zuschlag an Trainingstagen"><small>' + ic('dumbbell') + 'Training<i class="ctg">' + (on ? ic('check') : '') + '</i></small><b>' + (on ? tday.k : rest.k) + '<em>' + (on ? sg(tday.tb) : 'kcal') + '</em></b></button></div>' +
+      '<div class="cmac">' + [['p', 'Protein'], ['f', 'Fett'], ['c', 'Kohlenh.'], ['fb', 'Ballast.'], ['su', 'Zucker']].map(function (m) { return '<div><b>' + (m[0] === 'su' ? '≤' : '') + rest[m[0]] + '<small>g</small></b><span>' + m[1] + '</span></div>'; }).join('') + '</div>';
+    // Rechenweg (aufklappbar)
     function row(lab, v, cls) { return '<div' + (cls ? ' class="' + cls + '"' : '') + '><span>' + lab + '</span><b>' + v + '</b></div>'; }
-    // Ruhetag immer, Trainingstag als Schalter (gedimmt = kein Zuschlag)
-    function mac(x) { return '<p class="cmac">' + [['p', 'P'], ['f', 'F'], ['c', 'K'], ['fb', 'B'], ['su', 'Z']].map(function (m) { return '<span><i>' + m[1] + '</i>' + (m[0] === 'su' ? '≤' : '') + x[m[0]] + '</span>'; }).join('') + '</p>'; }
-    var tr = c.tb && tday;
-    r.innerHTML = '<div class="ctop"><div>' + ic('moon') + '<b>' + rest.k + '</b><em>kcal</em></div>' + (tday ? '<button data-ctb="1" aria-pressed="' + !!c.tb + '" aria-label="Zuschlag an Trainingstagen">' + ic('dumbbell') + '<b>' + tday.k + '</b><small>+' + tday.tb + '</small></button>' : '') + '</div>' + mac(rest) +
-      '<details><summary>Rechenweg</summary>' + row('Grundumsatz', Math.round(rest.bmr)) + row('× Alltag ' + fN2(c.pal), Math.round(rest.bmr * c.pal)) +
-      (c.rt ? row('Tempo ' + rateText(c.rt) + ' kg/Wo.', (c.rt > 0 ? '+' : '−') + Math.round(Math.abs(c.rt) * 1100)) : '') + (c.adj ? row('Korrektur aus Verlauf', (c.adj > 0 ? '+' : '−') + Math.abs(c.adj)) : '') +
-      (tr ? row('Training (Schnitt)', '+' + tday.tb) : '') + '</details>';
+    $('c-way').innerHTML = row('Grundumsatz', Math.round(rest.bmr)) + row('× Alltag ' + fN2(c.pal), Math.round(rest.bmr * c.pal)) +
+      (c.rt ? row('Tempo ' + rateText(c.rt) + ' kg/Woche', sg(c.rt * 1100)) : '') + (c.adj ? row('Anpassung aus Verlauf', sg(c.adj)) : '') + row('Ruhetag (gerundet)', rest.k + ' kcal', 'tot') +
+      (on ? row('Training ' + esc(fmtDayL(tdi)), sg(tday.tb)) + row('Trainingstag', tday.k + ' kcal', 'tot') : '') +
+      row('Protein ' + fN(c.pkg) + ' g × ' + fN(c.w) + ' kg', rest.p + ' g', 'sub') + row('Fett ' + c.fp + ' % der kcal', rest.f + ' g', 'sub') + row('Kohlenhydrate = Rest', rest.c + ' g', 'sub') +
+      row('Ballaststoffe 14 g je 1000 kcal', rest.fb + ' g', 'sub') + row('Zucker höchstens 10 %', '≤ ' + rest.su + ' g', 'sub');
+    // Echter Bedarf aus Essen + Gewicht (tdeeEst): Abweichung zur Formel wird als Anpassung ins Ziel übernommen
     var e = tdeeEst(pr), L = $('c-learn');
-    if (e.off) L.innerHTML = '<div>' + ic('chart') + '<span><b>Verlauf passt nicht zur Formel</b><small>' + e.est + ' ≠ ' + e.maint + ' kcal · Einträge lückenhaft?</small></span></div>';
-    else if (!e.ok) L.innerHTML = '<div>' + ic('chart') + '<span><b>Lernt aus dem Verlauf</b><small>Tage ' + Math.min(e.n, 10) + '/10 · Wiegen ' + Math.min(e.wn, 3) + '/3</small></span></div>';
+    if (e.off) L.innerHTML = '<div>' + ic('chart') + '<span><b>Echter Bedarf: noch unklar</b><small>Essen und Gewicht passen nicht zusammen (' + e.est + ' statt ' + e.maint + ' kcal). Meist fehlen Einträge.</small></span></div>';
+    else if (!e.ok) L.innerHTML = '<div>' + ic('chart') + '<span><b>Echter Bedarf: lernt noch</b><small>aus Essen und Gewicht der letzten 4 Wochen</small><span class="cprg"><i style="--p:' + Math.min(1, e.n / 10).toFixed(2) + '"></i>Tage ' + Math.min(e.n, 10) + '/10</span><span class="cprg"><i style="--p:' + Math.min(1, e.wn / 3).toFixed(2) + '"></i>Wiegen ' + Math.min(e.wn, 3) + '/3</span></span></div>';
     else {
       var diff = e.adj - c.adj;
-      L.innerHTML = '<div>' + ic('chart') + '<span><b>Verlauf ≈ ' + e.est + ' kcal</b><small>Formel ' + e.maint + ' · ' + e.n + ' Tage · ' + (e.wk >= 0 ? '+' : '−') + fN(Math.abs(e.wk)) + ' kg/Wo.</small></span></div>' +
-        (Math.abs(diff) >= 50 ? '<button class="btn small" data-cadj="' + e.adj + '">' + ic('check') + (e.adj > 0 ? '+' : '−') + Math.abs(e.adj) + ' kcal</button>' : '<small class="ok">' + ic('check') + 'Passt zur Formel' + (c.adj ? ' mit Korrektur' : '') + '.</small>');
+      L.innerHTML = '<div>' + ic('chart') + '<span><b>Echter Bedarf ≈ ' + e.est + ' kcal</b><small>Formel sagt ' + e.maint + ' kcal. Gemessen aus ' + e.n + ' Tagen Essen und Gewicht (' + (e.wk >= 0 ? '+' : '−') + fN(Math.abs(e.wk)) + ' kg/Woche).</small></span></div>' +
+        (Math.abs(diff) >= 50 ? '<button class="btn small" data-cadj="' + e.adj + '">' + ic('check') + 'Ziel um ' + sg(e.adj) + ' kcal anpassen</button>' :
+          '<small class="ok">' + ic('check') + (c.adj ? 'Ziel angepasst (' + sg(c.adj) + ' kcal)' : 'Formel passt') + '</small>' + (c.adj ? '<button class="btn ghost small" data-cadj="0">Anpassung entfernen</button>' : ''));
     }
   }
   function goalsSave() {
@@ -3021,12 +3130,12 @@ button.pdb-h:active { background: var(--s2); }
     persist(); closeSheet(true); ui.fresh = false; render();
     var after = foodSum(today).p;
     if (editIdx == null && before < goal && after >= goal) { toast('Proteinziel erreicht', 'trophy'); confetti(90); buzz([40, 30, 40]); }
-    else toast((editIdx != null ? 'Geändert · ' : '+') + Math.round(x.k) + ' kcal · ' + fN(x.p) + ' g Protein' + (ui.fday ? ' · gestern' : ''), 'check', true);
+    else toast((editIdx != null ? 'Geändert · ' : '+') + Math.round(x.k) + ' kcal · ' + fN(x.p) + ' g Protein' + (ui.fday ? ' · ' + (ui.fday === 1 ? 'gestern' : fmtDayL(dayIdx(Date.now()) - ui.fday)) : ''), 'check', true);
     ui.fday = 0;
   }
   function foodRef(id, a, editIdx) {
     var it = fItem(id); if (!it || !(a > 0)) return;
-    var v = fNut(it, a), x = { n: it.n.slice(0, 30) };
+    var v = fNut(it, a), x = { n: fEn(it).slice(0, 30) };
     NK.forEach(function (k) { if (v[k] != null) x[k] = k === 'k' ? Math.round(v.k) : Math.round(v[k] * 10) / 10; });
     x.r = { i: id, g: Math.round(a * 10) / 10 }; foodPush(x, editIdx);
   }
@@ -3037,18 +3146,27 @@ button.pdb-h:active { background: var(--s2); }
       ui.undo = '#' + JSON.stringify(st); st.e.splice(i, 1); persist(); ui.fresh = false; render(); toast('Gelöscht', 'close', true); return true;
     }
     if ((el = t.closest('[data-fedit]'))) { var x = st.e[+el.dataset.fedit]; if (x && x.r && fItem(x.r.i)) openPick(x.r.i, x.r.g, +el.dataset.fedit); else openQuick(+el.dataset.fedit); return true; }
-    if ((el = t.closest('[data-ftile]'))) { var tl = (ui.ftiles || [])[+el.dataset.ftile]; if (tl) { ui.fday = 0; buzz(8); openPick(tl.i, tl.g); } return true; }
+    if ((el = t.closest('[data-ftile]'))) { var tl = (ui.ftiles || [])[+el.dataset.ftile]; if (tl) { ui.fday = dayIdx(Date.now()) - fSd(); buzz(8); openPick(tl.i, tl.g); } return true; }
     if (t.closest('[data-fsearch]')) { openFsearch(); return true; }
     if (t.closest('[data-fdishes]')) { openDishes(); return true; }
     if (t.closest('[data-fquick]')) { openQuick(null); return true; }
     if ((el = t.closest('[data-fpick]'))) { var from = ui.sheet && (ui.sheet.fsearch || ui.sheet.fdishes) ? (ui.sheet.fsearch ? 's' : 'd') : null; openPick(el.dataset.fpick); ui.sheet.from = from; $('sheet').innerHTML = fpickHtml(); return true; }
-    if (t.closest('[data-fback]')) { if (ui.sheet && ui.sheet.from === 'd') openDishes(); else { var q0 = ui.fq; openFsearch(true); ui.fq = q0 || ''; $('fq').value = ui.fq; $('fres').innerHTML = fresHtml(); } return true; }
+    if (t.closest('[data-fback]')) { if (ui.sheet && ui.sheet.from === 'o') openOwn(ui.odraft.id, null, ui.odraft); else if (ui.sheet && ui.sheet.from === 'd') openDishes(); else { var q0 = ui.fq; openFsearch(true); ui.fq = q0 || ''; $('fq').value = ui.fq; $('fres').innerHTML = fresHtml(); } return true; }
     if ((el = t.closest('[data-fvar]'))) { ui.fpick.i = el.dataset.fvar; $('sheet').innerHTML = fpickHtml(); return true; }
     if ((el = t.closest('[data-foff]'))) { var ox = ui.fon && ui.fon.r[+el.dataset.foff]; if (ox) pickFrom(offSave(ox)); return true; }
-    if (t.closest('[data-fscan]')) { openScan(); return true; }
+    if ((el = t.closest('[data-fscan]'))) { if (el.dataset.fscan === 'own') { ui.odraft = ownDraft(); ui.odraft.id = ui.sheet.fown; openScan('own'); } else openScan(); return true; }
+    if ((el = t.closest('[data-oml]'))) { ui.sheet.ml = +el.dataset.oml; document.querySelectorAll('[data-oml]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === el)); }); return true; }
+    if ((el = t.closest('[data-fsd]'))) { ui.fsd = +el.dataset.fsd; ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-fwa]'))) { var wd = fSd(); st.wa[wd] = Math.max(0, Math.min(8000, (st.wa[wd] || 0) + 250 * +el.dataset.fwa)); if (!st.wa[wd]) delete st.wa[wd]; persist(); buzz(6); ui.fresh = false; render(); return true; }
+    if (t.closest('[data-fbr]')) {
+      var bi = ui.fpick.i, bit = fItem(bi), bw = fnorm(fName(bit)).split(' ')[0]; ui.fbr = { i: bi, st: 'load', r: [] }; $('fbr').innerHTML = fbrHtml();
+      offSearch(fEn(bit), function (r) { if (!ui.fbr || ui.fbr.i !== bi) return; ui.fbr.st = r ? 'ok' : 'err'; ui.fbr.r = r ? r.filter(function (x) { return fnorm(x.n).indexOf(bw) >= 0; }).slice(0, 10) : []; var e = $('fbr'); if (e) e.innerHTML = fbrHtml(); });
+      return true;
+    }
+    if ((el = t.closest('[data-fbrp]'))) { var bx = ui.fbr && ui.fbr.r[+el.dataset.fbrp]; if (bx) pickFrom(offSave(bx)); return true; }
     if ((el = t.closest('[data-fcat]'))) { ui.fcat = el.dataset.fcat; $('fres').innerHTML = fresHtml(); $('sheet').scrollTop = 0; return true; }
-    if ((el = t.closest('[data-famt]'))) { ui.fpick.a = +el.dataset.famt; $('fa').value = ui.fpick.a; fpickUpd(); return true; }
-    if ((el = t.closest('[data-fstep]'))) { var it0 = fItem(ui.fpick.i), stp = it0.dish ? 0.5 : 10; ui.fpick.a = Math.max(stp, Math.round((ui.fpick.a + stp * (+el.dataset.fstep)) * 10) / 10); $('fa').value = ui.fpick.a; fpickUpd(); buzz(4); return true; }
+    if ((el = t.closest('[data-famt]'))) { ui.fpick.a = +el.dataset.famt; if ($('fa')) $('fa').value = ui.fpick.a; fpickUpd(); return true; }
+    if ((el = t.closest('[data-fstep]'))) { var it0 = fItem(ui.fpick.i), stp = it0.dish ? 0.5 : it0.pc ? it0.u[0][1] : 10; ui.fpick.a = Math.max(stp, Math.round((ui.fpick.a + stp * (+el.dataset.fstep)) * 10) / 10); if ($('fa')) $('fa').value = ui.fpick.a; fpickUpd(); buzz(4); return true; }
     if (t.closest('[data-fpadd]')) { var pk = ui.fpick; foodRef(pk.i, pk.a, pk.edit); return true; }
     if ((el = t.closest('[data-fown]'))) { openOwn(el.dataset.fown); return true; }
     if (t.closest('[data-fownsave]')) {
@@ -3057,7 +3175,8 @@ button.pdb-h:active { background: var(--s2); }
       if (!ov('k')) { toast('kcal je 100 g eintragen', 'bolt'); return true; }
       var oid = ui.sheet.fown !== 'new' ? ui.sheet.fown : 'u' + Date.now().toString(36), o = { id: oid, n: nm.slice(0, 30), u: [] };
       NK.forEach(function (k) { o[k] = ov(k); }); var un = $('o-un').value.trim(), ug = ov('ug'); if (un && ug) o.u.push([un.slice(0, 12), ug]);
-      var o0 = fOwn(oid); if (o0) { if (o0.b) o.b = o0.b; if (o0.bc) o.bc = o0.bc; o.u = o.u.concat(o0.u.slice(1)); } if (ui.sheet.bc) o.bc = ui.sheet.bc;
+      var o0 = fOwn(oid); if (o0) { if (o0.b) o.b = o0.b; if (o0.bc) o.bc = o0.bc; o.u = o.u.concat(o0.u.slice(1)); } if (ui.sheet.bc) o.bc = ui.sheet.bc; if (ui.sheet.ml) o.ml = 1; else delete o.ml;
+      if (o.bc) st.o.forEach(function (y) { if (y.id !== oid && y.bc === o.bc) delete y.bc; });
       var oi = st.o.map(function (y) { return y.id; }).indexOf(oid); if (oi >= 0) st.o[oi] = o; else st.o.push(o);
       persist(); ui.fresh = false; render(); toast('Gespeichert', 'check'); openPick(oid); return true;
     }
@@ -3073,16 +3192,16 @@ button.pdb-h:active { background: var(--s2); }
     }
     if ((el = t.closest('[data-wdel]'))) { st.w = st.w.filter(function (y) { return y.t !== +el.dataset.wdel; }); persist(); openWeight(); ui.fresh = false; render(); return true; }
     if (t.closest('[data-fcopy]')) {
-      var ys = foodSum(dayIdx(Date.now()) - 1).items, nn = Date.now(); ui.undo = '#' + JSON.stringify(st);
+      var sd1 = fSd(), ys = foodSum(sd1 - 1).items, nn = Date.now() - (dayIdx(Date.now()) - sd1) * 864e5; ui.undo = '#' + JSON.stringify(st);
       ys.forEach(function (o, j) { var c = JSON.parse(JSON.stringify(o.x)); c.t = nn + j; st.e.push(c); });
       persist(); ui.fresh = false; render(); toast(ys.length + ' Einträge wie gestern', 'check', true); return true;
     }
-    if ((el = t.closest('[data-fday]'))) { ui.fday = +el.dataset.fday; document.querySelectorAll('[data-fday]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === el)); }); return true; }
+    if ((el = t.closest('[data-fday]'))) { ui.fday = +el.dataset.fday; document.querySelectorAll('[data-fday]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === el)); }); if ($('ffit')) $('ffit').innerHTML = ffitHtml(); return true; }
     if ((el = t.closest('[data-gmode]'))) { calcRead(); ui.gmode = el.dataset.gmode; $('sheet').innerHTML = goalsHtml(); calcUpd(); return true; }
     if ((el = t.closest('[data-csx]'))) { ui.cpr.s = el.dataset.csx; document.querySelectorAll('[data-csx]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === el)); }); calcUpd(); return true; }
     if ((el = t.closest('[data-crt]'))) { ui.cpr.rt = +el.dataset.crt; document.querySelectorAll('[data-crt]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === el)); }); calcUpd(); return true; }
     if ((el = t.closest('[data-ctb]'))) { ui.cpr.tb = ui.cpr.tb ? 0 : 1; el.setAttribute('aria-pressed', String(!!ui.cpr.tb)); calcUpd(); return true; }
-    if ((el = t.closest('[data-cadj]'))) { ui.cpr.adj = +el.dataset.cadj; calcUpd(); toast('Korrektur übernommen, mit „Übernehmen“ speichern', 'check'); return true; }
+    if ((el = t.closest('[data-cadj]'))) { ui.cpr.adj = +el.dataset.cadj; calcUpd(); toast((ui.cpr.adj ? 'Angepasst' : 'Entfernt') + ', mit „Übernehmen“ speichern', 'check'); return true; }
     if (t.closest('[data-cuse]')) { goalsSave(); return true; }
     if ((el = t.closest('[data-fd]'))) { ui.fd = +el.dataset.fd; ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-fde]'))) { openDishEdit(el.dataset.fde); return true; }

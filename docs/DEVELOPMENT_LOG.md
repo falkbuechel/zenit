@@ -15,6 +15,16 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-21 – Rechner klarer, Tagesleiste, Wasser, „Passt das noch?“, Marken, Fast Food je Portion
+- Rechner: Ergebnis klebt oben im Sheet (sticky, feste Höhe, Ziffern gleich breit) → kein Springen beim Schieben; Lernen und Rechenweg unter den Reglern. Ruhetag/Training mit Beschriftung, Training mit Kästchen (Zuschlag an/aus). Makros als 5 Spalten mit Namen. Rechenweg als Tabelle inkl. Makro-Herleitung. Echter Bedarf geprüft: est = Ø gegessen − Gewichtstrend × 7700, Anpassung = est − Formel (ohne Anpassung), wird zu `pr.adj`; „Anpassung entfernen“ setzt 0.
+- Fehler: `.cres2 > div` überschrieb `.ctop` (Spezifität) → Rechner-CSS neu (`.cres`, `.cday`, `.cmac`, `#c-way`).
+- Sheets ohne Scrollbalken.
+- Varianten mit Grundname (`bn`, `vl`): Listen zeigen „Milch“, Einträge „Milch 1,5 %“ (`fEn`), Suche findet über alle Varianten (`fHay`), zeigt nur die erste. Getränke in ml (`ml`, auch eigene/importierte).
+- Fast Food (`pc`): nur Verkaufsportionen (6er-Box, Portion mittel), Schritte in der Grundeinheit (`~` = Grundeinheit, `ub`). Werte über Nährwert-Datenbanken an die offiziellen Portionsgewichte angepasst (Big Mac 232 g/545 kcal, Cheeseburger 121 g/307, 6 Nuggets 109 g/267, Pommes mittel 114 g/329, Whopper 275 g/~600).
+- Mengenwahl: „Passt das noch?“ (`ffitHtml`: Balken bisher + diese Menge, kcal frei/drüber, Protein), „Marke wählen“ (`fbrHtml`, Open Food Facts zum Grundnamen).
+- Eigenes Lebensmittel: Barcode scannen (Entwurf bleibt erhalten, `ownDraft`), g/ml.
+- Essen: Tagesleiste (7 Tage, `ui.fsd`/`fSd`), Sheets tragen in den gewählten Tag ein. Wasser `food.wa {Tag: ml}`, Ziel 35 ml/kg.
+
 ### 2026-10-21 – Online-Suche, Barcode, Varianten, Fast Food, Rechner ohne Worte
 - Tab-Leiste wieder nicht am Rand (iOS-Web-App, nach `html/body height: 100%`) → `html { height: 100lvh }` wie früher am body. Scrollbalken von `#app` ausgeblendet.
 - Open Food Facts (frei, ohne Schlüssel): Suche ab 3 Zeichen (600 ms nach dem Tippen) über `cgi/search.pl`; Barcode über `api/v2/product`. `search.openfoodfacts.org` ist ohne CORS, also unbrauchbar. Die cgi-Suche antwortet oft mit 503 ohne CORS-Header („Failed to fetch“) → bis zu 3 Versuche, abwechselnd de/world. Gewählte Produkte werden eigene Lebensmittel mit `b` (Marke) und `bc` (Barcode), danach offline.

@@ -10,7 +10,7 @@ const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const SCEN = ['mid', 'gold', 'broken', 'fresh', 'empty'];
 const TABS = ['heute', 'tage', 'food', 'fort', 'profil'];
 // Je Tab: Schalter, von denen jeweils jeder Wert einmal angeklickt wird (alle harmlos, nichts löscht)
-const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data-xr]', '[data-xm]', '[data-pg]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]'];
+const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data-xr]', '[data-xm]', '[data-pg]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]', '[data-fsd]', '[data-fwa]'];
 const NOANIM = '*, *::before, *::after { animation: none !important; transition: none !important; }';
 
 async function scenario(b, sc, errs) {

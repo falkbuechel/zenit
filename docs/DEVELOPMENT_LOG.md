@@ -13,6 +13,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-21 – Tab-Leiste auf kurzen Seiten, Heute-Icon, Karten unter der Leiste, Plan-Namen
+- Tab-Leiste: Falks Hinweis „bei Heute und Essen richtig“ = die langen Seiten. Auf kurzen Seiten (kürzer als der Bildschirm) sitzt die feste Leiste in der iOS-Web-App zu hoch. Lösung: `body` mindestens `100lvh`, der obere Sicherheitsabstand als `padding-top` im `body` statt an `:root` (`build.py`), so wird nichts scrollbar. `fixBar` (visualViewport-Korrektur aus dem Schritt davor) wieder entfernt, sie half nicht.
+- Heute-Icon im Kalender ist immer da (nur unsichtbar), der Monatstitel springt nicht mehr.
+- Karten-Hand bekommt eine eigene Ebene (`isolation`), die hervorgehobene Karte liegt unter der Menüleiste.
+- Plan-Name leer → beim Verlassen kleinster freier Name „Plan n“ (`wpName`), auch für neue Pläne.
+- Irrweg (1 h): Playwright-WebKit unter Windows erzeugt aus Tipps oft keinen Klick (zufällig, auch auf einfachen divs), obwohl es auf dem iPhone geht. WebKit nur noch für Layout; Interaktion mit Chromium + CDP. Karten/Tage im Planer haben jetzt trotzdem `cursor: pointer` + `role="button"` (Barrierefreiheit, ältere iOS).
+
 ### 2026-10-21 – Ausnahmen als Bausteine, anstehendes Wiegen, Monatstitel, Planer-Leiste, Tab-Leiste
 - Ausnahmen eines Datums als Bausteine `plan.ovk[tag] = {s, w, b, r, a}` (ausgesetzt, getauscht mit w/übernommenes Training b, ersetzt, zusätzlich); `ov[tag]` wird daraus berechnet (`ovSetF`). So gehen Ersetzen + Zusätzlich oder Tauschen + Zusätzlich gleichzeitig, jede Aktion einzeln zurücknehmbar. Aussetzen schließt alles aus, Ersetzen/Tauschen gegenseitig. Alte Einträge ohne Bausteine (Heute-Tausch) werden als „ersetzt“ gelesen.
 - Anstehend im Kalender: Wiegen fällig (letzte Messung + 7 Tage) als Waage an dem Tag; Tageskarte bietet „Jetzt eintragen“. Wird früher gewogen, wandert der Termin mit.

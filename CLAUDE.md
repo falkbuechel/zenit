@@ -18,6 +18,7 @@ Sprache: Deutsch (UI und Antworten). Antworten kurz, ohne Einleitung/Recap. Änd
 - Funktionsnamen und Klick-Attribute (`data-x`) nicht doppelt vergeben (es gab schon `spark` und `data-pf` doppelt). `tools/check.py` prüft beides.
 - Ändert sich eine Datenform (Tupel/Objekt), alle Aufrufstellen per grep prüfen.
 - Klassenname `x` ist belegt (Button 40px). Icons: Objekt `P` + `ic(name)`.
+- Klicks laufen über einen Handler am `document`. Antippbare `div`/`span` bekommen `cursor: pointer` und `role="button"` (ältere iOS-Versionen klicken sonst nicht). Playwright-WebKit nur für Layout nutzen, Touch/Klick dort ist unzuverlässig; Interaktion mit Chromium + CDP-Touch testen.
 - Design: ruhiges Salbeigrün + Anthrazit, wenig Grün, wenig Text, Icons statt Beschriftung, klare Grenzen zwischen Bereichen.
 - Keine Abhängigkeiten/Frameworks/Server einführen ohne Rückfrage. Node nur für Dev-Tools.
 

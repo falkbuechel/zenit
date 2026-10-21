@@ -13,6 +13,15 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-21 – Wochenplaner (ersetzt „Woche & Tage“)
+- Idee von Falk: Woche Mo–So als Entwurf (`ui.draft`, gilt erst nach „Speichern“, Zurück fragt „Verwerfen?“), darunter Trainingstage als farbige, leicht schwebende Karten in einer seitlich scrollbaren Hand. Karte nach oben auf einen Tag ziehen (Pointer-Events, Geisterkarte) oder antippen + Tag antippen; ✕ am Tag entfernt; ✎ auf der Karte öffnet den Editor. Wochentage gibt es nur noch hier (`wdChips` im Editor entfernt).
+- Presets: Leer, Standard (`defaultPlan`), eigene Wochen speichern/löschen. Neue Datenform `plan.wp: [{n, m: {tagId: [wd]}}]`. Fast vergessen: `cleanPlan` hätte `wp` beim Laden verworfen (Presets nach Neustart weg); nachgetragen und mit Neuladen geprüft.
+- Grenzen ohne Text: Karte über dem Wochenlimit (`LIM` je Hauptgruppe: Kraft 3, Bike 4, Mobility 7) = roter Rand, roter Punkt, ⚡; Doppelbelastung (Tag mit ≥3 Pull- bzw. Push-Übungen an zwei Tagen hintereinander, auch So → Mo) = rote Kante + ⚡ an beiden Tagen, Karte rot. Erst über die Hauptgruppe gerechnet: Druck-Tage sind hantellastig, wurden nicht erkannt.
+- Plan-Seite: Einstieg „Woche planen“ mit Mini-Woche statt Trainingstage-Leiste; passt auf dem iPhone ohne Scrollen (844/844).
+- Fehler: Nach dem Ziehen kam der nächste Tipp nicht an. Ursachen: Neuaufbau beim `pointerup` entfernte die berührte Karte vor dem `touchend`; außerdem lief die native Touch-Geste weiter. Lösung: Neuaufbau 40 ms verzögert, `touchmove` während des Ziehens `preventDefault`. Mit CDP-Touch-Events nachgestellt und geprüft.
+- Rauchtest: schwebende Karten sind nie „stabil“, dort Klick mit `force`.
+- Tote CSS-Reste der alten Ansichten entfernt (`.pbar`, `.pbc`, `.tdr`, `.wds`, `.agl/.agr/...`).
+
 ### 2026-10-21 – Tag ändern, Urlaub/Krank, kein unnötiges Scrollen
 - Tag ändern (✎ in der Tageskarte): beschriftete Knöpfe Tauschen, Aussetzen, Ersetzen, Zusätzlich, Urlaub, Krank (`dayEdit`, `ui.pmode`); zweite Ebene darunter (Tag zum Tauschen, Trainingstag, Dauer 1–14 Tage). Vergangene Tage (bis 14 zurück): nur Urlaub/Krank. `ovSet` aufgeteilt in `ovPut` (ohne Neuaufbau) + Rendern.
 - Neue Datenform `plan.off: [{a, b, k: 'vac'|'sick'}]`. `schedFor` gibt dort nichts zurück; Kalender zeigt ☀/Thermometer; Karte zeigt Zeitraum mit Löschen.

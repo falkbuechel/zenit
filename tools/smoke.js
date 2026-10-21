@@ -8,7 +8,7 @@ const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const SCEN = ['mid', 'gold', 'broken', 'fresh', 'empty'];
 const TABS = ['heute', 'tage', 'food', 'fort', 'profil'];
 // Je Tab: Schalter, von denen jeweils jeder Wert einmal angeklickt wird (alle harmlos, nichts löscht)
-const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data-xr]', '[data-xm]', '[data-pg]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]', '[data-pman]', '[data-wv]', '[data-pmanx]'];
+const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data-xr]', '[data-xm]', '[data-pg]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]'];
 
 (async () => {
   const b = await chromium.launch();
@@ -18,7 +18,8 @@ const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data
   p.on('pageerror', e => errs.push(where + ': ' + e.message));
   p.on('console', m => { if (m.type() === 'error' && !/fonts\.g/.test(m.text())) errs.push(where + ': ' + m.text()); });
   const pause = ms => p.waitForTimeout(ms);
-  const click = async sel => { const el = p.locator(sel).first(); if (await el.isVisible().catch(() => false)) { await el.click({ timeout: 2000 }).catch(e => errs.push(where + ': Klick ' + sel + ' ' + e.message.split('\n')[0])); await pause(250); return true; } return false; };
+  // Karten im Wochenplaner schweben dauerhaft (nie "stabil"), deshalb dort force
+  const click = async sel => { const el = p.locator(sel).first(); if (await el.isVisible().catch(() => false)) { await el.click({ timeout: 2000, force: sel.startsWith('.pk') || sel === '[data-pedit]' }).catch(e => errs.push(where + ': Klick ' + sel + ' ' + e.message.split('\n')[0])); await pause(250); return true; } return false; };
   const closeSheet = async () => { await click('[data-sheet-close]'); await pause(300); };
 
   await p.goto(URL_);
@@ -43,11 +44,17 @@ const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data
         await click('[data-pmode="vac"]'); await click('[data-poff="3"]'); await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-urlaub.png`) });
         await click('[data-offdel]'); await click('[data-pchg]'); await click('[data-creset]');
       }
+      // Plan: Wochenplaner (Preset, Karte antippen + Tag antippen, entfernen, Preset speichern/löschen), daraus den Editor öffnen
+      if (tab === 'tage' && await click('[data-pman]')) {
+        await click('[data-pwp="std"]'); await click('.pk[data-pkid]'); await click('[data-pslot="6"]'); await click('[data-punset]');
+        await click('[data-pwpsave]'); await click('[data-pwpdel]'); await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-planer.png`) });
+      }
       // Plan: Trainingstag-Editor öffnen, Übung an/aus, Icon, Filter, zurück
       if (tab === 'tage' && await click('[data-pedit]')) {
         await click('[data-ptog]'); await click('[data-ptog]'); await click('[data-pic="star"]'); await click('[data-pef="pull"]'); await click('[data-pef="all"]');
         await click('[data-prp="2"]'); await click('[data-pst="1"]'); await click('[data-prp="0"]'); await click('[data-prp="1"]'); await click('[data-plk]'); await click('[data-plk]');
         await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-editor.png`) }); await click('[data-pback]');
+        await click('[data-psave]');
       }
       if (await click('[data-open]')) { await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-detail.png`) }); await click('[data-back]'); }
       if (await click('[data-pill]')) { await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-sheet.png`) }); await closeSheet(); }

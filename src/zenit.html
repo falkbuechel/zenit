@@ -541,10 +541,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .restday b { display: block; font-size: 17px; }
 .restday small { color: var(--ink3); font-size: 13px; }
 .pt-h h2 { margin: 4px 0 0; font-family: var(--f-display); font-weight: 900; font-size: 36px; text-transform: uppercase; line-height: 1; }
-.wds { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
-.wds button { min-height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--s3); color: var(--ink3); font-weight: 800; font-size: 13px; transition: transform .16s var(--ease), background .2s; }
-.wds button:active { transform: scale(.95); }
-.wds button[aria-pressed="true"] { background: var(--pc); border-color: transparent; color: #101512; }
 .pgc { display: flex; gap: 8px; flex-wrap: wrap; }
 .pgc span { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 99px; background: color-mix(in srgb, var(--gc) 16%, var(--s3)); color: var(--gc); font-size: 12px; font-weight: 800; }
 .pgc .ic { width: 14px; height: 14px; }
@@ -915,27 +911,10 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 @media (max-width: 380px) { .sk b { font-size: 64px; } .ringw, .ringw svg { width: 92px; height: 92px; } .pill { width: 52px; } .step { grid-template-columns: 56px 1fr 56px; } }
 /* Plan: Kalender (Woche, aufklappbar zum Monat), Tageskarte, Trainingstage; dahinter Woche & Tage. Werkzeug statt Spiel: Farbe nur als Punkt/Rand, kein Glow.
    Bewegung nur mit Zweck: Woche/Monat gleitet in Blätterrichtung (200 ms), Aufklappen 220 ms, Tageswechsel blendet über (150 ms), Ausnahme gesetzt = kurzes Aufleuchten. */
-.agl { display: grid; grid-template-columns: minmax(0, 1fr); border: 1px solid var(--line); border-radius: 16px; background: var(--s1); overflow: hidden; }
-.agr + .agr { border-top: 1px solid var(--line); }
-.agh { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 10px; width: 100%; min-height: 52px; padding: 6px 12px; border: 0; background: transparent; color: var(--ink); font: inherit; text-align: left; -webkit-user-select: none; user-select: none; transition: background-color .16s var(--ease); }
-.agh:active { background: var(--s2); }
-.agd { display: grid; line-height: 1.15; }
-.agd b { font-family: var(--f-display); font-weight: 800; font-size: 18px; letter-spacing: .04em; text-transform: uppercase; }
-.agd small { font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
-.agc { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-width: 0; }
-.agk { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 700; }
-.agk .pdot { width: 8px; height: 8px; }
-.agk.rest .ic { width: 16px; height: 16px; color: var(--ink3); }
-.agm { width: 14px; height: 14px; color: var(--ink3); }
-.ags { display: inline-flex; align-items: center; gap: 4px; font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
-.ags .ic { width: 14px; height: 14px; }
-.agr.today { background: var(--s2); box-shadow: inset 3px 0 0 var(--ink); }
-.agr.today .agd small { color: var(--ink); font-weight: 700; }
 .agx { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .22s var(--ease); }
-.agx > div { display: grid; gap: 10px; min-height: 0; overflow: hidden; padding: 0 12px 0 74px; opacity: 0; visibility: hidden; transition: opacity .12s var(--ease), padding .22s var(--ease), visibility 0s .22s; }
-.agr.open .agx, .pday.open > .pd-x, .todo.open > .agx, .pdb.open > .agx, .exk.open > .agx { grid-template-rows: 1fr; }
-.agr.open .agx > div, .pday.open > .pd-x > div, .todo.open > .agx > div, .pdb.open > .agx > div, .exk.open > .agx > div { padding-bottom: 12px; opacity: 1; visibility: visible; transition: opacity .2s var(--ease) .05s, padding .22s var(--ease), visibility 0s; }
-.agr .ptg button { min-height: 36px; }
+.agx > div { display: grid; gap: 10px; min-height: 0; overflow: hidden; padding: 0; opacity: 0; visibility: hidden; transition: opacity .12s var(--ease), padding .22s var(--ease), visibility 0s .22s; }
+.pday.open > .pd-x, .todo.open > .agx, .pdb.open > .agx, .exk.open > .agx { grid-template-rows: 1fr; }
+.pday.open > .pd-x > div, .todo.open > .agx > div, .pdb.open > .agx > div, .exk.open > .agx > div { padding-bottom: 12px; opacity: 1; visibility: visible; transition: opacity .2s var(--ease) .05s, padding .22s var(--ease), visibility 0s; }
 .agp { margin: 0; font-size: 13px; color: var(--ink2); }
 .agb { display: flex; flex-wrap: wrap; gap: 8px; }
 .agn { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 10px; border-radius: 99px; border: 1px solid var(--line); background: var(--s1); color: var(--ink2); font: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: none; transition: transform .14s var(--ease); }
@@ -945,23 +924,10 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .agn.gold { border-color: color-mix(in srgb, var(--gold) 55%, var(--line)); color: var(--gold); }
 .sec-h small.hot { color: var(--flame); }
 @keyframes agfl { from { background-color: color-mix(in srgb, var(--ac) 22%, transparent); } }
-.wvr .agh { min-height: 46px; }
-.wvw { display: inline-flex; align-items: center; gap: 4px; font-family: var(--f-body); font-size: 11px; font-style: normal; font-weight: 700; color: var(--flame); }
-.wvw .ic { width: 14px; height: 14px; }
 .wvb { margin-top: 8px; gap: 6px; }
 .wvb span { background: var(--s2); color: var(--ink2); font-family: var(--f-mono); font-weight: 600; }
 .wvb span .ic { color: var(--gc); }
 .pgc span.z { background: transparent; box-shadow: inset 0 0 0 1px var(--line); color: var(--ink3); }
-.tdl { display: grid; gap: 8px; }
-.tdr { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 1px solid var(--line); border-left: 4px solid var(--pc); background: var(--s1); color: var(--ink); font: inherit; text-align: left; -webkit-user-select: none; user-select: none; transition: transform .14s var(--ease); }
-.tdr:active { transform: scale(.98); }
-.tdr .nm { display: grid; flex: 1; min-width: 0; }
-.tdr b { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tdr small { font-size: 12px; color: var(--ink3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tdr .pdi { width: 34px; height: 34px; }
-.tdr .chv { width: 16px; height: 16px; color: var(--ink3); flex: none; }
-.tdr.new { border: 1px dashed var(--line); background: transparent; color: var(--ink2); }
-.tdr.new .ic { width: 18px; height: 18px; }
 /* Kalender */
 .pcal2 { overflow: hidden; margin-top: 10px; padding: 8px 8px 10px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
 .pc2-h { display: flex; align-items: center; gap: 4px; }
@@ -1010,9 +976,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .pd-c[aria-expanded="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 .pd-c .ic { width: 16px; height: 16px; }
 .pd-f { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.agk.rest { gap: 6px; color: var(--ink3); }
-.agk .ic, .ptg button .ic { width: 16px; height: 16px; color: var(--pc, var(--ink3)); }
-.pd-h .agm { margin-left: 6px; }
+.ptg button .ic { width: 16px; height: 16px; color: var(--pc, var(--ink3)); }
 .pday > .pd-x > div { padding: 0; }
 .pday.open > .pd-x > div { padding: 10px 0 2px; }
 /* Zu tun: rote Glocke, aufklappbar */
@@ -1115,7 +1079,6 @@ button.pdb-h:active { background: var(--s2); }
 .pe-rp button:active { transform: scale(.96); }
 .pe-rp button[aria-pressed="true"] { border-color: var(--pc); background: color-mix(in srgb, var(--pc) 20%, var(--s2)); color: var(--ink); }
 .pe-st { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 2px; font-family: var(--f-mono); font-size: 13px; color: var(--ink2); }
-.agk em { font-style: normal; font-family: var(--f-mono); font-size: 10px; font-weight: 600; color: var(--ink3); }
 .exr:active { background: var(--s2); }
 .exr > span:first-child { flex: 1; min-width: 0; }
 .exr b { display: flex; align-items: center; gap: 6px; font-size: 14px; }
@@ -1128,22 +1091,73 @@ button.pdb-h:active { background: var(--s2); }
 .exr[aria-pressed="true"] i { background: var(--gc, var(--ac)); }
 .exr[aria-pressed="true"] i::after { transform: translateX(16px); background: #fff; }
 /* Trainingstage kompakt */
-.pbar { margin-top: 12px; }
-.pb-h { display: flex; align-items: center; gap: 8px; }
-.pb-h .sec-h { flex: 1; margin: 0; }
-.pb-l { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 6px; }
-.pbc { min-width: 0; display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); border-left: 3px solid var(--pc); background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
-.pbc:active { transform: scale(.97); }
-.pbc > .ic { width: 20px; height: 20px; color: var(--pc); }
-.pbc span { min-width: 0; }
-.pbc b, .pbc small { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.pbc b { display: block; font-size: 14px; }
-.pbc small { display: block; font-family: var(--f-mono); font-size: 10px; color: var(--ink3); }
-.pbc.add { border: 1px dashed var(--line); background: transparent; color: var(--ink2); }
-.pbc.add { justify-content: center; }
-.pbc.add .ic { width: 18px; height: 18px; }
 .pm-t { margin: 0; flex: 1; font-family: var(--f-display); font-weight: 900; font-size: 26px; text-transform: uppercase; }
-@media (prefers-reduced-motion: reduce) { .agx, .agx > div { transition: none; } .pday.fl { animation: none; } .pc2-g.in-r, .pc2-g.in-l, .pc2-g.in-m { animation: fade .15s ease; } }
+/* Einstieg „Woche planen“ */
+.pwe { display: grid; gap: 8px; margin-top: 12px; }
+.pwe-b { display: grid; gap: 8px; width: 100%; padding: 10px 12px 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
+.pwe-b:active { transform: scale(.98); }
+.pwe-b .sec-h { margin: 0; }
+.pwe-b .sec-h .chv { width: 16px; height: 16px; margin-left: auto; color: var(--ink3); }
+.pwm { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.pwm > span { display: grid; justify-items: center; gap: 3px; }
+.pwm small { font-size: 11px; font-weight: 800; color: var(--ink3); text-transform: uppercase; }
+.pwm .t small { color: var(--ink); }
+.pwm em { display: grid; color: var(--pc); }
+.pwm em .ic { width: 17px; height: 17px; }
+.pwm em.r { color: var(--ink3); opacity: .45; }
+.pwe > .agn { justify-self: start; }
+/* Wochenplaner: Presets, Ablageplätze, Karten-Hand */
+.pe-top .btn[disabled] { opacity: .45; }
+.pps { display: flex; gap: 6px; margin: 10px -16px 0; padding: 0 16px 2px; overflow-x: auto; scrollbar-width: none; }
+.pps::-webkit-scrollbar { display: none; }
+.pps button { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: 99px; border: 1px solid var(--line); background: var(--s1); color: var(--ink2); font: inherit; font-size: 13px; font-weight: 700; transition: transform .14s var(--ease); }
+.pps button:active { transform: scale(.96); }
+.pps .ic { width: 14px; height: 14px; }
+.ppw { flex: none; display: inline-flex; }
+.ppw button:first-child { border-radius: 99px 0 0 99px; padding-right: 8px; }
+.ppw .ppx { border-left: 0; border-radius: 0 99px 99px 0; padding: 0 10px 0 6px; color: var(--ink3); }
+.pwkl { display: grid; gap: 6px; margin-top: 10px; }
+.psl { position: relative; display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 8px; min-height: 50px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--s1); transition: background-color .16s var(--ease), border-color .16s var(--ease), transform .16s var(--ease); }
+.psl > b { font-family: var(--f-display); font-weight: 800; font-size: 17px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink2); }
+.psl.today > b { color: var(--ink); }
+.psl.hov { border-color: var(--ink); background: var(--s2); transform: scale(1.015); }
+.psl.clash { border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); box-shadow: inset 3px 0 0 var(--danger); }
+.pwarn { width: 16px; height: 16px; color: var(--danger); }
+.pst { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.ptl { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 3px 3px 3px 8px; border-radius: 10px; border: 1px solid color-mix(in srgb, var(--pc) 45%, var(--line)); background: color-mix(in srgb, var(--pc) 16%, var(--s1)); font-size: 13px; font-weight: 700; }
+.ptl > .ic { width: 15px; height: 15px; color: var(--pc); flex: none; }
+.ptl span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.ptl em { font-style: normal; font-family: var(--f-mono); font-size: 10px; color: var(--ink3); }
+.ptl button { display: grid; place-items: center; width: 24px; height: 24px; border: 0; border-radius: 8px; background: transparent; color: var(--ink3); }
+.ptl button .ic { width: 13px; height: 13px; }
+.ptl.over { border-color: var(--danger); }
+.ptl.nw { animation: ptlin .24s var(--ease); }
+@keyframes ptlin { from { opacity: 0; transform: scale(.9); } }
+.pdrop { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; border: 1px dashed var(--line); color: var(--ink3); }
+.pdrop .ic { width: 14px; height: 14px; }
+.pkh { display: flex; align-items: flex-end; margin: 6px -16px 0; padding: 22px 16px 16px 34px; overflow-x: auto; scrollbar-width: none; touch-action: pan-x; }
+.pkh::-webkit-scrollbar { display: none; }
+.pk { position: relative; flex: none; display: grid; align-content: space-between; justify-items: start; width: 104px; height: 136px; margin-left: -18px; padding: 12px 10px; border-radius: 16px; background: linear-gradient(160deg, color-mix(in srgb, var(--pc) 82%, #fff), var(--pc)); color: var(--on); box-shadow: 0 12px 22px -14px var(--pc), 0 2px 0 rgba(0, 0, 0, .08), inset 0 1px 0 rgba(255, 255, 255, .35); -webkit-user-select: none; user-select: none; touch-action: pan-x; rotate: calc((var(--j) - 1.5) * 2deg); animation: pkfloat 3.2s ease-in-out infinite alternate; animation-delay: calc(var(--j) * -.7s); transition: translate .2s var(--ease), rotate .2s var(--ease), opacity .2s; }
+@keyframes pkfloat { from { translate: 0 0; } to { translate: 0 -4px; } }
+.pki .ic { width: 30px; height: 30px; }
+.pk b { font-size: 15px; line-height: 1.15; }
+.pkd { display: flex; flex-wrap: wrap; gap: 3px; max-width: 64px; }
+.pkd i { width: 6px; height: 6px; border-radius: 50%; background: color-mix(in srgb, var(--on) 28%, transparent); }
+.pkd i.on { background: var(--on); }
+.pkd i.x { background: var(--danger); box-shadow: 0 0 0 1.5px var(--on); }
+.pke { position: absolute; right: 8px; bottom: 8px; display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--on) 16%, transparent); color: var(--on); }
+.pke .ic { width: 14px; height: 14px; }
+.pkw { position: absolute; top: -8px; right: -6px; width: 24px; height: 24px; padding: 4px; border-radius: 50%; background: var(--danger); color: #fff; box-shadow: 0 0 0 2px var(--bg); }
+.pk.sel { z-index: 2; rotate: 0deg; translate: 0 -16px; animation: none; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink), 0 16px 26px -14px var(--pc); }
+.pk.full { filter: saturate(.55); opacity: .7; }
+.pk.over, .pk.clash { z-index: 1; box-shadow: 0 0 0 2px var(--danger), 0 12px 22px -14px var(--danger); animation: pkwarn 2.6s ease-in-out infinite; }
+@keyframes pkwarn { 0%, 80%, 100% { translate: 0 0; } 84% { translate: -2px 0; } 88% { translate: 2px 0; } 92% { translate: -1px 0; } }
+.pk.lift { opacity: .3; }
+.pk.ghost { position: fixed; z-index: 50; margin: 0; pointer-events: none; animation: none; rotate: 0deg; translate: none; box-shadow: 0 24px 40px -18px rgba(0, 0, 0, .55); }
+.pk.add { place-items: center; align-content: center; background: transparent; border: 1.5px dashed var(--line); box-shadow: none; color: var(--ink2); animation: none; rotate: 0deg; }
+.pk.add .ic { width: 24px; height: 24px; }
+.pkh + .ppre { margin-top: 0; }
+@media (prefers-reduced-motion: reduce) { .agx, .agx > div { transition: none; } .pk, .pk.over, .pk.clash { animation: none; } .ptl.nw { animation: none; } .pday.fl { animation: none; } .pc2-g.in-r, .pc2-g.in-l, .pc2-g.in-m { animation: fade .15s ease; } }
 </style>
 
 <div id="app">
@@ -1393,7 +1407,7 @@ button.pdb-h:active { background: var(--s2); }
   var DEMO = false; try { DEMO = localStorage.getItem('zenit.mode') === 'demo'; } catch (e) { /* egal */ }
   var KEY = DEMO ? 'stufenbuch.demo' : 'stufenbuch.v1';
   var state = { logs: [], u: 0, plan: null, food: null };
-  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', data: false, sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fmode: 'man', nts: [], pd: null, pw: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, todo: false, pdo: {}, plk: null, pmode: null, dd: null, dp: 1, xo: {}, gx: {}, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
+  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', data: false, sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fmode: 'man', nts: [], pd: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, todo: false, pdo: {}, plk: null, pmode: null, draft: null, psel: null, pnt: null, pdisc: 0, dd: null, dp: 1, xo: {}, gx: {}, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
   var store = 'local', sync = '', ref = null, timer = null, writing = false, dirty = false;
 
   var EQUIP = [['bar', 'Klimmzugstange'], ['board', 'Push-up-Board'], ['db', 'Kurzhanteln'], ['mat', 'Matte'], ['roll', 'Blackroll'], ['ball', 'Faszienball'], ['bike', 'Homebike'], ['band', 'Widerstandsband']];
@@ -1424,7 +1438,11 @@ button.pdb-h:active { background: var(--s2); }
     if (p.ov && typeof p.ov === 'object') Object.keys(p.ov).forEach(function (k) { if (+k >= lim && Array.isArray(p.ov[k])) ov[k] = p.ov[k].filter(function (x) { return typeof x === 'string'; }); });
     if (p.ovl && typeof p.ovl === 'object') Object.keys(p.ovl).forEach(function (k) { if (+k >= lim && isFinite(p.ovl[k])) ovl[k] = +p.ovl[k]; });
     var off = (Array.isArray(p.off) ? p.off : []).filter(function (o) { return o && isFinite(o.a) && isFinite(o.b) && o.b >= o.a && o.b - o.a < 120 && (o.k === 'vac' || o.k === 'sick'); }).slice(-60).map(function (o) { return { a: Math.round(o.a), b: Math.round(o.b), k: o.k }; });
-    return { days: days, v: p.v | 0, ev: p.ev | 0, cu: !!p.cu, ov: ov, ovl: ovl, off: off };
+    var wp = (Array.isArray(p.wp) ? p.wp : []).filter(function (q) { return q && typeof q.n === 'string' && q.m && typeof q.m === 'object'; }).slice(0, 6).map(function (q) {
+      var m = {}; Object.keys(q.m).forEach(function (k) { if (Array.isArray(q.m[k])) m[k] = q.m[k].filter(function (w) { return w >= 0 && w <= 6; }); });
+      return { n: q.n.slice(0, 18), m: m };
+    });
+    return { days: days, v: p.v | 0, ev: p.ev | 0, cu: !!p.cu, ov: ov, ovl: ovl, off: off, wp: wp };
   }
   function clean(arr) {
     if (!Array.isArray(arr)) return [];
@@ -2584,9 +2602,6 @@ button.pdb-h:active { background: var(--s2); }
     }
     return h || '<p class="muted">Nichts gefunden.</p>';
   }
-  function wdChips(day) {
-    return '<div class="wds">' + WDN.map(function (n, w) { return '<button data-wd="' + day.id + ':' + w + '" aria-pressed="' + (day.wd.indexOf(w) >= 0) + '" style="--pc:var(' + PCOL[day.c] + ')">' + n + '</button>'; }).join('') + '</div>';
-  }
   function durEst() {
     // Geschätzte Minuten je Trainingstag: Mittel der letzten Einheiten, an denen genau dieser Tag geplant war
     var m = {}, o = {};
@@ -2605,17 +2620,6 @@ button.pdb-h:active { background: var(--s2); }
     var gc = {};
     days.forEach(function (x) { x.ex.forEach(function (id) { if (d.unlocked[id]) gc[EXB[id].g] = (gc[EXB[id].g] || 0) + 1; }); });
     return gc;
-  }
-  function rowToggle(btn, open, sel) {
-    // Nur die Zeilen umschalten, kein Neuaufbau: das Aufklappen läuft als CSS-Übergang
-    btn.closest('.agl').querySelectorAll(sel).forEach(function (b) { var on = open && b === btn; b.setAttribute('aria-expanded', on); b.parentNode.classList.toggle('open', on); });
-  }
-  function pChips(ds) {
-    if (!ds.length) return '<span class="agk rest">' + ic('snow') + 'Frei</span>';
-    return ds.map(function (x) { var r = rpText(x); return '<span class="agk" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + (r ? '<em>' + r + '</em>' : '') + '</span>'; }).join('');
-  }
-  function pToggles(P, attr, on) {
-    return P.days.map(function (x) { return '<button ' + attr(x) + ' aria-pressed="' + on(x) + '" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + '</button>'; }).join('');
   }
   function calMove(dir) {
     // Woche: 7 Tage weiter, Monat: auf den 1. des nächsten/vorigen Monats. Grenzen: 6 Monate zurück, 6 voraus
@@ -2656,7 +2660,7 @@ button.pdb-h:active { background: var(--s2); }
       if (day) return viewPlanEdit(d, day);
       ui.pe = null;
     }
-    if (ui.pman) return viewPlanManage(d, now);
+    if (ui.pman) return viewPlanner(d, now);
     var NT = ui.nts || [], dur = durEst(), sd = ui.pd == null ? today : ui.pd, a = ui.ca == null ? today : ui.ca, k;
     function nt(x) { return NT.filter(function (n) { return n.k === x; })[0]; }
     var todo = ['st', 'tr', 'wg', 'f0', 'fp'].map(nt).filter(Boolean), wk = nt('wk'), ux = nt('ux');
@@ -2710,52 +2714,136 @@ button.pdb-h:active { background: var(--s2); }
     h += '<section class="pday rise' + (ui.pchg ? ' open' : '') + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
     ui.pfl = null; ui.pdx = false;
 
-    // Trainingstage kompakt: Chip öffnet den Editor, Stift öffnet Woche & Tage
-    h += '<section class="pbar rise" style="--i:3"><div class="pb-h"><h2 class="sec-h">' + ic('dumb') + 'Trainingstage</h2>' + (ux ? '<button class="agn gold" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>' : '') +
-      '<button class="x" data-pman="1" aria-label="Woche und Trainingstage bearbeiten">' + ic('edit') + '</button></div><div class="pb-l">' +
-      P.days.map(function (x) { return '<button class="pbc" data-pedit="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '<span><b>' + esc(x.n) + '</b><small>' + (x.wd.length ? x.wd.map(function (v) { return WDN[v]; }).join(' ') : '–') + (rpText(x) ? ' · ' + (dRp(x) ? dRp(x) + 'W' : '1×') : '') + '</small></span></button>'; }).join('') +
-      (P.days.length < 8 ? '<button class="pbc add" data-pman="new" aria-label="Neuer Trainingstag">' + ic('plus') + '</button>' : '') + '</div></section>';
+    // Woche planen: Mini-Woche (Regel Mo–So) als Einstieg in den Planer
+    h += '<section class="pwe rise" style="--i:3"><button class="pwe-b" data-pman="1"><span class="sec-h">' + ic('cal') + 'Woche planen' + ic('chev', 'chv') + '</span><span class="pwm">' + WDN.map(function (n, w) {
+      var xs = P.days.filter(function (x) { return x.wd.indexOf(w) >= 0; });
+      return '<span' + (w === wdOf(today) ? ' class="t"' : '') + '><small>' + n + '</small>' + (xs.length ? xs.slice(0, 2).map(function (x) { return '<em style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }).join('') : '<em class="r">' + ic('snow') + '</em>') + '</span>';
+    }).join('') + '</span></button>' + (ux ? '<button class="agn gold" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>' : '') + '</section>';
     return h;
   }
-  function viewPlanManage(d, now) {
-    var today = dayIdx(now), P = plan(), dur = durEst(), w;
-    var h = '<div class="pe-top rise" style="--i:0"><button class="x" data-pmanx="1" aria-label="Zurück">' + ic('back') + '</button><h2 class="pm-t">Woche & Tage</h2></div>';
-    // Woche: welcher Trainingstag an welchem Wochentag, dazu Balance und Erholung
-    var wg = WDN.map(function (n, w2) { return dayGroups(P.days.filter(function (x) { return x.wd.indexOf(w2) >= 0; }), d); }), gw = {}, busy = 0, wv = '';
+  // ---------- Wochenplaner: Entwurf der Wochenvorlage (welcher Trainingstag an welchem Wochentag), gilt erst nach Speichern
+  var LIM = { pull: 3, push: 3, kh: 3, core: 3, skill: 3, cardio: 4, mob: 7 };
+  function draft() {
+    if (!ui.draft) { var m = {}; plan().days.forEach(function (x) { m[x.id] = x.wd.slice(); }); ui.draft = { m: m, dirty: false }; }
+    return ui.draft;
+  }
+  function draftWd(id) { var D = draft(); return D.m[id] || (D.m[id] = []); }
+  function dLim(x) { return LIM[domGroup(x)] || 7; }
+  function planCheck(P) {
+    // Zu oft (über dem Limit) und Doppelbelastung (Pull/Push an zwei Tagen hintereinander, auch So → Mo)
+    var used = {}, slotG = [], clash = {}, cclash = {};
+    P.days.forEach(function (x) { used[x.id] = draftWd(x.id).length; });
+    // Belastung je Tag: Pull bzw. Push, wenn der Trainingstag mindestens 3 Übungen dieser Gruppe hat (die Hauptgruppe allein reicht nicht, Druck-Tage sind oft hantellastig)
+    function load(x) { return ['pull', 'push'].filter(function (g) { return x.ex.filter(function (id) { return EXB[id] && EXB[id].g === g; }).length >= 3; }); }
+    for (var w = 0; w < 7; w++) slotG.push([].concat.apply([], P.days.filter(function (x) { return draftWd(x.id).indexOf(w) >= 0; }).map(function (x) { return load(x).map(function (g) { return { id: x.id, g: g }; }); })));
     for (w = 0; w < 7; w++) {
-      var dw = P.days.filter(function (x) { return x.wd.indexOf(w) >= 0; }), pg = wg[(w + 6) % 7], wo = ui.pw === w, ww = w;
-      // Erholung: Pull oder Push (mind. 2 Übungen) an zwei Tagen hintereinander. Hantel nicht, die mischt Zug- und Druckmuskeln
-      var rep = ['pull', 'push'].filter(function (g) { return (wg[w][g] || 0) >= 2 && (pg[g] || 0) >= 2; });
-      if (dw.length) busy++;
-      GORDER.forEach(function (g) { if (wg[w][g]) gw[g] = (gw[g] || 0) + 1; });
-      wv += '<div class="agr wvr' + (w === wdOf(today) ? ' today' : '') + (wo ? ' open' : '') + '"><button class="agh" data-wv="' + w + '" aria-expanded="' + wo + '"><span class="agd"><b>' + WDN[w] + '</b></span>' +
-        '<span class="agc">' + pChips(dw) + '</span><span class="ags">' + rep.map(function (g) { return '<em class="wvw" aria-label="' + gOf(g).n + ' ohne Pausentag">' + ic(gOf(g).i) + 'ohne Pause</em>'; }).join('') + '</span></button>' +
-        '<div class="agx"><div>' + (P.days.length ? '<div class="ptg">' + pToggles(P, function (y) { return 'data-wd="' + y.id + ':' + ww + '"'; }, function (y) { return y.wd.indexOf(ww) >= 0; }) + '</div>' : '<p class="agp">Erst einen Trainingstag anlegen.</p>') + '</div></div></div>';
+      var nx = (w + 1) % 7;
+      slotG[w].forEach(function (a) {
+        slotG[nx].forEach(function (b) { if (b.g === a.g) { clash[w] = clash[nx] = 1; cclash[a.id] = cclash[b.id] = 1; } });
+      });
     }
-    var bal = GORDER.filter(function (g) { return gw[g] || ['pull', 'push', 'core'].indexOf(g) >= 0; }).map(function (g) {
-      return '<span class="g' + g + (gw[g] ? '' : ' z') + '" aria-label="' + gOf(g).n + ': ' + (gw[g] || 0) + ' Tage pro Woche">' + ic(gOf(g).i) + (gw[g] || 0) + '×</span>';
-    }).join('');
-    h += '<section class="sec rise" style="--i:1"><h2 class="sec-h">' + ic('cal') + 'Woche<small>' + busy + '/7</small></h2><div class="agl">' + wv + '</div><div class="pgc wvb">' + bal + '</div></section>';
-    // Trainingstage: Antippen öffnet den Editor
-    h += '<section class="sec rise" style="--i:2"><h2 class="sec-h">' + ic('dumb') + 'Trainingstage</h2><div class="tdl">';
-    P.days.forEach(function (x) {
-      var sub = [x.wd.length ? x.wd.map(function (v) { return WDN[v]; }).join(' · ') : 'nicht eingeplant', x.ex.filter(function (id) { return d.unlocked[id]; }).length + ' Üb.'];
-      if (rpText(x)) sub.push(rpText(x));
-      if (dur[x.id]) sub.push('~' + dur[x.id] + '′');
-      h += '<button class="tdr" data-pedit="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')"><span class="pdi">' + ic(dIcon(x)) + '</span><span class="nm"><b>' + esc(x.n) + '</b><small>' + sub.join(' · ') + '</small></span>' + ic('chev', 'chv') + '</button>';
-    });
-    if (P.days.length < 8) {
-      h += '<button class="tdr new" data-pnew="1">' + ic(ui.pnew ? 'close' : 'plus') + '<span class="nm"><b>' + (ui.pnew ? 'Abbrechen' : 'Neuer Tag') + '</b></span></button>';
-      if (ui.pnew) h += '<div class="ppre">' + PRESETS.map(function (pr, j) { return '<button data-ppre="' + j + '" style="--pc:var(' + PCOL[pr.c] + ')">' + ic(pr.i) + pr.n + '</button>'; }).join('') + '</div>';
+    return { used: used, clash: clash, cclash: cclash };
+  }
+  function viewPlanner(d, now) {
+    var today = dayIdx(now), P = plan(), D = draft(), chk = planCheck(P), w;
+    var h = '<div class="pe-top rise" style="--i:0"><button class="x" data-pmanx="1" aria-label="Zurück">' + (ui.pdisc ? '<b class="sure">Verwerfen?</b>' : ic('back')) + '</button><h2 class="pm-t">Woche</h2>' +
+      '<button class="btn small primary" data-psave="1"' + (D.dirty ? '' : ' disabled') + '>' + ic('check') + 'Speichern</button></div>';
+    // Presets: leeren, Standard, gespeicherte Wochen, aktuelle speichern
+    h += '<div class="pps rise" style="--i:1" data-noswipe="1"><button data-pwp="clear">' + ic('close') + 'Leer</button><button data-pwp="std">' + ic('target') + 'Standard</button>' +
+      (P.wp || []).map(function (q, j) { return '<span class="ppw"><button data-pwp="' + j + '">' + ic('cal') + esc(q.n) + '</button><button class="ppx" data-pwpdel="' + j + '" aria-label="Preset löschen">' + ic('close') + '</button></span>'; }).join('') +
+      ((P.wp || []).length < 6 ? '<button data-pwpsave="1" aria-label="Woche als Preset speichern">' + ic('plus') + '</button>' : '') + '</div>';
+    // Woche Mo–So: Ablageplätze mit den gelegten Karten
+    var slots = '';
+    for (w = 0; w < 7; w++) {
+      var here = P.days.filter(function (x) { return draftWd(x.id).indexOf(w) >= 0; });
+      slots += '<div class="psl' + (w === wdOf(today) ? ' today' : '') + (chk.clash[w] ? ' clash' : '') + '" data-pslot="' + w + '"><b>' + WDN[w] + '</b><div class="pst">' +
+        here.map(function (x) { var k = x.id + ':' + w; return '<span class="ptl' + (ui.pnt === k ? ' nw' : '') + (chk.used[x.id] > dLim(x) ? ' over' : '') + '" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '<span>' + esc(x.n) + '</span>' + (rpText(x) ? '<em>' + (dRp(x) ? dRp(x) + 'W' : '1×') + '</em>' : '') + '<button data-punset="' + k + '" aria-label="Entfernen">' + ic('close') + '</button></span>'; }).join('') +
+        (here.length ? '' : '<i class="pdrop">' + ic('plus') + '</i>') + '</div>' + (chk.clash[w] ? ic('bolt', 'pwarn') : '') + '</div>';
     }
-    return h + '</div></section>';
+    ui.pnt = null;
+    var gw = {}; for (w = 0; w < 7; w++) GORDER.forEach(function (g) { if (dayGroups(P.days.filter(function (x) { return draftWd(x.id).indexOf(w) >= 0; }), d)[g]) gw[g] = (gw[g] || 0) + 1; });
+    h += '<section class="pwkl rise" style="--i:2">' + slots + '</section><div class="pgc wvb rise" style="--i:3">' + GORDER.filter(function (g) { return gw[g] || ['pull', 'push', 'core'].indexOf(g) >= 0; }).map(function (g) {
+      return '<span class="g' + g + (gw[g] ? '' : ' z') + '" aria-label="' + gOf(g).n + ': ' + (gw[g] || 0) + ' Tage">' + ic(gOf(g).i) + (gw[g] || 0) + '×</span>'; }).join('') + '</div>';
+    // Karten-Hand: farbige Karten zum Ziehen (nach oben auf einen Tag) oder Antippen + Tag antippen; ✎ öffnet den Editor
+    h += '<section class="pkh rise" style="--i:4" data-noswipe="1">' + P.days.map(function (x, j) {
+      var u = chk.used[x.id], lim = dLim(x), st = u > lim ? ' over' : u === lim ? ' full' : '';
+      return '<div class="pk' + st + (chk.cclash[x.id] ? ' clash' : '') + (ui.psel === x.id ? ' sel' : '') + '" data-pkid="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ');--j:' + j + '">' +
+        '<span class="pki">' + ic(dIcon(x)) + '</span><b>' + esc(x.n) + '</b><span class="pkd" aria-label="' + u + ' von ' + lim + '">' + Array.apply(null, Array(Math.max(lim, u))).map(function (z, k) { return '<i' + (k < u ? ' class="on' + (k >= lim ? ' x' : '') + '"' : '') + '></i>'; }).join('') + '</span>' +
+        ((st === ' over' || chk.cclash[x.id]) ? ic('bolt', 'pkw') : '') + '<button class="pke" data-pedit="' + x.id + '" aria-label="' + esc(x.n) + ' bearbeiten">' + ic('edit') + '</button></div>';
+    }).join('') + (P.days.length < 8 ? '<button class="pk add" data-pnew="1" aria-label="Neuer Trainingstag">' + ic(ui.pnew ? 'close' : 'plus') + '</button>' : '') + '</section>';
+    if (ui.pnew) h += '<div class="ppre">' + PRESETS.map(function (pr, j) { return '<button data-ppre="' + j + '" style="--pc:var(' + PCOL[pr.c] + ')">' + ic(pr.i) + pr.n + '</button>'; }).join('') + '</div>';
+    return h;
+  }
+  function plannerPlace(id, w) {
+    var a = draftWd(id); if (a.indexOf(w) >= 0) return;
+    a.push(w); a.sort(); draft().dirty = true; ui.pnt = id + ':' + w; ui.psel = null; ui.fresh = false; render(); buzz(8);
+  }
+  // Ziehen: Karte nach oben aus der Hand ziehen (seitlich scrollt die Hand), Geisterkarte folgt dem Finger, Ablage auf einem Tag
+  var pdrag = null;
+  document.addEventListener('pointerdown', function (e) {
+    var c = e.target.closest && e.target.closest('.pk[data-pkid]');
+    if (!c || e.target.closest('[data-pedit]')) return;
+    pdrag = { id: c.dataset.pkid, el: c, x: e.clientX, y: e.clientY, on: false, pid: e.pointerId, g: null, hov: null };
+  });
+  document.addEventListener('pointermove', function (e) {
+    if (!pdrag || e.pointerId !== pdrag.pid) return;
+    var dx = e.clientX - pdrag.x, dy = e.clientY - pdrag.y;
+    if (!pdrag.on) {
+      if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) { pdrag = null; return; }
+      if (Math.abs(dy) < 10) return;
+      var r = pdrag.el.getBoundingClientRect(), g = pdrag.el.cloneNode(true);
+      g.className += ' ghost'; g.style.width = r.width + 'px'; g.style.height = r.height + 'px'; g.style.left = r.left + 'px'; g.style.top = r.top + 'px';
+      document.body.appendChild(g); pdrag.g = g; pdrag.on = true; pdrag.ox = r.left; pdrag.oy = r.top; pdrag.el.classList.add('lift'); buzz(6);
+    }
+    e.preventDefault();
+    pdrag.g.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + Math.max(-8, Math.min(8, dx / 20)) + 'deg) scale(1.06)';
+    var t = document.elementFromPoint(e.clientX, e.clientY), s = t && t.closest ? t.closest('[data-pslot]') : null;
+    if (s !== pdrag.hov) { if (pdrag.hov) pdrag.hov.classList.remove('hov'); if (s) s.classList.add('hov'); pdrag.hov = s; }
+  }, { passive: false });
+  function pdragEnd(e) {
+    if (!pdrag || (e && e.pointerId !== pdrag.pid)) return;
+    var p = pdrag; pdrag = null;
+    if (!p.on) return;
+    p.el.classList.remove('lift');
+    // Neuaufbau erst nach dem touchend: verschwindet die berührte Karte vorher aus dem DOM, schluckt der Browser den nächsten Tipp
+    if (p.hov) { p.g.remove(); var w = +p.hov.dataset.pslot; setTimeout(function () { plannerPlace(p.id, w); }, 40); return; }
+    // Kein Tag getroffen: Karte fliegt zurück in die Hand
+    p.g.style.transition = 'transform .22s var(--ease)'; p.g.style.transform = 'none';
+    setTimeout(function () { p.g.remove(); }, 230);
+  }
+  document.addEventListener('pointerup', pdragEnd);
+  document.addEventListener('pointercancel', pdragEnd);
+  function plannerClick(t) {
+    var el, P = plan(), D;
+    if (t.closest('.pk.ghost')) return true;
+    if ((el = t.closest('[data-punset]'))) { var a = el.dataset.punset.split(':'), wd = draftWd(a[0]), i = wd.indexOf(+a[1]); if (i >= 0) wd.splice(i, 1); draft().dirty = true; ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-pslot]')) && ui.psel) { plannerPlace(ui.psel, +el.dataset.pslot); return true; }
+    if ((el = t.closest('.pk[data-pkid]')) && !t.closest('[data-pedit]')) { ui.psel = ui.psel === el.dataset.pkid ? null : el.dataset.pkid; ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-pwp]'))) {
+      var k = el.dataset.pwp, m = {};
+      if (k === 'std') { var df = defaultPlan(); df.days.forEach(function (x) { m[x.id] = x.wd.slice(); }); }
+      else if (k !== 'clear') m = JSON.parse(JSON.stringify((P.wp[+k] || {}).m || {}));
+      P.days.forEach(function (x) { m[x.id] = (m[x.id] || []).filter(function (v) { return v >= 0 && v <= 6; }); });
+      ui.draft = { m: m, dirty: true }; ui.fresh = false; render(); return true;
+    }
+    if ((el = t.closest('[data-pwpdel]'))) { P.wp.splice(+el.dataset.pwpdel, 1); P.cu = true; persist(); ui.fresh = false; render(); return true; }
+    if (t.closest('[data-pwpsave]')) { D = draft(); P.wp = (P.wp || []).concat([{ n: 'Woche ' + ((P.wp || []).length + 1), m: JSON.parse(JSON.stringify(D.m)) }]); P.cu = true; persist(); ui.fresh = false; render(); toast('Als Preset gespeichert', 'check'); return true; }
+    if (t.closest('[data-psave]')) {
+      D = draft(); P.days.forEach(function (x) { if (D.m[x.id]) x.wd = D.m[x.id].slice().sort(); });
+      P.cu = true; ui.draft = null; ui.pman = false; ui.pdisc = 0; persist(); ui.fresh = true; render(); window.scrollTo(0, 0); toast('Woche gespeichert', 'check'); return true;
+    }
+    if (t.closest('[data-pmanx]')) {
+      if (ui.draft && ui.draft.dirty && !ui.pdisc) { ui.pdisc = Date.now(); ui.fresh = false; render(); setTimeout(function () { if (ui.pdisc && Date.now() - ui.pdisc > 2900) { ui.pdisc = 0; if (ui.pman) { ui.fresh = false; render(); } } }, 3000); return true; }
+      ui.pman = false; ui.pnew = false; ui.draft = null; ui.pdisc = 0; ui.psel = null; ui.fresh = true; render(); window.scrollTo(0, 0); return true;
+    }
+    return false;
   }
   function viewPlanEdit(d, day) {
     var h = '<div class="pe-top rise" style="--i:0"><button class="x" data-pback="1" aria-label="Zurück">' + ic('back') + '</button><input id="pe-n" class="pe-n" type="text" maxlength="18" value="' + esc(day.n) + '" aria-label="Name"><button class="x" data-pdel="' + day.id + '" aria-label="Tag löschen"' + (ui.pdel ? ' style="color:var(--danger)"' : '') + '>' + (ui.pdel ? '<b class="sure">Sicher?</b>' : ic('trash')) + '</button></div>';
     // Aussehen und Rhythmus: Icon, Farbe, Wochentage, Wiederholung (jede / alle 2 / alle 3 Wochen / einmalig ab Startwoche)
     var rp = dRp(day), st = dSt(day), a = new Date(st * 864e5), b = new Date((st + 6) * 864e5);
     h += '<section class="pe-set rise" style="--i:1;--pc:var(' + PCOL[day.c] + ')"><div class="pe-ic" role="group" aria-label="Icon">' + DAYI.map(function (k) { return '<button data-pic="' + k + '" aria-pressed="' + (dIcon(day) === k) + '" aria-label="Icon ' + k + '">' + ic(k) + '</button>'; }).join('') + '</div>' +
-      '<div class="pe-c">' + PCOL.map(function (c, j) { return '<button data-pc="' + j + '" style="--pc:var(' + c + ')" aria-pressed="' + (day.c === j) + '" aria-label="Farbe ' + (j + 1) + '"><i class="pdot big"></i></button>'; }).join('') + '</div>' + wdChips(day) +
+      '<div class="pe-c">' + PCOL.map(function (c, j) { return '<button data-pc="' + j + '" style="--pc:var(' + c + ')" aria-pressed="' + (day.c === j) + '" aria-label="Farbe ' + (j + 1) + '"><i class="pdot big"></i></button>'; }).join('') + '</div>' +
       '<div class="pe-rp" role="group" aria-label="Wiederholung">' + [[1, 'Jede Woche'], [2, 'Alle 2 Wo.'], [3, 'Alle 3 Wo.'], [0, 'Einmalig']].map(function (o) { return '<button data-prp="' + o[0] + '" aria-pressed="' + (rp === o[0]) + '">' + o[1] + '</button>'; }).join('') + '</div>' +
       (rp !== 1 ? '<div class="pe-st"><button class="x" data-pst="-1" aria-label="Woche früher">' + ic('back') + '</button><span>' + (rp ? 'Ab ' : 'Nur ') + a.getUTCDate() + '.' + (a.getUTCMonth() + 1) + '. – ' + b.getUTCDate() + '.' + (b.getUTCMonth() + 1) + '.</span><button class="x" data-pst="1" aria-label="Woche später">' + ic('chev') + '</button></div>' : '') + '</section>';
     // Übungen: Filter (Zahl = im Plan), Suche, Liste
@@ -2781,9 +2869,7 @@ button.pdb-h:active { background: var(--s2); }
     if ((el = t.closest('[data-todo]'))) { ui.todo = !ui.todo; el.setAttribute('aria-expanded', ui.todo); el.parentNode.classList.toggle('open', ui.todo); return true; }
     if ((el = t.closest('[data-pdb]'))) { var pk = el.dataset.pdb; ui.pdo[pk] = !ui.pdo[pk]; el.setAttribute('aria-expanded', ui.pdo[pk]); el.parentNode.classList.toggle('open', ui.pdo[pk]); return true; }
     if ((el = t.closest('[data-pchg]'))) { ui.pchg = !ui.pchg; el.setAttribute('aria-expanded', ui.pchg); el.closest('.pday').classList.toggle('open', ui.pchg); return true; }
-    if ((el = t.closest('[data-pman]'))) { ui.pman = true; ui.pnew = el.dataset.pman === 'new'; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
-    if (t.closest('[data-pmanx]')) { ui.pman = false; ui.pnew = false; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
-    if ((el = t.closest('[data-wv]'))) { var wv = +el.dataset.wv; ui.pw = ui.pw === wv ? null : wv; rowToggle(el, ui.pw === wv, '[data-wv]'); return true; }
+    if ((el = t.closest('[data-pman]'))) { ui.pman = true; ui.draft = null; ui.psel = null; ui.pdisc = 0; ui.pnew = el.dataset.pman === 'new'; ui.fresh = true; render(); window.scrollTo(0, 0); return true; }
     if ((el = t.closest('[data-gotab]'))) { goTab(el.dataset.gotab); return true; }
     if ((el = t.closest('[data-rm]'))) { ui.rm = Math.max(-11, Math.min(0, ui.rm + (+el.dataset.rm))); ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-wr]'))) { ui.wr = el.dataset.wr; ui.fresh = false; render(); return true; }
@@ -2802,6 +2888,7 @@ button.pdb-h:active { background: var(--s2); }
     return false;
   }
   function planClick(t) {
+    if (ui.tab === 'tage' && ui.pman && !ui.pe && plannerClick(t)) return true;
     if (calClick(t)) return true;
     var el, P = plan(), day, a;
     function done(keepScroll) { persist(); ui.fresh = false; render(); }
@@ -2812,11 +2899,6 @@ button.pdb-h:active { background: var(--s2); }
       var pr = PRESETS[+el.dataset.ppre], ids = pr.ids ? pr.ids.slice() : EX.filter(function (e) { return pr.f.indexOf(e.g) >= 0; }).map(function (e) { return e.id; });
       var nd = { id: 'p' + Date.now().toString(36), n: pr.n === 'Eigener Tag' ? 'Tag ' + (P.days.length + 1) : pr.n, c: pr.c, i: pr.i, wd: [], ex: ids };
       P.cu = true; P.days.push(nd); ui.pnew = false; ui.pe = nd.id; ui.pf = 'all'; ui.pq = ''; ui.fresh = true; persist(); render(); window.scrollTo(0, 0); return true;
-    }
-    if ((el = t.closest('[data-wd]'))) {
-      a = el.dataset.wd.split(':'); day = pDay(a[0]); if (!day) return true;
-      P.cu = true; var w = +a[1], ix = day.wd.indexOf(w); if (ix >= 0) day.wd.splice(ix, 1); else day.wd.push(w);
-      day.wd.sort(); done(); return true;
     }
     if ((el = t.closest('[data-pc]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; day.c = +el.dataset.pc; done(); } return true; }
     if ((el = t.closest('[data-ptog]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; var xi = day.ex.indexOf(el.dataset.ptog); if (xi >= 0) day.ex.splice(xi, 1); else day.ex = sortIds(day.ex.concat([el.dataset.ptog])); done(); } return true; }
@@ -3412,6 +3494,7 @@ button.pdb-h:active { background: var(--s2); }
     j = Math.max(0, Math.min(rows.length - 1, j)); var di = +rows[j].dataset.fd; if (di !== ui.fd) { ui.fd = di; ui.fresh = false; render(); buzz(4); }
   }
   document.addEventListener('touchmove', function (e) {
+    if (pdrag && pdrag.on) { e.preventDefault(); return; }
     var t = e.touches[0];
     if (sMode === 'bar') { var el = document.elementFromPoint(t.clientX, t.clientY), b = el && el.closest ? el.closest('#tabs [data-tab]') : null; if (b && b.dataset.tab !== ui.tab) { goTab(b.dataset.tab); buzz(5); } }
     else if (sMode === 'chart') scrub(t.clientX);

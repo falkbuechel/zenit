@@ -23,7 +23,8 @@ Sprache: Deutsch (UI und Antworten). Antworten kurz, ohne Einleitung/Recap. Änd
 - Keine Abhängigkeiten/Frameworks/Server einführen ohne Rückfrage. Node nur für Dev-Tools.
 
 ## Prüfen und veröffentlichen
-- `python tools/check.py` (Syntax, doppelte Namen, Build) und `node tools/smoke.js` (alle Demo-Szenarien und Tabs, schlägt bei JS-Fehlern fehl) müssen durchlaufen.
+- `python tools/check.py` (Syntax, doppelte Namen, Build) und `node tools/smoke.js` (alle Demo-Szenarien und Tabs parallel, ~10 s, schlägt bei JS-Fehlern fehl) müssen durchlaufen. Screenshots aller Dialoge: `--shots`.
+- Nach dem Push nicht auf den Deploy warten; das Ergebnis zu Beginn der nächsten Runde prüfen (`gh run list --limit 1`).
 - Push auf `main` = live auf Falks iPhone (GitHub Pages, die Action prüft vorher noch einmal). Nur nach bestandenen Prüfungen committen und pushen.
 - Commit-Nachrichten: Deutsch, ein kurzer Satz, was sich für die App ändert.
 - Datenform-Änderungen: Migration muss alte Daten behalten (`clean*`-Funktionen verwerfen sonst still). Vorher Falk an ein Backup erinnern.

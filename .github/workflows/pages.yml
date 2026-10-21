@@ -21,7 +21,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python3 tools/check.py
-      - run: npm ci && npx playwright install --with-deps chromium
+      # Node-Pakete und Playwright-Browser zwischenspeichern (spart ~1 min); Systempakete für Chrome bringt der Runner mit
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - id: pw
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - if: steps.pw.outputs.cache-hit != 'true'
+        run: npx playwright install chromium
       - run: node tools/smoke.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

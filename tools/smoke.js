@@ -1,79 +1,82 @@
 // Rauchtest gegen dist/: jedes Demo-Szenario laden, alle Tabs, Ansichten und Dialoge durchklicken.
-// Schlägt fehl bei jedem JS-Fehler. Aufruf: node tools/smoke.js [url]  (vorher python tools/check.py)
-// Ohne url wird dist/index.html direkt geöffnet (Service Worker läuft dann nicht). Screenshots -> tools/out/
+// Schlägt fehl bei jedem JS-Fehler. Aufruf: node tools/smoke.js [url] [--shots]  (vorher python tools/check.py)
+// Szenarien laufen parallel (eigener Kontext = eigener Speicher), Animationen sind aus, daher kaum Wartezeiten.
+// Screenshots der Tabs -> tools/out/, mit --shots zusätzlich Dialoge, Planer, Editor.
 const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs'), { pathToFileURL } = require('url');
-const URL_ = process.argv[2] || pathToFileURL(path.join(__dirname, '..', 'dist', 'index.html')).href;
+const ARGS = process.argv.slice(2), SHOTS = ARGS.includes('--shots');
+const URL_ = ARGS.filter(a => !a.startsWith('--'))[0] || pathToFileURL(path.join(__dirname, '..', 'dist', 'index.html')).href;
 const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const SCEN = ['mid', 'gold', 'broken', 'fresh', 'empty'];
 const TABS = ['heute', 'tage', 'food', 'fort', 'profil'];
 // Je Tab: Schalter, von denen jeweils jeder Wert einmal angeklickt wird (alle harmlos, nichts löscht)
 const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data-xr]', '[data-xm]', '[data-pg]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]'];
+const NOANIM = '*, *::before, *::after { animation: none !important; transition: none !important; }';
 
-(async () => {
-  const b = await chromium.launch();
-  const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, hasTouch: true });
-  const p = await ctx.newPage();
-  const errs = []; let where = '';
+async function scenario(b, sc, errs) {
+  const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, hasTouch: true, reducedMotion: 'reduce' });
+  await ctx.addInitScript(css => { document.addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = css; document.head.appendChild(s); }); }, NOANIM);
+  const p = await ctx.newPage(); let where = sc;
   p.on('pageerror', e => errs.push(where + ': ' + e.message));
   p.on('console', m => { if (m.type() === 'error' && !/fonts\.g/.test(m.text())) errs.push(where + ': ' + m.text()); });
-  const pause = ms => p.waitForTimeout(ms);
-  // Karten im Wochenplaner schweben dauerhaft (nie "stabil"), deshalb dort force
-  const click = async sel => { const el = p.locator(sel).first(); if (await el.isVisible().catch(() => false)) { await el.click({ timeout: 2000, force: sel.startsWith('.pk') || sel === '[data-pedit]' }).catch(e => errs.push(where + ': Klick ' + sel + ' ' + e.message.split('\n')[0])); await pause(250); return true; } return false; };
-  const closeSheet = async () => { await click('[data-sheet-close]'); await pause(300); };
+  const shot = (n, all) => (all || SHOTS) ? p.screenshot({ path: path.join(OUT, `${sc}-${n}.png`) }) : null;
+  // Klicks lösen synchrones Rendern aus; ohne Animationen reicht ein kurzer Takt. Karten im Planer: force (liegen übereinander)
+  const click = async sel => { const el = p.locator(sel).first(); if (await el.isVisible().catch(() => false)) { await el.click({ timeout: 2000, force: sel.startsWith('.pk') || sel === '[data-pedit]' }).catch(e => errs.push(where + ': Klick ' + sel + ' ' + e.message.split('\n')[0])); await p.waitForTimeout(30); return true; } return false; };
+  const closeSheet = () => click('[data-sheet-close]');
 
   await p.goto(URL_);
-  await p.evaluate(() => { localStorage.clear(); localStorage.setItem('zenit.mode', 'demo'); });
-  for (const sc of SCEN) {
-    where = sc;
-    // Demo-Szenario über den eingebauten Knopf laden (Klick-Handler hängt am document, lädt neu)
-    await p.evaluate(k => { const bt = document.createElement('button'); bt.dataset.demo = k; document.body.appendChild(bt); bt.click(); }, sc);
-    await p.waitForLoadState('load'); await pause(800);
-    for (const tab of TABS) {
-      where = sc + '/' + tab;
-      await click(`[data-tab="${tab}"]`); await pause(400);
-      await p.screenshot({ path: path.join(OUT, `${sc}-${tab}.png`) });
-      for (const sel of TOGGLES) {
-        const vals = await p.$$eval(sel, (els, s) => [...new Set(els.map(e => e.getAttribute(s.slice(1, -1))))], sel);
-        for (const v of vals) await click(`${sel.slice(0, -1)}="${v}"]`);
-      }
-      // Essen: Kachel, Suche → Menge → Eintragen, Schnell, Ziele (beide Modi), Gerichte, eigenes Lebensmittel
-      if (tab === 'food') {
-        await click('[data-ftile="0"]'); await click('[data-fsearch]'); await p.fill('#fq', 'ei').catch(() => {}); await click('[data-fpick]'); await click('[data-fstep="1"]'); await click('[data-fpadd]');
-        await click('[data-fquick]'); await closeSheet(); await click('[data-fgoal]'); await click('[data-ctb]'); await click('[data-gmode="m"]'); await click('[data-gmode="a"]'); await closeSheet();
-        await click('[data-fdishes]'); await click('[data-fde]'); await closeSheet(); await click('[data-fsearch]'); await click('[data-fown="new"]'); await closeSheet();
-        await click('[data-fedit]'); await closeSheet();
-      }
-      // Plan: Tag ändern (Tauschen über den Kalender, Ersetzen, Aussetzen, Urlaub; jede Aktion schaltet sich beim zweiten Tippen aus)
-      if (tab === 'tage' && await click('[data-cnow]') !== null) {
-        if (!(await p.$('.pday.open'))) await click('[data-pchg]');
-        await click('[data-pmode="swap"]'); await click('.pc2.pick'); await click('[data-pmode="swap"]');
-        await click('[data-pmode="repl"]'); await click('[data-preplx]'); await click('[data-pmode="repl"]');
-        await click('[data-pmode="skip"]'); await click('[data-pmode="skip"]'); await click('[data-pmode="add"]'); await click('[data-paddx]');
-        await click('[data-pmode="vac"]'); await click('[data-poff="3"]'); await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-urlaub.png`) });
-        await click('[data-pmode="vac"]'); await click('[data-pchg]');
-      }
-      // Plan: Wochenplaner (Karte antippen + Tag antippen, entfernen, speichern, neuer Plan, aktivieren), daraus den Editor öffnen
-      if (tab === 'tage' && await click('[data-pman]')) {
-        await click('.pk[data-pkid]'); await click('[data-pslot="6"]'); await click('[data-punset]'); await click('[data-psave]');
-        await click('[data-wpnew]'); await click('.pk[data-pkid]'); await click('[data-pslot="0"]'); await click('[data-psave]');
-        await click('[data-wpact]'); await click('[data-wpon]'); await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-planer.png`) });
-      }
-      // Plan: Trainingstag-Editor öffnen, Übung an/aus, Icon, Filter, zurück
-      if (tab === 'tage' && await click('[data-pedit]')) {
-        await click('[data-ptog]'); await click('[data-ptog]'); await click('[data-pic="star"]'); await click('[data-pef="pull"]'); await click('[data-pef="all"]');
-        await click('[data-prp="2"]'); await click('[data-pst="1"]'); await click('[data-prp="0"]'); await click('[data-prp="1"]'); await click('[data-plk]'); await click('[data-plk]');
-        await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-editor.png`) }); await click('[data-pback]');
-        await click('[data-pmanx]'); await click('[data-pdiscok]');
-      }
-      if (await click('[data-open]')) { await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-detail.png`) }); await click('[data-back]'); }
-      if (await click('[data-pill]')) { await p.screenshot({ path: path.join(OUT, `${sc}-${tab}-sheet.png`) }); await closeSheet(); }
+  await p.evaluate(k => { localStorage.clear(); localStorage.setItem('zenit.mode', 'demo'); const bt = document.createElement('button'); bt.dataset.demo = k; document.body.appendChild(bt); bt.click(); }, sc);
+  await p.waitForLoadState('load'); await p.waitForTimeout(300);
+  for (const tab of TABS) {
+    where = sc + '/' + tab;
+    await click(`#tabs [data-tab="${tab}"]`);
+    await shot(tab, true);
+    for (const sel of TOGGLES) {
+      const vals = await p.$$eval(sel, (els, s) => [...new Set(els.map(e => e.getAttribute(s.slice(1, -1))))], sel);
+      for (const v of vals) await click(`${sel.slice(0, -1)}="${v}"]`);
     }
-    where = sc + '/einstellungen';
-    await click('[data-tab="profil"]'); await click('[data-set]'); await pause(300);
-    await p.screenshot({ path: path.join(OUT, `${sc}-einstellungen.png`) }); await closeSheet();
+    // Essen: Kachel, Suche → Menge → Eintragen, Schnell, Ziele (beide Modi), Gerichte, eigenes Lebensmittel
+    if (tab === 'food') {
+      await click('[data-ftile="0"]'); await click('[data-fsearch]'); await p.fill('#fq', 'ei').catch(() => {}); await click('[data-fpick]'); await click('[data-fstep="1"]'); await click('[data-fpadd]');
+      await click('[data-fquick]'); await closeSheet(); await click('[data-fgoal]'); await click('[data-ctb]'); await click('[data-gmode="m"]'); await click('[data-gmode="a"]'); await closeSheet();
+      await click('[data-fdishes]'); await click('[data-fde]'); await closeSheet(); await click('[data-fsearch]'); await click('[data-fown="new"]'); await closeSheet();
+      await click('[data-fedit]'); await closeSheet();
+    }
+    // Plan: Tag ändern (Tauschen über den Kalender, Ersetzen, Aussetzen, Urlaub; jede Aktion schaltet sich beim zweiten Tippen aus)
+    if (tab === 'tage') {
+      await click('[data-cnow]');
+      if (!(await p.$('.pday.open'))) await click('[data-pchg]');
+      await click('[data-pmode="swap"]'); await click('.pc2.pick'); await click('[data-pmode="swap"]');
+      await click('[data-pmode="repl"]'); await click('[data-preplx]'); await click('[data-pmode="repl"]');
+      await click('[data-pmode="skip"]'); await click('[data-pmode="skip"]'); await click('[data-pmode="add"]'); await click('[data-paddx]');
+      await click('[data-pmode="vac"]'); await click('[data-poff="3"]'); await shot('tage-urlaub');
+      await click('[data-pmode="vac"]'); await click('[data-pchg]');
+    }
+    // Plan: Wochenplaner (Karte antippen + Tag antippen, entfernen, speichern, neuer Plan, aktivieren), daraus den Editor öffnen
+    if (tab === 'tage' && await click('[data-pman]')) {
+      await click('.pk[data-pkid]'); await click('[data-pslot="6"]'); await click('[data-punset]'); await click('[data-psave]');
+      await click('[data-wpnew]'); await click('.pk[data-pkid]'); await click('[data-pslot="0"]'); await click('[data-psave]');
+      await click('[data-wpact]'); await click('[data-wpon]'); await shot('tage-planer');
+    }
+    // Plan: Trainingstag-Editor öffnen, Übung an/aus, Icon, Filter, Rhythmus, gesperrte Übung, zurück
+    if (tab === 'tage' && await click('[data-pedit]')) {
+      await click('[data-ptog]'); await click('[data-ptog]'); await click('[data-pic="star"]'); await click('[data-pef="pull"]'); await click('[data-pef="all"]');
+      await click('[data-prp="2"]'); await click('[data-pst="1"]'); await click('[data-prp="0"]'); await click('[data-prp="1"]'); await click('[data-plk]'); await click('[data-plk]');
+      await shot('tage-editor'); await click('[data-pback]');
+      await click('[data-pmanx]'); await click('[data-pdiscok]');
+    }
+    if (await click('[data-open]')) { await shot(tab + '-detail'); await click('[data-back]'); }
+    if (await click('[data-pill]')) { await shot(tab + '-sheet'); await closeSheet(); }
   }
+  where = sc + '/einstellungen';
+  await click('#tabs [data-tab="profil"]'); await click('[data-set]'); await shot('einstellungen'); await closeSheet();
+  await ctx.close();
+}
+
+(async () => {
+  const t0 = Date.now(), b = await chromium.launch(), errs = [];
+  await Promise.all(SCEN.map(sc => scenario(b, sc, errs)));
   await b.close();
   if (errs.length) { console.log('FEHLER (' + errs.length + '):\n' + errs.join('\n')); process.exit(1); }
-  console.log('OK: ' + SCEN.length + ' Szenarien × ' + TABS.length + ' Tabs ohne Fehler, Screenshots in tools/out/');
+  console.log('OK: ' + SCEN.length + ' Szenarien × ' + TABS.length + ' Tabs ohne Fehler in ' + Math.round((Date.now() - t0) / 1000) + ' s, Screenshots in tools/out/');
 })();

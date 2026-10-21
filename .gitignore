@@ -1,0 +1,12 @@
+# Build-Ausgabe (python build.py)
+dist/
+# Dev-Tools
+node_modules/
+tools/out/
+__pycache__/
+*.pyc
+.DS_Store
+# Öffentliches Repo: persönliche Notizen und Backups mit Trainingsdaten nie committen
+docs/Notes.md
+zenit-backup*.json
+*backup*.json

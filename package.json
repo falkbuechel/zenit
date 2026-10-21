@@ -1,0 +1,14 @@
+{
+  "name": "zenit",
+  "private": true,
+  "description": "Nur Dev-Tools (Icons, Playwright-Test). Die App selbst braucht kein Node.",
+  "scripts": {
+    "build": "python build.py",
+    "serve": "python -m http.server 8000 -d dist",
+    "icons": "node tools/make-icons.js",
+    "test": "node tools/test-example.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  }
+}

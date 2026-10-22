@@ -15,6 +15,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Mahlzeit wählbar, Wasser-Regler neu, schmale Toasts, lineare Diagramme, Rekorde je Übung
+- Essen: unter Heute/Gestern Mahlzeit (Auswahl) + Uhrzeit nebeneinander (`whenRow`/`whenFor`); Mahlzeit folgt der Uhrzeit, bis man sie wählt; gespeichert nur, wenn sie von der Uhrzeit abweicht (`x.mk`, `cleanFood` behält `mk`; `mealOfE`). Neue Datenform-Erweiterung, abwärtskompatibel.
+- Wasser: eigener Regler (`.wsl`, Pointer: Antippen oder Ziehen setzt den Wert, Loslassen speichert) statt `input type=range` mit unsichtbarem Knopf (reagierte schlecht).
+- Toasts schmal als Pille direkt über der Tab-Leiste (in der Arena unten).
+- Kacheln: grüner Punkt + Gramm statt „g Protein“. Zu-viel-Rot schon ab 100 % (kcal, Fett, Kohlenhydrate, Zucker).
+- Diagramme: gerade Linien statt Kurven, Maximalwert oben links, Ziel beschriftet. Auswahl per Antippen/Ziehen über Pointer-Events ohne Neuzeichnen (`LCD`, `lcPick`) – vorher riss das Ziehen ab, weil `render()` das SVG unter dem Finger ersetzte.
+- Rekorde: eine Zeile je Übung (neueste zuerst) mit Bestwert, Plus seit Start, Anzahl; 3 Kennzahlen oben; Antippen öffnet die Übung im Profil.
+
 ### 2026-10-23 – Skilltree als zoombares radiales Netz
 Mit Falk: wie ein Dungeon-Skilltree, aber radial; Übungen gehören dazu, Navigation mit Zoomen, Infos kompakt.
 - `viewSkills`: Fläche 1400 px (`.stcan`, `ui.stv` = Verschiebung/Zoom), Mitte Zenit, Ring Muskelgruppen (Embleme), außen alle 98 Übungen, je Stufe ein Ring, Skills als große Knoten. Linien: Muskel → Grundübung, Voraussetzung → Übung; frei = grün, gewählter Weg = gold.

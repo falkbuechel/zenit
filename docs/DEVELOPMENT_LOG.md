@@ -15,6 +15,11 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Aufräumen
+- Ungenutzte Funktionen entfernt: `hudHtml`, `toolRow`, `warmHtml`, `weightSec`, `profTiles`, `viewPath` (nur noch Ausweich-Ansicht), `nextUnlock`. Tote Klick-Handler: `data-gx`, `data-pday`, `data-pg`, `data-seg`. 118 CSS-Regeln, die nur tote Klassen betrafen (alter HUD, Plan-Kopf, Werkzeugzeile, Gruppenlisten, alte Arena/Deck-Reste, Profil-Kacheln, Kartenkopf). `tools/compare.js`: Alles gleich.
+- Fehler gefunden: mit dem Heute-Umbau war das Aufwärmen nicht mehr erreichbar (kommt als Zeile zurück).
+- Werkzeuge (Scratchpad): Suche ungenutzter Funktionen per Wortzählung, Entfernen ganzer Funktionen per Klammerzählung; `data-p' + m + 'x` wird dynamisch erzeugt (nicht löschen).
+
 ### 2026-10-22 – Heute-Übersicht + Vollbild-Arena, Karten nach Gruppen, Skilltree radial, Profil mit Statistik
 Mit Falk per Mockups (alle Empfehlungen gewählt):
 - Heute: Übersicht (Training mit Name, Dauer, Fortschritt, ein Start-Knopf; Zeilen Tagesziel, Bergpfad, Serie). „Training starten“ öffnet die Arena im Vollbild (`ui.arena`, `body.arm` blendet Tab-Leiste, Kopf und Brandbar aus): große Karte, Wischen (Touch auf `#arm-s`) oder Punkte zum Wechseln, ein Hauptknopf, ✕ zurück; startet die Trainingszeit.

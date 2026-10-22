@@ -1178,11 +1178,11 @@ button.cday:active { transform: scale(.97); }
 .hc.on { outline: 2px solid var(--ink); outline-offset: 2px; }
 .hc.dn { opacity: .55; }
 .hc.rdy em::after { content: " ▲"; color: var(--gold); }
-.hc.r1, .dk.r1, .stx.r1 { --rc: #5b8fd6; }
-.hc.r2, .dk.r2, .stx.r2 { --rc: #a374d8; }
-.hc.r3, .dk.r3, .stx.r3 { --rc: var(--gold); }
-.hc.r4, .dk.r4, .stx.r4 { --rc: #e0533d; }
-.hc.r5, .dk.r5, .stx.r5 { --rc: #57c7b8; }
+.hc.r1, .dk.r1, .stx.r1, .sts.r1 { --rc: #5b8fd6; }
+.hc.r2, .dk.r2, .stx.r2, .sts.r2 { --rc: #a374d8; }
+.hc.r3, .dk.r3, .stx.r3, .sts.r3 { --rc: var(--gold); }
+.hc.r4, .dk.r4, .stx.r4, .sts.r4 { --rc: #e0533d; }
+.hc.r5, .dk.r5, .stx.r5, .sts.r5 { --rc: #57c7b8; }
 .hc.l1, .dk.l1 { --lc: #5b8fd6; background: linear-gradient(160deg, color-mix(in srgb, #5b8fd6 10%, var(--s1)), var(--s1) 60%); }
 .hc.l2, .dk.l2 { --lc: #a374d8; background: linear-gradient(160deg, color-mix(in srgb, #a374d8 14%, var(--s1)), var(--s1) 65%); }
 .hc.l3, .dk.l3 { --lc: var(--gold); background: linear-gradient(160deg, color-mix(in srgb, var(--gold) 16%, var(--s1)), var(--s1) 70%); box-shadow: 0 8px 22px -14px var(--gold); }
@@ -1396,6 +1396,10 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 .stcan line { stroke: var(--line); stroke-width: 2; }
 .stcan line.on { stroke: var(--ac); stroke-width: 3; }
 .stcan line.hl { stroke: var(--gold); stroke-width: 5; }
+.stcan line.st2 { stroke-width: 1; }
+.sts { --rc: #8fa39a; position: absolute; width: 16px; height: 16px; margin: -8px 0 0 -8px; padding: 0; border: 1.5px solid var(--line); border-radius: 50%; background: var(--s1); }
+.sts.on { border-color: var(--rc); background: color-mix(in srgb, var(--rc) 50%, var(--s1)); }
+.sts.sel { box-shadow: 0 0 0 3px var(--gold); }
 .stc2 { position: absolute; top: 700px; left: 700px; display: grid; place-items: center; width: 74px; height: 74px; margin: -37px 0 0 -37px; border-radius: 50%; background: var(--ink); color: var(--ac); box-shadow: 0 0 0 10px color-mix(in srgb, var(--ac) 20%, transparent); }
 .stc2 .ic { width: 36px; height: 36px; }
 .stm { position: absolute; display: grid; justify-items: center; gap: 4px; width: 100px; margin: -31px 0 0 -50px; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; }
@@ -1415,11 +1419,7 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 .stx.on.sk > i { box-shadow: 0 0 18px -2px var(--rc); }
 .stx.nx > i { border-style: dashed; border-color: var(--rc); }
 .stx.sel > i { box-shadow: 0 0 0 4px var(--gold); }
-.stz { position: absolute; top: 10px; right: 10px; display: grid; gap: 6px; }
-.stz .x { width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 12px; background: var(--s1); }
 .stinf { position: absolute; right: 10px; bottom: 10px; left: 10px; display: grid; gap: 8px; max-height: 46%; overflow: auto; padding: 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); box-shadow: 0 12px 26px -16px rgba(0, 0, 0, .6); }
-.stinf > small { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink3); }
-.stinf > small .ic { width: 15px; height: 15px; }
 .stinf-h { display: flex; align-items: center; gap: 10px; }
 .stinf-h span { display: grid; flex: 1; min-width: 0; }
 .stinf-h b { overflow: hidden; font-size: 15px; white-space: nowrap; text-overflow: ellipsis; }
@@ -4257,19 +4257,21 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
   }
   // Skilltree: radiales Netz auf einer 1400er-Fläche. Mitte Zenit, Ring Muskelgruppen, außen alle Übungen nach Stufe (innen leicht, außen schwer, je Stufe ein Ring), Skills groß.
   // Linien: Muskel → Grundübung, Voraussetzung → Übung. Zwei Finger zoomen, einer verschiebt (ui.stv), Antippen zeigt unten eine Info-Leiste
-  var STW = 1400, STC = 700, stLay = null;
+  var STW = 1400, STC = 700, stLay = null, stSat = {};
   function primMus(e) { var mw = musOf(e), ks = Object.keys(mw); return ks.filter(function (k) { return mw[k] === 1; })[0] || ks[0] || 'co'; }
   function stLayout() {
     if (stLay) return stLay;
-    // Radialer Baum: Eltern = erste Voraussetzung (Grundübungen hängen an ihrer Muskelgruppe). Jeder Ast bekommt einen Winkelbereich
-    // nach seiner Breite (meiste Knoten auf einem Ring), Kinder teilen den Bereich ihres Elternknotens; Radius = Stufe (je Stufe ein Ring)
-    var pos = {}, kids = {}, brM = {};
-    EX.forEach(function (e) { var par = e.req && EXB[e.req[0][0]] ? e.req[0][0] : 'm:' + primMus(e); (kids[par] = kids[par] || []).push(e.id); });
+    // Hauptknoten = Skills und Übungen, auf denen etwas aufbaut. Varianten (nichts baut auf ihnen auf) werden kleine Satelliten an ihrem Ursprung
+    // (erste Voraussetzung bzw. Muskelgruppe), damit breite Knoten (Liegestütz: 11 Varianten, Mobility: 14) keine eigenen Äste aufmachen
+    var dep = {}, pos = {}, kids = {}, sats = {}, brM = {};
+    EX.forEach(function (e) { (e.req || []).forEach(function (q) { dep[q[0]] = 1; }); });
+    function par(e) { return e.req && EXB[e.req[0][0]] ? e.req[0][0] : 'm:' + primMus(e); }
+    EX.forEach(function (e) { var p0 = par(e); if (e.g === 'skill' || dep[e.id]) (kids[p0] = kids[p0] || []).push(e.id); else (sats[p0] = sats[p0] || []).push(e.id); });
+    stSat = {}; Object.keys(sats).forEach(function (p0) { sats[p0].forEach(function (id) { stSat[id] = p0; }); });
     function breadth(id) {
       if (brM[id]) return brM[id];
-      var per = {}; (function walk(x) { (kids[x] || []).forEach(function (c) { var st = stageOf(EXB[c]); per[st] = (per[st] || 0) + (EXB[c].g === 'skill' ? 2 : 1); walk(c); }); })(id);
-      var b = Math.max.apply(null, [1].concat(Object.keys(per).map(function (k) { return per[k]; })));
-      return (brM[id] = b);
+      var per = {}; (function walk(x) { (kids[x] || []).forEach(function (c) { var st = stageOf(EXB[c]); per[st] = (per[st] || 0) + (EXB[c].g === 'skill' ? 2 : 1) + (sats[c] ? Math.ceil(sats[c].length / 5) : 0); walk(c); }); })(id);
+      return (brM[id] = Math.max.apply(null, [1].concat(Object.keys(per).map(function (k) { return per[k]; }))) + (sats[id] && id.indexOf('m:') === 0 ? 1 : 0));
     }
     function place(id, a1, a2) {
       var mid = (a1 + a2) / 2, r = mid * Math.PI / 180, R = id.indexOf('m:') === 0 ? 170 : 245 + stageOf(EXB[id]) * 67;
@@ -4277,7 +4279,7 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
       var ch = kids[id] || [], tot = ch.reduce(function (a, c) { return a + breadth(c); }, 0), cur = a1;
       ch.forEach(function (c) { var w = breadth(c) / tot * (a2 - a1); place(c, cur, cur + w); cur += w; });
     }
-    // Muskelgruppen: Bereich nach Breite, aber mindestens 30° (sonst überlappen die Embleme auf dem inneren Ring)
+    // Muskelgruppen: Bereich nach Breite, mindestens 30°
     var W0 = MUS.map(function (m) { return breadth('m:' + m[0]); }), small = W0.map(function () { return false; }), a0 = -90, ws;
     for (var it = 0; it < 4; it++) {
       var fixed = small.filter(Boolean).length, rest = W0.reduce(function (a, b, k) { return a + (small[k] ? 0 : b); }, 0);
@@ -4285,35 +4287,44 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
       ws.forEach(function (w, k) { if (w < 30) small[k] = true; });
     }
     MUS.forEach(function (m, k) { place('m:' + m[0], a0, a0 + ws[k]); a0 += ws[k]; });
-    // je Ring Mindestabstand (Knotengröße + 10 px): nach Winkel sortieren, nach vorn schieben, dann den Ring um die halbe Verschiebung zurückdrehen
+    // je Ring Mindestabstand (Knotengröße + 24 px Platz für Satelliten)
     var rings = {};
-    EX.forEach(function (e) { var st = stageOf(e), q = pos[e.id]; (rings[st] = rings[st] || []).push({ id: e.id, a: Math.atan2(q.y - STC, q.x - STC) * 180 / Math.PI }); });
+    EX.forEach(function (e) { if (stSat[e.id]) return; var st = stageOf(e), q = pos[e.id]; (rings[st] = rings[st] || []).push({ id: e.id, a: Math.atan2(q.y - STC, q.x - STC) * 180 / Math.PI }); });
     Object.keys(rings).forEach(function (st) {
       var L = rings[st].sort(function (x, y) { return x.a - y.a; }), R = 245 + st * 67, sh = 0;
-      function gap(x, y) { return ((EXB[x.id].g === 'skill' ? 44 : 28) + (EXB[y.id].g === 'skill' ? 44 : 28)) / 2 + 10; }
+      function gap(x, y) { return ((EXB[x.id].g === 'skill' ? 44 : 28) + (EXB[y.id].g === 'skill' ? 44 : 28)) / 2 + (sats[x.id] || sats[y.id] ? 34 : 14); }
       for (var it2 = 0; it2 < 3; it2++) {
         for (var j = 1; j < L.length; j++) { var dA = L[j].a - L[j - 1].a, g = gap(L[j], L[j - 1]) / (2 * Math.PI * R) * 360; if (dA < g) { L[j].a += g - dA; sh += g - dA; } }
-        // über ±180° hinweg: letzter gegen ersten Knoten (der Ring wird dafür als Ganzes zurückgedreht)
         var dW = L[0].a + 360 - L[L.length - 1].a, gW = L.length > 1 ? gap(L[0], L[L.length - 1]) / (2 * Math.PI * R) * 360 : 0;
         if (dW < gW) L.forEach(function (o, k) { o.a -= (gW - dW) * k / (L.length - 1); });
       }
       L.forEach(function (o) { var r = (o.a - sh / L.length / 2) * Math.PI / 180; pos[o.id] = { x: STC + Math.cos(r) * R, y: STC + Math.sin(r) * R }; });
     });
+    // Satelliten: Bogen nach außen um den Ursprung, bei vielen in zwei Reihen
+    Object.keys(sats).forEach(function (p0) {
+      // je Reihe so viele, wie auf ~140° Bogen mit 24 px Abstand passen; weitere Reihen 24 px weiter außen
+      var c = pos[p0], S = sats[p0], ao = Math.atan2(c.y - STC, c.x - STC), r = p0.indexOf('m:') === 0 ? 56 : 34, j = 0;
+      while (j < S.length) {
+        var cap = Math.max(1, Math.floor(r * 2.45 / 24) + 1), m = Math.min(cap, S.length - j), st = 24 / r;
+        for (var k = 0; k < m; k++, j++) { var da = (k - (m - 1) / 2) * st; pos[S[j]] = { x: c.x + Math.cos(ao + da) * r, y: c.y + Math.sin(ao + da) * r }; }
+        r += 24;
+      }
+    });
     return (stLay = pos);
   }
   function stInfo(d, sel) {
     if (sel && sel.indexOf('m:') !== 0 && !EXB[sel]) sel = null;
-    if (!sel) return '<div class="stinf"><small>' + ic('star') + 'Antippen für Details · zwei Finger zoomen</small></div>';
-    if (sel.indexOf('m:') === 0) { var k = sel.slice(2), q = mLevel(d.mp[k] || 0); return '<div class="stinf"><div class="stinf-h">' + embHtml(k, q.lv) + '<span><b>' + MUSN[k] + '</b><small>Lv ' + q.lv + ' · ' + MAT[matOf(q.lv)][1] + '</small></span><button class="btn small" data-muso="' + k + '">Übungen</button></div></div>'; }
-    var e = EXB[sel]; if (!e) return '';
-    var own = !!d.unlocked[e.id], c = cardOf(d, e);
-    return '<div class="stinf"><div class="stinf-h"><span><b>' + esc(e.n) + '</b><small>' + RAR[rarOf(e)][0] + ' · ' + (own ? 'Lv ' + c.lv : 'gesperrt') + '</small></span><button class="btn small" data-cardo="' + e.id + '">Karte</button></div>' + (own ? '' : reqHtml(d, e)) + '</div>';
+    if (!sel) return '';
+    if (sel.indexOf('m:') === 0) { var k = sel.slice(2), q = mLevel(d.mp[k] || 0), nv = Object.keys(stSat).filter(function (id) { return stSat[id] === sel; }).length; return '<div class="stinf"><div class="stinf-h">' + embHtml(k, q.lv) + '<span><b>' + MUSN[k] + '</b><small>Lv ' + q.lv + ' · ' + MAT[matOf(q.lv)][1] + (nv ? ' · ' + nv + ' Varianten' : '') + '</small></span><button class="btn small" data-muso="' + k + '">Übungen</button></div></div>'; }
+    var e = EXB[sel], own = !!d.unlocked[e.id], c = cardOf(d, e);
+    return '<div class="stinf"><div class="stinf-h"><span><b>' + esc(e.n) + '</b><small>' + RAR[rarOf(e)][0] + ' · ' + (own ? 'Lv ' + c.lv : 'gesperrt') + (stSat[e.id] ? ' · Variante' : '') + '</small></span><button class="btn small" data-cardo="' + e.id + '">Karte</button></div>' + (own ? '' : reqHtml(d, e)) + '</div>';
   }
   function viewSkills(d) {
     var P = stLayout(), sel = ui.stsel || null, lines = '', nodes = '', lit = 0, tot = 0;
     function ln(a, b, cls) { return '<line x1="' + a.x.toFixed(1) + '" y1="' + a.y.toFixed(1) + '" x2="' + b.x.toFixed(1) + '" y2="' + b.y.toFixed(1) + '"' + (cls ? ' class="' + cls + '"' : '') + '/>'; }
     MUS.forEach(function (m) { lines += ln({ x: STC, y: STC }, P['m:' + m[0]], 'on'); });
     EX.forEach(function (e) {
+      if (stSat[e.id]) { lines += ln(P[stSat[e.id]], P[e.id], 'st2' + (sel === e.id ? ' hl' : '')); return; }
       var from = e.req ? e.req.map(function (q) { return q[0]; }).filter(function (id) { return P[id]; }) : ['m:' + primMus(e)];
       from.forEach(function (f) { var on = d.unlocked[e.id] && (f.indexOf('m:') === 0 || d.unlocked[f]), hl = sel && (sel === e.id || sel === f); lines += ln(P[f], P[e.id], (on ? 'on' : '') + (hl ? ' hl' : '')); });
     });
@@ -4321,12 +4332,12 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
     EX.forEach(function (e) {
       var p = P[e.id], own = !!d.unlocked[e.id], c = cardOf(d, e), sk = e.g === 'skill', nx = !own && (e.req || []).every(function (q) { return d.unlocked[q[0]]; });
       if (sk) { tot++; if (own) lit++; }
+      if (stSat[e.id]) { nodes += '<button class="sts r' + rarOf(e) + (own ? ' on' : '') + (sel === e.id ? ' sel' : '') + '" data-stn="' + e.id + '" style="left:' + p.x.toFixed(0) + 'px;top:' + p.y.toFixed(0) + 'px" aria-label="' + esc(e.n) + '"></button>'; return; }
       nodes += '<button class="stx r' + rarOf(e) + (sk ? ' sk' : '') + (own ? ' on l' + lookOf(c.lv) : nx ? ' nx' : '') + (sel === e.id ? ' sel' : '') + '" data-stn="' + e.id + '" style="left:' + p.x.toFixed(0) + 'px;top:' + p.y.toFixed(0) + 'px"><i>' + (own ? c.lv : ic('lock')) + '</i><small>' + esc(e.n) + '</small></button>';
     });
     var rings = '<circle class="rg" cx="' + STC + '" cy="' + STC + '" r="170"/>'; for (var g = 0; g < 7; g++) rings += '<circle class="rg" cx="' + STC + '" cy="' + STC + '" r="' + (245 + g * 67) + '"/>';
     return '<p class="stsum rise" style="--i:1"><b>' + lit + ' / ' + tot + '</b> Skills frei · ' + EX.filter(function (e) { return d.unlocked[e.id]; }).length + ' / ' + EX.length + ' Übungen</p>' +
-      '<div class="stmap rise" id="stmap" style="--i:2" data-noswipe="1"><div class="stcan" id="stcan"><svg viewBox="0 0 ' + STW + ' ' + STW + '" width="' + STW + '" height="' + STW + '" aria-hidden="true">' + rings + lines + '</svg><i class="stc2">' + ic('peak') + '</i>' + nodes + '</div>' +
-      '<div class="stz"><button class="x" data-stz="1" aria-label="Näher">' + ic('plus') + '</button><button class="x" data-stz="-1" aria-label="Weiter weg">' + ic('minus') + '</button><button class="x" data-stz="0" aria-label="Ganzes Netz">' + ic('target') + '</button></div>' + stInfo(d, sel) + '</div>';
+      '<div class="stmap rise" id="stmap" style="--i:2" data-noswipe="1"><div class="stcan" id="stcan"><svg viewBox="0 0 ' + STW + ' ' + STW + '" width="' + STW + '" height="' + STW + '" aria-hidden="true">' + rings + lines + '</svg><i class="stc2">' + ic('peak') + '</i>' + nodes + '</div>' + stInfo(d, sel) + '</div>';
   }
   function stBox() {
     // Ausdehnung des Netzes (mit Rand für Beschriftungen)
@@ -4795,7 +4806,6 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
     if ((el = t.closest('[data-cg]'))) { ui.cgo = ui.cgo || {}; ui.cgo[el.dataset.cg] = !ui.cgo[el.dataset.cg]; ui.fresh = false; render(); return; }
     if ((el = t.closest('[data-cardo]'))) { var ce = EXB[el.dataset.cardo]; if (ce) { ui.sheet = { card: ce.id }; sheetOpen(cardSheet(derive(state.logs), ce), true); } return; }
     if ((el = t.closest('[data-stn]'))) { if (stMoved) { stMoved = false; return; } ui.stsel = ui.stsel === el.dataset.stn ? null : el.dataset.stn; ui.fresh = false; render(); buzz(4); return; }
-    if ((el = t.closest('[data-stz]'))) { var zm = $('stmap'), zz = +el.dataset.stz; if (!zz) { ui.stv = null; stApply(); } else if (zm) stZoom(zz > 0 ? 1.4 : 1 / 1.4, zm.clientWidth / 2, zm.clientHeight / 2); return; }
     if ((el = t.closest('[data-msel]'))) { if (mfMoved) { mfMoved = false; return; } ui.msel = el.dataset.msel; ui.fresh = false; render(); buzz(4); return; }
     if ((el = t.closest('[data-muso]'))) { ui.sheet = { mus: el.dataset.muso }; sheetOpen(musSheet(derive(state.logs), el.dataset.muso), true); return; }
     if ((el = t.closest('[data-cdet]'))) { closeSheet(); ui.tab = 'fort'; ui.sel = el.dataset.cdet; ui.fresh = true; render(); $('app').scrollTo(0, 0); return; }

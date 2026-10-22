@@ -15,6 +15,11 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Skilltree geordnet: Hauptwege und Varianten
+- Analyse: 31 Grundübungen, 24 ohne Folgeübung (14 Mobility); breite Knoten: Liegestütz 11, Goblet 7, Hollow/Pike 5 Folgeübungen.
+- Hauptknoten nur noch Skills und Übungen, auf denen etwas aufbaut; Varianten (nichts baut darauf auf) sind kleine Satelliten-Punkte am Ursprung (`stSat`, Bogen nach außen, Abstand 24 px, mehrere Reihen). Ringabstand der Hauptknoten berücksichtigt Satelliten. Messung: 4 knappe Berührungen bei 107 Knoten.
+- Zoom-Knöpfe und Hinweis entfernt (Finger/Mausrad), Info-Leiste nur nach Antippen (Muskel zeigt Anzahl Varianten).
+
 ### 2026-10-23 – Einzelmuskeln, Figur per Wischen
 - 15 Einzelmuskeln (`SUBM`: Latissimus, Nacken & Trapez, unterer Rücken, Brust, vordere/hintere Schulter, Bizeps, Trizeps, Unterarme & Griff, Bauch, seitlicher Bauch, Quadrizeps, Beinbeuger, Gesäß, Waden) mit eigenem Level (`subOf` verteilt die Wörter aus `e.mu`, `d.smp`, `sLevel` mit halben Kosten). Die 9 Gruppen bleiben Oberbegriff für Skill-Voraussetzungen und Balance.
 - Figur: Flächen je Einzelmuskel in Materialfarbe, vorn/hinten per waagerechtem Wischen (Dreh-Animation, zwei Punkte zeigen die Seite), keine Knöpfe. Gruppe antippen markiert ihre Einzelmuskeln; Info-Karte zeigt Gruppe mit Einzelmuskel-Chips oder Einzelmuskel mit Rückweg zur Gruppe.

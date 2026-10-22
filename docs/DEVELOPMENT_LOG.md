@@ -15,6 +15,12 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Statistik als Kurven auf einer Seite
+Mit Falk per Mockup (A): keine Kachel→Großansicht mehr, je Bereich eine Seite.
+- `statPage`: Zeitraum 7/30/90, 3 Kennzahlen (`kpis`), Diagramm-Karten mit weichen Kurven (`lineChart`, `smooth` = Catmull-Rom), zusammengehörige Werte teilen sich ein Diagramm (Sätze+XP, kcal+Ziel, Protein+Ziel, Fett+Zucker, Gewicht+Zielgewicht, alle Maße). Antippen oder Wischen über die Kurve wählt einen Tag (`ui.lsel`, `data-lc`, Touch-Scrub umgebaut von der alten Ernährungs-Grafik), Werte stehen im Kopf.
+- Training: Gruppen-Anteile, Übungen als eine Zeile je Übung mit Mini-Kurve und Trend (6, „Alle anzeigen“). Körper: Monatsrückblick aufklappbar.
+- Entfernt: `statDefs`, `bigChart`, `statFocus`, `statDash`, `foodStats`, `fchart`, `calHtml`, `viewList`, Handler `data-sfoc/fd/hd/mo`, 54 CSS-Regeln. `compare.js`: gleich.
+
 ### 2026-10-23 – Essen: Uhrzeit und Mahlzeiten, Zu-viel-Balken, Wasser nur Regler
 - Einträge haben eine einstellbare Uhrzeit (`whenRow`, `#ftm`, in `foodPush` auf den Tag gesetzt); daraus die Mahlzeit (`MEALS`/`mealOf`: bis 10:30 Frühstück, bis 14:30 Mittag, bis 17:30 Snack, danach Abend). Chips nach Uhrzeit, Farbe und Text der Mahlzeit, Leiste startet am neuesten Eintrag.
 - Zu viel: Balken bleibt voll in seiner Farbe, darüber füllt sich Rot neu (`i.ov`, 3× schneller: 10 % drüber = 30 % Rot), für kcal, Fett, Kohlenhydrate, Zucker. Fehler: die Makro-Farbregel überdeckte das Rot (Spezifität) → `.fmb .fbt > i.ov`.

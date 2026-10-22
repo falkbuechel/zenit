@@ -1518,6 +1518,17 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
 .recr b { font-size: 13.5px; }
 .recr small { font-size: 11.5px; color: var(--ink3); }
 .recr em { display: grid; justify-items: end; font-family: var(--f-mono); font-style: normal; font-weight: 700; }
+/* Essen: gegessene Einträge als wischbare Chip-Leiste */
+.fdl { margin-top: 18px; }
+.fchips { display: flex; gap: 8px; margin: 0 -16px; padding: 2px 16px 6px; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding: 0 16px; scrollbar-width: none; }
+.fchips::-webkit-scrollbar { display: none; }
+.fcpi { flex: 0 0 auto; display: grid; gap: 2px; min-width: 108px; max-width: 150px; padding: 10px 12px; scroll-snap-align: start; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
+.fcpi:active { transform: scale(.96); }
+.fcpi b { overflow: hidden; font-size: 13px; white-space: nowrap; text-overflow: ellipsis; }
+.fcpi small { overflow: hidden; font-size: 11px; color: var(--ink3); white-space: nowrap; text-overflow: ellipsis; }
+.fcpi em { margin-top: 4px; font-family: var(--f-display); font-size: 20px; font-style: normal; font-weight: 900; }
+.fcpi em i { margin-left: 3px; font-family: var(--f-mono); font-size: 10px; font-style: normal; font-weight: 600; color: var(--ink3); }
+.hrow.got > .ic:last-child { color: var(--ac); }
 </style>
 
 <div id="app">
@@ -2262,6 +2273,7 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
       '<button class="btn primary big tov-go" data-arena="1">' + ic(all ? 'check' : 'play') + (all ? 'Erledigt · ansehen' : nd ? 'Weiter trainieren' : 'Training starten') + '</button>';
     h += '</section><div class="hrows rise" style="--i:2">' +
       '<div class="hrow' + (reached ? ' got' : '') + '"><i class="dg-r" style="--p:' + ringP.toFixed(3) + '"><b>' + Math.min(n, DAILY) + '/' + DAILY + '</b></i><span><b>Tagesziel</b><small>' + (reached ? 'Geschafft · +40 XP' + (extra ? ' · +' + extra * 30 + ' Bonus' : '') : 'Noch ' + (DAILY - n) + (DAILY - n === 1 ? ' Übung' : ' Übungen') + ' bis +40 XP') + '</small></span></div>' +
+      '<div class="hrow' + (d.warm[today] ? ' got' : '') + '" data-warm="1" role="button" tabindex="0">' + ic('sun') + '<span><b>Aufwärmen</b><small>' + (d.warm[today] ? 'Erledigt · +' + WARM_XP + ' XP' : '3 Min · +' + WARM_XP + ' XP') + '</small></span>' + ic(d.warm[today] ? 'check' : 'plus') + '</div>' +
       '<div class="hrow" data-zoom="1" role="button" tabindex="0">' + ic('peak') + '<span><b>Bergpfad</b><small>Lv ' + lv + ' · ' + TIERS[tierOfLevel(lv)] + '</small></span>' + ic('chev') + '</div>' +
       '<details class="hrow"><summary>' + FL + '<span><b>Serie und Belohnungen</b><small>' + ss.n + ' Tage · ×' + fx(mu) + '</small></span>' + ic('chev') + '</summary>' + rwd + '</details></div>';
     return h;
@@ -3159,14 +3171,13 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     }).join('') + '</section>';
     ui.ftok = null;
     h += '<div class="fact2 rise" style="--i:3"><button class="btn" data-fsearch="1">' + ic('search') + 'Suchen</button><button class="btn" data-fdishes="1">' + ic('food') + 'Gerichte</button><button class="btn" data-fquick="1">' + ic('bolt') + 'Schnell</button></div>';
-    // Heute
+    // Gegessen: wischbare Leiste mit Eintrags-Chips (Antippen = ändern oder löschen), leer: „Wie gestern“
     var cp = !s.items.length && foodSum(sd - 1).items.length;
-    h += '<section class="sec rise" style="--i:4"><h2 class="sec-h">' + esc(dayHead(sd)) + '<small>' + s.items.length + ' Einträge</small></h2>' + (cp ? '<button class="agn fcp" data-fcopy="1">' + ic('swap') + '<span>Wie gestern eintragen</span></button>' : '') +
-      (s.items.length ? '<div class="fl">' + s.items.slice().reverse().map(function (o) {
+    h += '<section class="fdl rise" style="--i:4"><h2 class="sec-h">' + esc(dayHead(sd)) + '<small>' + s.items.length + ' Einträge</small></h2>' +
+      (s.items.length ? '<div class="fchips" data-noswipe="1">' + s.items.slice().reverse().map(function (o) {
         var it = o.x.r && fItem(o.x.r.i);
-        return '<div class="fe" data-fedit="' + o.i + '" role="button" tabindex="0"><div class="fn"><b>' + esc(o.x.n || 'Mahlzeit') + '</b><small>' + (it ? fAmt(it, o.x.r.g) + ' · ' : '') + new Date(o.x.t).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + '</small></div>' +
-          '<span class="fv"><b>' + Math.round(o.x.k) + ' kcal</b><small>' + fN(o.x.p) + ' g Protein</small></span><button class="xb rem" data-fdel="' + o.i + '" aria-label="Löschen">' + ic('close') + '</button></div>';
-      }).join('') + '</div>' : '<p class="muted">Noch nichts eingetragen.</p>') + '</section>';
+        return '<button class="fcpi" data-fedit="' + o.i + '"><b>' + esc(o.x.n || 'Mahlzeit') + '</b><small>' + (it ? fAmt(it, o.x.r.g) : new Date(o.x.t).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })) + '</small><em>' + Math.round(o.x.k) + '<i>kcal</i></em></button>';
+      }).join('') + '</div>' : cp ? '<button class="agn fcp" data-fcopy="1">' + ic('swap') + '<span>Wie gestern eintragen</span></button>' : '<p class="muted">Noch nichts eingetragen.</p>') + '</section>';
     return h;
   }
 
@@ -3326,7 +3337,7 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
       '<div class="fpc">' + ch.map(function (c) { return '<button data-famt="' + c[0] + '" aria-pressed="' + (c[0] === pk.a) + '">' + fAmt(it, c[0], c[1]) + '</button>'; }).join('') + '</div>' +
       '<div class="fstep"><button class="sb" data-fstep="-1" aria-label="Weniger">' + ic('minus') + '</button>' + amt + '<button class="sb" data-fstep="1" aria-label="Mehr">' + ic('plus') + '</button></div>' +
       '<div class="ftot" id="ftot">' + ftotHtml(fNut(it, pk.a)) + '</div>' + (ui.ingm ? '' : '<div class="ffit" id="ffit">' + ffitHtml() + '</div>' + (pk.edit == null ? dayTog() : '')) +
-      '<button class="btn primary big" data-fpadd="1">' + ic('check') + (ui.ingm ? 'Hinzufügen' : pk.edit != null ? 'Ändern' : 'Eintragen') + '</button>' + (/^u/.test(pk.i) ? '<button class="btn ghost small" data-fown="' + pk.i + '">' + ic('edit') + 'Lebensmittel bearbeiten</button>' : '') ;
+      '<button class="btn primary big" data-fpadd="1">' + ic('check') + (ui.ingm ? 'Hinzufügen' : pk.edit != null ? 'Ändern' : 'Eintragen') + '</button>' + (/^u/.test(pk.i) ? '<button class="btn ghost small" data-fown="' + pk.i + '">' + ic('edit') + 'Lebensmittel bearbeiten</button>' : '') + (pk.edit != null ? '<button class="btn ghost small" data-fdel="' + pk.edit + '">' + ic('trash') + 'Eintrag löschen</button>' : '') ;
   }
   function ffitHtml() {
     // Passt das noch? Tagessumme (ohne den Eintrag, der gerade geändert wird) + diese Menge gegen das Tagesziel
@@ -3367,7 +3378,7 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     sheetOpen(shHead('bolt', x ? 'Eintrag ändern' : 'Schnell eintragen', 'Ohne Lebensmittel, z. B. Restaurant') + '<div class="finp">' + f('k', 'Kalorien', 'k', 'kcal') + f('p', 'Protein', 'p', 'g') + '</div>' +
       '<div class="finp four">' + f('f', 'Fett', 'f', 'g') + f('c', 'Kohlenh.', 'c', 'g') + f('fb', 'Ballast.', 'fb', 'g') + f('su', 'Zucker', 'su', 'g') + '</div>' +
       '<input id="f-n" class="fnm" type="text" maxlength="30" placeholder="Name (optional)" value="' + (x ? esc(x.n) : '') + '" aria-label="Name">' + (x ? '' : dayTog()) +
-      '<button class="btn primary big" data-fsave="1">' + ic('check') + (x ? 'Ändern' : 'Speichern') + '</button>', true);
+      '<button class="btn primary big" data-fsave="1">' + ic('check') + (x ? 'Ändern' : 'Speichern') + '</button>' + (x ? '<button class="btn ghost small" data-fdel="' + idx + '">' + ic('trash') + 'Eintrag löschen</button>' : ''), true);
   }
   function openOwn(id, bc, dr) {
     // dr: Entwurf aus dem Formular (zurück vom Barcode-Scan)
@@ -3548,7 +3559,7 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     var el, st = foodState();
     if (t.closest('[data-fdel]')) {
       el = t.closest('[data-fdel]'); var i = +el.dataset.fdel;
-      ui.undo = '#' + JSON.stringify(st); st.e.splice(i, 1); persist(); ui.fresh = false; render(); toast('Gelöscht', 'close', true); return true;
+      ui.undo = '#' + JSON.stringify(st); st.e.splice(i, 1); persist(); closeSheet(true); ui.fresh = false; render(); toast('Gelöscht', 'close', true); return true;
     }
     if ((el = t.closest('[data-fedit]'))) { var x = st.e[+el.dataset.fedit]; if (x && x.r && fItem(x.r.i)) openPick(x.r.i, x.r.g, +el.dataset.fedit); else openQuick(+el.dataset.fedit); return true; }
     if ((el = t.closest('[data-ftile]'))) { var tl = (ui.ftiles || [])[+el.dataset.ftile]; if (tl) { ui.fday = dayIdx(Date.now()) - fSd(); buzz(8); openPick(tl.i, tl.g); } return true; }

@@ -250,8 +250,6 @@ button { transition: transform .14s var(--ease), background-color .2s, border-co
 .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: var(--s1); border: 1px solid var(--line); padding: 4px; border-radius: 12px; margin-top: 10px; }
 .seg button { min-height: 42px; border: 0; border-radius: 9px; background: transparent; font-weight: 700; color: var(--ink2); display: flex; align-items: center; justify-content: center; gap: 6px; }
 .seg button[aria-pressed="true"] { background: var(--ac); color: var(--on); }
-.frow { display: flex; gap: 6px; overflow-x: auto; padding: 12px 0 4px; scrollbar-width: none; }
-.frow::-webkit-scrollbar { display: none; }
 .rng { display: inline-flex; gap: 2px; background: var(--s2); padding: 3px; border-radius: 10px; flex: none; }
 .rng button { min-height: 34px; padding: 0 12px; border: 0; border-radius: 7px; background: transparent; font-size: 13px; font-weight: 700; color: var(--ink2); }
 .rng button[aria-pressed="true"] { background: var(--s1); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, .25); }
@@ -260,8 +258,6 @@ button { transition: transform .14s var(--ease), background-color .2s, border-co
 .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
 .chart text { font-family: var(--f-mono); fill: var(--ink3); font-size: 9.5px; }
 .chart .bk { cursor: pointer; }
-.bar-r { transform-box: fill-box; transform-origin: 50% 100%; }
-.fresh .bar-r { animation: grow .55s var(--ease) both; animation-delay: calc(var(--i, 0) * 16ms); }
 .draw { stroke-dasharray: 1; stroke-dashoffset: 0; }
 .fresh .draw { animation: draw 1s var(--ease) both; }
 .det { background: var(--s1); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; margin-top: 8px; display: grid; gap: 8px; }
@@ -489,10 +485,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .pe-c button[aria-pressed="true"] { border-color: var(--pc); background: color-mix(in srgb, var(--pc) 20%, var(--s2)); }
 .xg { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--gc); }
 .xg .ic { width: 15px; height: 15px; }
-.xb { flex: none; width: 38px; height: 38px; border-radius: 10px; border: 0; display: grid; place-items: center; transition: transform .16s var(--ease); }
-.xb:active { transform: scale(.92); }
-.xb .ic { width: 18px; height: 18px; }
-.xb.rem { background: var(--s3); color: var(--ink2); }
 .pgf2 { margin: 0 0 8px; }
 .pe-q { width: 100%; height: 42px; margin-bottom: 10px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--s1); color: var(--ink); font: inherit; }
 .pe-q:focus { outline: 2px solid var(--ac); }
@@ -528,10 +520,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .warm small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chase { padding: 8px 12px; gap: 6px; }
 .chase .ch-h .disp { font-size: 15px; }
-.gx { width: 100%; display: flex; align-items: center; gap: 8px; margin: 0; padding: 0; border: 0; background: transparent; color: var(--ink); font: inherit; text-align: left; }
-.gx .chv { width: 18px; height: 18px; margin-left: 6px; color: var(--ink3); transition: transform .25s var(--ease); }
-.gx[aria-expanded="true"] .chv { transform: rotate(90deg); }
-.gx small { margin-left: auto; }
 
 
 .seg2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 4px 0 6px; }
@@ -553,12 +541,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .fq small { font-family: var(--f-mono); font-size: 11px; color: var(--ac); }
 .fnote { margin: 6px 0 0; font-size: 12px; }
 .fl { display: grid; gap: 6px; }
-.fe { display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 12px; border-radius: 14px; border: 1px solid var(--line); background: linear-gradient(180deg, var(--s2), var(--s1)); cursor: pointer; }
-.fn { min-width: 0; flex: 1; }
-.fn b { display: block; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.fn small, .fv small { display: block; color: var(--ink3); font-size: 11px; font-family: var(--f-mono); }
-.fv { text-align: right; }
-.fv b { font-family: var(--f-mono); font-size: 14px; color: var(--ink); }
 .fch { margin-top: 8px; padding: 10px 8px 4px; border-radius: 16px; border: 1px solid var(--line); background: var(--s1); }
 .fch svg { width: 100%; height: auto; display: block; }
 .fch text { font-family: var(--f-mono); font-size: 9.5px; fill: var(--ink3); }
@@ -618,7 +600,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .ptg .pdot { width: 9px; height: 9px; border-radius: 50%; background: var(--pc); }
 .ptg .rs .ic { width: 16px; height: 16px; }
 
-.lnk span { flex: none; } .lnk b { color: var(--ink); font-family: var(--f-mono); }
 
 
 .demo-b { margin-left: auto; border: 1px solid var(--gold); background: color-mix(in srgb, var(--gold) 16%, transparent); color: var(--gold); border-radius: 999px; padding: 3px 10px; font: 800 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; }
@@ -636,8 +617,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 .sk .fln { margin-left: 2px; }
 .sk.none .fln .ic, .sk.lost .fln .ic { color: var(--ink3); filter: none; animation: none; }
 .sk.last .fln .ic { color: var(--danger); }
-.pft b { font-size: 14px; } .pft small { color: var(--ink3); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.pft.empty { border-style: dashed; } .pft.empty small { color: var(--gold); }
 .mg3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .eqs { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; }
 .eqs button { min-height: 40px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--line); background: var(--s2); color: var(--ink2); font-weight: 700; font-size: 13px; }
@@ -735,7 +714,7 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; b
 @media (prefers-reduced-motion: reduce) {
   .fresh .rise { animation-name: fade; }
 .status.last, .pill.next, .wd.today i, .tchip, .bar > i::after, .tchip::after { animation: none; }
-  .fresh .bar-r, .fresh .draw { animation-name: fade; }
+.fresh .draw { animation-name: fade; }
   .sheet, .toast, .unlock { transition-duration: .01ms; }
 }
 @media (max-width: 380px) { .sk b { font-size: 64px; } .ringw, .ringw svg { width: 92px; height: 92px; } .pill { width: 52px; } .step { grid-template-columns: 56px 1fr 56px; } }
@@ -1529,6 +1508,39 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
 .fcpi em { margin-top: 4px; font-family: var(--f-display); font-size: 20px; font-style: normal; font-weight: 900; }
 .fcpi em i { margin-left: 3px; font-family: var(--f-mono); font-size: 10px; font-style: normal; font-weight: 600; color: var(--ink3); }
 .hrow.got > .ic:last-child { color: var(--ac); }
+/* Statistik-Dashboard: Zeitraum, große Ansicht der gewählten Kachel, Kachelraster */
+.srng { margin-top: 10px; }
+.sfx { margin-top: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 20px; background: var(--s1); }
+.sfx-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.sfx-h b { font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
+.sfx-h span { font-family: var(--f-display); font-size: 26px; font-weight: 900; }
+.sbig { display: block; width: 100%; height: 150px; }
+.sbig rect { fill: var(--ac); opacity: .8; }
+.sbig polyline { fill: none; stroke: var(--ac); stroke-width: 2.5; vector-effect: non-scaling-stroke; }
+.sbig .av { stroke: var(--ink3); stroke-width: 1; stroke-dasharray: 4 4; vector-effect: non-scaling-stroke; }
+.sbig .gl { stroke: var(--gold); stroke-width: 1.5; stroke-dasharray: 6 4; vector-effect: non-scaling-stroke; }
+.sbig-n { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; }
+.sbig-n span { display: grid; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
+.sbig-n b { font-family: var(--f-mono); font-size: 15px; letter-spacing: 0; color: var(--ink); }
+.sbig-n .g b { color: var(--gold); }
+.sgrp { display: grid; gap: 8px; }
+.sgrp > div { display: grid; grid-template-columns: 96px 1fr 40px; align-items: center; gap: 8px; font-size: 13px; }
+.sgrp span { display: inline-flex; align-items: center; gap: 6px; }
+.sgrp .ic { width: 16px; height: 16px; }
+.sgrp i { display: block; height: 8px; overflow: hidden; border-radius: 4px; background: var(--s3); }
+.sgrp i > i { width: calc(var(--p) * 100%); height: 100%; border-radius: 0; background: var(--ac); }
+.sgrp b { font-family: var(--f-mono); text-align: right; }
+.stg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.stt { position: relative; display: grid; align-content: start; gap: 1px; min-height: 112px; padding: 11px 12px; overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .16s var(--ease), border-color .2s; }
+.stt:active { transform: scale(.97); }
+.stt.on { border-color: var(--ac); box-shadow: inset 0 0 0 1px var(--ac); }
+.stt > span { font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
+.stt > b { font-family: var(--f-display); font-size: 24px; font-weight: 900; line-height: 1.15; }
+.stt > b small { font-family: var(--f-mono); font-size: 11px; font-weight: 600; color: var(--ink3); }
+.stt > em { font-size: 11.5px; font-style: normal; color: var(--ink3); }
+.stt .msk { height: 24px; }
+.stt-i { position: absolute; right: 10px; bottom: 8px; color: var(--ink3); opacity: .35; }
+.stt-i .ic { width: 30px; height: 30px; }
 </style>
 
 <div id="app">
@@ -4248,94 +4260,6 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     h += '<button class="btn small" data-pf="meas">' + ic('plus') + 'Maße eintragen</button></section>';
     return h;
   }
-  function buckets(now) {
-    var today = dayIdx(now), out = [], i;
-    if (ui.range === '90') {
-      var w0 = today - (new Date(now).getDay() + 6) % 7 - 12 * 7;
-      for (i = 0; i < 13; i++) out.push({ a: w0 + 7 * i, b: w0 + 7 * i + 6 });
-    } else {
-      var n = ui.range === '7' ? 7 : 30;
-      for (i = 0; i < n; i++) { var di = today - (n - 1) + i; out.push({ a: di, b: di }); }
-    }
-    return out;
-  }
-  function viewOverview(d, now) {
-    var bs = buckets(now), today = dayIdx(now), gsel = ui.gf;
-    var key = ui.met === 'xp' ? 'gx' : 'g';
-    bs.forEach(function (b) {
-      b.v = {}; b.tot = 0; b.days = 0;
-      d.days.forEach(function (x) {
-        if (x.d < b.a || x.d > b.b) return;
-        b.days++;
-        GROUPS.forEach(function (g) { if (gsel !== 'all' && gsel !== g.k) return; var q = x[key][g.k] || 0; if (q) { b.v[g.k] = (b.v[g.k] || 0) + q; b.tot += q; } });
-      });
-    });
-    if (ui.bk === null || ui.bk >= bs.length) ui.bk = bs.length - 1;
-    var first = bs[0].a, len = bs[bs.length - 1].b - first + 1, prevTot = 0, curTot = 0, active = 0;
-    bs.forEach(function (b) { curTot += b.tot; active += b.days; });
-    d.days.forEach(function (x) { if (x.d >= first - len && x.d < first) GROUPS.forEach(function (g) { if (gsel !== 'all' && gsel !== g.k) return; prevTot += x[key][g.k] || 0; }); });
-    var delta = prevTot ? Math.round(100 * (curTot - prevTot) / prevTot) : null;
-    var h = '<div class="ctl rise" style="--i:1"><span class="rng" role="group" aria-label="Zeitraum">' + [['7', '7 T'], ['30', '30 T'], ['90', '90 T']].map(function (r) { return '<button data-range="' + r[0] + '" aria-pressed="' + (ui.range === r[0]) + '">' + r[1] + '</button>'; }).join('') + '</span>' +
-      '<span class="rng" role="group" aria-label="Messwert">' + [['sets', 'Sätze'], ['xp', 'XP']].map(function (r) { return '<button data-met="' + r[0] + '" aria-pressed="' + (ui.met === r[0]) + '">' + r[1] + '</button>'; }).join('') + '</span></div>';
-    h += '<div class="frow rise" style="--i:2" role="group" aria-label="Gruppe"><button class="fchip" data-gf="all" aria-pressed="' + (gsel === 'all') + '">Alle</button>' +
-      GROUPS.map(function (g) { return '<button class="fchip g' + g.k + '" data-gf="' + g.k + '" aria-pressed="' + (gsel === g.k) + '"><span class="dot"></span>' + g.n + '</button>'; }).join('') + '</div>';
-    h += '<div class="chart rise" style="--i:3">' + barChart(bs, gsel, today) + '</div>';
-    // Detail zum gewählten Balken
-    var b = bs[ui.bk];
-    var ttl = b.a === b.b ? fmtDayL(b.a) : fmtDay(b.a) + ' – ' + fmtDay(b.b);
-    var chips = GROUPS.filter(function (g) { return b.v[g.k]; }).map(function (g) { return '<span class="g' + g.k + '">' + g.n + ' ' + b.v[g.k] + '</span>'; }).join('');
-    var lines = state.logs.filter(function (l) { var di = dayIdx(l.t); return di >= b.a && di <= b.b && EXB[l.e] && (gsel === 'all' || EXB[l.e].g === gsel); }).sort(function (x, y) { return x.t - y.t; }).slice(-8)
-      .map(function (l) { return '<div><span>' + esc(EXB[l.e].n) + '</span><span class="mono">' + l.s.join(' · ') + (EXB[l.e].u === 'Sek.' ? ' s' : '') + '</span></div>'; }).join('');
-    h += '<div class="det rise" style="--i:4"><div class="det-h"><b>' + ttl + '</b><span>' + b.tot + (ui.met === 'xp' ? ' XP' : ' Sätze') + '</span></div>' + (chips ? '<div class="gchips">' + chips + '</div>' : '<span class="hint">Kein Training</span>') + (lines ? '<div class="lines">' + lines + '</div>' : '') + '</div>';
-    // Kennzahlen
-    var gain = topGain(d);
-    h += '<div class="tiles">' +
-      '<div class="tile rise" style="--i:5"><small>' + ic('cal') + 'Aktive Tage</small><b>' + active + '<em>/ ' + len + '</em></b></div>' +
-      '<div class="tile rise" style="--i:6"><small>' + ic(delta !== null && delta < 0 ? 'down' : 'up') + 'Vorher</small><b class="' + (delta === null ? '' : delta >= 0 ? 'up' : 'dn') + '">' + (delta === null ? '–' : (delta >= 0 ? '+' : '') + delta + ' %') + '</b></div>' +
-      '<div class="tile rise" style="--i:7"><small>' + ic('today') + 'Längste Serie</small><b>' + d.longest + '<em>Tage</em></b></div>' +
-      '<div class="tile rise" style="--i:8"><small>' + ic('trophy') + 'Größter Sprung</small><b class="up">' + (gain ? '+' + Math.round(gain.g * 100) + ' %' : '–') + '</b>' + (gain ? '<span class="sub">' + esc(gain.e.n) + '</span>' : '') + '</div></div>';
-    h += calHtml(d, now);
-    return h;
-  }
-  function topGain(d) {
-    var bestG = null;
-    EX.forEach(function (e) {
-      var ms = logsOf(e.id).map(function (l) { return metric(e, l.s); }).filter(function (m) { return m.full && m.val > 0; });
-      if (ms.length < 2) return;
-      var f = ms[0].val, b = Math.max.apply(null, ms.map(function (m) { return m.val; })), g = (b - f) / f;
-      if (g > 0 && (!bestG || g > bestG.g)) bestG = { e: e, g: g };
-    });
-    return bestG;
-  }
-  function barChart(bs, gsel, today) {
-    var W = 360, H = 214, L = 30, R = 8, T = 18, B = 26, n = bs.length;
-    var mx = Math.max.apply(null, bs.map(function (b) { return b.tot; }));
-    var ymax = nice(Math.max(mx, 1) * 1.12), bw = (W - L - R) / n, s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Training pro Zeitraum">';
-    for (var k = 0; k <= 4; k++) {
-      var tv = ymax * k / 4, y = T + (H - T - B) * (1 - k / 4);
-      s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y + '" y2="' + y + '" stroke="var(--line)" stroke-width="1"' + (k ? ' stroke-dasharray="2 4"' : '') + '/>';
-      s += '<text x="' + (L - 6) + '" y="' + (y + 3) + '" text-anchor="end">' + (Math.round(tv * 10) / 10) + '</text>';
-    }
-    bs.forEach(function (b, i) {
-      var x = L + i * bw, w = bw * (n > 14 ? .68 : .56), bx = x + (bw - w) / 2, yb = H - B;
-      if (i === ui.bk) s += '<rect x="' + (x + 1) + '" y="' + T + '" width="' + (bw - 2) + '" height="' + (H - T - B) + '" rx="6" fill="var(--s2)"/>';
-      GROUPS.forEach(function (g) {
-        var v = b.v[g.k]; if (!v) return;
-        var h = (H - T - B) * v / ymax;
-        yb -= h;
-        s += '<rect class="bar-r" style="--i:' + i + '" x="' + bx + '" y="' + yb + '" width="' + w + '" height="' + Math.max(h - 1, 1) + '" rx="2.5" fill="var(--g-' + g.k + ')"/>';
-      });
-      if (b.tot && n <= 14) s += '<text x="' + (bx + w / 2) + '" y="' + (yb - 5) + '" text-anchor="middle" style="fill:var(--ink)">' + b.tot + '</text>';
-      var lab = '';
-      if (n === 7) lab = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'][(new Date(b.a * 864e5).getUTCDay() + 6) % 7];
-      else if (n === 30) lab = (i % 5 === 4 || i === 0) ? fmtShort(b.a) : '';
-      else lab = i % 2 === 0 ? fmtShort(b.a) : '';
-      if (b.a <= today && today <= b.b) lab = n === 7 ? lab : lab;
-      s += '<text x="' + (x + bw / 2) + '" y="' + (H - 9) + '" text-anchor="middle"' + (i === ui.bk ? ' style="fill:var(--ink)"' : '') + '>' + lab + '</text>';
-      s += '<rect class="bk" data-bk="' + i + '" x="' + x + '" y="0" width="' + bw + '" height="' + H + '" fill="rgba(0,0,0,0)"/>';
-    });
-    return s + '</svg>';
-  }
   function calHtml(d, now) {
     var today = dayIdx(now), first = d.days.length ? d.days[0].d : today, tset = d.byDay;
     var nd = new Date(now), cy = nd.getFullYear(), cm = nd.getMonth();
@@ -4424,6 +4348,7 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     var all = sessions(e), t = exTier(d, e), today = dayIdx(now);
     var ls = ui.xr === 'all' ? all : all.filter(function (o) { return o.d >= today - (+ui.xr); });
     if (!ls.length) ls = all.slice(-1);
+    if (!ls.length) return '<button class="back" data-back="1">' + ic('back') + 'Zurück</button><div class="dh rise"><h2>' + esc(e.n) + '</h2></div><div class="empty rise">' + ic('chart') + '<b>Noch keine Einheit</b></div>';
     if (ui.pt === null || ui.pt >= ls.length) ui.pt = ls.length - 1;
     var bestAll = all.length ? Math.max.apply(null, all.map(function (o) { return o.v; })) : 0;
     var gainPct = all.length > 1 && all[0].v ? Math.round(100 * (bestAll - all[0].v) / all[0].v) : 0;
@@ -4495,10 +4420,7 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     if (ui.pstat) {
       var T = { tr: 'Training', kp: 'Körper', er: 'Ernährung', re: 'Rekorde' };
       h += '<button class="pbk rise" data-pstat="">' + ic('back') + 'Profil · <b>' + T[ui.pstat] + '</b></button>';
-      if (ui.pstat === 'tr') return h + (state.logs.length ? viewOverview(d, now) + viewList(d) : '<div class="empty rise">' + ic('chart') + '<b>Noch leer</b></div>');
-      if (ui.pstat === 'kp') return h + viewBody(d, now);
-      if (ui.pstat === 'er') return h + foodStats(today);
-      return h + recHtml();
+      return h + (ui.pstat === 're' ? recHtml() : statDash(d, now));
     }
     var p = prof(), lw = lastW(), lv = level(d.xp), c0 = lvXp(lv), c1 = lvXp(lv + 1);
     h += '<section class="pid rise" style="--i:1"><div class="pid-t"><i class="pid-l">' + ic('peak') + '<b>' + lv + '</b></i><div><b>' + (TIERS[tierOfLevel(lv)] || 'Level ' + lv) + '</b><small>' +
@@ -4521,6 +4443,80 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
       tile('kp', 'scale', 'Körper', dw == null ? '–' : (dw > 0 ? '+' : dw < 0 ? '−' : '±') + fN(Math.abs(dw)) + '<small> kg</small>', '30 Tage', mspk(w.map(function (q) { return q.kg; }), 1)) +
       tile('er', 'food', 'Ernährung', hk + '<small>/7</small>', 'Tage im Ziel', mspk(kc)) +
       tile('re', 'trophy', 'Rekorde', pb30 + '<small> neu</small>', lpb ? esc(lpb.e.n) : 'noch keine', '<i class="pstt-t">' + ic('trophy') + '</i>') + '</section>';
+  }
+  // ---------- Statistik im Profil: Kachel-Dashboard je Bereich (Zeitraum 7/30/90), Antippen einer Kachel zeigt oben die große Ansicht
+  function dSeries(n, f) { var t = dayIdx(Date.now()), a = []; for (var i = n - 1; i >= 0; i--) a.push(f(t - i)); return a; }
+  function sumA(a) { return a.reduce(function (x, y) { return x + (y || 0); }, 0); }
+  function avgA(a) { var v = a.filter(function (x) { return x; }); return v.length ? sumA(v) / v.length : 0; }
+  function statDefs(d, now) {
+    var n = +(ui.srng || 30), today = dayIdx(now), st = foodState(), pr = st.pr || {};
+    if (ui.pstat === 'tr') {
+      var sets = dSeries(n, function (di) { var x = d.byDay[di]; return x ? x.sets || 0 : 0; }), xp = dSeries(n, function (di) { var x = d.byDay[di]; return x ? x.all || 0 : 0; }), ss = streakInfo(now), gs = {};
+      d.days.forEach(function (x) { if (x.d > today - n) Object.keys(x.g).forEach(function (k) { gs[k] = (gs[k] || 0) + x.g[k]; }); });
+      var top = Object.keys(gs).sort(function (a, b) { return gs[b] - gs[a]; })[0], used = EX.filter(function (e) { return logsOf(e.id).length; }).length;
+      return [
+        { k: 'days', n: 'Tage aktiv', v: sets.filter(Boolean).length, u: '/' + n, s: sets.map(function (x) { return x ? 1 : 0; }), t: 'bar', bin: 1 },
+        { k: 'sets', n: 'Sätze', v: sumA(sets), s: sets, t: 'bar' },
+        { k: 'xp', n: 'XP', v: sumA(xp), s: xp, t: 'bar' },
+        { k: 'ser', n: 'Serie', v: ss.n, u: ' Tage', sub: 'Rekord ' + d.longest, t: 'cal', i: 'today' },
+        { k: 'grp', n: 'Gruppen', v: top ? gOf(top).n : '–', sub: Object.keys(gs).length + ' trainiert', t: 'grp', g: gs, i: 'all' },
+        { k: 'ex', n: 'Übungen', v: used, u: '/' + EX.length, sub: 'trainiert', t: 'list', i: 'dumb' }
+      ];
+    }
+    if (ui.pstat === 'kp') {
+      var w = st.w.filter(function (q) { return dayIdx(q.t) > today - n; }), lw = lastW(), kg = w.map(function (q) { return q.kg; }), D = [];
+      D.push({ k: 'kg', n: 'Gewicht', v: lw ? fN(lw.kg) : '–', u: ' kg', sub: kg.length > 1 ? (kg[kg.length - 1] - kg[0] >= 0 ? '+' : '−') + fN(Math.abs(kg[kg.length - 1] - kg[0])) + ' kg' : 'zu wenig Werte', s: kg, t: 'line', goal: pr.tw || 0 });
+      if (pr.tw && lw) D.push({ k: 'tw', n: 'Ziel', v: fN(Math.abs(lw.kg - pr.tw)), u: ' kg', sub: (lw.kg > pr.tw ? 'runter bis ' : 'rauf bis ') + fN(pr.tw), s: kg, t: 'line', goal: pr.tw });
+      MEAS.forEach(function (m) {
+        var ms = st.m.filter(function (q) { return q[m[0]] && dayIdx(q.t) > today - Math.max(n, 90); }).map(function (q) { return q[m[0]]; }); if (!ms.length) return;
+        D.push({ k: 'm' + m[0], n: m[1], v: fN(ms[ms.length - 1]), u: ' cm', sub: ms.length > 1 ? (ms[ms.length - 1] - ms[0] >= 0 ? '+' : '−') + fN(Math.abs(ms[ms.length - 1] - ms[0])) + ' cm' : '1 Messung', s: ms, t: 'line' });
+      });
+      D.push({ k: 'mon', n: 'Monat', v: new Date(now).toLocaleDateString('de-DE', { month: 'short' }), sub: 'Rückblick', t: 'mon', i: 'cal' });
+      return D;
+    }
+    var kc = [], pp = [], fat = [], su = [], wa = [], gk = [], gp = [], inz = 0;
+    dSeries(n, function (di) { var fs = foodSum(di), g = foodGoal(di), on = fs.items.length > 0; kc.push(on ? fs.k : 0); pp.push(on ? fs.p : 0); fat.push(on ? Math.round(fs.f) : 0); su.push(on ? Math.round(fs.su) : 0); wa.push(st.wa[di] || 0); gk.push(g.k); gp.push(g.p); if (on && fs.k >= g.k * 0.9 && fs.k <= g.k * 1.1) inz++; return 0; });
+    return [
+      { k: 'kc', n: 'Ø Kalorien', v: Math.round(avgA(kc)), u: ' kcal', sub: 'Ziel ' + Math.round(avgA(gk)), s: kc, t: 'bar', goal: Math.round(avgA(gk)) },
+      { k: 'pp', n: 'Ø Protein', v: Math.round(avgA(pp)), u: ' g', sub: 'Ziel ' + Math.round(avgA(gp)), s: pp, t: 'bar', goal: Math.round(avgA(gp)) },
+      { k: 'inz', n: 'Im Ziel', v: inz, u: '/' + n, sub: 'Tage ±10 %', s: kc.map(function (x, i) { return x && x >= gk[i] * 0.9 && x <= gk[i] * 1.1 ? 1 : 0; }), t: 'bar', bin: 1 },
+      { k: 'wa', n: 'Ø Wasser', v: fN2(avgA(wa) / 1000), u: ' l', sub: wa.filter(Boolean).length + ' Tage erfasst', s: wa, t: 'bar' },
+      { k: 'fat', n: 'Ø Fett', v: Math.round(avgA(fat)), u: ' g', s: fat, t: 'bar' },
+      { k: 'su', n: 'Ø Zucker', v: Math.round(avgA(su)), u: ' g', s: su, t: 'bar' },
+      { k: 'pct', n: '% vom Ziel', v: '14', u: ' Tage', sub: 'Protein und kcal', t: 'food', i: 'chart' }
+    ];
+  }
+  function bigChart(f) {
+    // große Grafik: Balken (je Tag) oder Linie (Messwerte), gestrichelt Ø, gold das Ziel; darunter Ø, Min, Max (nicht bei Ja/Nein-Reihen)
+    var v = f.s || [], n = v.length, W = 360, H = 150, nz = v.filter(function (x) { return x; }), ln = f.t === 'line';
+    if (!nz.length) return '<p class="muted">Noch keine Werte in diesem Zeitraum.</p>';
+    var mx = Math.max.apply(null, nz.concat([f.goal || 0])), mn = ln ? Math.min.apply(null, nz.concat(f.goal ? [f.goal] : [])) : 0, pad = ln ? (mx - mn) * 0.15 || 1 : 0, rg = (mx + pad) - (mn - pad) || 1, av = avgA(v);
+    function Y(x) { return 6 + (H - 12) * (1 - (x - (mn - pad)) / rg); }
+    var s = '<svg class="sbig" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true">';
+    if (ln) s += '<polyline points="' + v.map(function (x, i) { return (n === 1 ? W / 2 : i * W / (n - 1)).toFixed(1) + ',' + Y(x).toFixed(1); }).join(' ') + '"/>';
+    else { var bw = W / n; v.forEach(function (x, i) { if (!x) return; var y = Y(x); s += '<rect x="' + (i * bw + bw * 0.15).toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + Math.max(1, bw * 0.7).toFixed(1) + '" height="' + (H - 6 - y).toFixed(1) + '" rx="1.5"/>'; }); }
+    if (f.bin) return s + '</svg>';
+    if (!ln && av) s += '<line class="av" x1="0" x2="' + W + '" y1="' + Y(av).toFixed(1) + '" y2="' + Y(av).toFixed(1) + '"/>';
+    if (f.goal) s += '<line class="gl" x1="0" x2="' + W + '" y1="' + Y(f.goal).toFixed(1) + '" y2="' + Y(f.goal).toFixed(1) + '"/>';
+    function r(x) { return x % 1 ? fN(x) : x; }
+    return s + '</svg><div class="sbig-n"><span>Ø<b>' + r(Math.round(avgA(v) * 10) / 10) + '</b></span><span>Min<b>' + r(Math.min.apply(null, nz)) + '</b></span><span>Max<b>' + r(Math.max.apply(null, nz)) + '</b></span>' + (f.goal ? '<span class="g">Ziel<b>' + r(f.goal) + '</b></span>' : '') + '</div>';
+  }
+  function statFocus(d, now, f) {
+    if (f.t === 'bar' || f.t === 'line') return bigChart(f);
+    if (f.t === 'grp') { var mx = Math.max.apply(null, Object.keys(f.g).map(function (k) { return f.g[k]; }).concat([1])); return '<div class="sgrp">' + GORDER.filter(function (k) { return f.g[k]; }).sort(function (a, b) { return f.g[b] - f.g[a]; }).map(function (k) { return '<div class="g' + k + '"><span>' + ic(gOf(k).i) + gOf(k).n + '</span><i><i style="--p:' + (f.g[k] / mx).toFixed(3) + '"></i></i><b>' + f.g[k] + '</b></div>'; }).join('') + '</div>'; }
+    if (f.t === 'cal') return calHtml(d, now);
+    if (f.t === 'list') return viewList(d);
+    if (f.t === 'mon') return viewBody(d, now);
+    return foodStats(dayIdx(now));
+  }
+  function statDash(d, now) {
+    var defs = statDefs(d, now), f = defs.filter(function (x) { return x.k === ui.sfoc; })[0] || defs[0], n = +(ui.srng || 30);
+    return '<div class="seg three srng rise" style="--i:1">' + [7, 30, 90].map(function (r) { return '<button data-srng="' + r + '" aria-pressed="' + (n === r) + '">' + r + ' Tage</button>'; }).join('') + '</div>' +
+      '<section class="sfx rise" style="--i:2"><div class="sfx-h"><b>' + f.n + '</b><span>' + f.v + (f.u || '') + '</span></div>' + statFocus(d, now, f) + '</section>' +
+      '<div class="stg rise" style="--i:3">' + defs.map(function (x) {
+        var mini = x.t === 'bar' ? mspk(x.s) : x.t === 'line' ? mspk(x.s, 1) : '<i class="stt-i">' + ic(x.i || 'chart') + '</i>';
+        return '<button class="stt' + (x === f ? ' on' : '') + '" data-sfoc="' + x.k + '"><span>' + x.n + '</span><b>' + x.v + (x.u ? '<small>' + x.u + '</small>' : '') + '</b>' + (x.sub ? '<em>' + x.sub + '</em>' : '') + mini + '</button>';
+      }).join('') + '</div>';
   }
   function mspk(vals, line) {
     // Mini-Diagramm: Balken (Training, Ernährung) oder Linie (Gewicht)
@@ -4603,8 +4599,8 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
   function go(k) {
     if (k === 'plan') { scrollToEl('.plan-h'); return; }
     ui.sel = null; ui.del = null; ui.fresh = true; ui.hd = null;
-    if (k === 'cal') { ui.tab = 'profil'; ui.pstat = 'tr'; ui.scroll = '#calw'; }
-    else if (k === 'xp') { ui.tab = 'profil'; ui.pstat = 'tr'; ui.met = 'xp'; ui.scroll = null; $('app').scrollTo(0, 0); }
+    if (k === 'cal') { ui.tab = 'profil'; ui.pstat = 'tr'; ui.sfoc = 'ser'; ui.scroll = '#calw'; }
+    else if (k === 'xp') { ui.tab = 'profil'; ui.pstat = 'tr'; ui.sfoc = 'xp'; ui.met = 'xp'; ui.scroll = null; $('app').scrollTo(0, 0); }
     else if (k === 'pfad') { ui.tab = 'fort'; ui.col = 'ka'; ui.sel = null; ui.scroll = null; $('app').scrollTo(0, 0); }
     render();
   }
@@ -4662,17 +4658,15 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     if ((el = t.closest('[data-preset]'))) { $('sv').value = el.dataset.preset; updSheetXp(); return; }
     if (t.closest('[data-sheet-save]')) { saveSheet(); return; }
     if (t.closest('[data-sheet-del]')) { delSet(); return; }
-    if ((el = t.closest('[data-pstat]'))) { ui.pstat = el.dataset.pstat || null; ui.sel = null; ui.fresh = true; render(); $('app').scrollTo(0, 0); return; }
+    if ((el = t.closest('[data-sfoc]'))) { ui.sfoc = el.dataset.sfoc; ui.fresh = false; render(); $('app').scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); return; }
+    if ((el = t.closest('[data-srng]'))) { ui.srng = el.dataset.srng; ui.fresh = false; render(); return; }
+    if ((el = t.closest('[data-pstat]'))) { ui.sfoc = null; ui.pstat = el.dataset.pstat || null; ui.sel = null; ui.fresh = true; render(); $('app').scrollTo(0, 0); return; }
     if ((el = t.closest('[data-col]'))) { ui.col = el.dataset.col; ui.sel = null; ui.fresh = true; render(); return; }
     if ((el = t.closest('[data-cf2]'))) { ui.cf2 = el.dataset.cf2; ui.fresh = false; render(); return; }
     if ((el = t.closest('[data-cg]'))) { ui.cgo = ui.cgo || {}; ui.cgo[el.dataset.cg] = !ui.cgo[el.dataset.cg]; ui.fresh = false; render(); return; }
     if ((el = t.closest('[data-cardo]'))) { var ce = EXB[el.dataset.cardo]; if (ce) { ui.sheet = { card: ce.id }; sheetOpen(cardSheet(derive(state.logs), ce), true); } return; }
     if ((el = t.closest('[data-muso]'))) { ui.sheet = { mus: el.dataset.muso }; sheetOpen(musSheet(derive(state.logs), el.dataset.muso), true); return; }
     if ((el = t.closest('[data-cdet]'))) { closeSheet(); ui.tab = 'fort'; ui.sel = el.dataset.cdet; ui.fresh = true; render(); $('app').scrollTo(0, 0); return; }
-    if ((el = t.closest('[data-range]'))) { ui.range = el.dataset.range; ui.bk = null; ui.fresh = true; render(); return; }
-    if ((el = t.closest('[data-met]'))) { ui.met = el.dataset.met; ui.fresh = true; render(); return; }
-    if ((el = t.closest('[data-gf]'))) { ui.gf = el.dataset.gf; ui.fresh = true; render(); return; }
-    if ((el = t.closest('[data-bk]'))) { ui.bk = +el.dataset.bk; render(); return; }
     if ((el = t.closest('[data-hd]'))) { ui.hd = +el.dataset.hd; render(); return; }
     if ((el = t.closest('[data-mo]'))) { ui.mo += +el.dataset.mo; ui.hd = null; render(); return; }
     if (t.closest('[data-undo]')) { undo(); return; }

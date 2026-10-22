@@ -10,7 +10,7 @@ const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const SCEN = ['mid', 'gold', 'broken', 'fresh', 'empty'];
 const TABS = ['heute', 'tage', 'food', 'fort', 'profil'];
 // Je Tab: Schalter, von denen jeweils jeder Wert einmal angeklickt wird (alle harmlos, nichts löscht)
-const TOGGLES = ['[data-range]', '[data-met]', '[data-gf]', '[data-xr]', '[data-xm]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]', '[data-fsd]', '[data-fwa]', '[data-hsel]', '[data-col]', '[data-cf2]', '[data-cg]', '[data-pstat]'];
+const TOGGLES = ['[data-xr]', '[data-xm]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]', '[data-fsd]', '[data-fwa]', '[data-hsel]', '[data-col]', '[data-cf2]', '[data-cg]', '[data-pstat]', '[data-srng]', '[data-sfoc]'];
 const NOANIM = '*, *::before, *::after { animation: none !important; transition: none !important; }';
 
 async function scenario(b, sc, errs) {
@@ -19,11 +19,17 @@ async function scenario(b, sc, errs) {
   // Open Food Facts nicht wirklich fragen (Suche ab 3 Zeichen): leere Antwort, Test bleibt offline und gleich
   await ctx.route(/openfoodfacts\.org/, r => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: '{"products":[],"status":0}' }));
   const p = await ctx.newPage(); let where = sc;
-  p.on('pageerror', e => errs.push(where + ': ' + e.message));
+  // Fehler mit erster Stack-Zeile (Funktion + Zeile im gebauten dist/index.html)
+  p.on('pageerror', e => errs.push(where + ': ' + e.message + ' @ ' + ((e.stack || '').split('\n')[1] || '').trim()));
   p.on('console', m => { if (m.type() === 'error' && !/fonts\.g/.test(m.text())) errs.push(where + ': ' + m.text()); });
   const shot = (n, all) => (all || SHOTS) ? p.screenshot({ path: path.join(OUT, `${sc}-${n}.png`) }) : null;
-  // Klicks lösen synchrones Rendern aus; ohne Animationen reicht ein kurzer Takt. Karten im Planer und Essen-Eintrag (unter dem Rückgängig-Toast): force
-  const click = async sel => { const el = p.locator(sel).first(); if (await el.isVisible().catch(() => false)) { await el.click({ timeout: 2000, force: sel.startsWith('.pk') || sel === '[data-pedit]' || sel === '[data-fedit]' }).catch(e => errs.push(where + ': Klick ' + sel + ' ' + e.message.split('\n')[0])); await p.waitForTimeout(30); return true; } return false; };
+  // Klicks lösen synchrones Rendern aus; ohne Animationen reicht ein kurzer Takt. Karten im Planer: force.
+  // Verdeckt (z. B. Rückgängig-Toast über der untersten Kachel): einmal erzwungen wiederholen, erst dann als Fehler zählen
+  const click = async sel => {
+    const el = p.locator(sel).first(); if (!(await el.isVisible().catch(() => false))) return false;
+    await el.click({ timeout: 1500, force: sel.startsWith('.pk') || sel === '[data-pedit]' }).catch(() => el.click({ timeout: 1500, force: true })).catch(e => errs.push(where + ': Klick ' + sel + ' ' + e.message.split('\n')[0]));
+    await p.waitForTimeout(30); return true;
+  };
   const closeSheet = () => click('[data-sheet-close]');
 
   await p.goto(URL_);

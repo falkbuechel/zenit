@@ -15,6 +15,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Essen ohne Scrollen, Statistik als Kachel-Dashboard
+Mit Falk per Mockups: Essen „Gegessen“ als wischbare Chip-Leiste, Statistik-Details als Kachel-Dashboard.
+- Essen: Einträge als Chips (`.fcpi`, Antippen = Bearbeiten-Fenster mit „Eintrag löschen“); die Seite passt ohne Scrollen auf den Bildschirm. Heute: Aufwärmen wieder als Zeile.
+- Statistik (Profil › Training/Körper/Ernährung): Zeitraum 7/30/90 (`ui.srng`), oben die große Ansicht der gewählten Kachel (`ui.sfoc`, `bigChart` mit Ø/Min/Max/Ziel bzw. Kalender, Gruppen, Übungsliste, Monatsrückblick, % vom Ziel), darunter Kachelraster (`statDefs`, `statDash`).
+- Entfernt: `viewOverview`, `buckets`, `barChart`, `topGain`, Handler `data-range/met/gf/bk`, 21 CSS-Regeln (alte Essen-Liste, alter Überblick). `compare.js`: Alles gleich.
+- Fehler: Detailansicht einer Übung ohne Einheit stürzte im Diagramm ab (`exChart` mit leerer Liste) – jetzt „Noch keine Einheit“.
+- Smoke: verdeckte Klicks (Toast) werden einmal erzwungen wiederholt; Fehler zeigen die erste Stack-Zeile.
+
 ### 2026-10-23 – Aufräumen
 - Ungenutzte Funktionen entfernt: `hudHtml`, `toolRow`, `warmHtml`, `weightSec`, `profTiles`, `viewPath` (nur noch Ausweich-Ansicht), `nextUnlock`. Tote Klick-Handler: `data-gx`, `data-pday`, `data-pg`, `data-seg`. 118 CSS-Regeln, die nur tote Klassen betrafen (alter HUD, Plan-Kopf, Werkzeugzeile, Gruppenlisten, alte Arena/Deck-Reste, Profil-Kacheln, Kartenkopf). `tools/compare.js`: Alles gleich.
 - Fehler gefunden: mit dem Heute-Umbau war das Aufwärmen nicht mehr erreichbar (kommt als Zeile zurück).

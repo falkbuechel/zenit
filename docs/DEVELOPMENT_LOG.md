@@ -15,6 +15,11 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Wischen zum Eintragen/Löschen, Mahlzeit-Leiste, Balken-Glanz, lesbare Diagramme, Skilltree-Sektoren
+- Essen: Vorschlag nach unten ziehen = sofort eintragen, Eintrag nach oben ziehen = löschen mit Rückgängig (Pointer-Events, `touch-action: pan-x` auf den Reihen, waagerecht bleibt Scrollen, Wischen löst kein Antippen aus; `foodDel`). Uhrzeit als Pille neben Heute/Gestern, Mahlzeit als Symbol-Leiste (`MEALI`, Icon `snack`, verstecktes `#fmk`, `fmkSet`). Balken mit Verlauf zur Spitze und wanderndem Glanz (auch Wasser).
+- Diagramme: Wertlinien mit Zahlen (0/Mitte/oben), Endwert an jeder Linie, Legende antippen hebt eine Kurve hervor (`data-lcf`, `data-f` am SVG).
+- Skilltree: farbige Sektoren je Muskelgruppe mit großem Namen am Rand (`stWed`, `MUSC`), Ecken: Fortschritt (Skills/Übungen) und „Als Nächstes“ (erreichbare Skills, antippbar).
+
 ### 2026-10-23 – Skilltree geordnet: Hauptwege und Varianten
 - Analyse: 31 Grundübungen, 24 ohne Folgeübung (14 Mobility); breite Knoten: Liegestütz 11, Goblet 7, Hollow/Pike 5 Folgeübungen.
 - Hauptknoten nur noch Skills und Übungen, auf denen etwas aufbaut; Varianten (nichts baut darauf auf) sind kleine Satelliten-Punkte am Ursprung (`stSat`, Bogen nach außen, Abstand 24 px, mehrere Reihen). Ringabstand der Hauptknoten berücksichtigt Satelliten. Messung: 4 knappe Berührungen bei 107 Knoten.

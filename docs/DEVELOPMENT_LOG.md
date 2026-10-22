@@ -15,6 +15,11 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Essen: Uhrzeit und Mahlzeiten, Zu-viel-Balken, Wasser nur Regler
+- Einträge haben eine einstellbare Uhrzeit (`whenRow`, `#ftm`, in `foodPush` auf den Tag gesetzt); daraus die Mahlzeit (`MEALS`/`mealOf`: bis 10:30 Frühstück, bis 14:30 Mittag, bis 17:30 Snack, danach Abend). Chips nach Uhrzeit, Farbe und Text der Mahlzeit, Leiste startet am neuesten Eintrag.
+- Zu viel: Balken bleibt voll in seiner Farbe, darüber füllt sich Rot neu (`i.ov`, 3× schneller: 10 % drüber = 30 % Rot), für kcal, Fett, Kohlenhydrate, Zucker. Fehler: die Makro-Farbregel überdeckte das Rot (Spezifität) → `.fmb .fbt > i.ov`.
+- Schnell-Kacheln zeigen Protein statt Menge (Menge brach oft um, steht im aria-label). Wasser ohne Plus, nur Regler. Karten-Gruppen: Pfeil nach unten/oben.
+
 ### 2026-10-23 – Essen ohne Scrollen, Statistik als Kachel-Dashboard
 Mit Falk per Mockups: Essen „Gegessen“ als wischbare Chip-Leiste, Statistik-Details als Kachel-Dashboard.
 - Essen: Einträge als Chips (`.fcpi`, Antippen = Bearbeiten-Fenster mit „Eintrag löschen“); die Seite passt ohne Scrollen auf den Bildschirm. Heute: Aufwärmen wieder als Zeile.

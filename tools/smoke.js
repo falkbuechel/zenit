@@ -70,6 +70,8 @@ async function scenario(b, sc, errs) {
       await shot('tage-editor'); await click('[data-pback]');
       await click('[data-pmanx]'); await click('[data-pdiscok]');
     }
+    // Heute: Bergpfad (Kopfzeile antippen) und zurück, große Karte öffnet das Karten-Sheet
+    if (tab === 'heute') { await click('#hud [data-zoom]'); await click('#hud [data-zoom]'); await click('.hc.big'); await closeSheet(); }
     // Sammlung: Karte, Muskel, zurück zu Karten
     if (tab === 'fort') { await click('[data-col="ka"]'); await click('[data-cardo]'); await closeSheet(); await click('[data-col="mu"]'); await click('[data-muso]'); await closeSheet(); await click('[data-col="sk"]'); await click('[data-col="st"]'); }
     if (await click('[data-open]')) { await shot(tab + '-detail'); await click('[data-back]'); }

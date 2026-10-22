@@ -1325,22 +1325,22 @@ button.cday:active { transform: scale(.97); }
 .hc.on { outline: 2px solid var(--ink); outline-offset: 2px; }
 .hc.dn { opacity: .55; }
 .hc.rdy em::after { content: " ▲"; color: var(--gold); }
-.hc.r1 { --rc: #5b8fd6; }
-.hc.r2 { --rc: #a374d8; }
-.hc.r3 { --rc: var(--gold); }
-.hc.r4 { --rc: #e0533d; }
-.hc.r5 { --rc: #57c7b8; }
-.hc.l1 { --lc: #5b8fd6; background: linear-gradient(160deg, color-mix(in srgb, #5b8fd6 10%, var(--s1)), var(--s1) 60%); }
-.hc.l2 { --lc: #a374d8; background: linear-gradient(160deg, color-mix(in srgb, #a374d8 14%, var(--s1)), var(--s1) 65%); }
-.hc.l3 { --lc: var(--gold); background: linear-gradient(160deg, color-mix(in srgb, var(--gold) 16%, var(--s1)), var(--s1) 70%); box-shadow: 0 8px 22px -14px var(--gold); }
-.hc.l4 { --lc: #e0533d; background: radial-gradient(120% 90% at 50% 120%, color-mix(in srgb, #e0533d 30%, var(--s1)), var(--s1) 70%); animation: ember 2.8s ease-in-out infinite alternate; }
-.hc.l5 { border-color: transparent; background: linear-gradient(var(--s1), var(--s1)) padding-box, conic-gradient(from var(--za), #57c7b8, #fff3c4, var(--gold), #57c7b8) border-box; animation: zspin 5s linear infinite; }
-.hc.l2::after, .hc.l3::after, .hc.l4::after, .hc.l5::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .2) 50%, transparent 60%) -150% 0 / 250% 100% no-repeat; pointer-events: none; animation: sheen 5s var(--ease) infinite; }
+.hc.r1, .dk.r1 { --rc: #5b8fd6; }
+.hc.r2, .dk.r2 { --rc: #a374d8; }
+.hc.r3, .dk.r3 { --rc: var(--gold); }
+.hc.r4, .dk.r4 { --rc: #e0533d; }
+.hc.r5, .dk.r5 { --rc: #57c7b8; }
+.hc.l1, .dk.l1 { --lc: #5b8fd6; background: linear-gradient(160deg, color-mix(in srgb, #5b8fd6 10%, var(--s1)), var(--s1) 60%); }
+.hc.l2, .dk.l2 { --lc: #a374d8; background: linear-gradient(160deg, color-mix(in srgb, #a374d8 14%, var(--s1)), var(--s1) 65%); }
+.hc.l3, .dk.l3 { --lc: var(--gold); background: linear-gradient(160deg, color-mix(in srgb, var(--gold) 16%, var(--s1)), var(--s1) 70%); box-shadow: 0 8px 22px -14px var(--gold); }
+.hc.l4, .dk.l4 { --lc: #e0533d; background: radial-gradient(120% 90% at 50% 120%, color-mix(in srgb, #e0533d 30%, var(--s1)), var(--s1) 70%); animation: ember 2.8s ease-in-out infinite alternate; }
+.hc.l5, .dk.l5 { border-color: transparent; background: linear-gradient(var(--s1), var(--s1)) padding-box, conic-gradient(from var(--za), #57c7b8, #fff3c4, var(--gold), #57c7b8) border-box; animation: zspin 5s linear infinite; }
+.hc.l2::after, .hc.l3::after, .hc.l4::after, .hc.l5::after, .dk.l3::after, .dk.l4::after, .dk.l5::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .2) 50%, transparent 60%) -150% 0 / 250% 100% no-repeat; pointer-events: none; animation: sheen 5s var(--ease) infinite; }
 @property --za { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
 @keyframes zspin { to { --za: 360deg; } }
 @keyframes sheen { 0%, 62% { background-position: -150% 0; } 100% { background-position: 150% 0; } }
 @keyframes ember { from { box-shadow: 0 6px 16px -10px #e0533d; } to { box-shadow: 0 8px 26px -8px #e0533d; } }
-@media (prefers-reduced-motion: reduce) { .hc.l4, .hc.l5, .hc::after { animation: none; } }.cpg { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 10px 2px 8px; font-size: 12px; color: var(--ink3); }
+@media (prefers-reduced-motion: reduce) { .hc.l4, .hc.l5, .hc::after, .dk.l4, .dk.l5, .dk::after, .arena.zin, .bp.zout { animation: none; } }.cpg { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 10px 2px 8px; font-size: 12px; color: var(--ink3); }
 .cpg b { font-family: var(--f-mono); color: var(--ink); }
 .cpg span { display: inline-flex; align-items: center; gap: 4px; font-family: var(--f-mono); }
 .cpg .ic { width: 14px; height: 14px; }
@@ -1431,6 +1431,90 @@ button.cday:active { transform: scale(.97); }
 .skn.r4 { --rc: #e0533d; }
 .skn.r5 { --rc: #57c7b8; }
 .skn.l4 > i, .skn.l5 > i { box-shadow: 0 0 14px -4px var(--rc); }
+/* Heute als Arena: große Karte, ein Hauptknopf, Deck, Tagesziel; herausgezoomt der Bergpfad */
+.arena { margin-top: 12px; padding: 12px 14px 16px; border: 1px solid var(--line); border-radius: 22px; background: radial-gradient(120% 70% at 50% 0%, color-mix(in srgb, var(--ac) 10%, var(--s1)), var(--s1) 70%); }
+.arena.zin { animation: zin .42s var(--ease) both; }
+.ar-h { display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; gap: 8px; text-align: center; }
+.ar-h b { display: block; font-family: var(--f-display); font-size: 22px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
+.ar-h small { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
+.ar-e { text-align: center; }
+.ar-card { display: grid; justify-items: center; margin-top: 14px; }
+.hc.big { flex: none; width: 60%; max-width: 230px; min-height: 0; aspect-ratio: 3 / 4; padding: 16px; border-radius: 18px; }
+.hc.big b { font-size: 21px; -webkit-line-clamp: 4; }
+.hc.big small { font-size: 11px; }
+.hc.big span { top: 14px; right: 14px; font-size: 13px; }
+.hc.big em { font-size: 17px; }
+.hc.big .hcb { height: 6px; }
+.arena .cpg { justify-content: center; margin: 12px 0; }
+.ar-act { display: flex; gap: 8px; }
+.ar-go { flex: 1; }
+.ar-tm { width: 56px; height: auto; }
+.ar-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 12px; }
+.ar-pills .pill { width: 54px; height: 54px; }
+.deck { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+.dk { --rc: #8fa39a; --lc: var(--line); position: relative; display: grid; align-content: space-between; gap: 4px; aspect-ratio: 3 / 4; padding: 7px; overflow: hidden; border: 1.5px solid var(--lc); border-top: 3px solid var(--rc); border-radius: 12px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .16s var(--ease), opacity .2s; }
+.dk:active { transform: scale(.95); }
+.dk b { display: -webkit-box; overflow: hidden; font-size: 10.5px; line-height: 1.15; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.dk span { font-family: var(--f-mono); font-size: 10px; color: var(--ink3); }
+.dk span .ic { width: 13px; height: 13px; color: var(--ac); }
+.dk em { position: absolute; right: 6px; bottom: 5px; font-family: var(--f-mono); font-size: 12px; font-style: normal; font-weight: 800; }
+.dk em .ic { width: 15px; height: 15px; color: var(--flame); }
+.dk.on { outline: 2px solid var(--ink); outline-offset: 1px; }
+.dk.dn { opacity: .5; }
+.dk.rdy em::after { content: "▲"; margin-left: 1px; color: var(--gold); }
+.dgoal { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; margin-top: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
+.dg-i { color: var(--ink3); }
+.dg-i .ic { width: 24px; height: 24px; }
+.dgoal b { display: block; font-size: 14px; }
+.dgoal small { font-size: 12px; color: var(--ink3); }
+.dg-r { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: conic-gradient(var(--ac) calc(var(--p) * 360deg), var(--s3) 0); font-style: normal; }
+.dg-r b { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--s1); font-family: var(--f-mono); font-size: 11px; }
+.dgoal.got { border-color: var(--gold); }
+.dgoal.got .dg-i { color: var(--gold); }
+.bp { position: relative; margin-top: 12px; padding: 16px 0 24px; overflow: hidden; border-radius: 22px; background: linear-gradient(180deg, color-mix(in srgb, var(--ac) 14%, var(--s1)), var(--s1) 45%); }
+.bp.zout { animation: zout .45s var(--ease) both; }
+.bp-sky { display: grid; justify-items: center; gap: 4px; }
+.bp-sky svg { width: 100%; height: 90px; }
+.bp-sky path { fill: color-mix(in srgb, var(--ink) 10%, transparent); }
+.bp-sky path.sn { fill: color-mix(in srgb, var(--ink) 22%, transparent); }
+.bp-peak { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-display); font-size: 18px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink2); }
+.bp-peak .ic { color: var(--ac); }
+.bp-path { position: relative; display: grid; justify-items: center; gap: 20px; margin-top: 18px; }
+.bp-path::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; border-left: 2px dashed var(--line); }
+.bp-n { position: relative; display: grid; justify-items: center; gap: 6px; transform: translateX(var(--x)); }
+.bp-n > i { display: grid; place-items: center; width: 52px; height: 52px; border: 2px solid var(--line); border-radius: 50%; background: var(--s1); box-shadow: 0 4px 0 var(--line); color: var(--ink3); font-family: var(--f-mono); font-style: normal; font-weight: 800; }
+.bp-n > i .ic { width: 22px; height: 22px; }
+.bp-n.ok > i { border-color: var(--ac); background: var(--ac); box-shadow: 0 4px 0 color-mix(in srgb, var(--ac) 55%, #000); color: var(--on); }
+.bp-n.cur > i { width: 68px; height: 68px; border-color: var(--ink); background: var(--ink); box-shadow: 0 0 0 7px color-mix(in srgb, var(--ac) 30%, transparent), 0 5px 0 #000; color: var(--bg); font-size: 22px; }
+.bp-n.ms > i { border-color: var(--gold); color: var(--gold); }
+.bp-n span { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 99px; background: var(--s2); font-size: 12px; white-space: nowrap; }
+.bp-hint { margin: 18px 0 0; text-align: center; font-size: 12px; color: var(--ink3); }
+@keyframes zin { from { opacity: 0; transform: scale(.86); } }
+@keyframes zout { from { opacity: 0; transform: scale(1.2); filter: blur(4px); } }
+/* Level-Up-Moment */
+.lvfx { --fxc: #ffc94a; position: fixed; inset: 0; z-index: 70; display: grid; place-content: center; justify-items: center; gap: 22px; overflow: hidden; background: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--fxc) 22%, #050808), #050808 70%); animation: fxin .35s ease both; }
+.lvfx.out { animation: fxout .3s ease both; }
+.lvfx-r { position: absolute; left: 50%; top: 42%; width: 170vmax; height: 170vmax; margin: -85vmax 0 0 -85vmax; background: repeating-conic-gradient(color-mix(in srgb, var(--fxc) 30%, transparent) 0 5deg, transparent 5deg 15deg); -webkit-mask: radial-gradient(circle, #000 0, transparent 50%); mask: radial-gradient(circle, #000 0, transparent 50%); opacity: 0; transition: opacity .7s; animation: rays 16s linear infinite; }
+.lvfx.up .lvfx-r { opacity: 1; }
+.lvfx::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 42%, var(--fxc), transparent 55%); opacity: 0; pointer-events: none; }
+.lvfx.up::after { animation: flash .8s ease-out; }
+.lvfx-c { position: relative; z-index: 1; perspective: 900px; }
+.lvfx .hc.big { width: 200px; animation: cflip 1s cubic-bezier(.2, .8, .2, 1) both; }
+.lvfx .emb-i.big { width: 140px; height: 140px; animation: forge 1s cubic-bezier(.2, .8, .2, 1) both; }
+.lvfx .emb-i.big .ic { width: 64px; height: 64px; }
+.lvfx.up .hc.big, .lvfx.up .emb-i.big { animation: cpop .6s cubic-bezier(.2, 1.4, .4, 1) both; }
+.lvfx-t { position: relative; z-index: 1; display: grid; justify-items: center; gap: 4px; margin: 0; color: #fff; opacity: 0; transform: translateY(10px); transition: opacity .4s .15s, transform .4s .15s var(--ease); }
+.lvfx-t b { font-family: var(--f-display); font-size: 30px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.lvfx-t small { font-size: 14px; color: rgba(255, 255, 255, .75); }
+.lvfx.up .lvfx-t { opacity: 1; transform: none; }
+@keyframes fxin { from { opacity: 0; } }
+@keyframes fxout { to { opacity: 0; } }
+@keyframes rays { to { rotate: 360deg; } }
+@keyframes flash { from { opacity: .85; } to { opacity: 0; } }
+@keyframes cflip { from { opacity: 0; transform: rotateY(200deg) scale(.5); } 65% { opacity: 1; transform: rotateY(-12deg) scale(1.06); } to { transform: none; } }
+@keyframes cpop { 40% { transform: scale(1.14); } }
+@keyframes forge { from { opacity: 0; transform: scale(.4); filter: brightness(3); } 60% { opacity: 1; transform: scale(1.08); } to { transform: none; filter: none; } }
+@media (prefers-reduced-motion: reduce) { .lvfx, .lvfx *, .lvfx::after { animation: none !important; transition: none !important; } }
 </style>
 
 <div id="app">
@@ -2088,9 +2172,9 @@ button.cday:active { transform: scale(.97); }
     jumpMode = ''; updJump();
   }
   function hudSlim(d, now) {
-    // Heute: eine Zeile mit Tag, Serie und Konto-Level (Antippen = XP im Verlauf)
+    // Heute: eine Zeile mit Tag, Serie und Konto-Level (Antippen = Bergpfad)
     var lv = level(d.xp), c0 = lvXp(lv), c1 = lvXp(lv + 1), ss = streakInfo(now);
-    return '<div class="hsl go" data-go="xp" role="button" tabindex="0" aria-label="Level und XP im Verlauf"><b>' + esc(dayHead(dayIdx(now))) + '</b><span class="hsl-f ' + ss.mode + '">' + FL + ss.n + '</span>' +
+    return '<div class="hsl" data-zoom="1" role="button" tabindex="0" aria-label="Bergpfad zum Zenit"><b>' + esc(dayHead(dayIdx(now))) + '</b><span class="hsl-f ' + ss.mode + '">' + FL + ss.n + '</span>' +
       '<span class="hsl-l">Lv ' + lv + '<i><i style="--p:' + ((d.xp - c0) / (c1 - c0)).toFixed(3) + '"></i></i></span></div>';
   }
   function cardProg(d, e) {
@@ -2163,22 +2247,50 @@ button.cday:active { transform: scale(.97); }
     if (ui.pg !== 'all' && !gAv[ui.pg]) ui.pg = 'all';
     function vis(e) { return (ui.pg === 'all' || e.g === ui.pg) && vis0(e); }
     EX.forEach(function (e) { if (!vis(e)) return; tot += e.sets; var tl = todayLog(e.id, today); doneS += tl ? Math.min(tl.s.length, e.sets) : 0; });
-    h += '<div class="plan-h rise" style="--i:3"><div><small>' + ic('cal') + 'Training heute</small><h2>' + esc(sel.key === 'all' ? 'Alle' : sel.days.length ? sel.days.map(function (x) { return x.n; }).join(' + ') : 'Frei') + '</h2></div><button class="swb" data-swap="1" aria-label="Heute ändern">' + ic('swap') + '</button><div class="plan-c"><b data-n="' + doneS + '" data-nk="ps">' + doneS + '</b><span>/ ' + tot + ' Sätze</span></div></div><div class="bar plan-b rise" style="--i:3"><i' + pv('plan', tot ? doneS / tot : 0) + '></i></div>';
-    h += toolRow(today, gAv) + (sel.key === 'rest' ? restCard(today) : '') + warmHtml(d, today);
+    var tname = sel.key === 'all' ? 'Alle' : sel.days.length ? sel.days.map(function (x) { return x.n; }).join(' + ') : 'Frei';
     todayVis = 0;
-    // Karten-Reihe: heutige Übungen als Karten (Seltenheit, Level, KP-Balken); darunter Fortschritt und Sätze der gewählten Karte
     var L = []; GORDER.forEach(function (k) { EX.forEach(function (e) { if (e.g === k && vis(e)) L.push(e); }); });
     function dn(e) { var tl = todayLog(e.id, today); return !!tl && tl.s.length >= rxNow(d, e).s; }
-    var cur = L.filter(function (e) { return e.id === ui.hsel; })[0] || L.filter(function (e) { return !dn(e); })[0] || L[0];
-    if (cur) {
-      h += '<section class="hcr rise" style="--i:5" data-noswipe="1">' + L.map(function (e) {
-        var c = cardOf(d, e), r = rarOf(e), cc = cCost(e, c.lv), tl = todayLog(e.id, today), q = rxNow(d, e), k = tl ? Math.min(tl.s.length, q.s) : 0;
-        return '<button class="hc ' + RAR[r][2] + ' l' + lookOf(c.lv) + (dn(e) ? ' dn' : '') + (cardReady(d, e) ? ' rdy' : '') + (e === cur ? ' on' : '') + '" data-hsel="' + e.id + '"><small>' + RAR[r][0] + '</small><b>' + esc(e.n) + '</b><span>' + (dn(e) ? ic('check') : k + '/' + q.s) + '</span>' +
-          '<em>Lv ' + c.lv + '</em><i class="hcb"><i style="--p:' + (cc ? Math.min(1, c.kp / cc) : 1).toFixed(3) + '"></i></i></button>';
-      }).join('') + '</section>' + cardProg(d, cur) + (function () { var q = rxNow(d, cur); return card(Object.assign({}, cur, { sets: q.s, goal: q.r }), d, today, 6); })();
+    var cur = L.filter(function (e) { return e.id === ui.hsel; })[0] || L.filter(function (e) { return !dn(e); })[0] || L[0], nd = L.filter(dn).length, hz = ui.hz; ui.hz = false;
+    // Herausgezoomt: Bergpfad zum Zenit
+    if (ui.hpath) return h + pathHtml(d, hz);
+    // Arena: Kopf, große Karte der aktuellen Übung mit einem Hauptknopf, Sätze; Hintergrund antippen = Bergpfad
+    h += '<section class="arena rise' + (hz ? ' zin' : '') + '" data-zoom="1" style="--i:1"><div class="ar-h"><button class="x" data-swap="1" aria-label="Heute ändern">' + ic('swap') + '</button><div><b>' + esc(tname) + '</b><small>' + nd + ' von ' + L.length + ' Übungen</small></div>' +
+      (sess ? '<span></span>' : '<button class="x" data-sess="start" aria-label="Training starten">' + ic('clock') + '</button>') + '</div>';
+    if (!cur) h += sel.key === 'rest' ? restCard(today) : '<p class="muted ar-e">Heute keine Übungen</p>';
+    else {
+      var c = cardOf(d, cur), r = rarOf(cur), q = rxNow(d, cur), tl = todayLog(cur.id, today), s = tl ? tl.s : [], ex2 = Object.assign({}, cur, { sets: q.s, goal: q.r }), cc = cCost(cur, c.lv), pills = '';
+      for (var pi = 0; pi < Math.max(q.s, s.length); pi++) pills += pill(ex2, pi, s, tl);
+      var nxE = L.filter(function (e) { return e !== cur && !dn(e); })[0];
+      var go = !dn(cur) ? '<button class="btn primary big ar-go" data-pill="' + cur.id + ':' + s.length + '">' + ic('plus') + 'Satz ' + (s.length + 1) + ' eintragen</button>' :
+        nxE ? '<button class="btn primary big ar-go" data-hsel="' + nxE.id + '">Weiter: ' + esc(nxE.n) + ic('chev') + '</button>' : '<button class="btn big ar-go" data-pill="' + cur.id + ':' + s.length + '">' + ic('plus') + 'Extra-Satz</button>';
+      h += '<div class="ar-card"><button class="hc big ' + RAR[r][2] + ' l' + lookOf(c.lv) + (cardReady(d, cur) ? ' rdy' : '') + '" data-cardo="' + cur.id + '"><small>' + RAR[r][0] + '</small><b>' + esc(cur.n) + '</b><span>' + Math.min(s.length, q.s) + '/' + q.s + '</span>' +
+        '<em>Lv ' + c.lv + '</em><i class="hcb"><i style="--p:' + (cc ? Math.min(1, c.kp / cc) : 1).toFixed(3) + '"></i></i></button></div>' + cardProg(d, cur) +
+        '<div class="ar-act">' + go + (cur.u === 'Sek.' ? '<button class="x ar-tm" data-timer="' + cur.id + '" aria-label="Stoppuhr">' + ic('play') + '</button>' : '') + '</div><div class="ar-pills">' + pills + '</div>';
     }
-    h += '<details class="hrw rise" style="--i:7"><summary>' + ic('trophy') + '<b>Serie und Belohnungen</b><span>' + ss.n + ' Tage · ×' + fx(mu) + '</span>' + ic('chev') + '</summary>' + rwd + '</details>';
+    h += '</section>';
+    // Deck: Aufwärmen und alle Übungen von heute als kleine Karten
+    var wu = !!d.warm[today];
+    h += '<section class="deck rise" style="--i:2"><button class="dk wu' + (wu ? ' dn' : '') + '" data-warm="1"><b>Aufwärmen</b><span>' + (wu ? ic('check') : '+' + WARM_XP + ' XP') + '</span><em>' + ic('sun') + '</em></button>' + L.map(function (e) {
+      var cd = cardOf(d, e), q2 = rxNow(d, e), t2 = todayLog(e.id, today), k = t2 ? Math.min(t2.s.length, q2.s) : 0;
+      return '<button class="dk ' + RAR[rarOf(e)][2] + ' l' + lookOf(cd.lv) + (dn(e) ? ' dn' : '') + (e === cur ? ' on' : '') + (cardReady(d, e) ? ' rdy' : '') + '" data-hsel="' + e.id + '"><b>' + esc(e.n) + '</b><span>' + (dn(e) ? ic('check') : k + '/' + q2.s) + '</span><em>' + cd.lv + '</em></button>';
+    }).join('') + '</section>';
+    // Tagesziel
+    h += '<div class="dgoal rise' + (reached ? ' got' : '') + '" style="--i:3"><i class="dg-i">' + ic(reached ? 'trophy' : 'target') + '</i><div><b>Tagesziel</b><small>' + (reached ? 'Geschafft · +40 XP' + (extra ? ' · +' + extra * 30 + ' Bonus' : '') : 'Noch ' + (DAILY - n) + (DAILY - n === 1 ? ' Übung' : ' Übungen') + ' bis +40 XP') + '</small></div>' +
+      '<i class="dg-r" style="--p:' + ringP.toFixed(3) + '"><b>' + Math.min(n, DAILY) + '/' + DAILY + '</b></i></div>';
+    h += '<details class="hrw rise" style="--i:4"><summary>' + ic('trophy') + '<b>Serie und Belohnungen</b><span>' + ss.n + ' Tage · ×' + fx(mu) + '</span>' + ic('chev') + '</summary>' + rwd + '</details>';
     return h;
+  }
+  function pathHtml(d, hz) {
+    // Bergpfad zum Zenit: Konto-Level als Stationen (unten Vergangenheit, oben Zukunft), Titel-Stufen als Meilensteine
+    var lv = level(d.xp), c0 = lvXp(lv), c1 = lvXp(lv + 1), top = Math.max(lv + 7, 12), lo = Math.max(1, lv - 4), h = '';
+    for (var k = top; k >= lo; k--) {
+      var tr = tierOfLevel(k), ms = k > 1 && tierOfLevel(k - 1) !== tr, st = k < lv ? ' ok' : k === lv ? ' cur' : '';
+      h += '<div class="bp-n' + st + (ms ? ' ms' : '') + '" style="--x:' + Math.round(Math.sin(k * 1.3) * 34) + 'px"><i>' + (k < lv ? ic('check') : ms && k > lv ? ic('trophy') : k) + '</i>' +
+        (k === lv ? '<span><b>Du · Lv ' + lv + '</b> ' + (d.xp - c0) + ' / ' + (c1 - c0) + ' XP</span>' : ms ? '<span>Lv ' + k + ' · Titel ' + TIERS[tr] + '</span>' : '') + '</div>';
+    }
+    return '<section class="bp' + (hz ? ' zout' : '') + '" data-zoom="1"><div class="bp-sky"><svg viewBox="0 0 360 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 90 70 44 108 62 180 8 250 56 292 36 360 90z"/><path class="sn" d="M164 22 180 8 197 24 186 20 180 26 172 19z"/></svg><b class="bp-peak">' + ic('peak') + 'Zenit</b></div>' +
+      '<div class="bp-path">' + h + '</div><p class="bp-hint">Antippen: zurück zum Training</p></section>';
   }
   // ---------- Plan
   var GORDER = ['skill', 'pull', 'push', 'kh', 'core', 'cardio', 'mob'], GRANK = {}, EXI = {}, PCOL = ['--g-pull', '--g-push', '--g-core', '--g-kh', '--g-skill', '--g-cardio', '--g-mob'], WDN = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
@@ -2380,7 +2492,7 @@ button.cday:active { transform: scale(.97); }
 
   // ---------- Sheet
   function openSheet(id, i) {
-    var e = EXB[id], today = dayIdx(Date.now()), tl = todayLog(id, today), last = lastBefore(id, today);
+    var q0 = rxNow(derive(state.logs), EXB[id]), e = Object.assign({}, EXB[id], { sets: q0.s, goal: q0.r }), today = dayIdx(Date.now()), tl = todayLog(id, today), last = lastBefore(id, today);
     var s = tl ? tl.s : [];
     if (i > s.length) i = s.length;
     var editing = s[i] !== undefined, prefill;
@@ -2604,29 +2716,72 @@ button.cday:active { transform: scale(.97); }
     setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 1000);
   }
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function confetti(n) {
+  function sparks(n) {
+    // Zenit-Effekt statt Konfetti: Lichtschein von unten und aufsteigende Funken (Gold, Weiß, Akzent), additiv gemischt
     if (reduce) return;
-    var cv = $('fx'), ctx = cv.getContext('2d'), dpr = window.devicePixelRatio || 1;
-    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
-    var cs = getComputedStyle(document.documentElement);
-    var cols = ['--ac', '--pt', '--gold', '--t3', '--t5a', '--t5b'].map(function (v) { return cs.getPropertyValue(v).trim() || '#3fd0b6'; });
-    var ps = [], N = n || 120;
-    for (var i = 0; i < N; i++) ps.push({ x: innerWidth / 2 + (Math.random() - .5) * 120, y: innerHeight * .55, vx: (Math.random() - .5) * 11, vy: -Math.random() * 13 - 4, w: 5 + Math.random() * 6, h: 3 + Math.random() * 4, r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: cols[i % cols.length] });
+    var cv = $('fx'), ctx = cv.getContext('2d'), dpr = window.devicePixelRatio || 1, W = innerWidth, H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    var cs = getComputedStyle(document.documentElement), cols = [cs.getPropertyValue('--gold').trim() || '#ffc94a', '#ffffff', cs.getPropertyValue('--ac').trim() || '#3fd0b6'];
+    var ps = [], N = Math.min(n || 70, 110);
+    for (var i = 0; i < N; i++) ps.push({ x: W / 2 + (Math.random() - .5) * W * .9, y: H * (.72 + Math.random() * .35), vy: -(1.4 + Math.random() * 3.4), sw: Math.random() * 6.28, r: .8 + Math.random() * 2.2, c: cols[i % 3], d: Math.random() * .35 });
     var t0 = performance.now();
     (function frame(t) {
-      var k = (t - t0) / 1900;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      var k = (t - t0) / 2200;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
       if (k >= 1) return;
-      ctx.globalAlpha = 1 - k * k;
+      ctx.globalCompositeOperation = 'lighter';
+      var g = ctx.createRadialGradient(W / 2, H * 1.05, 0, W / 2, H * 1.05, H * .8), a = Math.max(0, .32 * (1 - k * 1.6));
+      g.addColorStop(0, 'rgba(255,201,74,' + a.toFixed(3) + ')'); g.addColorStop(1, 'rgba(255,201,74,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
       ps.forEach(function (p) {
-        p.vy += .38; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.r += p.vr;
-        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+        if (k < p.d) return;
+        p.y += p.vy; p.sw += .05;
+        ctx.globalAlpha = Math.max(0, 1 - (k - p.d) / (1 - p.d)); ctx.fillStyle = p.c; ctx.shadowColor = p.c; ctx.shadowBlur = 8;
+        ctx.beginPath(); ctx.arc(p.x + Math.sin(p.sw) * 8, p.y, p.r, 0, 6.29); ctx.fill();
       });
+      ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.globalCompositeOperation = 'source-over';
       requestAnimationFrame(frame);
     })(t0);
   }
-  function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) { /* egal */ } }
+  // Level-Up-Moment: Bildschirm dunkel, Karte dreht sich herein bzw. Emblem wird geschmiedet, Strahlen in der Look-/Materialfarbe, Wert springt; Antippen schließt. Mehrere nacheinander
+  var LOOKC = ['#8fa39a', '#5b8fd6', '#a374d8', '#ffc94a', '#e0533d', '#57c7b8'], MATC = ['#8a6a4a', '#8d9399', '#b07a4a', '#b9c1cb', '#d9a82e', '#8fd8d2', '#6aa8ff', '#57c7b8'];
+  var fxq = [], fxOn = false;
+  function fxPush(f) { fxq.push(f); if (!fxOn) fxNext(); }
+  function fxNext() { var f = fxq.shift(); fxOn = !!f; if (f) f(); }
+  function fxShow(col, inner, title, sub, swap) {
+    var o = document.createElement('div'), done = false, t1, t2;
+    o.className = 'lvfx'; o.style.setProperty('--fxc', col); o.setAttribute('role', 'status');
+    o.innerHTML = '<i class="lvfx-r"></i><div class="lvfx-c">' + inner + '</div><p class="lvfx-t"><b>' + title + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</p>';
+    document.body.appendChild(o); buzz([20, 40, 20]);
+    function close() { if (done) return; done = true; clearTimeout(t1); clearTimeout(t2); o.classList.add('out'); setTimeout(function () { o.remove(); fxNext(); }, 320); }
+    t1 = setTimeout(function () { o.classList.add('up'); if (swap) swap(o); buzz([60, 40, 90]); sparks(60); }, reduce ? 0 : 950);
+    t2 = setTimeout(close, 4600);
+    o.addEventListener('click', function (ev) { ev.stopPropagation(); close(); });
+  }
+  function cardFx(e, lv) {
+    var r = rarOf(e), l0 = lookOf(lv - 1), l1 = lookOf(lv);
+    fxPush(function () {
+      fxShow(LOOKC[l1], '<div class="hc big ' + RAR[r][2] + ' l' + l0 + '"><small>' + RAR[r][0] + '</small><b>' + esc(e.n) + '</b><em>Lv <i>' + (lv - 1) + '</i></em></div>', 'Level ' + lv, l1 !== l0 ? 'Neuer Look: ' + LOOK[l1] : esc(e.n),
+        function (o) { var c = o.querySelector('.hc'); c.className = c.className.replace(/ l\d/, ' l' + l1); c.querySelector('em i').textContent = lv; });
+    });
+  }
+  function musFx(k, lv) {
+    var m0 = matOf(lv - 1), m1 = matOf(lv);
+    fxPush(function () {
+      fxShow(MATC[m1], '<i class="emb-i big m' + m0 + '">' + ic(MUSI[k]) + '</i>', MUSN[k] + ' Lv ' + lv, m1 !== m0 ? 'Neues Material: ' + MAT[m1][1] : 'Muskelgruppe gestärkt',
+        function (o) { var c = o.querySelector('.emb-i'); c.className = c.className.replace(/ m\d/, ' m' + m1); });
+    });
+  }
+  window.__zfx = { card: function (id, lv) { cardFx(EXB[id], lv); }, mus: musFx };
+  var hapEl = null;
+  function buzz(ms) {
+    try { if (navigator.vibrate) { navigator.vibrate(ms); return; } } catch (e) { /* egal */ }
+    // iPhone: Safari kann nicht vibrieren; ab iOS 18 löst das Umschalten eines versteckten Schalters ein kurzes Haptik-Signal aus
+    try {
+      if (!hapEl) { hapEl = document.createElement('label'); hapEl.setAttribute('aria-hidden', 'true'); hapEl.style.cssText = 'position:fixed;left:-99px;top:0;opacity:0;pointer-events:none'; hapEl.innerHTML = '<input type="checkbox" switch tabindex="-1">'; hapEl.addEventListener('click', function (ev) { ev.stopPropagation(); }); document.body.appendChild(hapEl); }
+      var n = Array.isArray(ms) ? Math.ceil(ms.length / 2) : 1;
+      for (var i = 0; i < n; i++) setTimeout(function () { hapEl.click(); }, i * 90);
+    } catch (e) { /* egal */ }
+  }
   var dq = [];
   function nextDialog() {
     var x = dq.shift();
@@ -2635,7 +2790,7 @@ button.cday:active { transform: scale(.97); }
     $('u-sm').textContent = x.sm; $('u-name').textContent = x.name; $('u-text').textContent = x.text || '';
     $('scrim').classList.add('on');
     $('u-ok').focus({ preventScroll: true });
-    confetti(x.big ? 220 : 120); buzz(30);
+    sparks(x.big ? 220 : 120); buzz(30);
   }
   function afterSave(before, after, e, rect, v) {
     var today = dayIdx(Date.now()), bt = before.byDay[today], at = after.byDay[today];
@@ -2658,12 +2813,14 @@ button.cday:active { transform: scale(.97); }
     ui.fresh = false;
     render();
     if (gain > 0) floaty('+' + gain + ' XP', rect);
+    // Level-Up der Karte und der Muskelgruppen dieser Übung: großer Moment
+    if (cardOf(after, e).lv > cardOf(before, e).lv) cardFx(e, cardOf(after, e).lv);
+    Object.keys(musOf(e)).forEach(function (k) { var a1 = mLevel(after.mp[k] || 0).lv; if (a1 > mLevel(before.mp[k] || 0).lv) musFx(k, a1); });
     buzz(12);
     if (dq.length) { setTimeout(nextDialog, 450); }
-    else if (goalNow) { toast('Tagesziel erreicht · +40 XP', 'target', true); confetti(90); }
+    else if (goalNow) { toast('Tagesziel erreicht · +40 XP', 'target', true); sparks(90); }
     else if (extraNow) toast('Bonus-Übung · +30 XP', 'bolt', true);
-    else if (cardOf(after, e).lv > cardOf(before, e).lv) { toast(e.n + ' · Level ' + cardOf(after, e).lv, 'up', true); confetti(70); }
-    else if (goalEx) { toast('Ziel erreicht: ' + e.n, 'trophy', true); confetti(90); }
+    else if (goalEx) { toast('Ziel erreicht: ' + e.n, 'trophy', true); sparks(90); }
     else if (exT) toast(e.n + ' ist jetzt ' + TIERS[exTier(after, e)], 'up', true);
     else if (pb) toast('Neuer Rekord: ' + after.bestRaw[e.id], 'trophy', true);
     else toast('+' + gain + ' XP', 'check', true);
@@ -3413,7 +3570,7 @@ button.cday:active { transform: scale(.97); }
     if (editIdx != null && st.e[editIdx]) { x.t = st.e[editIdx].t; st.e[editIdx] = x; } else { x.t = Date.now() - (ui.fday || 0) * 864e5; st.e.push(x); }
     persist(); closeSheet(true); ui.fresh = false; render();
     var after = foodSum(today).p;
-    if (editIdx == null && before < goal && after >= goal) { toast('Proteinziel erreicht', 'trophy'); confetti(90); buzz([40, 30, 40]); }
+    if (editIdx == null && before < goal && after >= goal) { toast('Proteinziel erreicht', 'trophy'); sparks(90); buzz([40, 30, 40]); }
     else toast((editIdx != null ? 'Geändert · ' : '+') + Math.round(x.k) + ' kcal · ' + fN(x.p) + ' g Protein' + (ui.fday ? ' · ' + (ui.fday === 1 ? 'gestern' : fmtDayL(dayIdx(Date.now()) - ui.fday)) : ''), 'check', true);
     ui.fday = 0;
   }
@@ -4472,7 +4629,8 @@ button.cday:active { transform: scale(.97); }
     if ((el = t.closest('[data-xt]'))) { ui.xo[el.dataset.xt] = !ui.xo[el.dataset.xt]; ui.fresh = false; render(); return; }
     if ((el = t.closest('[data-gx]'))) { ui.gx[el.dataset.gx] = !ui.gx[el.dataset.gx]; ui.fresh = false; render(); return; }
     if ((el = t.closest('[data-pday]'))) { dsel = el.dataset.pday; try { localStorage.setItem('zenit.day', JSON.stringify({ d: dayIdx(Date.now()), v: dsel })); } catch (err) { /* egal */ } ui.fresh = false; render(); return; }
-    if ((el = t.closest('[data-hsel]'))) { ui.hsel = el.dataset.hsel; ui.fresh = false; render(); return; }
+    if ((el = t.closest('[data-zoom]')) && !t.closest('button, input, a, summary')) { ui.hpath = !ui.hpath; ui.hz = true; ui.fresh = false; if (ui.tab !== 'heute') ui.tab = 'heute'; ui.scroll = ui.hpath ? '.bp-n.cur' : null; render(); if (!ui.hpath) $('app').scrollTo(0, 0); buzz(6); return; }
+    if ((el = t.closest('[data-hsel]'))) { ui.hsel = el.dataset.hsel; ui.fresh = false; render(); buzz(4); return; }
     if ((el = t.closest('[data-pg]'))) { ui.pg = el.dataset.pg; ui.fresh = false; render(); return; }
     if (foodClick(t)) return;
     if (profClick(t)) return;

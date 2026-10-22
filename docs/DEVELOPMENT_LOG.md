@@ -15,6 +15,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-22 – Heute als Arena mit Bergpfad, Level-Up-Effekte, Haptik auf dem iPhone
+- Heute: Arena (Trainingsname, große Karte der aktuellen Übung im Look, Vorgabe/Prüfung, ein Hauptknopf „Satz n eintragen“ bzw. „Weiter: …“, Sätze), Deck im 4er-Raster (Aufwärmen + alle Übungen, Look-Rahmen, ▲ bereit), Tagesziel mit Ring, „Serie und Belohnungen“ aufklappbar. Satz-Fenster nutzt die Vorgabe des Karten-Levels (`openSheet` mit `rxNow`).
+- Bergpfad (`pathHtml`): Kopfzeile oder Arena-Hintergrund antippen (`data-zoom`, nicht auf Bedienelementen) zoomt heraus; Konto-Level als Stationen, Titel-Stufen als Meilensteine, Gipfel oben; Zoom-Animationen `zin`/`zout`.
+- Effekte: `confetti` ersetzt durch `sparks` (aufsteigende Lichtfunken, Lichtschein). Level-Up-Moment `cardFx` (Karte dreht sich herein, Strahlen in Look-Farbe, neuer Rahmen) und `musFx` (Emblem wird geschmiedet, neues Material), nacheinander über `fxq`. Test-Hook `window.__zfx`.
+- Haptik: Safari kann nicht vibrieren; `buzz` schaltet auf dem iPhone einen versteckten `<input type="checkbox" switch>` um (iOS 18+), Klick wird nicht an den Dokument-Handler weitergereicht.
+- Offen: `toolRow`, `warmHtml`, `viewPath` werden auf Heute/Sammlung nicht mehr genutzt → beim nächsten Aufräumen prüfen.
+
 ### 2026-10-22 – Sammlung statt Verlauf: Karten, Muskeln, Skills, Statistik
 - Tab „fort“ heißt jetzt Sammlung (Icon `gem`), oben 4 Bereiche (`ui.col`: ka/mu/sk/st), immer nur einer sichtbar. Statistik enthält Überblick/Übungen/Körper (später ins Profil).
 - Karten: Kopfzahlen (Karten, Stärke = Summe der Level, bereit zum Aufstieg), Gruppenfilter, Raster (eigene nach Level, gesperrte gestrichelt). Antippen: Sheet mit großer Karte, Fortschritt bzw. Voraussetzungen, Muskeln, alle Stufen der Leiter mit Look-Farbe, Sprung in den Übungsverlauf.

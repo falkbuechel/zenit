@@ -1311,25 +1311,41 @@ button.cday:active { transform: scale(.97); }
 .hsl-l > i > i { display: block; width: calc(var(--p) * 100%); height: 100%; background: var(--ac); }
 .hcr { display: flex; gap: 8px; margin: 12px -16px 0; padding: 4px 16px 6px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; scrollbar-width: none; }
 .hcr::-webkit-scrollbar { display: none; }
-.hc { --rc: #8fa39a; position: relative; flex: 0 0 112px; display: grid; grid-template-rows: auto 1fr auto auto; gap: 4px; min-height: 132px; padding: 10px 10px 9px; scroll-snap-align: start; border: 1px solid var(--line); border-top: 3px solid var(--rc); border-radius: 14px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease), border-color .2s var(--ease), opacity .2s; }
+/* Karte: Abzeichen-Farbe = Seltenheit (r0–r5, fest), Rahmen und Effekte = Look nach Level (l0–l5) */
+.hc { --rc: #8fa39a; --lc: var(--line); position: relative; flex: 0 0 112px; display: grid; grid-template-rows: auto 1fr auto auto; gap: 4px; min-height: 136px; padding: 10px 10px 9px; overflow: hidden; scroll-snap-align: start; border: 1.5px solid var(--lc); border-radius: 14px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .16s var(--ease), opacity .2s; }
 .hc:active { transform: scale(.97); }
 .hc small { padding-right: 28px; font-size: 9.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--rc); }
+.hc small::before { content: "◆ "; }
 .hc b { display: -webkit-box; overflow: hidden; font-size: 13px; line-height: 1.2; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
 .hc span { position: absolute; top: 8px; right: 9px; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
 .hc span .ic { width: 15px; height: 15px; color: var(--ac); }
 .hc em { font-family: var(--f-mono); font-size: 12px; font-style: normal; font-weight: 700; }
 .hcb { display: block; height: 4px; overflow: hidden; border-radius: 2px; background: var(--s3); }
 .hcb > i { display: block; width: calc(var(--p) * 100%); height: 100%; background: var(--rc); }
-.hc.on { border-color: var(--rc); box-shadow: 0 0 0 1px var(--rc), 0 10px 20px -14px var(--rc); }
+.hc.on { outline: 2px solid var(--ink); outline-offset: 2px; }
 .hc.dn { opacity: .55; }
+.hc.rdy em::after { content: " ▲"; color: var(--gold); }
 .hc.r1 { --rc: #5b8fd6; }
 .hc.r2 { --rc: #a374d8; }
 .hc.r3 { --rc: var(--gold); }
-.cpg { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 10px 2px 8px; font-size: 12px; color: var(--ink3); }
+.hc.r4 { --rc: #e0533d; }
+.hc.r5 { --rc: #57c7b8; }
+.hc.l1 { --lc: #5b8fd6; background: linear-gradient(160deg, color-mix(in srgb, #5b8fd6 10%, var(--s1)), var(--s1) 60%); }
+.hc.l2 { --lc: #a374d8; background: linear-gradient(160deg, color-mix(in srgb, #a374d8 14%, var(--s1)), var(--s1) 65%); }
+.hc.l3 { --lc: var(--gold); background: linear-gradient(160deg, color-mix(in srgb, var(--gold) 16%, var(--s1)), var(--s1) 70%); box-shadow: 0 8px 22px -14px var(--gold); }
+.hc.l4 { --lc: #e0533d; background: radial-gradient(120% 90% at 50% 120%, color-mix(in srgb, #e0533d 30%, var(--s1)), var(--s1) 70%); animation: ember 2.8s ease-in-out infinite alternate; }
+.hc.l5 { border-color: transparent; background: linear-gradient(var(--s1), var(--s1)) padding-box, conic-gradient(from var(--za), #57c7b8, #fff3c4, var(--gold), #57c7b8) border-box; animation: zspin 5s linear infinite; }
+.hc.l2::after, .hc.l3::after, .hc.l4::after, .hc.l5::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .2) 50%, transparent 60%) -150% 0 / 250% 100% no-repeat; pointer-events: none; animation: sheen 5s var(--ease) infinite; }
+@property --za { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes zspin { to { --za: 360deg; } }
+@keyframes sheen { 0%, 62% { background-position: -150% 0; } 100% { background-position: 150% 0; } }
+@keyframes ember { from { box-shadow: 0 6px 16px -10px #e0533d; } to { box-shadow: 0 8px 26px -8px #e0533d; } }
+@media (prefers-reduced-motion: reduce) { .hc.l4, .hc.l5, .hc::after { animation: none; } }.cpg { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 10px 2px 8px; font-size: 12px; color: var(--ink3); }
 .cpg b { font-family: var(--f-mono); color: var(--ink); }
 .cpg span { display: inline-flex; align-items: center; gap: 4px; font-family: var(--f-mono); }
 .cpg .ic { width: 14px; height: 14px; }
 .cpg .ok { color: var(--ac); }
+.cpg.prf b { display: inline-flex; align-items: center; gap: 4px; color: var(--gold); }
 .hrw { margin-top: 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
 .hrw summary { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 14px; cursor: pointer; list-style: none; }
 .hrw summary::-webkit-details-marker { display: none; }
@@ -1508,11 +1524,20 @@ button.cday:active { transform: scale(.97); }
   function wkOf(d) { return d - (d + 3) % 7; }
   function moOf(d) { var q = new Date(d * 864e5); return q.getUTCFullYear() * 12 + q.getUTCMonth(); }
   // ---------- Karten (Übungen) und Muskelgruppen: alles aus den Logs berechnet, nichts gespeichert
-  // Seltenheit bestimmt Startlevel (Max 10). Level-Up braucht Leistung (Satzziel des nächsten Levels in einer Einheit) UND Fleiß (KP).
+  // Seltenheit (fest, wie schwer die Übung ist) bestimmt das Startlevel; der Look (Rahmen) hängt am Level. Max 10, später Kraftstufen.
+  // Level-Up: genug KP (Fleiß) macht die Karte bereit, dann in einer Einheit das Satzziel des nächsten Levels schaffen (Aufstiegsprüfung).
   // KP je Satz = 10 × Leistung / Ziel des aktuellen Levels (max 15). Muskeln bekommen KP × Anteil (Hauptmuskel 1, weitere 0,5)
-  var RAR = [['Gewöhnlich', 1, 'r0'], ['Selten', 3, 'r1'], ['Episch', 5, 'r2'], ['Legendär', 7, 'r3']], CMAX = 10, MMAX = 20;
-  // Einheiten am Ziel bis zum nächsten Level, je Seltenheit ab ihrem Startlevel
-  var CSES = [[2, 3, 4, 5, 6, 8, 10, 12, 15], [4, 6, 8, 10, 13, 16, 20], [8, 12, 16, 20, 25], [20, 28, 36]];
+  var RAR = [['Gewöhnlich', 1, 'r0'], ['Selten', 3, 'r1'], ['Episch', 5, 'r2'], ['Legendär', 7, 'r3'], ['Mythisch', 8, 'r4'], ['Zenit', 9, 'r5']], CMAX = 10, MMAX = 20;
+  var LOOK = ['Gewöhnlich', 'Selten', 'Episch', 'Legendär', 'Mythisch', 'Zenit'];
+  function lookOf(lv) { return lv >= 10 ? 5 : lv >= 9 ? 4 : lv >= 7 ? 3 : lv >= 5 ? 2 : lv >= 3 ? 1 : 0; }
+  // Einheiten am Ziel bis zum nächsten Level, je Seltenheit ab ihrem Startlevel (bei 2× pro Woche je Übung etwa 1,5 bis 2+ Jahre bis Level 10)
+  var CSES = [[4, 6, 8, 10, 14, 18, 24, 30, 40], [8, 10, 14, 18, 24, 30, 40], [16, 22, 30, 40, 55], [50, 70, 90], [90, 130], [220]];
+  // Skills: feste Seltenheit (Episch bis Zenit) nach Lernzeit
+  var SKR = { crow: 2, lsit: 2, lever: 2, hand: 2, wallw: 2, advfl: 3, psplan: 3, hspu: 3, planl: 3, mun: 3, pistol: 3, blever: 4, archpu: 4, hsfree: 4, mu: 4, tplan: 5, sfl: 5, oap: 5 };
+  // Stufen-Leiter (10 Stufen): Sätze, Anteil am Grundziel, Tempo (3 s ab), Pause. Erst Wiederholungen, dann ein Satz mehr (max 4), dann Tempo, dann Pause
+  var LAD = [[2, .3], [2, .45], [3, .45], [3, .6], [3, .8], [4, .8], [4, 1], [4, 1, 1], [4, 1, 1, 1], [4, 1.25, 1, 1]];
+  // Halteübungen: statt Tempo/Pause länger halten
+  var LADH = [[2, .3], [2, .45], [3, .45], [3, .6], [3, .8], [4, .8], [4, 1], [4, 1.1], [4, 1.25], [4, 1.4]];
   var MUS = [['ru', 'Rücken'], ['br', 'Brust'], ['sh', 'Schultern'], ['ar', 'Arme'], ['co', 'Core'], ['be', 'Beine'], ['gr', 'Griff'], ['mo', 'Beweglichkeit'], ['au', 'Ausdauer']];
   var MUW = { 'Rücken': 'ru', 'Latissimus': 'ru', 'Breite': 'ru', 'unterer Rücken': 'ru', 'Unterer Rücken': 'ru', 'Trapez': 'ru', 'Nacken': 'ru', 'Schulterblätter': 'ru',
     'Schulter': 'sh', 'Schulter vorn': 'sh', 'Schulter hinten': 'sh', 'Brust': 'br', 'Obere Brust': 'br', 'Bizeps': 'ar', 'Trizeps': 'ar', 'Arme': 'ar',
@@ -1532,18 +1557,22 @@ button.cday:active { transform: scale(.97); }
     var st = stageOf(e);
     if (e.g === 'mob' || e.g === 'cardio') return st ? 1 : 0;
     if (e.g === 'kh') return st <= 1 ? 0 : st === 2 ? 1 : 2;
-    if (e.g === 'skill') return st >= 4 ? 3 : 2;
+    if (e.g === 'skill') return SKR[e.id] != null ? SKR[e.id] : 2;
     return st === 0 ? 0 : st === 1 ? 1 : st <= 3 ? 2 : 3;
   }
-  function cTarget(e, lv) {
-    // Satzziel je Level: 30 % des Grundziels beim Startlevel bis 150 % bei Level 10, geometrisch (seltene Karten: weniger, größere Schritte)
-    var l0 = RAR[rarOf(e)][1], st = e.u === 'Sek.' ? 5 : 1;
-    return Math.max(st, Math.round(e.goal * 0.3 * Math.pow(5, (lv - l0) / (CMAX - l0)) / st) * st);
+  function rx(e, lv) {
+    // Vorgabe eines Levels: seltene Karten laufen dieselbe Leiter in weniger, größeren Schritten
+    var l0 = RAR[rarOf(e)][1], i = Math.round((Math.min(lv, CMAX) - l0) / Math.max(1, CMAX - l0) * 9), q = (e.u === 'Sek.' ? LADH : LAD)[Math.max(0, Math.min(9, i))], u = e.u === 'Sek.' ? 5 : 1;
+    return { s: e.sets === 1 ? 1 : q[0], r: Math.max(u, Math.round(e.goal * q[1] / u) * u), t: !!q[2], p: !!q[3] };
   }
+  function rxText(e, q) { return q.s + '×' + q.r + (e.u === 'Sek.' ? ' s' : '') + (q.t ? ' · 3 s ab' : '') + (q.p ? ' · Pause' : ''); }
   function cCost(e, lv) { var r = rarOf(e); return lv >= CMAX ? 0 : CSES[r][lv - RAR[r][1]] * 10 * e.sets; }
   function mCost(lv) { return Math.round(150 * Math.pow(1.18, lv - 1)); }
   function mLevel(mp) { var lv = 1; while (lv < MMAX && mp >= mCost(lv)) { mp -= mCost(lv); lv++; } return { lv: lv, mp: Math.round(mp), need: lv < MMAX ? mCost(lv) : 0 }; }
   function cardOf(d, e) { return d.cards[e.id] || { lv: RAR[rarOf(e)][1], kp: 0, n: 0 }; }
+  function cardReady(d, e) { var c = cardOf(d, e); return c.lv < CMAX && c.kp >= cCost(e, c.lv); }
+  // heutige Vorgabe: bereit = Aufstiegsprüfung mit dem Ziel des nächsten Levels
+  function rxNow(d, e) { var c = cardOf(d, e); return rx(e, cardReady(d, e) ? c.lv + 1 : c.lv); }
   function derive(logs) {
     var sorted = logs.slice().sort(function (a, b) { return a.t - b.t; });
     var best = {}, bestRaw = {}, unlocked = {}, goalHit = {}, xp = 0, tl = [], days = [], byDay = {};
@@ -1582,10 +1611,12 @@ button.cday:active { transform: scale(.97); }
       });
       cur.ex[e.id] = 1;
       // Karte: KP gegen das Ziel des aktuellen Levels, Level-Up bei Leistung (diese Einheit) + genug KP; Muskeln bekommen KP × Anteil
-      var cd = cards[e.id] || (cards[e.id] = { lv: RAR[rarOf(e)][1], kp: 0, n: 0 }), ctg = cTarget(e, cd.lv), kp = 0, mw = musOf(e), cm = metric(e, l.s);
+      var cd = cards[e.id] || (cards[e.id] = { lv: RAR[rarOf(e)][1], kp: 0, n: 0 }), ctg = rx(e, cd.lv).r, kp = 0, mw = musOf(e), nx = cd.lv < CMAX ? rx(e, cd.lv + 1) : null;
       l.s.forEach(function (x) { kp += Math.round(10 * Math.min(x / ctg, 1.5)); });
+      // Aufstiegsprüfung: KP reichten schon vor dieser Einheit und die Vorgabe des nächsten Levels ist geschafft (ein Level pro Einheit)
+      var rdy = nx && cd.kp >= cCost(e, cd.lv);
       cd.kp += kp; cd.n++; Object.keys(mw).forEach(function (k) { mp[k] = (mp[k] || 0) + kp * mw[k]; });
-      while (cd.lv < CMAX && cd.kp >= cCost(e, cd.lv) && cm.full && cm.val >= cTarget(e, cd.lv + 1)) { cd.kp -= cCost(e, cd.lv); cd.lv++; cd.up = l.t; }
+      if (rdy && l.s.filter(function (x) { return x >= nx.r; }).length >= nx.s) { cd.kp -= cCost(e, cd.lv); cd.lv++; cd.up = l.t; }
       if (l.s.length >= e.sets && l.s.slice(0, e.sets).every(function (x) { return x >= e.goal; })) { cur.sx += 10; add(10); }
       var r = metric(e, l.s);
       if (r.full) {
@@ -1977,11 +2008,10 @@ button.cday:active { transform: scale(.97); }
   }
   function cardProg(d, e) {
     // gewählte Karte: nächstes Level braucht Leistung (Satzziel in einer Einheit) und Fleiß (KP)
-    var c = cardOf(d, e);
-    if (c.lv >= CMAX) return '<div class="cpg"><b>Lv ' + c.lv + ' · Maximum</b></div>';
-    var nt = cTarget(e, c.lv + 1), b = d.best[e.id] || 0, cc = cCost(e, c.lv), ok1 = b >= nt, ok2 = c.kp >= cc;
-    return '<div class="cpg"><b>Lv ' + c.lv + ' → ' + (c.lv + 1) + '</b><span' + (ok1 ? ' class="ok"' : '') + '>' + ic(ok1 ? 'check' : 'target') + nt + ' ' + esc(e.u) + (ok1 ? '' : ' · Best ' + b) + '</span>' +
-      '<span' + (ok2 ? ' class="ok"' : '') + '>' + ic(ok2 ? 'check' : 'bolt') + Math.min(c.kp, cc) + ' / ' + cc + ' KP</span></div>';
+    var c = cardOf(d, e), cc = cCost(e, c.lv);
+    if (c.lv >= CMAX) return '<div class="cpg"><b>Lv 10 · Zenit</b><span>' + ic('target') + rxText(e, rx(e, CMAX)) + '</span></div>';
+    if (cardReady(d, e)) return '<div class="cpg prf"><b>' + ic('up') + 'Aufstiegsprüfung</b><span>' + ic('target') + rxText(e, rx(e, c.lv + 1)) + ' schaffen → Lv ' + (c.lv + 1) + '</span></div>';
+    return '<div class="cpg"><b>Lv ' + c.lv + '</b><span>' + ic('target') + rxText(e, rx(e, c.lv)) + '</span><span>' + ic('bolt') + c.kp + ' / ' + cc + ' KP</span></div>';
   }
   function hudHtml(d, now) {
     var lv = level(d.xp), cur = lvXp(lv), nxt = lvXp(lv + 1), tr = tierOfLevel(lv), ss = streakInfo(now);
@@ -2051,14 +2081,14 @@ button.cday:active { transform: scale(.97); }
     todayVis = 0;
     // Karten-Reihe: heutige Übungen als Karten (Seltenheit, Level, KP-Balken); darunter Fortschritt und Sätze der gewählten Karte
     var L = []; GORDER.forEach(function (k) { EX.forEach(function (e) { if (e.g === k && vis(e)) L.push(e); }); });
-    function dn(e) { var tl = todayLog(e.id, today); return !!tl && tl.s.length >= e.sets; }
+    function dn(e) { var tl = todayLog(e.id, today); return !!tl && tl.s.length >= rxNow(d, e).s; }
     var cur = L.filter(function (e) { return e.id === ui.hsel; })[0] || L.filter(function (e) { return !dn(e); })[0] || L[0];
     if (cur) {
       h += '<section class="hcr rise" style="--i:5" data-noswipe="1">' + L.map(function (e) {
-        var c = cardOf(d, e), r = rarOf(e), cc = cCost(e, c.lv), tl = todayLog(e.id, today), k = tl ? Math.min(tl.s.length, e.sets) : 0;
-        return '<button class="hc ' + RAR[r][2] + (dn(e) ? ' dn' : '') + (e === cur ? ' on' : '') + '" data-hsel="' + e.id + '"><small>' + RAR[r][0] + '</small><b>' + esc(e.n) + '</b><span>' + (dn(e) ? ic('check') : k + '/' + e.sets) + '</span>' +
+        var c = cardOf(d, e), r = rarOf(e), cc = cCost(e, c.lv), tl = todayLog(e.id, today), q = rxNow(d, e), k = tl ? Math.min(tl.s.length, q.s) : 0;
+        return '<button class="hc ' + RAR[r][2] + ' l' + lookOf(c.lv) + (dn(e) ? ' dn' : '') + (cardReady(d, e) ? ' rdy' : '') + (e === cur ? ' on' : '') + '" data-hsel="' + e.id + '"><small>' + RAR[r][0] + '</small><b>' + esc(e.n) + '</b><span>' + (dn(e) ? ic('check') : k + '/' + q.s) + '</span>' +
           '<em>Lv ' + c.lv + '</em><i class="hcb"><i style="--p:' + (cc ? Math.min(1, c.kp / cc) : 1).toFixed(3) + '"></i></i></button>';
-      }).join('') + '</section>' + cardProg(d, cur) + card(cur, d, today, 6);
+      }).join('') + '</section>' + cardProg(d, cur) + (function () { var q = rxNow(d, cur); return card(Object.assign({}, cur, { sets: q.s, goal: q.r }), d, today, 6); })();
     }
     h += '<details class="hrw rise" style="--i:7"><summary>' + ic('trophy') + '<b>Serie und Belohnungen</b><span>' + ss.n + ' Tage · ×' + fx(mu) + '</span>' + ic('chev') + '</summary>' + rwd + '</details>';
     return h;

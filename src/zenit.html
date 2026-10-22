@@ -1325,11 +1325,11 @@ button.cday:active { transform: scale(.97); }
 .hc.on { outline: 2px solid var(--ink); outline-offset: 2px; }
 .hc.dn { opacity: .55; }
 .hc.rdy em::after { content: " ▲"; color: var(--gold); }
-.hc.r1, .dk.r1 { --rc: #5b8fd6; }
-.hc.r2, .dk.r2 { --rc: #a374d8; }
-.hc.r3, .dk.r3 { --rc: var(--gold); }
-.hc.r4, .dk.r4 { --rc: #e0533d; }
-.hc.r5, .dk.r5 { --rc: #57c7b8; }
+.hc.r1, .dk.r1, .stn.r1 { --rc: #5b8fd6; }
+.hc.r2, .dk.r2, .stn.r2 { --rc: #a374d8; }
+.hc.r3, .dk.r3, .stn.r3 { --rc: var(--gold); }
+.hc.r4, .dk.r4, .stn.r4 { --rc: #e0533d; }
+.hc.r5, .dk.r5, .stn.r5 { --rc: #57c7b8; }
 .hc.l1, .dk.l1 { --lc: #5b8fd6; background: linear-gradient(160deg, color-mix(in srgb, #5b8fd6 10%, var(--s1)), var(--s1) 60%); }
 .hc.l2, .dk.l2 { --lc: #a374d8; background: linear-gradient(160deg, color-mix(in srgb, #a374d8 14%, var(--s1)), var(--s1) 65%); }
 .hc.l3, .dk.l3 { --lc: var(--gold); background: linear-gradient(160deg, color-mix(in srgb, var(--gold) 16%, var(--s1)), var(--s1) 70%); box-shadow: 0 8px 22px -14px var(--gold); }
@@ -1561,6 +1561,43 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
 .ar-dots button.d { background: var(--ac); }
 .ar-dots button.c { width: 24px; border-radius: 5px; background: var(--ink); }
 .arm-v .cpg { justify-content: center; margin: 0; }
+/* Sammlung: Karten-Filter und Gruppen, Skilltree radial */
+.cft { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; margin-top: 12px; padding: 4px; border: 1px solid var(--line); border-radius: 12px; background: var(--s1); }
+.cft button { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; border: 0; border-radius: 9px; background: transparent; color: var(--ink2); font: inherit; font-size: 13px; font-weight: 700; }
+.cft small { font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
+.cft button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.cft button[aria-pressed="true"] small { color: inherit; opacity: .7; }
+.cgr { margin-top: 10px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
+.cgr-h { display: grid; grid-template-columns: auto auto auto 1fr auto; align-items: center; gap: 10px; width: 100%; min-height: 54px; padding: 0 14px; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; }
+.cgr-h > .ic { width: 20px; height: 20px; color: var(--ink2); }
+.cgr-h > .ic:last-child { width: 16px; height: 16px; color: var(--ink3); transition: transform .2s var(--ease); }
+.cgr.open .cgr-h > .ic:last-child { transform: rotate(90deg); }
+.cgr-h b { font-size: 14px; }
+.cgr-h small { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
+.cgr-h .hcb { height: 5px; }
+.cgr-h .hcb > i { background: var(--ac); }
+.cgr .deck { margin: 0; padding: 0 10px 12px; }
+.dk .rr { font-size: 8px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--rc); }
+.dk.lk { border-style: dashed; background: transparent; opacity: .55; }
+.stsum { margin: 12px 2px 0; font-size: 12px; color: var(--ink3); }
+.stsum b { font-family: var(--f-mono); color: var(--ink); }
+.stw { margin: 8px -16px 0; overflow: auto; scrollbar-width: none; }
+.stw::-webkit-scrollbar { display: none; }
+.stree { position: relative; width: 150%; aspect-ratio: 1; overflow: hidden; border-radius: 22px; background: radial-gradient(circle, color-mix(in srgb, var(--ac) 12%, var(--s1)), var(--s1) 72%); }
+.stree svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.stree circle.rg { fill: none; stroke: var(--line); stroke-width: .3; stroke-dasharray: 1 1.4; }
+.stree line { stroke: var(--line); stroke-width: .6; }
+.stree line.nx { stroke: var(--ink3); stroke-dasharray: 1 1; }
+.stree line.on { stroke: var(--ac); stroke-width: 1; }
+.stc { position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--ink); color: var(--ac); transform: translate(-50%, -50%); box-shadow: 0 0 0 6px color-mix(in srgb, var(--ac) 22%, transparent); }
+.stc .ic { width: 24px; height: 24px; }
+.stn { --rc: #8fa39a; position: absolute; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 2px solid var(--line); border-radius: 50%; background: var(--s1); color: var(--ink3); font: inherit; transform: translate(-50%, -50%); transition: transform .16s var(--ease); }
+.stn:active { transform: translate(-50%, -50%) scale(.92); }
+.stn i { font-family: var(--f-mono); font-size: 13px; font-style: normal; font-weight: 800; }
+.stn .ic { width: 14px; height: 14px; }
+.stn.on { border-color: var(--rc); background: color-mix(in srgb, var(--rc) 22%, var(--s1)); color: var(--ink); box-shadow: 0 0 14px -3px var(--rc); }
+.stn.nx { border-style: dashed; border-color: var(--rc); }
+.stl { position: absolute; max-width: 84px; font-size: 10.5px; font-weight: 700; line-height: 1.1; text-align: center; color: var(--ink2); transform: translate(-50%, -50%); pointer-events: none; }
 </style>
 
 <div id="app">
@@ -2212,6 +2249,7 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     ui.sw = 0;
     v.innerHTML = ui.tab === 'heute' ? viewToday(d, now) : ui.tab === 'tage' ? viewPlan(d, now) : ui.tab === 'food' ? viewFood(d, now) : ui.tab === 'fort' ? viewProgress(d, now) : ui.tab === 'profil' ? viewProfile(d, now) : viewPath(d);
     document.body.classList.toggle('arm', ui.tab === 'heute' && !!ui.arena);
+    var stw = document.querySelector('.stw'); if (stw) stw.scrollLeft = (stw.scrollWidth - stw.clientWidth) / 2;
     if (ui.tab === 'fort' && (ui.col || 'ka') === 'ka') { var un0 = EX.filter(function (e) { return d.unlocked[e.id]; }).map(function (e) { return e.id; }); if (!seenUx || un0.length !== seenUx.length) { saveSeen(un0); badges(notices(d, now)); } }
     if (ui.sheet && ui.sheet.settings && $('sheet').classList.contains('open')) $('sheet').innerHTML = setHtml();
     hydrate(snap, fresh);
@@ -4182,16 +4220,25 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
       (own ? '<em>Lv ' + c.lv + '</em><i class="hcb"><i style="--p:' + (cc ? Math.min(1, c.kp / cc) : 1).toFixed(3) + '"></i></i>' : '<em>' + ic('lock') + '</em>') + '</button>';
   }
   function viewCards(d) {
-    var f = ui.cf || 'all', own = [], lock = [], n = 0, sum = 0, rd = 0;
-    EX.forEach(function (e) {
-      if (d.unlocked[e.id]) { n++; sum += cardOf(d, e).lv; if (cardReady(d, e)) rd++; }
-      if (f === 'all' || e.g === f) (d.unlocked[e.id] ? own : lock).push(e);
-    });
-    own.sort(function (a, b) { return cardOf(d, b).lv - cardOf(d, a).lv || rarOf(b) - rarOf(a); });
-    lock.sort(function (a, b) { return rarOf(a) - rarOf(b); });
-    return '<section class="csum rise" style="--i:1"><div><b>' + n + '<small>/' + EX.length + '</small></b><span>Karten</span></div><div><b>' + sum + '</b><span>Stärke</span></div><div><b>' + rd + '</b><span>bereit</span></div></section>' +
-      '<div class="pgf cfl rise" style="--i:2" role="group" aria-label="Gruppe filtern"><button class="pg" data-cf="all" aria-pressed="' + (f === 'all') + '">Alle</button>' + GORDER.map(function (k) { var g = gOf(k); return '<button class="pg g' + k + '" data-cf="' + k + '" aria-pressed="' + (f === k) + '" aria-label="' + g.n + '">' + ic(g.i) + '</button>'; }).join('') + '</div>' +
-      '<div class="cgrid rise" style="--i:3">' + own.concat(lock).map(function (e) { return cardTile(d, e); }).join('') + '</div>';
+    // Karten: oben drei Filter (Alle, Bereit, Gesperrt), darunter je Gruppe eine zuklappbare Zeile mit Stärke-Balken; Karten klein (Name, Seltenheit, Level, Look)
+    var f = ui.cf2 || 'all', rd = EX.filter(function (e) { return d.unlocked[e.id] && cardReady(d, e); }), lk = EX.filter(function (e) { return !d.unlocked[e.id]; }), op = ui.cgo || {};
+    function mini(e) {
+      var own = !!d.unlocked[e.id], c = cardOf(d, e), r = rarOf(e);
+      return '<button class="dk ' + RAR[r][2] + ' l' + (own ? lookOf(c.lv) : 0) + (own ? '' : ' lk') + (own && cardReady(d, e) ? ' rdy' : '') + '" data-cardo="' + e.id + '"><b>' + esc(e.n) + '</b><span class="rr">' + RAR[r][0] + '</span><em>' + (own ? c.lv : ic('lock')) + '</em></button>';
+    }
+    function byLv(a, b) { return cardOf(d, b).lv - cardOf(d, a).lv || rarOf(b) - rarOf(a); }
+    var h = '<div class="cft rise" style="--i:1" role="group" aria-label="Filter">' + [['all', 'Alle', EX.length - lk.length], ['rdy', 'Bereit ▲', rd.length], ['lock', 'Gesperrt', lk.length]].map(function (x) {
+      return '<button data-cf2="' + x[0] + '" aria-pressed="' + (f === x[0]) + '">' + x[1] + '<small>' + x[2] + '</small></button>'; }).join('') + '</div>';
+    if (f !== 'all') {
+      var L = f === 'rdy' ? rd.sort(byLv) : lk.sort(function (a, b) { return rarOf(a) - rarOf(b); });
+      return h + (L.length ? '<div class="deck rise" style="--i:2">' + L.map(mini).join('') + '</div>' : '<p class="muted rise" style="--i:2">' + (f === 'rdy' ? 'Gerade keine Karte bereit. KP sammelst du im Training.' : 'Alles freigeschaltet.') + '</p>');
+    }
+    return h + GORDER.map(function (k, i) {
+      var g = gOf(k), all = EX.filter(function (e) { return e.g === k; }), own = all.filter(function (e) { return d.unlocked[e.id]; }), lv = own.reduce(function (a, e) { return a + cardOf(d, e).lv; }, 0);
+      var rest = all.filter(function (e) { return !d.unlocked[e.id]; }).sort(function (a, b) { return rarOf(a) - rarOf(b); });
+      return '<section class="cgr rise' + (op[k] ? ' open' : '') + '" style="--i:' + (i + 2) + '"><button class="cgr-h" data-cg="' + k + '" aria-expanded="' + !!op[k] + '">' + ic(g.i) + '<b>' + g.n + '</b><small>' + own.length + '/' + all.length + '</small>' +
+        '<i class="hcb"><i style="--p:' + (lv / (all.length * CMAX)).toFixed(3) + '"></i></i>' + ic('chev') + '</button>' + (op[k] ? '<div class="deck">' + own.sort(byLv).concat(rest).map(mini).join('') + '</div>' : '') + '</section>';
+    }).join('');
   }
   function reqHtml(d, e) {
     // Voraussetzungen: Bestwerte anderer Übungen, bei Skills zusätzlich Muskel-Level
@@ -4222,13 +4269,22 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
       '<h3 class="xg">Übungen</h3><div class="cgrid">' + ex.map(function (e) { return cardTile(d, e); }).join('') + '</div>';
   }
   function viewSkills(d) {
-    return SKL.map(function (L, i) {
-      var ids = L[1].split(' ').filter(function (id) { return EXB[id]; }), nx = ids.filter(function (id) { return !d.unlocked[id]; })[0];
-      return '<section class="skl rise" style="--i:' + (i + 1) + '"><h3>' + L[0] + '<small>' + ids.filter(function (id) { return d.unlocked[id]; }).length + ' / ' + ids.length + '</small></h3><div class="skp">' + ids.map(function (id) {
-        var e = EXB[id], own = !!d.unlocked[id], c = cardOf(d, e);
-        return '<button class="skn r' + rarOf(e) + (own ? ' on l' + lookOf(c.lv) : id === nx ? ' nx' : ' lk') + '" data-cardo="' + id + '"><i>' + (own ? c.lv : ic('lock')) + '</i><small>' + esc(e.n) + '</small></button>';
-      }).join('') + '</div></section>';
-    }).join('');
+    // Skilltree von innen nach außen: Mitte = Grundlagen, je Skill-Linie ein Ast, Etappen auf Ringen (innen leicht, außen schwer); freie Wege leuchten
+    var N = SKL.length, R = [18, 27, 36, 44], nodes = '', lines = '', lit = 0, tot = 0;
+    SKL.forEach(function (L, i) {
+      var a = (-90 + i * 360 / N) * Math.PI / 180, ids = L[1].split(' ').filter(function (id) { return EXB[id]; }), px = 50, py = 50;
+      ids.forEach(function (id, j) {
+        var e = EXB[id], own = !!d.unlocked[id], x = 50 + Math.cos(a) * R[j], y = 50 + Math.sin(a) * R[j], nx = !own && (j === 0 || !!d.unlocked[ids[j - 1]]), c = cardOf(d, e);
+        tot++; if (own) lit++;
+        lines += '<line x1="' + px.toFixed(2) + '" y1="' + py.toFixed(2) + '" x2="' + x.toFixed(2) + '" y2="' + y.toFixed(2) + '"' + (own ? ' class="on"' : nx ? ' class="nx"' : '') + '/>';
+        nodes += '<button class="stn r' + rarOf(e) + (own ? ' on l' + lookOf(c.lv) : nx ? ' nx' : '') + '" style="left:' + x.toFixed(2) + '%;top:' + y.toFixed(2) + '%" data-cardo="' + id + '" aria-label="' + esc(e.n) + '"><i>' + (own ? c.lv : ic('lock')) + '</i></button>';
+        px = x; py = y;
+      });
+      var lr = Math.min(R[ids.length - 1] + 7, 47);
+      nodes += '<span class="stl" style="left:' + (50 + Math.cos(a) * lr).toFixed(2) + '%;top:' + (50 + Math.sin(a) * lr).toFixed(2) + '%">' + L[0] + '</span>';
+    });
+    return '<p class="stsum rise" style="--i:1"><b>' + lit + ' / ' + tot + '</b> Etappen frei · wischen und antippen</p><div class="stw rise" style="--i:2" data-noswipe="1"><div class="stree"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">' +
+      R.map(function (r) { return '<circle class="rg" cx="50" cy="50" r="' + r + '"/>'; }).join('') + lines + '</svg><i class="stc">' + ic('peak') + '</i>' + nodes + '</div></div>';
   }
   function viewProgress(d, now) {
     if (ui.sel) return viewDetail(d, now);
@@ -4706,7 +4762,8 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     if (t.closest('[data-sheet-save]')) { saveSheet(); return; }
     if (t.closest('[data-sheet-del]')) { delSet(); return; }
     if ((el = t.closest('[data-col]'))) { ui.col = el.dataset.col; ui.sel = null; ui.fresh = true; render(); return; }
-    if ((el = t.closest('[data-cf]'))) { ui.cf = el.dataset.cf; ui.fresh = false; render(); return; }
+    if ((el = t.closest('[data-cf2]'))) { ui.cf2 = el.dataset.cf2; ui.fresh = false; render(); return; }
+    if ((el = t.closest('[data-cg]'))) { ui.cgo = ui.cgo || {}; ui.cgo[el.dataset.cg] = !ui.cgo[el.dataset.cg]; ui.fresh = false; render(); return; }
     if ((el = t.closest('[data-cardo]'))) { var ce = EXB[el.dataset.cardo]; if (ce) { ui.sheet = { card: ce.id }; sheetOpen(cardSheet(derive(state.logs), ce), true); } return; }
     if ((el = t.closest('[data-muso]'))) { ui.sheet = { mus: el.dataset.muso }; sheetOpen(musSheet(derive(state.logs), el.dataset.muso), true); return; }
     if ((el = t.closest('[data-cdet]'))) { closeSheet(); ui.tab = 'fort'; ui.sel = el.dataset.cdet; ui.fresh = true; render(); $('app').scrollTo(0, 0); return; }

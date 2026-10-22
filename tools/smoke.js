@@ -79,7 +79,7 @@ async function scenario(b, sc, errs) {
     // Heute: Bergpfad (Kopfzeile antippen) und zurück, Arena öffnen (Karte, Punkte), verlassen
     if (tab === 'heute') { await click('#hud [data-zoom]'); await click('#hud [data-zoom]'); await click('[data-arena]'); await click('.hc.big'); await closeSheet(); await click('.ar-dots button:last-child'); await click('[data-arx]'); }
     // Sammlung: Karte, Muskel, zurück zu Karten
-    if (tab === 'fort') { await click('[data-col="ka"]'); await click('[data-cardo]'); await closeSheet(); await click('[data-col="mu"]'); await click('.minf [data-muso]'); await closeSheet(); await click('[data-col="sk"]'); }
+    if (tab === 'fort') { await click('[data-col="ka"]'); await click('[data-cardo]'); await closeSheet(); await click('[data-col="mu"]'); await click('.minf [data-muso]'); await closeSheet(); await click('[data-col="sk"]'); await click('.stx.sk'); await click('[data-stz="1"]'); await click('.stm'); await click('[data-stz="0"]'); }
     if (await click('[data-open]')) { await shot(tab + '-detail'); await click('[data-back]'); }
     if (await click('[data-pill]')) { await shot(tab + '-sheet'); await closeSheet(); }
   }

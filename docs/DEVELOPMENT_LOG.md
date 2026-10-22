@@ -15,6 +15,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Skilltree als zoombares radiales Netz
+Mit Falk: wie ein Dungeon-Skilltree, aber radial; Übungen gehören dazu, Navigation mit Zoomen, Infos kompakt.
+- `viewSkills`: Fläche 1400 px (`.stcan`, `ui.stv` = Verschiebung/Zoom), Mitte Zenit, Ring Muskelgruppen (Embleme), außen alle 98 Übungen, je Stufe ein Ring, Skills als große Knoten. Linien: Muskel → Grundübung, Voraussetzung → Übung; frei = grün, gewählter Weg = gold.
+- Layout (`stLayout`): radialer Baum (Eltern = erste Voraussetzung), Winkelbereich je Ast nach seiner Breite (Skills zählen doppelt), Muskelgruppen mindestens 30°, danach je Ring Mindestabstand nach Knotengröße inkl. Übergang über ±180°. Messung: 107 Knoten, 0 Überlappungen. Startansicht passt auf die Ausdehnung des Netzes (`stBox`).
+- Bedienung: ein Finger verschiebt, zwei zoomen (Pointer-Events, `touch-action: none`), Mausrad, Knöpfe +/−/Ganzes Netz; Antippen zeigt unten eine Info-Leiste (Name, Seltenheit, Level bzw. Voraussetzungen, „Karte“/„Übungen“), ein Ziehen löst kein Antippen aus. Beschriftungen kleiner Knoten erst ab Zoom 0,8.
+- Fehler: `.stcan svg` traf auch die Icons in den Knoten (Schlösser außerhalb) → `.stcan > svg`.
+
 ### 2026-10-23 – Muskeln als Körperfigur
 - Mockup A: stilisierte Figur (`BODY`, vorn/hinten), jede Fläche = Muskelgruppe in Materialfarbe (ab Gold mit Leuchten), Antippen wählt (`ui.msel`), Chips für alle 9 Gruppen (auch Beweglichkeit/Ausdauer), Info-Karte mit Level, MP-Balken, „Silber ab Lv 8 · noch X MP“, Übungen öffnen das bisherige Muskel-Fenster. Platzhalter bis zu den Illustrationen.
 

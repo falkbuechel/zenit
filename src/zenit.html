@@ -1354,6 +1354,83 @@ button.cday:active { transform: scale(.97); }
 .hrw summary > .ic:last-child { width: 14px; height: 14px; transition: transform .2s var(--ease); }
 .hrw[open] summary > .ic:last-child { transform: rotate(90deg); }
 .hrw > section { margin: 0 10px 10px; }
+/* Sammlung: Kopfzahlen, Kartenraster, Karten-Sheet mit Stufen, Muskel-Embleme, Skill-Linien */
+.csum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+.csum div { display: grid; justify-items: center; gap: 2px; padding: 12px 6px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); }
+.csum b { font-family: var(--f-display); font-size: 26px; font-weight: 900; line-height: 1; }
+.csum b small { font-family: var(--f-mono); font-size: 12px; font-weight: 600; color: var(--ink3); }
+.csum span { font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
+.cfl { margin-top: 12px; }
+.cgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+.cgrid .hc { flex: none; min-height: 124px; }
+.hc.lk { border-style: dashed; background: transparent; opacity: .55; }
+.hc.lk em .ic { width: 15px; height: 15px; color: var(--ink3); }
+.cbig { display: grid; justify-items: center; }
+.cbig .hc { width: 150px; min-height: 180px; }
+.cbig .hc b { font-size: 16px; }
+.rqw { display: grid; gap: 6px; }
+.rqm { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; font-size: 13px; color: var(--ink2); }
+.rqm .ic { width: 15px; height: 15px; color: var(--ink3); }
+.rqm b { font-family: var(--f-mono); font-size: 12px; }
+.rqm.ok .ic, .rqm.ok b { color: var(--ac); }
+.cmu { display: flex; flex-wrap: wrap; gap: 6px; }
+.cmu span { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 99px; background: var(--s2); font-size: 12.5px; font-weight: 700; }
+.cmu span.half { opacity: .65; }
+.cmu .ic { width: 15px; height: 15px; }
+.ladw { display: grid; gap: 2px; }
+.lad { display: grid; grid-template-columns: 10px 48px 1fr; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 10px; font-size: 13px; color: var(--ink3); }
+.lad b { font-family: var(--f-mono); font-size: 12px; }
+.lad.ok { color: var(--ink2); }
+.lad.cur { background: var(--s2); color: var(--ink); font-weight: 700; }
+.lad > i { width: 10px; height: 10px; border-radius: 3px; background: #8fa39a; }
+.lad > i.lk1 { background: #5b8fd6; }
+.lad > i.lk2 { background: #a374d8; }
+.lad > i.lk3 { background: var(--gold); }
+.lad > i.lk4 { background: #e0533d; }
+.lad > i.lk5 { background: conic-gradient(#57c7b8, #fff3c4, var(--gold), #57c7b8); }
+.mgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+.emb { display: grid; justify-items: center; gap: 4px; padding: 14px 6px 10px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); color: var(--ink); font: inherit; transition: transform .16s var(--ease); }
+.emb:active { transform: scale(.97); }
+.emb b { font-size: 12.5px; }
+.emb em { font-family: var(--f-mono); font-size: 10.5px; font-style: normal; color: var(--ink3); }
+.emb .hcb { width: 78%; }
+.emb .hcb > i { background: var(--ink2); }
+.emb-i { --mc: #8a6a4a; position: relative; display: grid; place-items: center; width: 54px; height: 54px; overflow: hidden; border-radius: 50%; background: radial-gradient(circle at 34% 28%, color-mix(in srgb, var(--mc) 50%, #fff), var(--mc) 58%, color-mix(in srgb, var(--mc) 55%, #000)); box-shadow: inset 0 2px 3px rgba(255, 255, 255, .35), inset 0 -3px 6px rgba(0, 0, 0, .35), 0 6px 14px -8px var(--mc); color: #fff; font-style: normal; }
+.emb-i .ic { width: 26px; height: 26px; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .4)); }
+.emb-i.big { width: 84px; height: 84px; }
+.emb-i.big .ic { width: 40px; height: 40px; }
+.emb-i.m1 { --mc: #8d9399; }
+.emb-i.m2 { --mc: #b07a4a; }
+.emb-i.m3 { --mc: #b9c1cb; }
+.emb-i.m4 { --mc: #d9a82e; }
+.emb-i.m5 { --mc: #8fd8d2; }
+.emb-i.m6 { --mc: #6aa8ff; }
+.emb-i.m7 { --mc: #57c7b8; background: conic-gradient(from var(--za), #57c7b8, #fff3c4, var(--gold), #57c7b8); animation: zspin 5s linear infinite; }
+.emb-i.m3::after, .emb-i.m4::after, .emb-i.m5::after, .emb-i.m6::after, .emb-i.m7::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .35) 50%, transparent 60%) -150% 0 / 250% 100% no-repeat; animation: sheen 5s var(--ease) infinite; }
+.msh { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 16px; }
+.msh > div { display: grid; gap: 6px; }
+.msh b { font-family: var(--f-mono); font-size: 15px; }
+.msh small { font-size: 12px; color: var(--ink3); }
+.skl { margin-top: 12px; padding: 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
+.skl h3 { display: flex; justify-content: space-between; margin: 0 0 10px; font-size: 14px; }
+.skl h3 small { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
+.skp { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.skp::-webkit-scrollbar { display: none; }
+.skn { --rc: #8fa39a; position: relative; flex: 1 0 76px; display: grid; justify-items: center; gap: 6px; padding: 0 4px; border: 0; background: none; color: var(--ink); font: inherit; }
+.skn + .skn::before { content: ""; position: absolute; top: 21px; right: 50%; width: 100%; height: 2px; background: var(--line); z-index: 0; }
+.skn.on + .skn::before { background: var(--rc); }
+.skn > i { position: relative; z-index: 1; display: grid; place-items: center; width: 44px; height: 44px; border: 2px solid var(--line); border-radius: 50%; background: var(--s1); font-family: var(--f-mono); font-size: 15px; font-style: normal; font-weight: 800; }
+.skn > i .ic { width: 16px; height: 16px; color: var(--ink3); }
+.skn small { font-size: 11px; line-height: 1.2; text-align: center; color: var(--ink3); }
+.skn.on > i { border-color: var(--rc); background: color-mix(in srgb, var(--rc) 18%, var(--s1)); }
+.skn.on small { color: var(--ink); }
+.skn.nx > i { border-style: dashed; border-color: var(--rc); }
+.skn.r1 { --rc: #5b8fd6; }
+.skn.r2 { --rc: #a374d8; }
+.skn.r3 { --rc: var(--gold); }
+.skn.r4 { --rc: #e0533d; }
+.skn.r5 { --rc: #57c7b8; }
+.skn.l4 > i, .skn.l5 > i { box-shadow: 0 0 14px -4px var(--rc); }
 </style>
 
 <div id="app">
@@ -1567,8 +1644,13 @@ button.cday:active { transform: scale(.97); }
   }
   function rxText(e, q) { return q.s + '×' + q.r + (e.u === 'Sek.' ? ' s' : '') + (q.t ? ' · 3 s ab' : '') + (q.p ? ' · Pause' : ''); }
   function cCost(e, lv) { var r = rarOf(e); return lv >= CMAX ? 0 : CSES[r][lv - RAR[r][1]] * 10 * e.sets; }
-  function mCost(lv) { return Math.round(150 * Math.pow(1.18, lv - 1)); }
+  // Muskel-Level: 250 × 1,17^(L−1) MP; Level 20 nach etwa 2,5–4 Jahren regelmäßigem Training
+  function mCost(lv) { return Math.round(250 * Math.pow(1.17, lv - 1)); }
   function mLevel(mp) { var lv = 1; while (lv < MMAX && mp >= mCost(lv)) { mp -= mCost(lv); lv++; } return { lv: lv, mp: Math.round(mp), need: lv < MMAX ? mCost(lv) : 0 }; }
+  // Skills brauchen zusätzlich Muskel-Level (Kraftniveau)
+  var SKQ = { lever: { ru: 4, co: 4 }, advfl: { ru: 6, co: 6 }, sfl: { ru: 9, co: 8 }, blever: { sh: 5, ar: 5, co: 4 }, wallw: { sh: 3, co: 3 }, hand: { sh: 4, co: 3 }, hsfree: { sh: 6, co: 5 }, hspu: { sh: 8, ar: 6 },
+    psplan: { sh: 4, br: 4 }, planl: { sh: 6, gr: 4 }, tplan: { sh: 9, co: 7, gr: 6 }, mun: { ru: 6, ar: 5 }, mu: { ru: 8, br: 6, ar: 7 }, oap: { br: 8, co: 7, ar: 6 }, archpu: { ru: 9, ar: 7, gr: 6 }, lsit: { co: 5, ar: 3 }, crow: { co: 3, ar: 3 }, pistol: { be: 6, co: 4 } };
+  function skqOk(e, mp) { var q = SKQ[e.id]; return !q || Object.keys(q).every(function (k) { return mLevel(mp[k] || 0).lv >= q[k]; }); }
   function cardOf(d, e) { return d.cards[e.id] || { lv: RAR[rarOf(e)][1], kp: 0, n: 0 }; }
   function cardReady(d, e) { var c = cardOf(d, e); return c.lv < CMAX && c.kp >= cCost(e, c.lv); }
   // heutige Vorgabe: bereit = Aufstiegsprüfung mit dem Ziel des nächsten Levels
@@ -1610,6 +1692,7 @@ button.cday:active { transform: scale(.97); }
         cur.gx[e.g] = (cur.gx[e.g] || 0) + sx;
       });
       cur.ex[e.id] = 1;
+      if (!unlocked[e.id]) unlocked[e.id] = l.t;
       // Karte: KP gegen das Ziel des aktuellen Levels, Level-Up bei Leistung (diese Einheit) + genug KP; Muskeln bekommen KP × Anteil
       var cd = cards[e.id] || (cards[e.id] = { lv: RAR[rarOf(e)][1], kp: 0, n: 0 }), ctg = rx(e, cd.lv).r, kp = 0, mw = musOf(e), nx = cd.lv < CMAX ? rx(e, cd.lv + 1) : null;
       l.s.forEach(function (x) { kp += Math.round(10 * Math.min(x / ctg, 1.5)); });
@@ -1626,7 +1709,7 @@ button.cday:active { transform: scale(.97); }
         if (best[e.id] === undefined || r.val > best[e.id]) best[e.id] = r.val;
         if (r.val >= e.goal && !goalHit[e.id]) { goalHit[e.id] = l.t; add(100); }
         EX.forEach(function (x) {
-          if (!unlocked[x.id] && x.req.every(function (q) { return best[q[0]] >= q[1]; })) { unlocked[x.id] = l.t; add(150); }
+          if (!unlocked[x.id] && x.req.every(function (q) { return best[q[0]] >= q[1]; }) && skqOk(x, mp)) { unlocked[x.id] = l.t; add(150); }
         });
       }
     });
@@ -1865,6 +1948,10 @@ button.cday:active { transform: scale(.97); }
     star: '<path d="m12 3.500 2.600 5.400 5.900.8-4.300 4.100 1 5.900L12 16.900l-5.200 2.800 1-5.900L3.500 9.700l5.900-.8L12 3.500z"/>',
     calc: '<rect x="5" y="3.500" width="14" height="17" rx="2.500"/><path d="M8.500 7.500h7M8.500 12h.01M12 12h.01M15.500 12h.01M8.500 16h.01M12 16h.01M15.500 16h.01" stroke-width="2.400"/>',
     caltd: '<rect x="4" y="5" width="16" height="15" rx="2.500"/><path d="M4 9.500h16M8 3.500v3M16 3.500v3"/><rect x="10" y="12.500" width="4" height="4" rx="1" fill="currentColor"/>',
+    gem: '<path d="M7 4h10l4 5-9 11L3 9z"/><path d="M3 9h18M9.500 4 8 9l4 11 4-11-1.500-5"/>',
+    shoulder: '<circle cx="12" cy="6.500" r="2.800"/><path d="M4 20v-4.500A5.500 5.500 0 0 1 9.500 10h5a5.500 5.500 0 0 1 5.500 5.500V20"/><path d="M8.500 20v-5M15.500 20v-5"/>',
+    leg: '<path d="M9 3.500v6.500l-1.500 10h3.500l1.500-6 1.500 6h3.500L15 10V3.500"/><path d="M9 7h6"/>',
+    grip: '<path d="M7 11V8.500a1.700 1.700 0 0 1 3.400 0V10M10.400 9.500V7.500a1.700 1.700 0 0 1 3.400 0V10M13.800 9.500V8.500a1.700 1.700 0 0 1 3.400 0V14a6.500 6.500 0 0 1-6.500 6.500H10A5.500 5.500 0 0 1 4.500 15v-2a1.700 1.700 0 0 1 3.400 0"/>',
     tag: '<path d="M3.500 12.200V4.500a1 1 0 0 1 1-1h7.700l8.300 8.300-8.700 8.700z"/><circle cx="8" cy="8" r="1.300"/>',
     drop: '<path d="M12 3.500c3 3.800 5.500 7 5.500 10a5.500 5.500 0 0 1-11 0c0-3 2.500-6.200 5.500-10z"/>',
     scan: '<path d="M4 8.500V5.500A1.500 1.500 0 0 1 5.500 4H8.500M15.500 4h3A1.500 1.500 0 0 1 20 5.500V8.500M20 15.500v3a1.500 1.500 0 0 1-1.500 1.500h-3M8.500 20h-3A1.500 1.500 0 0 1 4 18.500v-3"/><path d="M8 8.500v7M11 8.500v7M13.500 8.500v7M16 8.500v7"/>',
@@ -1984,7 +2071,7 @@ button.cday:active { transform: scale(.97); }
     document.documentElement.setAttribute('data-tier', tr);
     $('hud').innerHTML = ui.tab === 'heute' ? hudSlim(d, now) : '';
     $('hudw').classList.toggle('nohud', ui.tab !== 'heute');
-    var T = [['tage', 'Plan', 'cal'], ['food', 'Essen', 'food'], ['heute', 'Heute', 'dumb'], ['fort', 'Verlauf', 'chart'], ['profil', 'Profil', 'user']];
+    var T = [['tage', 'Plan', 'cal'], ['food', 'Essen', 'food'], ['heute', 'Heute', 'dumb'], ['fort', 'Sammlung', 'gem'], ['profil', 'Profil', 'user']];
     var tb = $('tabs');
     if (!tb.querySelector('.ind')) tb.innerHTML = '<i class="ind" aria-hidden="true"></i>' + T.map(function (t) { return '<button data-tab="' + t[0] + '" aria-label="' + t[1] + '"' + (t[0] === 'heute' ? ' class="mid"' : '') + '>' + ic(t[2]) + '</button>'; }).join('');
     Array.prototype.forEach.call(tb.querySelectorAll('button'), function (bt) { if (bt.dataset.tab === ui.tab) bt.setAttribute('aria-current', 'page'); else bt.removeAttribute('aria-current'); });
@@ -1994,7 +2081,7 @@ button.cday:active { transform: scale(.97); }
     v.className = 'page gut' + (fresh ? ' fresh' : '') + (ui.sw ? (ui.sw > 0 ? ' sw-l' : ' sw-r') : '');
     ui.sw = 0;
     v.innerHTML = ui.tab === 'heute' ? viewToday(d, now) : ui.tab === 'tage' ? viewPlan(d, now) : ui.tab === 'food' ? viewFood(d, now) : ui.tab === 'fort' ? viewProgress(d, now) : ui.tab === 'profil' ? viewProfile(d, now) : viewPath(d);
-    if (ui.tab === 'fort' && ui.seg === 'pf') { var un0 = EX.filter(function (e) { return d.unlocked[e.id]; }).map(function (e) { return e.id; }); if (!seenUx || un0.length !== seenUx.length) { saveSeen(un0); badges(notices(d, now)); } }
+    if (ui.tab === 'fort' && (ui.col || 'ka') === 'ka') { var un0 = EX.filter(function (e) { return d.unlocked[e.id]; }).map(function (e) { return e.id; }); if (!seenUx || un0.length !== seenUx.length) { saveSeen(un0); badges(notices(d, now)); } }
     if (ui.sheet && ui.sheet.settings && $('sheet').classList.contains('open')) $('sheet').innerHTML = setHtml();
     hydrate(snap, fresh);
     if (ui.scroll) { var sc = ui.scroll; ui.scroll = null; setTimeout(function () { scrollToEl(sc); }, 60); }
@@ -3874,13 +3961,80 @@ button.cday:active { transform: scale(.97); }
   });
   var planT = null;
   // ---------- Verlauf
+  // ---------- Sammlung (Tab „fort“): Karten, Muskeln, Skills, Statistik – immer nur ein Bereich sichtbar
+  var MUSI = { ru: 'pull', br: 'push', sh: 'shoulder', ar: 'dumbbell', co: 'core', be: 'leg', gr: 'grip', mo: 'roll', au: 'bike' }, MUSN = {};
+  MUS.forEach(function (m) { MUSN[m[0]] = m[1]; });
+  // Muskel-Embleme: Material steigt mit dem Level
+  var MAT = [[1, 'Holz'], [3, 'Stein'], [5, 'Bronze'], [8, 'Silber'], [11, 'Gold'], [14, 'Platin'], [17, 'Diamant'], [20, 'Zenit']];
+  function matOf(lv) { var m = 0; MAT.forEach(function (x, i) { if (lv >= x[0]) m = i; }); return m; }
+  // Skill-Linien: Etappen in Reihenfolge (jede Etappe ist eine Karte)
+  var SKL = [['Frontlever', 'lever advfl sfl'], ['Handstand', 'wallw hand hsfree hspu'], ['Planche', 'psplan planl tplan'], ['Muscle-up', 'mun mu'], ['Backlever', 'blever'],
+    ['Einarmiger Liegestütz', 'archer oap'], ['Archer-Klimmzug', 'archpu'], ['L-Sit', 'lsit'], ['Krähe', 'crow'], ['Pistol Squat', 'pistol']];
+  function cardTile(d, e) {
+    var own = !!d.unlocked[e.id], c = cardOf(d, e), r = rarOf(e), cc = cCost(e, c.lv);
+    return '<button class="hc ' + RAR[r][2] + ' l' + (own ? lookOf(c.lv) : 0) + (own ? '' : ' lk') + (own && cardReady(d, e) ? ' rdy' : '') + '" data-cardo="' + e.id + '"><small>' + RAR[r][0] + '</small><b>' + esc(e.n) + '</b>' +
+      (own ? '<em>Lv ' + c.lv + '</em><i class="hcb"><i style="--p:' + (cc ? Math.min(1, c.kp / cc) : 1).toFixed(3) + '"></i></i>' : '<em>' + ic('lock') + '</em>') + '</button>';
+  }
+  function viewCards(d) {
+    var f = ui.cf || 'all', own = [], lock = [], n = 0, sum = 0, rd = 0;
+    EX.forEach(function (e) {
+      if (d.unlocked[e.id]) { n++; sum += cardOf(d, e).lv; if (cardReady(d, e)) rd++; }
+      if (f === 'all' || e.g === f) (d.unlocked[e.id] ? own : lock).push(e);
+    });
+    own.sort(function (a, b) { return cardOf(d, b).lv - cardOf(d, a).lv || rarOf(b) - rarOf(a); });
+    lock.sort(function (a, b) { return rarOf(a) - rarOf(b); });
+    return '<section class="csum rise" style="--i:1"><div><b>' + n + '<small>/' + EX.length + '</small></b><span>Karten</span></div><div><b>' + sum + '</b><span>Stärke</span></div><div><b>' + rd + '</b><span>bereit</span></div></section>' +
+      '<div class="pgf cfl rise" style="--i:2" role="group" aria-label="Gruppe filtern"><button class="pg" data-cf="all" aria-pressed="' + (f === 'all') + '">Alle</button>' + GORDER.map(function (k) { var g = gOf(k); return '<button class="pg g' + k + '" data-cf="' + k + '" aria-pressed="' + (f === k) + '" aria-label="' + g.n + '">' + ic(g.i) + '</button>'; }).join('') + '</div>' +
+      '<div class="cgrid rise" style="--i:3">' + own.concat(lock).map(function (e) { return cardTile(d, e); }).join('') + '</div>';
+  }
+  function reqHtml(d, e) {
+    // Voraussetzungen: Bestwerte anderer Übungen, bei Skills zusätzlich Muskel-Level
+    var rs = (e.req || []).map(function (q) { var r = reqLine(q, d); return '<div class="rqm' + (r.ok ? ' ok' : '') + '">' + ic(r.ok ? 'check' : 'lock') + '<span>' + esc(r.name) + '</span><b>' + r.cur + ' / ' + r.need + ' ' + esc(r.u) + '</b></div>'; });
+    var sq = SKQ[e.id] || {}; Object.keys(sq).forEach(function (k) { var lv = mLevel(d.mp[k] || 0).lv; rs.push('<div class="rqm' + (lv >= sq[k] ? ' ok' : '') + '">' + ic(lv >= sq[k] ? 'check' : 'lock') + '<span>' + MUSN[k] + '</span><b>Lv ' + lv + ' / ' + sq[k] + '</b></div>'); });
+    return '<div class="rqw">' + rs.join('') + '</div>';
+  }
+  function cardSheet(d, e) {
+    var own = !!d.unlocked[e.id], c = cardOf(d, e), r = rarOf(e), mw = musOf(e), lad = '';
+    for (var lv = RAR[r][1]; lv <= CMAX; lv++) lad += '<div class="lad' + (own && lv === c.lv ? ' cur' : own && lv < c.lv ? ' ok' : '') + '"><i class="lk' + lookOf(lv) + '"></i><b>Lv ' + lv + '</b><span>' + rxText(e, rx(e, lv)) + '</span></div>';
+    return shHead(gOf(e.g).i, e.n, RAR[r][0] + ' · ' + (own ? 'Level ' + c.lv + ' · Look ' + LOOK[lookOf(c.lv)] : 'gesperrt')) +
+      '<div class="cbig">' + cardTile(d, e) + '</div>' + (own ? cardProg(d, e) : reqHtml(d, e)) +
+      '<h3 class="xg">Muskeln</h3><div class="cmu">' + Object.keys(mw).map(function (k) { return '<span' + (mw[k] < 1 ? ' class="half"' : '') + '>' + ic(MUSI[k]) + MUSN[k] + '</span>'; }).join('') + '</div>' +
+      '<h3 class="xg">Stufen</h3><div class="ladw">' + lad + '</div>' + (own ? '<button class="btn small" data-cdet="' + e.id + '">' + ic('chart') + 'Verlauf der Übung</button>' : '');
+  }
+  function embHtml(k, lv, big) { return '<i class="emb-i m' + matOf(lv) + (big ? ' big' : '') + '">' + ic(MUSI[k]) + '</i>'; }
+  function viewMuscles(d) {
+    return '<div class="mgrid rise" style="--i:1">' + MUS.map(function (m) {
+      var q = mLevel(d.mp[m[0]] || 0);
+      return '<button class="emb" data-muso="' + m[0] + '">' + embHtml(m[0], q.lv) + '<b>' + m[1] + '</b><em>Lv ' + q.lv + ' · ' + MAT[matOf(q.lv)][1] + '</em><i class="hcb"><i style="--p:' + (q.need ? q.mp / q.need : 1).toFixed(3) + '"></i></i></button>';
+    }).join('') + '</div>';
+  }
+  function musSheet(d, k) {
+    var q = mLevel(d.mp[k] || 0), mi = matOf(q.lv), nx = MAT[mi + 1];
+    var ex = EX.filter(function (e) { return musOf(e)[k]; }).sort(function (a, b) { return (d.unlocked[b.id] ? 1 : 0) - (d.unlocked[a.id] ? 1 : 0) || cardOf(d, b).lv - cardOf(d, a).lv; });
+    return shHead(MUSI[k], MUSN[k], 'Level ' + q.lv + ' · ' + MAT[mi][1]) + '<div class="msh">' + embHtml(k, q.lv, 1) + '<div><b>' + (q.need ? Math.round(q.mp) + ' / ' + q.need + ' MP' : 'Maximum') + '</b><i class="hcb"><i style="--p:' + (q.need ? q.mp / q.need : 1).toFixed(3) + '"></i></i>' +
+      '<small>' + (nx ? 'Ab Level ' + nx[0] + ': ' + nx[1] : 'Höchstes Material') + '</small></div></div>' +
+      '<h3 class="xg">Übungen</h3><div class="cgrid">' + ex.map(function (e) { return cardTile(d, e); }).join('') + '</div>';
+  }
+  function viewSkills(d) {
+    return SKL.map(function (L, i) {
+      var ids = L[1].split(' ').filter(function (id) { return EXB[id]; }), nx = ids.filter(function (id) { return !d.unlocked[id]; })[0];
+      return '<section class="skl rise" style="--i:' + (i + 1) + '"><h3>' + L[0] + '<small>' + ids.filter(function (id) { return d.unlocked[id]; }).length + ' / ' + ids.length + '</small></h3><div class="skp">' + ids.map(function (id) {
+        var e = EXB[id], own = !!d.unlocked[id], c = cardOf(d, e);
+        return '<button class="skn r' + rarOf(e) + (own ? ' on l' + lookOf(c.lv) : id === nx ? ' nx' : ' lk') + '" data-cardo="' + id + '"><i>' + (own ? c.lv : ic('lock')) + '</i><small>' + esc(e.n) + '</small></button>';
+      }).join('') + '</div></section>';
+    }).join('');
+  }
   function viewProgress(d, now) {
-    if (ui.sel && ui.seg !== 'pf') return viewDetail(d, now);
-    var h = '<div class="seg four rise" role="group" aria-label="Ansicht"><button data-seg="ov" aria-pressed="' + (ui.seg === 'ov') + '">' + ic('chart') + 'Überblick</button><button data-seg="ex" aria-pressed="' + (ui.seg === 'ex') + '">' + ic('pull') + 'Übungen</button><button data-seg="kp" aria-pressed="' + (ui.seg === 'kp') + '">' + ic('scale') + 'Körper</button><button data-seg="pf" aria-pressed="' + (ui.seg === 'pf') + '">' + ic('path') + 'Pfad</button></div>';
-    if (ui.seg === 'pf') return h + viewPath(d);
+    if (ui.sel) return viewDetail(d, now);
+    var col = ui.col || 'ka', h = '<div class="seg four rise" role="group" aria-label="Sammlung">' + [['ka', 'gem', 'Karten'], ['mu', 'shoulder', 'Muskeln'], ['sk', 'star', 'Skills'], ['st', 'chart', 'Statistik']].map(function (x) {
+      return '<button data-col="' + x[0] + '" aria-pressed="' + (col === x[0]) + '">' + ic(x[1]) + x[2] + '</button>'; }).join('') + '</div>';
+    if (col === 'ka') return h + viewCards(d);
+    if (col === 'mu') return h + viewMuscles(d);
+    if (col === 'sk') return h + viewSkills(d);
+    h += '<div class="ctl rise" style="--i:1"><span class="rng" role="group" aria-label="Statistik">' + [['ov', 'Überblick'], ['ex', 'Übungen'], ['kp', 'Körper']].map(function (x) { return '<button data-seg="' + x[0] + '" aria-pressed="' + ((ui.seg === x[0]) || (x[0] === 'ov' && ['ex', 'kp'].indexOf(ui.seg) < 0)) + '">' + x[1] + '</button>'; }).join('') + '</span></div>';
     if (ui.seg === 'kp') return h + viewBody(d, now) + foodStats(dayIdx(now));
     if (!state.logs.length) return h + '<div class="empty rise">' + ic('chart') + '<b>Noch leer</b></div>';
-    return h + (ui.seg === 'ov' ? viewOverview(d, now) : viewList(d));
+    return h + (ui.seg === 'ex' ? viewList(d) : viewOverview(d, now));
   }
   function scl(vals, W, H, col, goal) {
     var mn = Math.min.apply(null, vals.concat(goal ? [goal] : [])), mx = Math.max.apply(null, vals.concat(goal ? [goal] : [])), pad = Math.max(0.4, (mx - mn) * 0.15);
@@ -4283,9 +4437,9 @@ button.cday:active { transform: scale(.97); }
   function go(k) {
     if (k === 'plan') { scrollToEl('.plan-h'); return; }
     ui.sel = null; ui.del = null; ui.fresh = true; ui.hd = null;
-    if (k === 'cal') { ui.tab = 'fort'; ui.seg = 'ov'; ui.scroll = '#calw'; }
-    else if (k === 'xp') { ui.tab = 'fort'; ui.seg = 'ov'; ui.met = 'xp'; ui.scroll = null; $('app').scrollTo(0, 0); }
-    else if (k === 'pfad') { ui.tab = 'fort'; ui.seg = 'pf'; ui.sel = null; ui.scroll = null; $('app').scrollTo(0, 0); }
+    if (k === 'cal') { ui.tab = 'fort'; ui.col = 'st'; ui.seg = 'ov'; ui.scroll = '#calw'; }
+    else if (k === 'xp') { ui.tab = 'fort'; ui.col = 'st'; ui.seg = 'ov'; ui.met = 'xp'; ui.scroll = null; $('app').scrollTo(0, 0); }
+    else if (k === 'pfad') { ui.tab = 'fort'; ui.col = 'ka'; ui.sel = null; ui.scroll = null; $('app').scrollTo(0, 0); }
     render();
   }
   var jumpMode = '', todayN = 0, todayVis = 0;
@@ -4331,7 +4485,7 @@ button.cday:active { transform: scale(.97); }
     if ((el = t.closest('[data-go]')) && !t.closest('a')) { go(el.dataset.go); return; }
     if ((el = t.closest('[data-nt]'))) {
       var nt = ui.nts.filter(function (x) { return x.k === el.dataset.nt; })[0]; if (!nt) return;
-      ui.tab = nt.tab; ui.sel = null; ui.pe = null; if (nt.k === 'ux') ui.seg = 'pf'; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0);
+      ui.tab = nt.tab; ui.sel = null; ui.pe = null; if (nt.k === 'ux') ui.col = 'ka'; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0);
       if (nt.k === 'wg') openWeight();
       return;
     }
@@ -4342,6 +4496,11 @@ button.cday:active { transform: scale(.97); }
     if ((el = t.closest('[data-preset]'))) { $('sv').value = el.dataset.preset; updSheetXp(); return; }
     if (t.closest('[data-sheet-save]')) { saveSheet(); return; }
     if (t.closest('[data-sheet-del]')) { delSet(); return; }
+    if ((el = t.closest('[data-col]'))) { ui.col = el.dataset.col; ui.sel = null; ui.fresh = true; render(); return; }
+    if ((el = t.closest('[data-cf]'))) { ui.cf = el.dataset.cf; ui.fresh = false; render(); return; }
+    if ((el = t.closest('[data-cardo]'))) { var ce = EXB[el.dataset.cardo]; if (ce) { ui.sheet = { card: ce.id }; sheetOpen(cardSheet(derive(state.logs), ce), true); } return; }
+    if ((el = t.closest('[data-muso]'))) { ui.sheet = { mus: el.dataset.muso }; sheetOpen(musSheet(derive(state.logs), el.dataset.muso), true); return; }
+    if ((el = t.closest('[data-cdet]'))) { closeSheet(); ui.tab = 'fort'; ui.sel = el.dataset.cdet; ui.fresh = true; render(); $('app').scrollTo(0, 0); return; }
     if ((el = t.closest('[data-seg]'))) { ui.seg = el.dataset.seg; ui.fresh = true; render(); return; }
     if ((el = t.closest('[data-range]'))) { ui.range = el.dataset.range; ui.bk = null; ui.fresh = true; render(); return; }
     if ((el = t.closest('[data-met]'))) { ui.met = el.dataset.met; ui.fresh = true; render(); return; }

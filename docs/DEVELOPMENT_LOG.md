@@ -15,6 +15,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-22 – Sammlung statt Verlauf: Karten, Muskeln, Skills, Statistik
+- Tab „fort“ heißt jetzt Sammlung (Icon `gem`), oben 4 Bereiche (`ui.col`: ka/mu/sk/st), immer nur einer sichtbar. Statistik enthält Überblick/Übungen/Körper (später ins Profil).
+- Karten: Kopfzahlen (Karten, Stärke = Summe der Level, bereit zum Aufstieg), Gruppenfilter, Raster (eigene nach Level, gesperrte gestrichelt). Antippen: Sheet mit großer Karte, Fortschritt bzw. Voraussetzungen, Muskeln, alle Stufen der Leiter mit Look-Farbe, Sprung in den Übungsverlauf.
+- Muskeln: 9 Embleme, Material nach Level (Holz, Stein, Bronze, Silber, Gold, Platin, Diamant, Zenit, ab Silber mit Glanz), Sheet mit MP und allen Übungen der Gruppe. Kosten jetzt 250 × 1,17^(L−1).
+- Skills: 10 Skill-Linien (`SKL`) als Etappen-Pfad; Skills brauchen zusätzlich Muskel-Level (`SKQ`, `skqOk` in `derive`). Was schon trainiert wurde, bleibt frei (jede geloggte Übung gilt als freigeschaltet).
+- Neue Icons: gem, shoulder, leg, grip.
+
 ### 2026-10-22 – Kartensystem 2.0: 6 Seltenheiten, Looks, Leiter, Aufstiegsprüfung
 Mit Falk: 6 Seltenheiten (Gewöhnlich 1, Selten 3, Episch 5, Legendär 7, Mythisch 8, Zenit 9), Seltenheit fest = Abzeichen, Look (Rahmen/Effekte) nach Level (1–2/3–4/5–6/7–8/9/10). Langsamer (`CSES`: 154–220 Einheiten bis Lv 10). Legendär: wenige sichtbare Schritte, je Schritt viele Einheiten. Steigerung `LAD`: Wiederholungen → +1 Satz (max 4) → Tempo 3 s ab → Pause (Halten: länger), später Zusatzgewicht. Skills feste Seltenheit `SKR`. Pfad aus Heute = Bergpfad zum Zenit; Sammlung im Verlauf-Tab; Reihenfolge System → Sammlung → Heute → Effekte.
 - `rx(e, lv)` Vorgabe je Level, `rxNow`: bei genug KP Aufstiegsprüfung mit der Vorgabe des nächsten Levels (ein Level pro Einheit). Heute zeigt Karten mit Seltenheits-Abzeichen und Look-Rahmen (Glanz ab Episch, Glut Mythisch, rotierender Rand Zenit, `@property --za`), Sätze der gewählten Karte nach Vorgabe.

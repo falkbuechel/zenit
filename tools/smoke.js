@@ -10,7 +10,7 @@ const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const SCEN = ['mid', 'gold', 'broken', 'fresh', 'empty'];
 const TABS = ['heute', 'tage', 'food', 'fort', 'profil'];
 // Je Tab: Schalter, von denen jeweils jeder Wert einmal angeklickt wird (alle harmlos, nichts löscht)
-const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data-xr]', '[data-xm]', '[data-pg]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]', '[data-fsd]', '[data-fwa]', '[data-hsel]'];
+const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data-xr]', '[data-xm]', '[data-pg]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]', '[data-fsd]', '[data-fwa]', '[data-hsel]', '[data-col]', '[data-cf]'];
 const NOANIM = '*, *::before, *::after { animation: none !important; transition: none !important; }';
 
 async function scenario(b, sc, errs) {
@@ -70,6 +70,8 @@ async function scenario(b, sc, errs) {
       await shot('tage-editor'); await click('[data-pback]');
       await click('[data-pmanx]'); await click('[data-pdiscok]');
     }
+    // Sammlung: Karte, Muskel, zurück zu Karten
+    if (tab === 'fort') { await click('[data-col="ka"]'); await click('[data-cardo]'); await closeSheet(); await click('[data-col="mu"]'); await click('[data-muso]'); await closeSheet(); await click('[data-col="sk"]'); await click('[data-col="st"]'); }
     if (await click('[data-open]')) { await shot(tab + '-detail'); await click('[data-back]'); }
     if (await click('[data-pill]')) { await shot(tab + '-sheet'); await closeSheet(); }
   }

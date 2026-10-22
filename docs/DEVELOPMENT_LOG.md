@@ -15,6 +15,12 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Essen-Gruppen, Wischrichtung getauscht, Skilltree entwirrt mit Leuchten und Fortschritt
+- Essen: Mahlzeit-Leiste und Uhrzeit in einer Zeile (Tag darüber, nur bei neuen Einträgen). Wischen getauscht: Vorschlag nach oben = eintragen, Eintrag nach unten = löschen. Gleiche Mahlzeit innerhalb 45 min = Stapel (`fGroups`, `fChip`, `data-fstk`, `ui.fstk`), Antippen klappt auf (getönte Klammer, Schließen-Knopf); Stapel selbst lassen sich nicht wegwischen. Balken dunkler mit stärkerem Verlauf (dunkle Basis → helle Spitze).
+- Diagramme: feine Wochenlinien (ab 14 Tagen) bzw. Monatslinien (ab 120 Tagen).
+- Skilltree: Äste werden probeweise gedreht (±3–24°, drei Durchgänge), behalten wird, was weniger Kreuzungen + kürzere Linien ergibt; jeder Ast bleibt im Sektor seiner Muskelgruppe. Gemessen: 16 → 5 Kreuzungen, Linienlänge 9167 → 8127 px. Die einfache Variante (zur Mitte der Eltern drehen) machte es schlechter (20) und warf Äste aus ihren Sektoren.
+- Skilltree: „Als Nächstes“ entfernt. Freigeschaltete Linien leuchten (`line.gl`), gesperrte füllen sich vom Ursprung aus grün nach Fortschritt der Voraussetzung (`line.pg`), freigeschaltete Knoten mit Schein. Info-Leiste mit Level-Plakette in Seltenheitsfarbe, Balken (KP zum nächsten Level bzw. jede Voraussetzung und Muskel-Level), Vorgabe, Muskeln; bei Muskelgruppen MP-Balken, Einzelmuskeln, freigeschaltete Übungen.
+
 ### 2026-10-23 – Wischen zum Eintragen/Löschen, Mahlzeit-Leiste, Balken-Glanz, lesbare Diagramme, Skilltree-Sektoren
 - Essen: Vorschlag nach unten ziehen = sofort eintragen, Eintrag nach oben ziehen = löschen mit Rückgängig (Pointer-Events, `touch-action: pan-x` auf den Reihen, waagerecht bleibt Scrollen, Wischen löst kein Antippen aus; `foodDel`). Uhrzeit als Pille neben Heute/Gestern, Mahlzeit als Symbol-Leiste (`MEALI`, Icon `snack`, verstecktes `#fmk`, `fmkSet`). Balken mit Verlauf zur Spitze und wanderndem Glanz (auch Wasser).
 - Diagramme: Wertlinien mit Zahlen (0/Mitte/oben), Endwert an jeder Linie, Legende antippen hebt eine Kurve hervor (`data-lcf`, `data-f` am SVG).

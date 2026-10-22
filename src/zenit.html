@@ -973,8 +973,8 @@ button.pdb-h:active { background: var(--s2); }
 .fbk.over > em { color: var(--danger); }
 .fbt { position: relative; display: block; height: 6px; border-radius: 99px; background: var(--s3); overflow: hidden; }
 .fbt > i { position: relative; display: block; overflow: hidden; width: calc(var(--p, 0) * 100%); height: 100%; border-radius: inherit; background: var(--g-push); transition: width .6s var(--ease); }
-.fbt > i::after, .wsl > i::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, rgba(255, 255, 255, 0) 35%, rgba(255, 255, 255, .32)); }
-.fbt > i::before, .wsl > i::before { content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 40%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .45), transparent); animation: fshim 4s ease-in-out infinite; }
+.fbt > i::after, .wsl > i::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, .16) 65%, rgba(255, 255, 255, .2)); }
+.fbt > i::before, .wsl > i::before { content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 40%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .3), transparent); animation: fshim 4s ease-in-out infinite; }
 @keyframes fshim { 0%, 30% { left: -40%; } 100% { left: 110%; } }
 @media (prefers-reduced-motion: reduce) { .fbt > i::before, .wsl > i::before { animation: none; display: none; } }
 .fbk.hit .fbt > i { background: var(--ac); }
@@ -995,7 +995,7 @@ button.pdb-h:active { background: var(--s2); }
 .fmb.hit .fbt > i { background: var(--ac); }
 .fmb.low .fbt > i, .fbk.low .fbt > i { background: var(--flame); }
 .fmb.low b, .fmb.low span, .fbk.low > em { color: var(--flame); }
-.ftl { display: flex; gap: 8px; margin: 12px -16px 0; padding: 0 16px 12px; touch-action: pan-x; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; scrollbar-width: none; }
+.ftl { display: flex; gap: 8px; margin: 2px -16px 0; padding: 10px 16px 2px; touch-action: pan-x; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; scrollbar-width: none; }
 .ftl::-webkit-scrollbar { display: none; }
 .fti { flex: 0 0 calc((100% - 32px - 24px) / 4.3); scroll-snap-align: start; display: grid; align-content: space-between; gap: 4px; min-width: 0; min-height: 84px; padding: 9px 9px 8px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
 .fti:active { transform: scale(.95); }
@@ -1007,7 +1007,7 @@ button.pdb-h:active { background: var(--s2); }
 .fti, .fcpi { transition: transform .2s var(--ease), box-shadow .15s, opacity .16s; }
 .fti.arm { box-shadow: 0 0 0 2px var(--ac); }
 .fcpi.arm { box-shadow: 0 0 0 2px var(--danger); }
-.fcpi.gone { opacity: 0; transform: translateY(-60px) !important; }
+.fcpi.gone { opacity: 0; transform: translateY(60px) !important; }
 @keyframes ftok { 0% { background: color-mix(in srgb, var(--ac) 30%, var(--s1)); transform: scale(.96); } }
 .fact2 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
 .fact2 .btn { min-height: 44px; padding: 0 8px; font-size: 14px; }
@@ -1186,11 +1186,11 @@ button.cday:active { transform: scale(.97); }
 .hc.on { outline: 2px solid var(--ink); outline-offset: 2px; }
 .hc.dn { opacity: .55; }
 .hc.rdy em::after { content: " ▲"; color: var(--gold); }
-.hc.r1, .dk.r1, .stx.r1, .sts.r1 { --rc: #5b8fd6; }
-.hc.r2, .dk.r2, .stx.r2, .sts.r2 { --rc: #a374d8; }
-.hc.r3, .dk.r3, .stx.r3, .sts.r3 { --rc: var(--gold); }
-.hc.r4, .dk.r4, .stx.r4, .sts.r4 { --rc: #e0533d; }
-.hc.r5, .dk.r5, .stx.r5, .sts.r5 { --rc: #57c7b8; }
+.hc.r1, .dk.r1, .stx.r1, .sts.r1, .stinf.r1 { --rc: #5b8fd6; }
+.hc.r2, .dk.r2, .stx.r2, .sts.r2, .stinf.r2 { --rc: #a374d8; }
+.hc.r3, .dk.r3, .stx.r3, .sts.r3, .stinf.r3 { --rc: var(--gold); }
+.hc.r4, .dk.r4, .stx.r4, .sts.r4, .stinf.r4 { --rc: #e0533d; }
+.hc.r5, .dk.r5, .stx.r5, .sts.r5, .stinf.r5 { --rc: #57c7b8; }
 .hc.l1, .dk.l1 { --lc: #5b8fd6; background: linear-gradient(160deg, color-mix(in srgb, #5b8fd6 10%, var(--s1)), var(--s1) 60%); }
 .hc.l2, .dk.l2 { --lc: #a374d8; background: linear-gradient(160deg, color-mix(in srgb, #a374d8 14%, var(--s1)), var(--s1) 65%); }
 .hc.l3, .dk.l3 { --lc: var(--gold); background: linear-gradient(160deg, color-mix(in srgb, var(--gold) 16%, var(--s1)), var(--s1) 70%); box-shadow: 0 8px 22px -14px var(--gold); }
@@ -1406,14 +1406,12 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 .stk b { font-family: var(--f-display); font-size: 18px; font-weight: 900; }
 .stk b small { font-family: var(--f-mono); font-size: 10px; color: var(--ink3); }
 .stk span { font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
-.stn2 { position: absolute; top: 10px; right: 10px; display: grid; justify-items: end; gap: 4px; max-width: 46%; }
-.stn2 span { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--gold); }
-.stn2 span .ic { width: 12px; height: 12px; }
-.stn2 button { overflow: hidden; max-width: 100%; padding: 5px 10px; border: 1px dashed var(--gold); border-radius: 99px; background: var(--s1); color: var(--ink); font: inherit; font-size: 11.5px; font-weight: 700; white-space: nowrap; text-overflow: ellipsis; }
 .stcan line { stroke: var(--line); stroke-width: 2; }
 .stcan line.on { stroke: var(--ac); stroke-width: 3; }
 .stcan line.hl { stroke: var(--gold); stroke-width: 5; }
 .stcan line.st2 { stroke-width: 1; }
+.stcan line.gl { stroke: var(--ac); stroke-width: 10; stroke-linecap: round; opacity: .22; filter: blur(3px); }
+.stcan line.pg { stroke: var(--ac); stroke-width: 3; stroke-linecap: round; opacity: .55; }
 .sts { --rc: #8fa39a; position: absolute; width: 16px; height: 16px; margin: -8px 0 0 -8px; padding: 0; border: 1.5px solid var(--line); border-radius: 50%; background: var(--s1); }
 .sts.on { border-color: var(--rc); background: color-mix(in srgb, var(--rc) 50%, var(--s1)); }
 .sts.sel { box-shadow: 0 0 0 3px var(--gold); }
@@ -1432,17 +1430,30 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 .stx.sk { width: 96px; margin: -22px 0 0 -48px; }
 .stx.sk > i { width: 44px; height: 44px; font-size: 15px; }
 .stx.sk small { font-size: 11px; font-weight: 800; color: var(--ink); }
-.stx.on > i { border-color: var(--rc); background: color-mix(in srgb, var(--rc) 25%, var(--s1)); color: var(--ink); }
+.stx.on > i { border-color: var(--rc); background: color-mix(in srgb, var(--rc) 25%, var(--s1)); color: var(--ink); box-shadow: 0 0 12px -1px var(--rc); }
 .stx.on.sk > i { box-shadow: 0 0 18px -2px var(--rc); }
 .stx.nx > i { border-style: dashed; border-color: var(--rc); }
 .stx.sel > i { box-shadow: 0 0 0 4px var(--gold); }
-.stinf { position: absolute; right: 10px; bottom: 10px; left: 10px; display: grid; gap: 8px; max-height: 46%; overflow: auto; padding: 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); box-shadow: 0 12px 26px -16px rgba(0, 0, 0, .6); }
+.stinf { --rc: #8fa39a; position: absolute; right: 10px; bottom: 10px; left: 10px; display: grid; gap: 8px; max-height: 46%; overflow: auto; padding: 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); box-shadow: 0 12px 26px -16px rgba(0, 0, 0, .6); }
 .stinf-h { display: flex; align-items: center; gap: 10px; }
 .stinf-h span { display: grid; flex: 1; min-width: 0; }
 .stinf-h b { overflow: hidden; font-size: 15px; white-space: nowrap; text-overflow: ellipsis; }
 .stinf-h small { font-size: 12px; color: var(--ink3); }
 .stinf-h .emb-i { width: 40px; height: 40px; }
 .stinf-h .emb-i .ic { width: 20px; height: 20px; }
+.stb { display: grid; flex: none; place-items: center; width: 40px; height: 40px; border: 2px solid var(--rc); border-radius: 50%; background: var(--s2); color: var(--ink3); font-family: var(--f-display); font-size: 18px; font-style: normal; font-weight: 900; }
+.stb .ic { width: 16px; height: 16px; }
+.stinf.on .stb { background: color-mix(in srgb, var(--rc) 25%, var(--s1)); color: var(--ink); box-shadow: 0 0 14px -2px var(--rc); }
+.sigr { display: grid; gap: 7px; }
+.sir { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 8px; font-size: 12px; color: var(--ink2); }
+.sir span { display: flex; align-items: center; gap: 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.sir .ic { flex: none; width: 13px; height: 13px; color: var(--ink3); }
+.sir b { font-family: var(--f-mono); font-size: 11.5px; }
+.sir .hcb { grid-column: 1 / -1; }
+.sir.ok b, .sir.ok .ic { color: var(--ac); }
+.sir.ok .hcb > i { background: var(--ac); }
+.cmu.sm span { padding: 3px 8px; font-size: 11px; }
+.cmu.sm .ic { width: 12px; height: 12px; }
 /* Profil: Karte mit Level und Schnellknöpfen, Statistik-Kacheln mit Mini-Diagramm, Rekorde */
 .pid { display: grid; gap: 14px; margin-top: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 20px; background: var(--s1); }
 .pid-t { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 14px; }
@@ -1485,7 +1496,7 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 .recr em small { display: block; }
 /* Essen: gegessene Einträge als wischbare Chip-Leiste */
 .fdl { margin-top: 18px; }
-.fchips { display: flex; gap: 8px; margin: 0 -16px; padding: 12px 16px 6px; touch-action: pan-x; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding: 0 16px; scrollbar-width: none; }
+.fchips { display: flex; align-items: flex-start; gap: 8px; margin: 0 -16px; padding: 4px 16px 18px; touch-action: pan-x; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding: 0 16px; scrollbar-width: none; }
 .fchips::-webkit-scrollbar { display: none; }
 .fcpi { --mc: var(--line); flex: 0 0 auto; display: grid; gap: 2px; min-width: 108px; max-width: 150px; padding: 10px 12px; scroll-snap-align: start; border: 1px solid var(--line); border-top: 3px solid var(--mc); border-radius: 14px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
 .fcpi:active { transform: scale(.96); }
@@ -1520,6 +1531,7 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 .lcs[data-f="0"] [data-k="0"], .lcs[data-f="1"] [data-k="1"], .lcs[data-f="2"] [data-k="2"], .lcs[data-f="3"] [data-k="3"], .lcs[data-f="4"] [data-k="4"] { opacity: 1; }
 .lcs[data-f="0"] .lar[data-k="0"], .lcs[data-f="1"] .lar[data-k="1"] { opacity: .12; }
 .lgr { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; vector-effect: non-scaling-stroke; }
+.lwk { stroke: var(--line); stroke-width: 1; opacity: .5; vector-effect: non-scaling-stroke; }
 .lcs .lgx { font-size: 9px; }
 .lcs .lev { font-size: 10px; font-weight: 700; }
 .lch b { font-family: var(--f-mono); font-size: 14px; color: var(--ink); }
@@ -1547,18 +1559,24 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 .sex em.dn { color: var(--danger); }
 .sexm { width: 100%; margin-top: 8px; }
 /* Essen: Uhrzeit im Fenster, Mahlzeit-Farben der Chips */
-.fwh { display: grid; grid-template-columns: 1fr 116px; align-items: center; gap: 8px; }
+.fwh { display: grid; grid-template-columns: minmax(0, 1fr) 104px; align-items: stretch; gap: 8px; }
 .fwh .seg { margin: 0; }
 .seg.fmk { grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; }
-.seg.fmk button { flex-direction: column; gap: 2px; min-height: 52px; font-size: 11px; }
+.seg.fmk button { flex-direction: column; gap: 2px; min-width: 0; min-height: 44px; padding: 0; font-size: 10px; }
 .seg.fmk .ic { width: 18px; height: 18px; }
-.ftm { display: flex; align-items: center; gap: 6px; height: 52px; padding: 0 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--s1); color: var(--ink3); }
+.ftm { display: flex; align-items: center; gap: 5px; height: 54px; padding: 0 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--s1); color: var(--ink3); }
 .ftm .ic { flex: none; width: 16px; height: 16px; }
 .ftm input { width: 100%; min-width: 0; padding: 0; border: 0; border-radius: 0; outline: none; background: none; color: var(--ink); font-family: var(--f-mono); font-size: 16px; -webkit-appearance: none; appearance: none; }
-.fcpi.m-fr { --mc: #e0a24a; }
-.fcpi.m-mi { --mc: var(--ac); }
-.fcpi.m-sn { --mc: #5b8fd6; }
-.fcpi.m-ab { --mc: #8a6fd1; }
+.ftm input::-webkit-calendar-picker-indicator { display: none; }
+.fcpi.m-fr, .fgrp.m-fr { --mc: #e0a24a; }
+.fcpi.m-mi, .fgrp.m-mi { --mc: var(--ac); }
+.fcpi.m-sn, .fgrp.m-sn { --mc: #5b8fd6; }
+.fcpi.m-ab, .fgrp.m-ab { --mc: #8a6fd1; }
+/* Stapel: zwei angedeutete Karten dahinter; aufgeklappt eine getönte Klammer um die Gruppe */
+.fcpi.fstk { margin-right: 10px; box-shadow: 5px 5px 0 -1px var(--s1), 5px 5px 0 0 var(--line), 10px 10px 0 -1px var(--s1), 10px 10px 0 0 var(--line); }
+.fgrp { flex: none; display: flex; align-items: center; gap: 6px; padding: 4px; border-radius: 18px; background: color-mix(in srgb, var(--mc) 16%, transparent); }
+.fgx { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: var(--s1); color: var(--ink3); }
+.fgx .ic { width: 14px; height: 14px; }
 /* Muskeln: Körperfigur, Auswahl-Chips, Info-Karte */
 .mfig { display: grid; justify-items: center; margin-top: 12px; touch-action: pan-y; padding: 12px; border: 1px solid var(--line); border-radius: 22px; background: radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--ac) 12%, var(--s1)), var(--s1) 70%); }
 .mfig svg.fl { animation: mflip .4s var(--ease) both; }
@@ -1934,7 +1952,7 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
   var DEMO = false; try { DEMO = localStorage.getItem('zenit.mode') === 'demo'; } catch (e) { /* egal */ }
   var KEY = DEMO ? 'stufenbuch.demo' : 'stufenbuch.v1';
   var state = { logs: [], u: 0, plan: null, food: null };
-  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fq: '', fcat: '', fpick: null, ftiles: null, ftok: null, cpr: null, gmode: 'a', nts: [], pd: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, todo: false, pdo: {}, plk: null, pmode: null, draft: null, psel: null, pnt: null, pdisc: 0, pwe: null, pact: null, pnoclick: 0, dd: null, xo: {}, gx: {}, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0 };
+  var ui = { tab: 'heute', scroll: null, mo: 0, undo: null, rest: null, sel: null, seg: 'ov', range: '30', met: 'sets', gf: 'all', bk: null, xr: 'all', xm: 'best', pt: null, hd: null, del: null, io: '', sheet: null, fresh: true, sm: 'swap', fd: null, rm: 0, wr: '90', sw: 0, fdrawn: false, pfd: null, fq: '', fcat: '', fpick: null, ftiles: null, ftok: null, cpr: null, gmode: 'a', nts: [], pd: null, pfl: null, ca: null, cm: false, cdir: 0, cmx: false, pdx: false, pchg: false, pman: false, todo: false, pdo: {}, plk: null, pmode: null, draft: null, psel: null, pnt: null, pdisc: 0, pwe: null, pact: null, pnoclick: 0, dd: null, xo: {}, gx: {}, pg: 'all', pe: null, pnew: false, pf: 'all', pq: '', pdel: 0, fstk: {} };
   var store = 'local', sync = '', ref = null, timer = null, writing = false, dirty = false;
 
   var EQUIP = [['bar', 'Klimmzugstange'], ['board', 'Push-up-Board'], ['db', 'Kurzhanteln'], ['mat', 'Matte'], ['roll', 'Blackroll'], ['ball', 'Faszienball'], ['bike', 'Homebike'], ['band', 'Widerstandsband']];
@@ -3255,9 +3273,11 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
     // Gegessen: wischbare Leiste nach Uhrzeit, Farbe = Mahlzeit (Antippen = ändern oder löschen), leer: „Wie gestern“
     var cp = !s.items.length && foodSum(sd - 1).items.length;
     h += '<section class="fdl rise" style="--i:4"><h2 class="sec-h">' + esc(dayHead(sd)) + '<small>' + s.items.length + ' Einträge</small></h2>' +
-      (s.items.length ? '<div class="fchips" data-noswipe="1">' + s.items.slice().sort(function (a, b) { return a.x.t - b.x.t; }).map(function (o) {
-        var ml = mealOfE(o.x);
-        return '<button class="fcpi m-' + ml[1] + '" data-fedit="' + o.i + '"><b>' + esc(o.x.n || 'Mahlzeit') + '</b><small>' + ml[2] + ' · ' + hmOf(o.x.t) + '</small><em>' + Math.round(o.x.k) + '<i>kcal</i></em></button>';
+      (s.items.length ? '<div class="fchips" data-noswipe="1">' + fGroups(s.items).map(function (g) {
+        if (g.l.length < 2) return fChip(g.l[0]);
+        var key = g.m + g.t0, ml = mealOfE(g.l[0].x);
+        if (ui.fstk[key]) return '<div class="fgrp m-' + g.m + '">' + g.l.map(fChip).join('') + '<button class="fgx" data-fstk="' + key + '" aria-label="Zuklappen">' + ic('close') + '</button></div>';
+        return '<button class="fcpi fstk m-' + g.m + '" data-fstk="' + key + '"><b>' + g.l.map(function (o) { return esc(o.x.n || 'Mahlzeit'); }).join(' · ') + '</b><small>' + ml[2] + ' · ' + hmOf(g.t0) + ' · ' + g.l.length + '×</small><em>' + Math.round(g.l.reduce(function (a, o) { return a + o.x.k; }, 0)) + '<i>kcal</i></em></button>';
       }).join('') + '</div>' : cp ? '<button class="agn fcp" data-fcopy="1">' + ic('swap') + '<span>Wie gestern eintragen</span></button>' : '<p class="muted">Noch nichts eingetragen.</p>') + '</section>';
     return h;
   }
@@ -3540,10 +3560,11 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
   function mealOf(t) { var q = new Date(t), h = q.getHours() + q.getMinutes() / 60; return MEALS.filter(function (m) { return h < m[0]; })[0]; }
   function hmOf(t) { var q = new Date(t); return ('0' + q.getHours()).slice(-2) + ':' + ('0' + q.getMinutes()).slice(-2); }
   function whenRow(t, withDay, mk) {
-    // Tag (neue Einträge) und Uhrzeit-Pille in einer Zeile, darunter die Mahlzeit als Symbol-Leiste; die Mahlzeit folgt der Uhrzeit, bis man sie wählt
+    // Tag (nur neue Einträge) oben, darunter eine Zeile: Mahlzeit als Symbol-Leiste + Uhrzeit-Pille; die Mahlzeit folgt der Uhrzeit, bis man sie wählt
     var ml = mk || mealOf(t || Date.now())[1];
-    return '<div class="fwh">' + (withDay ? dayTog() : '<span></span>') + '<label class="ftm">' + ic('clock') + '<input id="ftm" type="time" value="' + hmOf(t || Date.now()) + '" aria-label="Uhrzeit"></label></div>' +
-      '<div class="seg fmk" role="group" aria-label="Mahlzeit"><input type="hidden" id="fmk" value="' + ml + '"' + (mk ? ' data-man="1"' : '') + '>' + MEALS.map(function (m) { return '<button type="button" data-fmk="' + m[1] + '" aria-pressed="' + (m[1] === ml) + '">' + ic(MEALI[m[1]]) + m[2] + '</button>'; }).join('') + '</div>';
+    return (withDay ? dayTog() : '') + '<div class="fwh"><div class="seg fmk" role="group" aria-label="Mahlzeit"><input type="hidden" id="fmk" value="' + ml + '"' + (mk ? ' data-man="1"' : '') + '>' +
+      MEALS.map(function (m) { return '<button type="button" data-fmk="' + m[1] + '" aria-pressed="' + (m[1] === ml) + '" aria-label="' + m[2] + '">' + ic(MEALI[m[1]]) + (m[1] === 'fr' ? 'Früh' : m[2]) + '</button>'; }).join('') + '</div>' +
+      '<label class="ftm">' + ic('clock') + '<input id="ftm" type="time" value="' + hmOf(t || Date.now()) + '" aria-label="Uhrzeit"></label></div>';
   }
   function whenFor(idx) { var x = idx != null ? foodState().e[idx] : null; return whenRow(x ? x.t : 0, !x, x ? x.mk : ''); }
   function mealOfE(x) { return x.mk ? MEALS.filter(function (m) { return m[1] === x.mk; })[0] || mealOf(x.t) : mealOf(x.t); }
@@ -3622,16 +3643,23 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
   }
 
   function fmkSet(v) { $('fmk').value = v; document.querySelectorAll('[data-fmk]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.fmk === v)); }); }
+  // Gegessenes gruppieren: gleiche Mahlzeit, höchstens 45 min nach dem ersten Eintrag der Gruppe
+  function fGroups(items) {
+    var gs = [];
+    items.slice().sort(function (a, b) { return a.x.t - b.x.t; }).forEach(function (o) { var m = mealOfE(o.x)[1], g = gs[gs.length - 1]; if (g && g.m === m && o.x.t - g.t0 <= 45 * 6e4) g.l.push(o); else gs.push({ m: m, t0: o.x.t, l: [o] }); });
+    return gs;
+  }
+  function fChip(o) { var ml = mealOfE(o.x); return '<button class="fcpi m-' + ml[1] + '" data-fedit="' + o.i + '"><b>' + esc(o.x.n || 'Mahlzeit') + '</b><small>' + ml[2] + ' · ' + hmOf(o.x.t) + '</small><em>' + Math.round(o.x.k) + '<i>kcal</i></em></button>'; }
   function foodDel(i) { var st = foodState(); ui.undo = '#' + JSON.stringify(st); st.e.splice(i, 1); persist(); closeSheet(true); ui.fresh = false; render(); toast('Gelöscht', 'close', true); buzz(10); }
-  // Wischen: Vorschlag nach unten ziehen = sofort eintragen (Menge wie angezeigt), Eintrag nach oben ziehen = löschen (mit Rückgängig).
+  // Wischen: Vorschlag nach oben ziehen = sofort eintragen (Menge wie angezeigt), Eintrag nach unten ziehen = löschen (mit Rückgängig).
   // Waagerecht bleibt Scrollen der Reihe; ein Wischen löst kein Antippen aus
   var fsw = null, fswMoved = false;
-  document.addEventListener('pointerdown', function (ev) { var el = ev.target.closest && ev.target.closest('.fti, .fcpi'); fswMoved = false; fsw = el ? { el: el, x: ev.clientX, y: ev.clientY, dy: 0, add: el.classList.contains('fti') } : null; });
+  document.addEventListener('pointerdown', function (ev) { var el = ev.target.closest && ev.target.closest('.fti, .fcpi:not(.fstk)'); fswMoved = false; fsw = el ? { el: el, x: ev.clientX, y: ev.clientY, dy: 0, add: el.classList.contains('fti') } : null; });
   document.addEventListener('pointermove', function (ev) {
     if (!fsw) return; var dx = ev.clientX - fsw.x, dy = ev.clientY - fsw.y;
     if (!fswMoved && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) { fsw = null; return; }
     if (Math.abs(dy) > 6) fswMoved = true; if (!fswMoved) return;
-    var v = fsw.add ? Math.max(0, Math.min(70, dy)) : Math.min(0, Math.max(-70, dy)); fsw.dy = v;
+    var v = fsw.add ? Math.min(0, Math.max(-70, dy)) : Math.max(0, Math.min(70, dy)); fsw.dy = v;
     fsw.el.style.transform = 'translateY(' + v + 'px)'; fsw.el.classList.toggle('arm', Math.abs(v) > 44);
   });
   function fswEnd() {
@@ -3668,6 +3696,7 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
     var el, st = foodState();
     if ((el = t.closest('[data-fdel]'))) { foodDel(+el.dataset.fdel); return true; }
     if ((el = t.closest('[data-fmk]'))) { fmkSet(el.dataset.fmk); $('fmk').dataset.man = '1'; buzz(4); return true; }
+    if ((el = t.closest('[data-fstk]'))) { ui.fstk[el.dataset.fstk] = !ui.fstk[el.dataset.fstk]; ui.fresh = false; render(); buzz(4); return true; }
     if ((el = t.closest('[data-fedit]'))) { if (fswMoved) { fswMoved = false; return true; } var x = st.e[+el.dataset.fedit]; if (x && x.r && fItem(x.r.i)) openPick(x.r.i, x.r.g, +el.dataset.fedit); else openQuick(+el.dataset.fedit); return true; }
     if ((el = t.closest('[data-ftile]'))) { if (fswMoved) { fswMoved = false; return true; } var tl = (ui.ftiles || [])[+el.dataset.ftile]; if (tl) { ui.fday = dayIdx(Date.now()) - fSd(); buzz(8); openPick(tl.i, tl.g); } return true; }
     if (t.closest('[data-fsearch]')) { openFsearch(); return true; }
@@ -4337,6 +4366,30 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
       ws.forEach(function (w, k) { if (w < 30) small[k] = true; });
     }
     stWed = []; MUS.forEach(function (m, k) { stWed.push({ k: m[0], a1: a0, a2: a0 + ws[k] }); place('m:' + m[0], a0, a0 + ws[k]); a0 += ws[k]; });
+    // Linien entwirren: jeden Ast (Knoten samt Unterbaum) probeweise drehen und behalten, was weniger Kreuzungen und kürzere Linien ergibt
+    function ang(id) { var q = pos[id]; return Math.atan2(q.y - STC, q.x - STC); }
+    function rot(id, da) { var q = pos[id], a = ang(id) + da, R = Math.hypot(q.x - STC, q.y - STC); pos[id] = { x: STC + Math.cos(a) * R, y: STC + Math.sin(a) * R }; (kids[id] || []).forEach(function (c) { rot(c, da); }); }
+    var main = EX.filter(function (e) { return !stSat[e.id]; }), edg = [];
+    main.forEach(function (e) { (e.req ? e.req.map(function (q) { return q[0]; }) : ['m:' + primMus(e)]).forEach(function (f) { edg.push([f, e.id]); }); });
+    function cost() {
+      var n = 0, len = 0, L = edg.map(function (g) { var a = pos[g[0]], b = pos[g[1]]; len += Math.hypot(a.x - b.x, a.y - b.y); return [a, b, g]; });
+      for (var i = 0; i < L.length; i++) for (var j = i + 1; j < L.length; j++) {
+        var A = L[i], B = L[j]; if (A[2][0] === B[2][0] || A[2][0] === B[2][1] || A[2][1] === B[2][0] || A[2][1] === B[2][1]) continue;
+        var d = (A[1].x - A[0].x) * (B[1].y - B[0].y) - (A[1].y - A[0].y) * (B[1].x - B[0].x); if (!d) continue;
+        var t = ((B[0].x - A[0].x) * (B[1].y - B[0].y) - (B[0].y - A[0].y) * (B[1].x - B[0].x)) / d, u = ((B[0].x - A[0].x) * (A[1].y - A[0].y) - (B[0].y - A[0].y) * (A[1].x - A[0].x)) / d;
+        if (t > 0 && t < 1 && u > 0 && u < 1) n++;
+      }
+      return n * 400 + len;
+    }
+    // jeder Ast bleibt im Sektor seiner Muskelgruppe
+    var wd = {}; stWed.forEach(function (w) { wd['m:' + w.k] = w; });
+    function root(id) { while (id.indexOf('m:') !== 0) id = par(EXB[id]); return wd[id]; }
+    function inside(id, w) { var a = ang(id) * 180 / Math.PI; while (a < w.a1) a += 360; while (a > w.a1 + 360) a -= 360; return a > w.a1 + 3 && a < w.a2 - 3 && (kids[id] || []).every(function (c) { return inside(c, w); }); }
+    var best = cost(), DA = [-24, -16, -10, -6, -3, 3, 6, 10, 16, 24];
+    for (var pass = 0; pass < 3; pass++) main.forEach(function (e) {
+      var bd = 0, w = root(e.id); DA.forEach(function (dg) { var r = dg * Math.PI / 180; rot(e.id, r); var c = inside(e.id, w) ? cost() : 1e9; rot(e.id, -r); if (c < best - 1) { best = c; bd = r; } });
+      if (bd) rot(e.id, bd);
+    });
     // je Ring Mindestabstand (Knotengröße + 24 px Platz für Satelliten)
     var rings = {};
     EX.forEach(function (e) { if (stSat[e.id]) return; var st = stageOf(e), q = pos[e.id]; (rings[st] = rings[st] || []).push({ id: e.id, a: Math.atan2(q.y - STC, q.x - STC) * 180 / Math.PI }); });
@@ -4363,20 +4416,41 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
     return (stLay = pos);
   }
   function stInfo(d, sel) {
+    // Kurzinfo unten: Kopf mit Level-Plakette, darunter Balken (Fortschritt zum nächsten Level bzw. Voraussetzungen)
     if (sel && sel.indexOf('m:') !== 0 && !EXB[sel]) sel = null;
     if (!sel) return '';
-    if (sel.indexOf('m:') === 0) { var k = sel.slice(2), q = mLevel(d.mp[k] || 0), nv = Object.keys(stSat).filter(function (id) { return stSat[id] === sel; }).length; return '<div class="stinf"><div class="stinf-h">' + embHtml(k, q.lv) + '<span><b>' + MUSN[k] + '</b><small>Lv ' + q.lv + ' · ' + MAT[matOf(q.lv)][1] + (nv ? ' · ' + nv + ' Varianten' : '') + '</small></span><button class="btn small" data-muso="' + k + '">Übungen</button></div></div>'; }
-    var e = EXB[sel], own = !!d.unlocked[e.id], c = cardOf(d, e);
-    return '<div class="stinf"><div class="stinf-h"><span><b>' + esc(e.n) + '</b><small>' + RAR[rarOf(e)][0] + ' · ' + (own ? 'Lv ' + c.lv : 'gesperrt') + (stSat[e.id] ? ' · Variante' : '') + '</small></span><button class="btn small" data-cardo="' + e.id + '">Karte</button></div>' + (own ? '' : reqHtml(d, e)) + '</div>';
+    function bar(lbl, cur, need, txt) { var ok = cur >= need; return '<div class="sir' + (ok ? ' ok' : '') + '"><span>' + lbl + '</span><b>' + txt + '</b><i class="hcb"><i style="--p:' + Math.min(1, need ? cur / need : 1).toFixed(3) + '"></i></i></div>'; }
+    if (sel.indexOf('m:') === 0) {
+      var k = sel.slice(2), q = mLevel(d.mp[k] || 0), nx = MAT[matOf(q.lv) + 1], ex = EX.filter(function (e) { return musOf(e)[k] === 1; }), eo = ex.filter(function (e) { return d.unlocked[e.id]; }).length;
+      return '<div class="stinf" style="--rc:' + MUSC[k] + '"><div class="stinf-h">' + embHtml(k, q.lv) + '<span><b>' + MUSN[k] + '</b><small>Lv ' + q.lv + ' · ' + MAT[matOf(q.lv)][1] + (nx ? ' → ' + nx[1] + ' ab Lv ' + nx[0] : '') + '</small></span><button class="btn small" data-muso="' + k + '">Übungen</button></div>' +
+        '<div class="sigr">' + bar(ic('bolt') + (q.need ? 'Lv ' + (q.lv + 1) : 'Max'), q.mp, q.need || 1, q.need ? q.mp + ' / ' + q.need + ' MP' : '-') +
+        SUBM.filter(function (m) { return m[2] === k; }).map(function (m) { var sl = sLevel(d.smp[m[0]] || 0); return bar(esc(m[1]), sl.mp, sl.need || 1, 'Lv ' + sl.lv); }).join('') +
+        bar(ic('star') + 'Übungen', eo, ex.length, eo + ' / ' + ex.length) + '</div></div>';
+    }
+    var e = EXB[sel], own = !!d.unlocked[e.id], c = cardOf(d, e), cc = cCost(e, c.lv), mw = musOf(e), rows = '';
+    if (own) rows = (c.lv >= CMAX ? '' : cardReady(d, e) ? '<div class="sir ok"><span>' + ic('up') + 'Aufstiegsprüfung</span><b>' + rxText(e, rx(e, c.lv + 1)) + '</b></div>' : bar(ic('bolt') + 'Lv ' + (c.lv + 1), c.kp, cc, c.kp + ' / ' + cc + ' KP')) +
+      '<div class="sir"><span>' + ic('target') + 'Vorgabe</span><b>' + rxText(e, rxNow(d, e)) + '</b></div>';
+    else {
+      rows = (e.req || []).map(function (q) { var r = reqLine(q, d); return bar(ic(r.ok ? 'check' : 'lock') + esc(r.name), r.cur, r.need, r.cur + ' / ' + r.need + ' ' + esc(r.u)); }).join('');
+      var sq = SKQ[e.id] || {}; Object.keys(sq).forEach(function (k) { var ml = mLevel(d.mp[k] || 0).lv; rows += bar(ic(MUSI[k]) + MUSN[k], ml, sq[k], 'Lv ' + ml + ' / ' + sq[k]); });
+      if (!rows) rows = '<div class="sir"><span>' + ic('target') + 'Einmal machen</span><b>' + rxText(e, rx(e, c.lv)) + '</b></div>';
+    }
+    return '<div class="stinf r' + rarOf(e) + (own ? ' on' : '') + '"><div class="stinf-h"><i class="stb">' + (own ? c.lv : ic('lock')) + '</i><span><b>' + esc(e.n) + '</b><small>' + RAR[rarOf(e)][0] + (stSat[e.id] ? ' · Variante' : '') + '</small></span><button class="btn small" data-cardo="' + e.id + '">Karte</button></div>' +
+      '<div class="sigr">' + rows + '</div><div class="cmu sm">' + Object.keys(mw).map(function (k) { return '<span' + (mw[k] < 1 ? ' class="half"' : '') + '>' + ic(MUSI[k]) + MUSN[k] + '</span>'; }).join('') + '</div></div>';
   }
   function viewSkills(d) {
-    var P = stLayout(), sel = ui.stsel || null, lines = '', nodes = '', lit = 0, tot = 0;
+    var P = stLayout(), sel = ui.stsel || null, lines = '', glow = '', nodes = '', lit = 0, tot = 0;
     function ln(a, b, cls) { return '<line x1="' + a.x.toFixed(1) + '" y1="' + a.y.toFixed(1) + '" x2="' + b.x.toFixed(1) + '" y2="' + b.y.toFixed(1) + '"' + (cls ? ' class="' + cls + '"' : '') + '/>'; }
-    MUS.forEach(function (m) { lines += ln({ x: STC, y: STC }, P['m:' + m[0]], 'on'); });
+    MUS.forEach(function (m) { lines += ln({ x: STC, y: STC }, P['m:' + m[0]], 'on'); glow += ln({ x: STC, y: STC }, P['m:' + m[0]], 'gl'); });
     EX.forEach(function (e) {
       if (stSat[e.id]) { lines += ln(P[stSat[e.id]], P[e.id], 'st2' + (sel === e.id ? ' hl' : '')); return; }
       var from = e.req ? e.req.map(function (q) { return q[0]; }).filter(function (id) { return P[id]; }) : ['m:' + primMus(e)];
-      from.forEach(function (f) { var on = d.unlocked[e.id] && (f.indexOf('m:') === 0 || d.unlocked[f]), hl = sel && (sel === e.id || sel === f); lines += ln(P[f], P[e.id], (on ? 'on' : '') + (hl ? ' hl' : '')); });
+      // freigeschaltet: Linie leuchtet; gesperrt mit offenem Ursprung: grüner Strich vom Ursprung, so lang wie der Fortschritt der Voraussetzung
+      from.forEach(function (f) {
+        var on = d.unlocked[e.id] && (f.indexOf('m:') === 0 || d.unlocked[f]), hl = sel && (sel === e.id || sel === f), q = !on && d.unlocked[f] && (e.req || []).filter(function (r) { return r[0] === f; })[0];
+        lines += ln(P[f], P[e.id], (on ? 'on' : '') + (hl ? ' hl' : '')); if (on) glow += ln(P[f], P[e.id], 'gl');
+        if (q) { var pc = reqLine(q, d).pct / 100, a = P[f], b = P[e.id]; if (pc > 0) lines += ln(a, { x: a.x + (b.x - a.x) * pc, y: a.y + (b.y - a.y) * pc }, 'pg'); }
+      });
     });
     MUS.forEach(function (m) { var q = mLevel(d.mp[m[0]] || 0), p = P['m:' + m[0]]; nodes += '<button class="stm' + (sel === 'm:' + m[0] ? ' sel' : '') + '" data-stn="m:' + m[0] + '" style="left:' + p.x.toFixed(0) + 'px;top:' + p.y.toFixed(0) + 'px">' + embHtml(m[0], q.lv) + '<small>' + m[1] + ' ' + q.lv + '</small></button>'; });
     EX.forEach(function (e) {
@@ -4393,11 +4467,10 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
       rings += '<path class="sct" style="fill:' + MUSC[w.k] + '" d="M' + pt(w.a1, R1) + 'L' + pt(w.a1, R2) + 'A' + R2 + ',' + R2 + ' 0 ' + lg + ' 1 ' + pt(w.a2, R2) + 'L' + pt(w.a2, R1) + 'A' + R1 + ',' + R1 + ' 0 ' + lg + ' 0 ' + pt(w.a1, R1) + 'Z"/>';
       labels += '<b class="stl2" style="left:' + (STC + Math.cos(mr) * 640).toFixed(0) + 'px;top:' + (STC + Math.sin(mr) * 640).toFixed(0) + 'px;color:' + MUSC[w.k] + '">' + MUSN[w.k] + '</b>';
     });
-    // Ecken: oben links Fortschritt, oben rechts die nächsten erreichbaren Skills (antippbar)
-    var nxt = EX.filter(function (e) { return e.g === 'skill' && !d.unlocked[e.id] && (e.req || []).every(function (q) { return d.unlocked[q[0]]; }); }).slice(0, 3);
-    return '<div class="stmap rise" id="stmap" style="--i:1" data-noswipe="1"><div class="stcan" id="stcan"><svg viewBox="0 0 ' + STW + ' ' + STW + '" width="' + STW + '" height="' + STW + '" aria-hidden="true">' + rings + lines + '</svg>' + labels + '<i class="stc2">' + ic('peak') + '</i>' + nodes + '</div>' +
+    // Ecke oben links: Fortschritt
+    return '<div class="stmap rise" id="stmap" style="--i:1" data-noswipe="1"><div class="stcan" id="stcan"><svg viewBox="0 0 ' + STW + ' ' + STW + '" width="' + STW + '" height="' + STW + '" aria-hidden="true">' + rings + glow + lines + '</svg>' + labels + '<i class="stc2">' + ic('peak') + '</i>' + nodes + '</div>' +
       '<div class="stk"><b>' + lit + '<small>/' + tot + '</small></b><span>Skills</span><b>' + EX.filter(function (e) { return d.unlocked[e.id]; }).length + '<small>/' + EX.length + '</small></b><span>Übungen</span></div>' +
-      (nxt.length ? '<div class="stn2"><span>' + ic('up') + 'Als Nächstes</span>' + nxt.map(function (e) { return '<button data-stn="' + e.id + '">' + esc(e.n) + '</button>'; }).join('') + '</div>' : '') + stInfo(d, sel) + '</div>';
+      stInfo(d, sel) + '</div>';
   }
   function stBox() {
     // Ausdehnung des Netzes (mit Rand für Beschriftungen)
@@ -4416,7 +4489,7 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
     v.x = cx - (cx - v.x) * s2 / v.s; v.y = cy - (cy - v.y) * s2 / v.s; v.s = s2; stApply();
   }
   var stP = {}, stMoved = false;
-  document.addEventListener('pointerdown', function (ev) { if (!ev.target.closest || !ev.target.closest('#stmap') || ev.target.closest('.stn2, .stinf')) return; stP[ev.pointerId] = { x: ev.clientX, y: ev.clientY }; stMoved = false; });
+  document.addEventListener('pointerdown', function (ev) { if (!ev.target.closest || !ev.target.closest('#stmap') || ev.target.closest('.stinf')) return; stP[ev.pointerId] = { x: ev.clientX, y: ev.clientY }; stMoved = false; });
   document.addEventListener('pointermove', function (ev) {
     var p0 = stP[ev.pointerId], m = $('stmap'); if (!p0 || !m || !ui.stv) return;
     var ids = Object.keys(stP);
@@ -4654,6 +4727,8 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
     });
     // Wertlinien (0, Mitte, oben) mit Zahlen der ersten Kurve
     if (grid) [0, 0.5, 1].forEach(function (f) { var v = grid.mn + (grid.mx - grid.mn) * f, y = grid.Y(v); s = '<line class="lgr" x1="0" x2="' + W + '" y1="' + y.toFixed(1) + '" y2="' + y.toFixed(1) + '"/><text class="lgx" x="2" y="' + (y - 3).toFixed(1) + '">' + (v % 1 && grid.mx - grid.mn < 10 ? fN(Math.round(v * 10) / 10) : Math.round(v)) + '</text>' + s; });
+    // Takt im Hintergrund: Wochenanfänge (ab 14 Tagen) bzw. Monatsanfänge (ab 120 Tagen), damit man Zeiträume ohne Antippen abschätzen kann
+    if (n >= 14) for (var wi = 1; wi < n; wi++) { var wq = new Date((t0 + wi) * 864e5); if (n >= 120 ? wq.getUTCDate() === 1 : wq.getUTCDay() === 1) s = '<line class="lwk" x1="' + X(wi).toFixed(1) + '" x2="' + X(wi).toFixed(1) + '" y1="' + T + '" y2="' + (H - B) + '"/>' + s; }
     s += '<g class="lmk" id="lmk-' + id + '"><line class="lsl" x1="0" x2="0" y1="' + T + '" y2="' + (H - B) + '"/>' + ser.map(function (q) { return '<circle class="ldt" r="4.5" cx="-20" cy="-20" style="fill:' + q.c + '"/>'; }).join('') + '</g>';
     s += '<text x="8" y="' + (H - 4) + '">' + fmtShort(t0) + '</text><text x="' + (W - 8) + '" y="' + (H - 4) + '" text-anchor="end">heute</text>';
     LCD[id] = { n: n, t0: t0, x: dSeries(n, function () { return 0; }).map(function (z, i) { return X(i); }), ys: ys, ser: ser };

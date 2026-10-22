@@ -1598,6 +1598,43 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
 .stn.on { border-color: var(--rc); background: color-mix(in srgb, var(--rc) 22%, var(--s1)); color: var(--ink); box-shadow: 0 0 14px -3px var(--rc); }
 .stn.nx { border-style: dashed; border-color: var(--rc); }
 .stl { position: absolute; max-width: 84px; font-size: 10.5px; font-weight: 700; line-height: 1.1; text-align: center; color: var(--ink2); transform: translate(-50%, -50%); pointer-events: none; }
+/* Profil: Karte mit Level und Schnellknöpfen, Statistik-Kacheln mit Mini-Diagramm, Rekorde */
+.pid { display: grid; gap: 14px; margin-top: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 20px; background: var(--s1); }
+.pid-t { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 14px; }
+.pid-l { position: relative; display: grid; place-items: center; width: 60px; height: 60px; border-radius: 18px; background: var(--ink); color: var(--bg); font-style: normal; }
+.pid-l .ic { position: absolute; top: 7px; width: 14px; height: 14px; color: var(--ac); }
+.pid-l b { margin-top: 10px; font-family: var(--f-display); font-size: 24px; font-weight: 900; }
+.pid-t > div { display: grid; gap: 4px; }
+.pid-t > div > b { font-size: 17px; }
+.pid-t small { font-size: 12.5px; color: var(--ink3); }
+.pid-t .hcb { height: 5px; }
+.pid-t .hcb > i { background: var(--ac); }
+.pid-a { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.pid-a button { display: grid; justify-items: center; gap: 4px; padding: 9px 0 8px; border: 1px solid var(--line); border-radius: 12px; background: var(--s2); color: var(--ink); font: inherit; font-size: 10.5px; font-weight: 700; transition: transform .14s var(--ease); }
+.pid-a button:active { transform: scale(.95); }
+.pid-a .ic { width: 20px; height: 20px; color: var(--ink2); }
+.pstg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.pstt { position: relative; display: grid; align-content: start; gap: 2px; min-height: 132px; padding: 12px; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .16s var(--ease); }
+.pstt:active { transform: scale(.97); }
+.pstt > span { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
+.pstt > span .ic { width: 15px; height: 15px; }
+.pstt > b { font-family: var(--f-display); font-size: 30px; font-weight: 900; line-height: 1.1; }
+.pstt > b small { font-family: var(--f-mono); font-size: 12px; font-weight: 600; color: var(--ink3); }
+.pstt > small { overflow: hidden; font-size: 12px; color: var(--ink3); white-space: nowrap; text-overflow: ellipsis; }
+.msk { position: absolute; left: 12px; bottom: 10px; width: calc(100% - 24px); height: 30px; }
+.msk rect { fill: var(--ac); opacity: .75; }
+.msk.ln polyline { fill: none; stroke: var(--ac); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.pstt-t { position: absolute; right: 8px; bottom: 4px; color: var(--gold); opacity: .3; }
+.pstt-t .ic { width: 46px; height: 46px; }
+.pbk { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; margin-top: 8px; padding: 0; border: 0; background: none; color: var(--ink2); font: inherit; font-size: 14px; }
+.pbk .ic { width: 18px; height: 18px; }
+.recl { display: grid; gap: 6px; margin-top: 12px; }
+.recr { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; }
+.recr > .ic { width: 20px; height: 20px; color: var(--gold); }
+.recr span { display: grid; }
+.recr b { font-size: 13.5px; }
+.recr small { font-size: 11.5px; color: var(--ink3); }
+.recr em { display: grid; justify-items: end; font-family: var(--f-mono); font-style: normal; font-weight: 700; }
 </style>
 
 <div id="app">
@@ -2119,6 +2156,7 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     shoulder: '<circle cx="12" cy="6.500" r="2.800"/><path d="M4 20v-4.500A5.500 5.500 0 0 1 9.500 10h5a5.500 5.500 0 0 1 5.500 5.500V20"/><path d="M8.500 20v-5M15.500 20v-5"/>',
     leg: '<path d="M9 3.500v6.500l-1.500 10h3.500l1.500-6 1.500 6h3.500L15 10V3.500"/><path d="M9 7h6"/>',
     grip: '<path d="M7 11V8.500a1.700 1.700 0 0 1 3.400 0V10M10.400 9.500V7.500a1.700 1.700 0 0 1 3.400 0V10M13.800 9.500V8.500a1.700 1.700 0 0 1 3.400 0V14a6.500 6.500 0 0 1-6.500 6.500H10A5.500 5.500 0 0 1 4.500 15v-2a1.700 1.700 0 0 1 3.400 0"/>',
+    ruler: '<rect x="3" y="8" width="18" height="8" rx="1.500"/><path d="M7 8v3M11 8v4M15 8v3M19 8v2"/>',
     tag: '<path d="M3.500 12.200V4.500a1 1 0 0 1 1-1h7.700l8.300 8.300-8.700 8.700z"/><circle cx="8" cy="8" r="1.300"/>',
     drop: '<path d="M12 3.500c3 3.800 5.500 7 5.500 10a5.500 5.500 0 0 1-11 0c0-3 2.500-6.200 5.500-10z"/>',
     scan: '<path d="M4 8.500V5.500A1.500 1.500 0 0 1 5.500 4H8.500M15.500 4h3A1.500 1.500 0 0 1 20 5.500V8.500M20 15.500v3a1.500 1.500 0 0 1-1.500 1.500h-3M8.500 20h-3A1.500 1.500 0 0 1 4 18.500v-3"/><path d="M8 8.500v7M11 8.500v7M13.500 8.500v7M16 8.500v7"/>',
@@ -4205,7 +4243,7 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
   });
   var planT = null;
   // ---------- Verlauf
-  // ---------- Sammlung (Tab „fort“): Karten, Muskeln, Skills, Statistik – immer nur ein Bereich sichtbar
+  // ---------- Sammlung (Tab „fort“): Karten, Muskeln, Skills – immer nur ein Bereich sichtbar (Statistik steht im Profil)
   var MUSI = { ru: 'pull', br: 'push', sh: 'shoulder', ar: 'dumbbell', co: 'core', be: 'leg', gr: 'grip', mo: 'roll', au: 'bike' }, MUSN = {};
   MUS.forEach(function (m) { MUSN[m[0]] = m[1]; });
   // Muskel-Embleme: Material steigt mit dem Level
@@ -4288,15 +4326,11 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
   }
   function viewProgress(d, now) {
     if (ui.sel) return viewDetail(d, now);
-    var col = ui.col || 'ka', h = '<div class="seg four rise" role="group" aria-label="Sammlung">' + [['ka', 'gem', 'Karten'], ['mu', 'shoulder', 'Muskeln'], ['sk', 'star', 'Skills'], ['st', 'chart', 'Statistik']].map(function (x) {
+    var col = ui.col === 'mu' || ui.col === 'sk' ? ui.col : 'ka', h = '<div class="seg three rise" role="group" aria-label="Sammlung">' + [['ka', 'gem', 'Karten'], ['mu', 'shoulder', 'Muskeln'], ['sk', 'star', 'Skills']].map(function (x) {
       return '<button data-col="' + x[0] + '" aria-pressed="' + (col === x[0]) + '">' + ic(x[1]) + x[2] + '</button>'; }).join('') + '</div>';
     if (col === 'ka') return h + viewCards(d);
     if (col === 'mu') return h + viewMuscles(d);
-    if (col === 'sk') return h + viewSkills(d);
-    h += '<div class="ctl rise" style="--i:1"><span class="rng" role="group" aria-label="Statistik">' + [['ov', 'Überblick'], ['ex', 'Übungen'], ['kp', 'Körper']].map(function (x) { return '<button data-seg="' + x[0] + '" aria-pressed="' + ((ui.seg === x[0]) || (x[0] === 'ov' && ['ex', 'kp'].indexOf(ui.seg) < 0)) + '">' + x[1] + '</button>'; }).join('') + '</span></div>';
-    if (ui.seg === 'kp') return h + viewBody(d, now) + foodStats(dayIdx(now));
-    if (!state.logs.length) return h + '<div class="empty rise">' + ic('chart') + '<b>Noch leer</b></div>';
-    return h + (ui.seg === 'ex' ? viewList(d) : viewOverview(d, now));
+    return h + viewSkills(d);
   }
   function scl(vals, W, H, col, goal) {
     var mn = Math.min.apply(null, vals.concat(goal ? [goal] : [])), mx = Math.max.apply(null, vals.concat(goal ? [goal] : [])), pad = Math.max(0.4, (mx - mn) * 0.15);
@@ -4625,10 +4659,59 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     return h;
   }
   function viewProfile(d, now) {
-    var fg = foodGoal(), h = '<div class="fd-h rise" style="--i:0"><h2>Profil</h2><button class="x" data-set="1" aria-label="Einstellungen">' + ic('gear') + '</button></div><div class="rise" style="--i:1;margin-top:12px">' + hudHtml(d, now) + '</div>';
-    h += profTiles() + weightSec();
-    h += '<section class="sec rise" style="--i:8"><h2 class="sec-h">' + ic('food') + 'Ernährung</h2><button class="lnk" data-fgoal="1"><span><b>' + fg.p + ' g</b> Protein</span><span><b>' + fg.k + '</b> kcal</span><em>Ziele &amp; Rechner</em>' + ic('chev', 'chv') + '</button></section>';
-    return h;
+    // Profil: kompakte Karte (Level, Körperwerte, 5 Schnellknöpfe) und 4 Statistik-Kacheln; Antippen öffnet die Detailansicht
+    if (ui.sel) return viewDetail(d, now);
+    var today = dayIdx(now), h = '<div class="fd-h rise" style="--i:0"><h2>Profil</h2><button class="x" data-set="1" aria-label="Einstellungen">' + ic('gear') + '</button></div>';
+    if (ui.pstat) {
+      var T = { tr: 'Training', kp: 'Körper', er: 'Ernährung', re: 'Rekorde' };
+      h += '<button class="pbk rise" data-pstat="">' + ic('back') + 'Profil · <b>' + T[ui.pstat] + '</b></button>';
+      if (ui.pstat === 'tr') return h + (state.logs.length ? viewOverview(d, now) + viewList(d) : '<div class="empty rise">' + ic('chart') + '<b>Noch leer</b></div>');
+      if (ui.pstat === 'kp') return h + viewBody(d, now);
+      if (ui.pstat === 'er') return h + foodStats(today);
+      return h + recHtml();
+    }
+    var p = prof(), lw = lastW(), lv = level(d.xp), c0 = lvXp(lv), c1 = lvXp(lv + 1);
+    h += '<section class="pid rise" style="--i:1"><div class="pid-t"><i class="pid-l">' + ic('peak') + '<b>' + lv + '</b></i><div><b>' + (TIERS[tierOfLevel(lv)] || 'Level ' + lv) + '</b><small>' +
+      [p.h ? p.h + ' cm' : '', lw ? fN(lw.kg) + ' kg' : '', p.a ? p.a + ' Jahre' : ''].filter(Boolean).join(' · ') + '</small><i class="hcb"><i style="--p:' + ((d.xp - c0) / (c1 - c0)).toFixed(3) + '"></i></i></div></div>' +
+      '<div class="pid-a"><button data-wgt="1">' + ic('scale') + 'Gewicht</button>' + [['body', 'user', 'Körper'], ['meas', 'ruler', 'Maße'], ['goal', 'target', 'Ziel'], ['train', 'dumb', 'Geräte']].map(function (x) {
+        return '<button data-pf="' + x[0] + '">' + ic(x[1]) + x[2] + '</button>'; }).join('') + '</div></section>';
+    // Statistik-Kacheln: Kernzahl + Mini-Diagramm
+    var sets = [], kc = [], nTr = 0, hk = 0, i;
+    for (i = 13; i >= 0; i--) {
+      var x = d.byDay[today - i], fs = foodSum(today - i), g = foodGoal(today - i);
+      sets.push(x ? x.sets || 0 : 0); if (x) nTr++;
+      kc.push(fs.items.length ? Math.min(1.5, fs.k / g.k) : 0);
+      if (i < 7 && fs.items.length && fs.k >= g.k * 0.9 && fs.k <= g.k * 1.1) hk++;
+    }
+    var w = foodState().w.filter(function (q) { return dayIdx(q.t) >= today - 30; }), dw = w.length > 1 ? w[w.length - 1].kg - w[0].kg : null;
+    var pb = pbList(), pb30 = pb.filter(function (q) { return q.t >= now - 30 * 864e5; }).length, lpb = pb[pb.length - 1];
+    function tile(k, icn, name, val, sub, sp) { return '<button class="pstt" data-pstat="' + k + '"><span>' + ic(icn) + name + '</span><b>' + val + '</b><small>' + sub + '</small>' + sp + '</button>'; }
+    return h + '<section class="pstg rise" style="--i:2">' +
+      tile('tr', 'dumb', 'Training', nTr + '<small>/14</small>', 'Tage aktiv', mspk(sets)) +
+      tile('kp', 'scale', 'Körper', dw == null ? '–' : (dw > 0 ? '+' : dw < 0 ? '−' : '±') + fN(Math.abs(dw)) + '<small> kg</small>', '30 Tage', mspk(w.map(function (q) { return q.kg; }), 1)) +
+      tile('er', 'food', 'Ernährung', hk + '<small>/7</small>', 'Tage im Ziel', mspk(kc)) +
+      tile('re', 'trophy', 'Rekorde', pb30 + '<small> neu</small>', lpb ? esc(lpb.e.n) : 'noch keine', '<i class="pstt-t">' + ic('trophy') + '</i>') + '</section>';
+  }
+  function mspk(vals, line) {
+    // Mini-Diagramm: Balken (Training, Ernährung) oder Linie (Gewicht)
+    if (!vals.length) return '';
+    var mx = Math.max.apply(null, vals.concat([line ? -1e9 : 1])), mn = line ? Math.min.apply(null, vals) : 0, rg = (mx - mn) || 1, bw = 100 / vals.length;
+    if (line) return '<svg class="msk ln" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><polyline points="' + vals.map(function (v, k) { return (vals.length === 1 ? 50 : k * 100 / (vals.length - 1)).toFixed(1) + ',' + (27 - (v - mn) / rg * 24).toFixed(1); }).join(' ') + '"/></svg>';
+    return '<svg class="msk" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">' + vals.map(function (v, k) { var hh = v ? Math.max(2, v / mx * 30) : 0.8; return '<rect x="' + (k * bw + bw * 0.15).toFixed(1) + '" y="' + (30 - hh).toFixed(1) + '" width="' + (bw * 0.7).toFixed(1) + '" height="' + hh.toFixed(1) + '" rx="1"/>'; }).join('') + '</svg>';
+  }
+  function pbList() {
+    // Rekorde: jeder neue Bestwert (vollständige Einheit) mit Datum und Vorwert
+    var best = {}, out = [];
+    state.logs.slice().sort(function (a, b) { return a.t - b.t; }).forEach(function (l) {
+      var e = EXB[l.e]; if (!e) return; var r = metric(e, l.s); if (!r.full) return;
+      if (best[e.id] === undefined || r.val > best[e.id]) { if (best[e.id] !== undefined) out.push({ t: l.t, e: e, v: r.val, p: best[e.id] }); best[e.id] = r.val; }
+    });
+    return out;
+  }
+  function recHtml() {
+    var pb = pbList().reverse().slice(0, 40);
+    if (!pb.length) return '<div class="empty rise">' + ic('trophy') + '<b>Noch keine Rekorde</b></div>';
+    return '<div class="recl rise" style="--i:2">' + pb.map(function (x) { return '<button class="recr" data-cdet="' + x.e.id + '">' + ic('trophy') + '<span><b>' + esc(x.e.n) + '</b><small>' + fmtDayL(dayIdx(x.t)) + '</small></span><em>' + x.v + ' ' + esc(x.e.u) + '<small>vorher ' + x.p + '</small></em></button>'; }).join('') + '</div>';
   }
   function prof() { var o = foodState().pr || {}; return { h: o.h || 0, a: o.a || 0, s: o.s || 'm', act: o.act || 1.375, go: o.go || 'bulk', tw: o.tw || 0, ex: o.ex || '', inj: o.inj || '', eq: o.eq || ['bar', 'board', 'db', 'mat', 'roll', 'ball', 'bike'] }; }
   var MEAS = [['w', 'Taille'], ['c', 'Brust'], ['sh', 'Schultern'], ['a', 'Oberarm'], ['th', 'Oberschenkel']], GOLAB = { bulk: 'Aufbau', keep: 'Halten', cut: 'Definition' }, EXLAB = { new: 'Einsteiger', mid: 'Fortgeschritten', adv: 'Profi' };
@@ -4699,8 +4782,8 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
   function go(k) {
     if (k === 'plan') { scrollToEl('.plan-h'); return; }
     ui.sel = null; ui.del = null; ui.fresh = true; ui.hd = null;
-    if (k === 'cal') { ui.tab = 'fort'; ui.col = 'st'; ui.seg = 'ov'; ui.scroll = '#calw'; }
-    else if (k === 'xp') { ui.tab = 'fort'; ui.col = 'st'; ui.seg = 'ov'; ui.met = 'xp'; ui.scroll = null; $('app').scrollTo(0, 0); }
+    if (k === 'cal') { ui.tab = 'profil'; ui.pstat = 'tr'; ui.scroll = '#calw'; }
+    else if (k === 'xp') { ui.tab = 'profil'; ui.pstat = 'tr'; ui.met = 'xp'; ui.scroll = null; $('app').scrollTo(0, 0); }
     else if (k === 'pfad') { ui.tab = 'fort'; ui.col = 'ka'; ui.sel = null; ui.scroll = null; $('app').scrollTo(0, 0); }
     render();
   }
@@ -4761,6 +4844,7 @@ body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
     if ((el = t.closest('[data-preset]'))) { $('sv').value = el.dataset.preset; updSheetXp(); return; }
     if (t.closest('[data-sheet-save]')) { saveSheet(); return; }
     if (t.closest('[data-sheet-del]')) { delSet(); return; }
+    if ((el = t.closest('[data-pstat]'))) { ui.pstat = el.dataset.pstat || null; ui.sel = null; ui.fresh = true; render(); $('app').scrollTo(0, 0); return; }
     if ((el = t.closest('[data-col]'))) { ui.col = el.dataset.col; ui.sel = null; ui.fresh = true; render(); return; }
     if ((el = t.closest('[data-cf2]'))) { ui.cf2 = el.dataset.cf2; ui.fresh = false; render(); return; }
     if ((el = t.closest('[data-cg]'))) { ui.cgo = ui.cgo || {}; ui.cgo[el.dataset.cg] = !ui.cgo[el.dataset.cg]; ui.fresh = false; render(); return; }

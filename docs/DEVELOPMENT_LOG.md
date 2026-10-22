@@ -15,6 +15,15 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-22 – Heute-Übersicht + Vollbild-Arena, Karten nach Gruppen, Skilltree radial, Profil mit Statistik
+Mit Falk per Mockups (alle Empfehlungen gewählt):
+- Heute: Übersicht (Training mit Name, Dauer, Fortschritt, ein Start-Knopf; Zeilen Tagesziel, Bergpfad, Serie). „Training starten“ öffnet die Arena im Vollbild (`ui.arena`, `body.arm` blendet Tab-Leiste, Kopf und Brandbar aus): große Karte, Wischen (Touch auf `#arm-s`) oder Punkte zum Wechseln, ein Hauptknopf, ✕ zurück; startet die Trainingszeit.
+- Sammlung/Karten: Filter Alle · Bereit ▲ · Gesperrt (`ui.cf2`), Gruppen zuklappbar (`ui.cgo`) mit Stärke-Balken, kleine Karten (`.dk`).
+- Skills: radialer Skilltree (`viewSkills`), Mitte Grundlagen, je Linie ein Ast, Etappen auf 4 Ringen, freie Wege leuchten; Fläche 150 % breit, seitlich verschiebbar, beim Öffnen mittig.
+- Profil: Karte (Level/Titel, Körperwerte, XP-Balken, Schnellknöpfe Gewicht/Körper/Maße/Ziel/Geräte) und 4 Statistik-Kacheln (Training 14 Tage, Körper 30 Tage, Ernährung 7 Tage, Rekorde 30 Tage) mit Mini-Diagramm (`mspk`); Antippen → Detail (`ui.pstat`: bisherige Ansichten, Rekorde neu über `pbList`). Statistik aus der Sammlung entfernt, Sprünge (`go('cal'/'xp')`) zeigen ins Profil.
+- Smoke: `[data-fedit]` mit force (liegt nach dem Eintragen unter dem Rückgängig-Toast, wenn die Trainingszeit oben läuft).
+- Offen: Detailansichten der Statistik überarbeiten (Training sehr lang), toter Code (`toolRow`, `warmHtml`, `viewPath`, `profTiles`, `weightSec`, alte Arena-CSS) aufräumen, Muskel-Illustrationen je Stufe.
+
 ### 2026-10-22 – Heute als Arena mit Bergpfad, Level-Up-Effekte, Haptik auf dem iPhone
 - Heute: Arena (Trainingsname, große Karte der aktuellen Übung im Look, Vorgabe/Prüfung, ein Hauptknopf „Satz n eintragen“ bzw. „Weiter: …“, Sätze), Deck im 4er-Raster (Aufwärmen + alle Übungen, Look-Rahmen, ▲ bereit), Tagesziel mit Ring, „Serie und Belohnungen“ aufklappbar. Satz-Fenster nutzt die Vorgabe des Karten-Levels (`openSheet` mit `rxNow`).
 - Bergpfad (`pathHtml`): Kopfzeile oder Arena-Hintergrund antippen (`data-zoom`, nicht auf Bedienelementen) zoomt heraus; Konto-Level als Stationen, Titel-Stufen als Meilensteine, Gipfel oben; Zoom-Animationen `zin`/`zout`.

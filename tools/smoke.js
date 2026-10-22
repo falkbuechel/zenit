@@ -10,7 +10,7 @@ const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const SCEN = ['mid', 'gold', 'broken', 'fresh', 'empty'];
 const TABS = ['heute', 'tage', 'food', 'fort', 'profil'];
 // Je Tab: Schalter, von denen jeweils jeder Wert einmal angeklickt wird (alle harmlos, nichts löscht)
-const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data-xr]', '[data-xm]', '[data-pg]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]', '[data-fsd]', '[data-fwa]', '[data-hsel]', '[data-col]', '[data-cf2]', '[data-cg]'];
+const TOGGLES = ['[data-seg]', '[data-range]', '[data-met]', '[data-gf]', '[data-xr]', '[data-xm]', '[data-pg]', '[data-mo]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]', '[data-fsd]', '[data-fwa]', '[data-hsel]', '[data-col]', '[data-cf2]', '[data-cg]', '[data-pstat]'];
 const NOANIM = '*, *::before, *::after { animation: none !important; transition: none !important; }';
 
 async function scenario(b, sc, errs) {
@@ -73,7 +73,7 @@ async function scenario(b, sc, errs) {
     // Heute: Bergpfad (Kopfzeile antippen) und zurück, Arena öffnen (Karte, Punkte), verlassen
     if (tab === 'heute') { await click('#hud [data-zoom]'); await click('#hud [data-zoom]'); await click('[data-arena]'); await click('.hc.big'); await closeSheet(); await click('.ar-dots button:last-child'); await click('[data-arx]'); }
     // Sammlung: Karte, Muskel, zurück zu Karten
-    if (tab === 'fort') { await click('[data-col="ka"]'); await click('[data-cardo]'); await closeSheet(); await click('[data-col="mu"]'); await click('[data-muso]'); await closeSheet(); await click('[data-col="sk"]'); await click('[data-col="st"]'); }
+    if (tab === 'fort') { await click('[data-col="ka"]'); await click('[data-cardo]'); await closeSheet(); await click('[data-col="mu"]'); await click('[data-muso]'); await closeSheet(); await click('[data-col="sk"]'); }
     if (await click('[data-open]')) { await shot(tab + '-detail'); await click('[data-back]'); }
     if (await click('[data-pill]')) { await shot(tab + '-sheet'); await closeSheet(); }
   }

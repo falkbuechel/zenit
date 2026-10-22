@@ -1515,6 +1515,52 @@ button.cday:active { transform: scale(.97); }
 @keyframes cpop { 40% { transform: scale(1.14); } }
 @keyframes forge { from { opacity: 0; transform: scale(.4); filter: brightness(3); } 60% { opacity: 1; transform: scale(1.08); } to { transform: none; filter: none; } }
 @media (prefers-reduced-motion: reduce) { .lvfx, .lvfx *, .lvfx::after { animation: none !important; transition: none !important; } }
+/* Heute: Übersicht (Training + Start), ruhige Zeilen; Arena im Vollbild (Tab-Leiste und Kopf ausgeblendet) */
+.tov { display: grid; gap: 10px; margin-top: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 22px; background: radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--ac) 10%, var(--s1)), var(--s1) 70%); }
+.tov-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.tov-h small { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); }
+.tov-h small .ic { width: 14px; height: 14px; }
+.tov-h b { display: block; margin-top: 4px; font-family: var(--f-display); font-size: 34px; font-weight: 900; line-height: 1; text-transform: uppercase; }
+.tov-m { margin: 0; font-size: 13px; color: var(--ink2); }
+.tov-b { height: 8px; overflow: hidden; border-radius: 4px; background: var(--s3); }
+.tov-b > i { display: block; width: calc(var(--p) * 100%); height: 100%; border-radius: inherit; background: var(--ac); }
+.tov-n { justify-self: end; margin-top: -4px; font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
+.tov-go { margin-top: 4px; }
+.hrows { display: grid; margin-top: 12px; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--s1); }
+.hrow { display: flex; align-items: center; gap: 12px; min-height: 62px; padding: 8px 14px; border: 0; border-top: 1px solid var(--line); background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.hrow:first-child { border-top: 0; cursor: default; }
+.hrow > span, .hrow summary > span { display: grid; flex: 1; }
+.hrow b { font-size: 14px; }
+.hrow small { font-size: 12px; color: var(--ink3); }
+.hrow > .ic, .hrow summary > svg { flex: none; width: 22px; height: 22px; color: var(--ink3); }
+.hrow > .ic:last-child, .hrow summary > .ic:last-child { width: 16px; height: 16px; transition: transform .2s var(--ease); }
+.hrow summary > svg.fill { color: var(--flame); }
+.hrow .dg-r { width: 40px; height: 40px; }
+.hrow .dg-r b { width: 31px; height: 31px; }
+.hrow.got b { color: var(--gold); }
+details.hrow { display: block; padding: 0; }
+details.hrow summary { display: flex; align-items: center; gap: 12px; min-height: 62px; padding: 8px 14px; list-style: none; }
+details.hrow summary::-webkit-details-marker { display: none; }
+details.hrow[open] summary > .ic:last-child { transform: rotate(90deg); }
+details.hrow > section { margin: 0 10px 10px; }
+body.arm .tabs, body.arm .brandbar, body.arm #hud { display: none; }
+body.arm .page { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+body.arm .rest { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+.arm-v { display: grid; align-content: start; gap: 12px; padding-top: 6px; }
+.arm-h { display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; text-align: center; }
+.arm-h b { display: block; font-family: var(--f-display); font-size: 22px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
+.arm-h small { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
+.arm-s { display: grid; justify-items: center; padding: 6px 0; touch-action: pan-y; }
+.arm-s .hc.big { width: 66%; max-width: 260px; }
+.hc.big.inr { animation: slr .3s var(--ease) both; }
+.hc.big.inl { animation: sll .3s var(--ease) both; }
+@keyframes slr { from { opacity: 0; transform: translateX(45%) rotate(5deg); } }
+@keyframes sll { from { opacity: 0; transform: translateX(-45%) rotate(-5deg); } }
+.ar-dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; }
+.ar-dots button { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: var(--s3); transition: width .2s var(--ease), background-color .2s; }
+.ar-dots button.d { background: var(--ac); }
+.ar-dots button.c { width: 24px; border-radius: 5px; background: var(--ink); }
+.arm-v .cpg { justify-content: center; margin: 0; }
 </style>
 
 <div id="app">
@@ -2165,6 +2211,7 @@ button.cday:active { transform: scale(.97); }
     v.className = 'page gut' + (fresh ? ' fresh' : '') + (ui.sw ? (ui.sw > 0 ? ' sw-l' : ' sw-r') : '');
     ui.sw = 0;
     v.innerHTML = ui.tab === 'heute' ? viewToday(d, now) : ui.tab === 'tage' ? viewPlan(d, now) : ui.tab === 'food' ? viewFood(d, now) : ui.tab === 'fort' ? viewProgress(d, now) : ui.tab === 'profil' ? viewProfile(d, now) : viewPath(d);
+    document.body.classList.toggle('arm', ui.tab === 'heute' && !!ui.arena);
     if (ui.tab === 'fort' && (ui.col || 'ka') === 'ka') { var un0 = EX.filter(function (e) { return d.unlocked[e.id]; }).map(function (e) { return e.id; }); if (!seenUx || un0.length !== seenUx.length) { saveSeen(un0); badges(notices(d, now)); } }
     if (ui.sheet && ui.sheet.settings && $('sheet').classList.contains('open')) $('sheet').innerHTML = setHtml();
     hydrate(snap, fresh);
@@ -2254,32 +2301,34 @@ button.cday:active { transform: scale(.97); }
     var cur = L.filter(function (e) { return e.id === ui.hsel; })[0] || L.filter(function (e) { return !dn(e); })[0] || L[0], nd = L.filter(dn).length, hz = ui.hz; ui.hz = false;
     // Herausgezoomt: Bergpfad zum Zenit
     if (ui.hpath) return h + pathHtml(d, hz);
-    // Arena: Kopf, große Karte der aktuellen Übung mit einem Hauptknopf, Sätze; Hintergrund antippen = Bergpfad
-    h += '<section class="arena rise' + (hz ? ' zin' : '') + '" data-zoom="1" style="--i:1"><div class="ar-h"><button class="x" data-swap="1" aria-label="Heute ändern">' + ic('swap') + '</button><div><b>' + esc(tname) + '</b><small>' + nd + ' von ' + L.length + ' Übungen</small></div>' +
-      (sess ? '<span></span>' : '<button class="x" data-sess="start" aria-label="Training starten">' + ic('clock') + '</button>') + '</div>';
-    if (!cur) h += sel.key === 'rest' ? restCard(today) : '<p class="muted ar-e">Heute keine Übungen</p>';
-    else {
-      var c = cardOf(d, cur), r = rarOf(cur), q = rxNow(d, cur), tl = todayLog(cur.id, today), s = tl ? tl.s : [], ex2 = Object.assign({}, cur, { sets: q.s, goal: q.r }), cc = cCost(cur, c.lv), pills = '';
-      for (var pi = 0; pi < Math.max(q.s, s.length); pi++) pills += pill(ex2, pi, s, tl);
-      var nxE = L.filter(function (e) { return e !== cur && !dn(e); })[0];
-      var go = !dn(cur) ? '<button class="btn primary big ar-go" data-pill="' + cur.id + ':' + s.length + '">' + ic('plus') + 'Satz ' + (s.length + 1) + ' eintragen</button>' :
-        nxE ? '<button class="btn primary big ar-go" data-hsel="' + nxE.id + '">Weiter: ' + esc(nxE.n) + ic('chev') + '</button>' : '<button class="btn big ar-go" data-pill="' + cur.id + ':' + s.length + '">' + ic('plus') + 'Extra-Satz</button>';
-      h += '<div class="ar-card"><button class="hc big ' + RAR[r][2] + ' l' + lookOf(c.lv) + (cardReady(d, cur) ? ' rdy' : '') + '" data-cardo="' + cur.id + '"><small>' + RAR[r][0] + '</small><b>' + esc(cur.n) + '</b><span>' + Math.min(s.length, q.s) + '/' + q.s + '</span>' +
-        '<em>Lv ' + c.lv + '</em><i class="hcb"><i style="--p:' + (cc ? Math.min(1, c.kp / cc) : 1).toFixed(3) + '"></i></i></button></div>' + cardProg(d, cur) +
-        '<div class="ar-act">' + go + (cur.u === 'Sek.' ? '<button class="x ar-tm" data-timer="' + cur.id + '" aria-label="Stoppuhr">' + ic('play') + '</button>' : '') + '</div><div class="ar-pills">' + pills + '</div>';
-    }
-    h += '</section>';
-    // Deck: Aufwärmen und alle Übungen von heute als kleine Karten
-    var wu = !!d.warm[today];
-    h += '<section class="deck rise" style="--i:2"><button class="dk wu' + (wu ? ' dn' : '') + '" data-warm="1"><b>Aufwärmen</b><span>' + (wu ? ic('check') : '+' + WARM_XP + ' XP') + '</span><em>' + ic('sun') + '</em></button>' + L.map(function (e) {
-      var cd = cardOf(d, e), q2 = rxNow(d, e), t2 = todayLog(e.id, today), k = t2 ? Math.min(t2.s.length, q2.s) : 0;
-      return '<button class="dk ' + RAR[rarOf(e)][2] + ' l' + lookOf(cd.lv) + (dn(e) ? ' dn' : '') + (e === cur ? ' on' : '') + (cardReady(d, e) ? ' rdy' : '') + '" data-hsel="' + e.id + '"><b>' + esc(e.n) + '</b><span>' + (dn(e) ? ic('check') : k + '/' + q2.s) + '</span><em>' + cd.lv + '</em></button>';
-    }).join('') + '</section>';
-    // Tagesziel
-    h += '<div class="dgoal rise' + (reached ? ' got' : '') + '" style="--i:3"><i class="dg-i">' + ic(reached ? 'trophy' : 'target') + '</i><div><b>Tagesziel</b><small>' + (reached ? 'Geschafft · +40 XP' + (extra ? ' · +' + extra * 30 + ' Bonus' : '') : 'Noch ' + (DAILY - n) + (DAILY - n === 1 ? ' Übung' : ' Übungen') + ' bis +40 XP') + '</small></div>' +
-      '<i class="dg-r" style="--p:' + ringP.toFixed(3) + '"><b>' + Math.min(n, DAILY) + '/' + DAILY + '</b></i></div>';
-    h += '<details class="hrw rise" style="--i:4"><summary>' + ic('trophy') + '<b>Serie und Belohnungen</b><span>' + ss.n + ' Tage · ×' + fx(mu) + '</span>' + ic('chev') + '</summary>' + rwd + '</details>';
+    if (ui.arena && cur) return arenaHtml(d, today, L, cur, dn, tname, nd);
+    ui.arena = false;
+    // Übersicht: Training mit einem Start-Knopf (öffnet die Arena), darunter Tagesziel, Bergpfad und Serie als ruhige Zeilen
+    var dm = durEst(), mins = sel.days.reduce(function (a, x) { return a + (dm[x.id] || 45); }, 0), lv = level(d.xp), all = cur && nd === L.length;
+    h += '<section class="tov rise" style="--i:1"><div class="tov-h"><div><small>' + ic('cal') + 'Training heute</small><b>' + esc(tname) + '</b></div><button class="x" data-swap="1" aria-label="Heute ändern">' + ic('swap') + '</button></div>';
+    if (!cur) h += sel.key === 'rest' ? restCard(today) : '<p class="muted">Heute keine Übungen</p>';
+    else h += '<p class="tov-m">' + L.length + ' Übungen' + (mins ? ' · ~' + mins + ' Min' : '') + '</p><div class="tov-b"><i style="--p:' + (nd / L.length).toFixed(3) + '"></i></div><span class="tov-n">' + nd + ' / ' + L.length + '</span>' +
+      '<button class="btn primary big tov-go" data-arena="1">' + ic(all ? 'check' : 'play') + (all ? 'Erledigt · ansehen' : nd ? 'Weiter trainieren' : 'Training starten') + '</button>';
+    h += '</section><div class="hrows rise" style="--i:2">' +
+      '<div class="hrow' + (reached ? ' got' : '') + '"><i class="dg-r" style="--p:' + ringP.toFixed(3) + '"><b>' + Math.min(n, DAILY) + '/' + DAILY + '</b></i><span><b>Tagesziel</b><small>' + (reached ? 'Geschafft · +40 XP' + (extra ? ' · +' + extra * 30 + ' Bonus' : '') : 'Noch ' + (DAILY - n) + (DAILY - n === 1 ? ' Übung' : ' Übungen') + ' bis +40 XP') + '</small></span></div>' +
+      '<div class="hrow" data-zoom="1" role="button" tabindex="0">' + ic('peak') + '<span><b>Bergpfad</b><small>Lv ' + lv + ' · ' + TIERS[tierOfLevel(lv)] + '</small></span>' + ic('chev') + '</div>' +
+      '<details class="hrow"><summary>' + FL + '<span><b>Serie und Belohnungen</b><small>' + ss.n + ' Tage · ×' + fx(mu) + '</small></span>' + ic('chev') + '</summary>' + rwd + '</details></div>';
     return h;
+  }
+  function arenaHtml(d, today, L, cur, dn, tname, nd) {
+    // Arena (Vollbild beim Trainieren): große Karte, wischen oder Punkte zum Wechseln, ein Hauptknopf; ✕ zurück zur Übersicht
+    var c = cardOf(d, cur), r = rarOf(cur), q = rxNow(d, cur), tl = todayLog(cur.id, today), s = tl ? tl.s : [], ex2 = Object.assign({}, cur, { sets: q.s, goal: q.r }), cc = cCost(cur, c.lv), pills = '', dir = ui.hdir || 0;
+    ui.hdir = 0; ui.harr = L.map(function (e) { return e.id; }); ui.hcur = cur.id;
+    for (var i = 0; i < Math.max(q.s, s.length); i++) pills += pill(ex2, i, s, tl);
+    var nxE = L.slice(L.indexOf(cur) + 1).concat(L).filter(function (e) { return e !== cur && !dn(e); })[0];
+    var go = !dn(cur) ? '<button class="btn primary big ar-go" data-pill="' + cur.id + ':' + s.length + '">' + ic('plus') + 'Satz ' + (s.length + 1) + ' eintragen</button>' :
+      nxE ? '<button class="btn primary big ar-go" data-hsel="' + nxE.id + '">Weiter: ' + esc(nxE.n) + ic('chev') + '</button>' : '<button class="btn big ar-go" data-arx="1">' + ic('check') + 'Training fertig</button>';
+    return '<section class="arm-v" data-noswipe="1"><div class="arm-h"><button class="x" data-arx="1" aria-label="Arena verlassen">' + ic('close') + '</button><div><b>' + esc(tname) + '</b><small>' + nd + ' / ' + L.length + ' Übungen</small></div>' +
+      (sess ? '<span></span>' : '<button class="x" data-sess="start" aria-label="Zeit starten">' + ic('clock') + '</button>') + '</div>' +
+      '<div class="arm-s" id="arm-s"><button class="hc big ' + RAR[r][2] + ' l' + lookOf(c.lv) + (cardReady(d, cur) ? ' rdy' : '') + (dir ? (dir > 0 ? ' inr' : ' inl') : '') + '" data-cardo="' + cur.id + '"><small>' + RAR[r][0] + '</small><b>' + esc(cur.n) + '</b><span>' + Math.min(s.length, q.s) + '/' + q.s + '</span>' +
+      '<em>Lv ' + c.lv + '</em><i class="hcb"><i style="--p:' + (cc ? Math.min(1, c.kp / cc) : 1).toFixed(3) + '"></i></i></button></div>' +
+      '<div class="ar-dots">' + L.map(function (e) { return '<button class="' + (dn(e) ? 'd' : '') + (e === cur ? ' c' : '') + '" data-hsel="' + e.id + '" aria-label="' + esc(e.n) + '"></button>'; }).join('') + '</div>' +
+      cardProg(d, cur) + '<div class="ar-pills">' + pills + '</div><div class="ar-act">' + go + (cur.u === 'Sek.' ? '<button class="x ar-tm" data-timer="' + cur.id + '" aria-label="Stoppuhr">' + ic('play') + '</button>' : '') + '</div></section>';
   }
   function pathHtml(d, hz) {
     // Bergpfad zum Zenit: Konto-Level als Stationen (unten Vergangenheit, oben Zukunft), Titel-Stufen als Meilensteine
@@ -4630,6 +4679,8 @@ button.cday:active { transform: scale(.97); }
     if ((el = t.closest('[data-gx]'))) { ui.gx[el.dataset.gx] = !ui.gx[el.dataset.gx]; ui.fresh = false; render(); return; }
     if ((el = t.closest('[data-pday]'))) { dsel = el.dataset.pday; try { localStorage.setItem('zenit.day', JSON.stringify({ d: dayIdx(Date.now()), v: dsel })); } catch (err) { /* egal */ } ui.fresh = false; render(); return; }
     if ((el = t.closest('[data-zoom]')) && !t.closest('button, input, a, summary')) { ui.hpath = !ui.hpath; ui.hz = true; ui.fresh = false; if (ui.tab !== 'heute') ui.tab = 'heute'; ui.scroll = ui.hpath ? '.bp-n.cur' : null; render(); if (!ui.hpath) $('app').scrollTo(0, 0); buzz(6); return; }
+    if (t.closest('[data-arena]')) { ui.arena = true; ui.hpath = false; ui.fresh = true; if (!sess) sessStart(); else render(); $('app').scrollTo(0, 0); return; }
+    if (t.closest('[data-arx]')) { ui.arena = false; ui.fresh = true; render(); $('app').scrollTo(0, 0); return; }
     if ((el = t.closest('[data-hsel]'))) { ui.hsel = el.dataset.hsel; ui.fresh = false; render(); buzz(4); return; }
     if ((el = t.closest('[data-pg]'))) { ui.pg = el.dataset.pg; ui.fresh = false; render(); return; }
     if (foodClick(t)) return;
@@ -4776,6 +4827,15 @@ button.cday:active { transform: scale(.97); }
 
   // ---------- Slide-Steuerung
   var TABS = ['tage', 'food', 'heute', 'fort', 'profil'];
+  var armX = null;
+  document.addEventListener('touchstart', function (ev) { armX = ev.target.closest && ev.target.closest('#arm-s') ? ev.touches[0].clientX : null; }, { passive: true });
+  document.addEventListener('touchend', function (ev) {
+    if (armX == null) return;
+    var dx = ev.changedTouches[0].clientX - armX; armX = null;
+    if (Math.abs(dx) < 50 || !ui.harr) return;
+    var j = ui.harr.indexOf(ui.hcur) + (dx < 0 ? 1 : -1); if (j < 0 || j >= ui.harr.length) return;
+    ui.hsel = ui.harr[j]; ui.hdir = dx < 0 ? 1 : -1; ui.fresh = false; render(); buzz(4);
+  });
   function goTab(k, dir) { if (k === ui.tab || TABS.indexOf(k) < 0) return; ui.sw = dir || (TABS.indexOf(k) - TABS.indexOf(ui.tab)); ui.fdrawn = false; ui.tab = k; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0); }
   var sx = 0, sy = 0, st0 = 0, sEl = null, sMode = '', sheetDy = 0, calLock = '';
   document.addEventListener('touchstart', function (e) {

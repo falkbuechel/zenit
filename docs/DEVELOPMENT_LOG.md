@@ -15,6 +15,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Arena mit Zähler und Pause-Vollbild, Serie als kompakte Zeile
+- Arena: flache Karte oben (`.hc.arc`, wischen = andere Übung), darunter großer Zähler `#arn` für den nächsten Satz (±, waagerecht wischen 16 px je Schritt; Akzentfarbe ab Ziel), vorbelegt wie im Fenster (`setPrefill`). „Satz eintragen“ (`data-arsave`, `arSave`) speichert direkt, Gewicht wie zuletzt (Chip öffnet das Fenster). Erledigte Sätze als kleine Pills (antippen = ändern).
+- Speichern als gemeinsame Funktion `logSet` (Fenster und Arena). Pause: `startRest(e, nx)` mit Text „Satz 2 von 3“, −15 s (`data-rest="sub"`); in der Arena als Vollbild mit Ring (`body.arm .rest`, `--p` am `#rest`), nach Ablauf schließt sie sich nach 1,2 s von selbst.
+- Heute: „Serie und Belohnungen“ (großer Block mit Flamme, Ring, Kacheln, Vorwoche) ersetzt durch eine Zeile `.hser`: Flamme + Tage, Wochenpunkte, Multiplikator-Chip, Vorwoche-Balken. `weekStrip`/`rwTile` entfernt. CSS von `.hero`, `.rw`, `.chase`, `.week`, `.sk`, `.ringw` ist jetzt tot → beim nächsten Aufräumen mit `compare.js` entfernen.
+- Fehler: `.unlock .big` (Symbolkreis) traf auch den Knopf `btn big` → „Weiter“ als Ellipse. Jetzt `.unlock div.big`.
+- Smoke: Arena trägt einen Satz ein, schließt Dialoge (die erscheinen verzögert; sonst blockiert der Schleier alle folgenden Klicks und der Lauf dauert 150 s), Pause −15 s und Weiter.
+
 ### 2026-10-23 – Balken blass → kräftig, 24-h-Uhrzeit, Wischen ohne iOS-Geste, Freischalten nur über Voraussetzungen, Sektor-Reihenfolge
 - Balken: Verlauf von blass (weiße Überlagerung) zu voller Farbe an der Spitze.
 - Uhrzeit: iPhone zeigte AM/PM und schnitt ab → eigene 24-h-Anzeige `#ftmv`, das echte `type=time`-Feld liegt unsichtbar darüber (öffnet weiter das Rad).

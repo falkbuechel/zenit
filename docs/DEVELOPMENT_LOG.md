@@ -15,6 +15,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Balken blass → kräftig, 24-h-Uhrzeit, Wischen ohne iOS-Geste, Freischalten nur über Voraussetzungen, Sektor-Reihenfolge
+- Balken: Verlauf von blass (weiße Überlagerung) zu voller Farbe an der Spitze.
+- Uhrzeit: iPhone zeigte AM/PM und schnitt ab → eigene 24-h-Anzeige `#ftmv`, das echte `type=time`-Feld liegt unsichtbar darüber (öffnet weiter das Rad).
+- Senkrechtes Wischen auf Kacheln/Einträgen: `touchmove` mit `preventDefault` (passive: false), sobald die Bewegung senkrecht ist, damit iOS nicht die Seite/Geste mitnimmt.
+- Freischalten: Üben einer gesperrten Übung schaltet sie nicht mehr frei; nur erfüllte Voraussetzungen (+ Muskel-Level bei Skills). Achtung: bisher so freigeschaltete Übungen sind wieder gesperrt (Karten-KP bleiben).
+- Skilltree: Reihenfolge der Muskel-Sektoren wird optimiert (alle 8! Reihenfolgen, Kosten = Querlinien × Winkelabstand der Sektormitten), Drehsuche weiter (±60°, 6 Durchgänge). Gemessen: 5 → 4 Kreuzungen, Linienlänge 8127 → 7479 px, längste Linie 628 → 337 px.
+
 ### 2026-10-23 – Essen-Gruppen, Wischrichtung getauscht, Skilltree entwirrt mit Leuchten und Fortschritt
 - Essen: Mahlzeit-Leiste und Uhrzeit in einer Zeile (Tag darüber, nur bei neuen Einträgen). Wischen getauscht: Vorschlag nach oben = eintragen, Eintrag nach unten = löschen. Gleiche Mahlzeit innerhalb 45 min = Stapel (`fGroups`, `fChip`, `data-fstk`, `ui.fstk`), Antippen klappt auf (getönte Klammer, Schließen-Knopf); Stapel selbst lassen sich nicht wegwischen. Balken dunkler mit stärkerem Verlauf (dunkle Basis → helle Spitze).
 - Diagramme: feine Wochenlinien (ab 14 Tagen) bzw. Monatslinien (ab 120 Tagen).

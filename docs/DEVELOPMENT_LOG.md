@@ -15,6 +15,9 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Muskeln als Körperfigur
+- Mockup A: stilisierte Figur (`BODY`, vorn/hinten), jede Fläche = Muskelgruppe in Materialfarbe (ab Gold mit Leuchten), Antippen wählt (`ui.msel`), Chips für alle 9 Gruppen (auch Beweglichkeit/Ausdauer), Info-Karte mit Level, MP-Balken, „Silber ab Lv 8 · noch X MP“, Übungen öffnen das bisherige Muskel-Fenster. Platzhalter bis zu den Illustrationen.
+
 ### 2026-10-23 – Statistik als Kurven auf einer Seite
 Mit Falk per Mockup (A): keine Kachel→Großansicht mehr, je Bereich eine Seite.
 - `statPage`: Zeitraum 7/30/90, 3 Kennzahlen (`kpis`), Diagramm-Karten mit weichen Kurven (`lineChart`, `smooth` = Catmull-Rom), zusammengehörige Werte teilen sich ein Diagramm (Sätze+XP, kcal+Ziel, Protein+Ziel, Fett+Zucker, Gewicht+Zielgewicht, alle Maße). Antippen oder Wischen über die Kurve wählt einen Tag (`ui.lsel`, `data-lc`, Touch-Scrub umgebaut von der alten Ernährungs-Grafik), Werte stehen im Kopf.

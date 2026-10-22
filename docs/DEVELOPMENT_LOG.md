@@ -15,6 +15,10 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-23 – Einzelmuskeln, Figur per Wischen
+- 15 Einzelmuskeln (`SUBM`: Latissimus, Nacken & Trapez, unterer Rücken, Brust, vordere/hintere Schulter, Bizeps, Trizeps, Unterarme & Griff, Bauch, seitlicher Bauch, Quadrizeps, Beinbeuger, Gesäß, Waden) mit eigenem Level (`subOf` verteilt die Wörter aus `e.mu`, `d.smp`, `sLevel` mit halben Kosten). Die 9 Gruppen bleiben Oberbegriff für Skill-Voraussetzungen und Balance.
+- Figur: Flächen je Einzelmuskel in Materialfarbe, vorn/hinten per waagerechtem Wischen (Dreh-Animation, zwei Punkte zeigen die Seite), keine Knöpfe. Gruppe antippen markiert ihre Einzelmuskeln; Info-Karte zeigt Gruppe mit Einzelmuskel-Chips oder Einzelmuskel mit Rückweg zur Gruppe.
+
 ### 2026-10-23 – Mahlzeit wählbar, Wasser-Regler neu, schmale Toasts, lineare Diagramme, Rekorde je Übung
 - Essen: unter Heute/Gestern Mahlzeit (Auswahl) + Uhrzeit nebeneinander (`whenRow`/`whenFor`); Mahlzeit folgt der Uhrzeit, bis man sie wählt; gespeichert nur, wenn sie von der Uhrzeit abweicht (`x.mk`, `cleanFood` behält `mk`; `mealOfE`). Neue Datenform-Erweiterung, abwärtskompatibel.
 - Wasser: eigener Regler (`.wsl`, Pointer: Antippen oder Ziehen setzt den Wert, Loslassen speichert) statt `input type=range` mit unsichtbarem Knopf (reagierte schlecht).

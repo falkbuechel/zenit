@@ -2,9 +2,18 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## Stand 2026-10-26
+- Zuletzt: Essen (Nährwert-Fenster, Wasser per Glas/Flasche, ohne Rückgängig), Heute als Spiel-Startseite mit Maskottchen-Platzhalter, Belohnungen nach dem Training (alles live, Deploy grün).
+- Falk testet am iPhone: neue Heute-Startseite, Belohnungsfolge nach dem Training, Essen-Zuviel/Wackeln, Wasser-Knöpfe, Nährwert-Fenster.
+- Nächster Schritt: Heute weiter umbauen („darauf kann man aufbauen, braucht noch viel Veränderung“) – erst fragen, was am meisten stört, dann Varianten zeigen.
+- Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken, damit Linien zu Backlever/Frontlever kürzer werden (Linie vom Muskel-Emblem wird dafür länger)?
+- Nicht committet: `.claude/settings.json` (Falk hat die Erlaubnisliste erweitert, `defaultMode: acceptEdits`) – beim nächsten Commit mitnehmen.
+
 ## Offen / Ideen
-- iPhone-Test offen: Arena (Zähler, Pause-Vollbild), Serie-Zeile, Essen (24 h, Wischen ohne iOS-Geste, Balken, Stapel), Freischalten nur über Voraussetzungen, Skilltree (Linien, Leuchten, Info-Leiste), Level-up-Effekte
-- Heute: Bergpfad-Belohnungen / Tages-Drops, Tagesaufgaben, Saison
+- iPhone-Test offen: Pause-Vollbild in der Arena, Skilltree (Linien, Leuchten, Info-Leiste)
+- Heute: weiterer Umbau der Startseite; Bergpfad-Belohnungen / Tages-Drops, Tagesaufgaben, Saison; Vorwoche-Vergleich ist aus Heute raus (neuen Platz finden)
+- Serie: zu langweilig, beim Redesign aufwerten
+- Maskottchen: echte Illustration mit Stufen (ComfyUI), ersetzt den SVG-Platzhalter `mascot()`
 - Statistik-Detailansichten schlanker (Training sehr lang)
 - Icons / Text reduzieren in Heute, Essen, Verlauf, Profil
 - Weitere anstehende Termine im Kalender (z. B. Körpermaße monatlich, wie das Wiegen)

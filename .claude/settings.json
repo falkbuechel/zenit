@@ -1,12 +1,10 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(python tools/check.py)", "Bash(python tools/check.py *)", "Bash(python build.py)",
-      "Bash(node tools/smoke.js)", "Bash(node tools/smoke.js *)", "Bash(node tools/compare.js *)", "Bash(node --check *)",
-      "Bash(git status *)", "Bash(git diff *)", "Bash(git log *)", "Bash(git show *)", "Bash(git branch *)",
-      "Bash(git add *)", "Bash(git commit *)", "Bash(grep *)",
-      "Bash(gh run list *)", "Bash(gh run view *)", "Bash(gh run watch *)"
-    ],
+  "defaultMode": "acceptEdits",
+  "allow": [
+    "Bash(python *)", "Bash(node *)", "Bash(git *)", "Bash(gh *)",
+    "Bash(cat *)", "Bash(sed *)", "Bash(grep *)", "Bash(ls *)", "Bash(cp *)", "Bash(wc *)", "Bash(tail *)", "Bash(head *)"
+  ],
     "ask": ["Bash(git push *)"],
     "deny": [
       "Bash(git push --force*)", "Bash(git push -f*)", "Bash(git reset --hard*)", "Bash(rm -rf *)",

@@ -46,6 +46,7 @@ async function scenario(b, sc, errs) {
     // Essen: Kachel → Menge bestätigen, Suche → Menge → Eintragen, Schnell, Ziele (beide Modi), Gerichte, eigenes Lebensmittel
     if (tab === 'food') {
       await click('[data-ftile="0"]'); await click('[data-fpadd]'); await click('[data-fsearch]'); await p.fill('#fq', 'ei').catch(() => {}); await click('[data-fpick]'); await click('[data-fstep="1"]'); await click('[data-fpadd]');
+      await click('[data-fnut="f"]'); await click('.fnr'); await closeSheet(); await click('[data-fnut="k"]'); await closeSheet(); await click('[data-fwa="250"]'); await click('[data-fwa="500"]');
       await click('[data-fquick]'); await closeSheet(); await click('[data-fgoal]'); await click('[data-ctb]'); await click('[data-gmode="m"]'); await click('[data-gmode="a"]'); await closeSheet();
       await click('[data-fdishes]'); await click('[data-fde]'); await closeSheet(); await click('[data-fsearch]'); await click('[data-fown="new"]'); await closeSheet();
       await click('[data-fedit]'); await closeSheet();

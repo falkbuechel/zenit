@@ -273,7 +273,7 @@
     // Mini-Balken: hit = im Ziel, over = über der Grenze (FLIM: Fett/Kohlenhydrate 110 %, Zucker 100 %, Protein 140 %, Ballaststoffe 160 % als gesundes Maximum)
     // low = orange: Protein/Ballaststoffe weit hinter dem, was zur Tageszeit zu erwarten ist (ex = erwarteter Anteil, fExp)
     var su = k === 'su', p = g ? v / g : 0, lim = FLIM[k], bad = p > lim, hit = !bad && (k === 'p' || k === 'fb' ? p >= 0.9 : !su && p >= 0.85), low = !bad && !hit && (k === 'p' || k === 'fb') && ex >= 0.3 && p < ex * 0.6;
-    return '<div class="fmb ' + k + (bad ? ' over' : hit ? ' hit' : low ? ' low' : '') + fAnim(k, bad ? 'over' : hit ? 'hit' : '', v) + '"><span>' + NSH[k] + '</span><i class="fbt"><i' + pv('fm' + k, Math.min(1, p)) + '></i>' + fOv(p, lim) + '</i><b>' + Math.round(v) + '<small>/' + (su ? '≤' : '') + g + '</small></b></div>';
+    return '<div class="fmb ' + k + (bad ? ' over' : hit ? ' hit' : low ? ' low' : '') + fAnim(k, bad ? 'over' : hit ? 'hit' : '', v) + '" data-fnut="' + k + '" role="button" tabindex="0"><span>' + NSH[k] + '</span><i class="fbt"><i' + pv('fm' + k, Math.min(1, p)) + '></i>' + fOv(p, lim) + '</i><b>' + Math.round(v) + '<small>/' + (su ? '≤' : '') + g + '</small></b></div>';
   }
   // Grenzen als Anteil vom Ziel: darüber = zu viel (k = kcal, wa = Wasser)
   var FLIM = { k: 1.1, p: 1.4, f: 1.1, c: 1.1, fb: 1.6, su: 1, wa: 1.5 };
@@ -307,10 +307,10 @@
     var r = wsl.getBoundingClientRect(), mx = +wsl.dataset.max, v = Math.round(Math.max(0, Math.min(1, (x - r.left) / r.width)) * mx / 50) * 50;
     if (v === +wsl.dataset.v) return;
     wsl.dataset.v = v; wsl.style.setProperty('--p', (v / mx).toFixed(3)); buzz(3);
-    if (wsl.id === 'fw-r') $('fw-t').firstChild.textContent = fN2(v / 1000); else { $('wa-n').textContent = fN2(v / 1000); $('wa-v').value = v; }
+    $('wa-n').textContent = fN2(v / 1000); $('wa-v').value = v;
   }
   function wslEnd() { if (!wsl) return; var v = +wsl.dataset.v; wsl = null; waSet(v); }
-  document.addEventListener('pointerdown', function (ev) { var el = ev.target.closest && ev.target.closest('.wsl'); if (!el) return; wsl = el; wslSet(ev.clientX); });
+  document.addEventListener('pointerdown', function (ev) { var el = ev.target.closest && ev.target.closest('.wsl:not([data-ro])'); if (!el) return; wsl = el; wslSet(ev.clientX); });
   document.addEventListener('pointermove', function (ev) { if (wsl) wslSet(ev.clientX); });
   document.addEventListener('pointerup', wslEnd);
   document.addEventListener('pointercancel', wslEnd);
@@ -336,12 +336,13 @@
       ds += '<button class="fdd' + (di === sd ? ' sel' : '') + (di === today ? ' today' : '') + dc + '" data-fsd="' + di + '" aria-label="' + esc(fmtDayL(di)) + '"><small>' + WDN[wdOf(di)].slice(0, 2) + '</small><b>' + new Date(di * 864e5).getUTCDate() + '</b><i style="--p:' + Math.min(1, kq).toFixed(2) + '"></i></button>'; }
     h += '<nav class="fds rise" style="--i:0">' + ds + '</nav>';
     // Bilanz: kcal groß mit Balken, darunter Protein, Fett, Kohlenhydrate, Ballaststoffe, Zucker
-    h += '<section class="fbal rise" style="--i:1"><div class="fbk' + (kp > FLIM.k ? ' over' : kp >= 0.9 ? ' hit' : ex >= 0.3 && kp < ex * 0.6 ? ' low' : '') + fAnim('k', kp > FLIM.k ? 'over' : kp >= 0.9 ? 'hit' : '', s.k) + '"><b data-n="' + s.k + '" data-nk="fkv">' + s.k + '</b><span>/ ' + g.k + ' kcal</span>' +
+    h += '<section class="fbal rise" style="--i:1"><div class="fbk' + (kp > FLIM.k ? ' over' : kp >= 0.9 ? ' hit' : ex >= 0.3 && kp < ex * 0.6 ? ' low' : '') + fAnim('k', kp > FLIM.k ? 'over' : kp >= 0.9 ? 'hit' : '', s.k) + '" data-fnut="k" role="button" tabindex="0"><b data-n="' + s.k + '" data-nk="fkv">' + s.k + '</b><span>/ ' + g.k + ' kcal</span>' +
       (g.tb ? '<span class="ftb">' + ic('dumb') + '+' + g.tb + '</span>' : '') + '<em>' + (g.k - s.k >= 0 ? (g.k - s.k) + ' offen' : (s.k - g.k) + ' drüber') + '</em><i class="fbt"><i' + pv('fkb', Math.min(1, kp)) + '></i>' + fOv(kp, FLIM.k) + '</i></div>' +
       '<div class="fbm">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return fbar(k, s[k], g[k], ex); }).join('') + '</div>' +
       '<div class="fwa' + (wa > wg * FLIM.wa ? ' over' : wa >= wg ? ' hit' : '') + fAnim('wa', wa > wg * FLIM.wa ? 'over' : wa >= wg ? 'hit' : '', wa) + '">' + ic('drop') +
-      '<i id="fw-r" class="wsl" data-max="' + wg + '" data-v="' + Math.min(wa, wg) + '" style="--p:' + Math.min(1, wa / wg).toFixed(3) + '" role="slider" aria-label="Wasser" data-noswipe="1"><i></i>' + fOv(wa / wg, FLIM.wa) + '</i>' +
-      '<button class="fwv" data-fwao="1" aria-label="Wasser genau eintragen"><b id="fw-t">' + fN2(wa / 1000) + '<small> / ' + fN(wg / 1000) + ' l</small></b></button>' +
+      '<i class="wsl" data-ro="1"><i' + pv('fwa', Math.min(1, wa / wg)) + '></i>' + fOv(wa / wg, FLIM.wa) + '</i>' +
+      '<button class="fwv" data-fwao="1" aria-label="Wasser genau eintragen"><b>' + fN2(wa / 1000) + '<small>/' + fN(wg / 1000) + ' l</small></b></button>' +
+      '<button class="fwq" data-fwa="250" aria-label="Ein Glas, 250 ml">' + ic('glass') + '</button><button class="fwq" data-fwa="500" aria-label="Eine Flasche, 500 ml">' + ic('bottle') + '</button>' +
       '</div></section>';
     // Schnell-Kacheln
     h += '<section class="ftl rise" style="--i:2" data-noswipe="1">' + tl.map(function (x, j) {
@@ -729,8 +730,21 @@
     items.slice().sort(function (a, b) { return a.x.t - b.x.t; }).forEach(function (o) { var m = mealOfE(o.x)[1], g = gs[gs.length - 1]; if (g && g.m === m && o.x.t - g.t0 <= 45 * 6e4) g.l.push(o); else gs.push({ m: m, t0: o.x.t, l: [o] }); });
     return gs;
   }
+  // Nährwert antippen: Fenster mit allen Einträgen des Tages, sortiert nach diesem Wert (meiste oben), Anteil am Tag als Balken; Eintrag antippen = ändern
+  function openNut(k) {
+    var sd = fSd(), s = foodSum(sd), g = foodGoal(sd), u = k === 'k' ? ' kcal' : ' g', tot = s[k] || 0;
+    var known = s.items.filter(function (o) { return o.x[k] != null; }), unk = s.items.length - known.length;
+    var rows = known.filter(function (o) { return o.x[k] > 0; }).sort(function (a, b) { return b.x[k] - a.x[k]; }).map(function (o) {
+      var ml = mealOfE(o.x), sh = tot ? o.x[k] / tot : 0;
+      return '<button class="fnr m-' + ml[1] + '" data-fedit="' + o.i + '"><span><b>' + esc(o.x.n || 'Mahlzeit') + '</b><small>' + ml[2] + ' · ' + hmOf(o.x.t) + '</small></span><em>' + (k === 'k' ? Math.round(o.x[k]) : fN(o.x[k])) + u + '<small>' + Math.round(sh * 100) + ' %</small></em><i style="--p:' + sh.toFixed(3) + '"></i></button>';
+    }).join('');
+    ui.sheet = { nut: k };
+    sheetOpen(shHead('chart', (k === 'k' ? 'Kalorien' : NSH[k]) + (sd === dayIdx(Date.now()) ? ' heute' : ''), (k === 'k' ? Math.round(tot) : fN(tot)) + ' / ' + (k === 'su' ? '≤' : '') + g[k] + u) +
+      '<div class="fnl" style="--fc:var(' + { k: '--g-push', p: '--g-pull', f: '--g-mob', c: '--g-cardio', fb: '--g-kh', su: '--g-core' }[k] + ')">' + (rows || '<p class="muted">Noch nichts mit ' + (k === 'k' ? 'Kalorien' : NSH[k]) + '.</p>') + '</div>' +
+      (unk ? '<p class="sh-note">' + unk + (unk === 1 ? ' Eintrag' : ' Einträge') + ' ohne Angabe</p>' : ''));
+  }
   function fChip(o) { var ml = mealOfE(o.x); return '<button class="fcpi m-' + ml[1] + '" data-fedit="' + o.i + '"><b>' + esc(o.x.n || 'Mahlzeit') + '</b><small>' + ml[2] + ' · ' + hmOf(o.x.t) + '</small><em>' + Math.round(o.x.k) + '<i>kcal</i></em></button>'; }
-  function foodDel(i) { var st = foodState(); ui.undo = '#' + JSON.stringify(st); st.e.splice(i, 1); persist(); closeSheet(true); ui.fresh = false; render(); toast('Gelöscht', 'close', true); buzz(10); }
+  function foodDel(i) { var st = foodState(); st.e.splice(i, 1); persist(); closeSheet(true); ui.fresh = false; render(); toast('Gelöscht', 'close'); buzz(10); }
   // Wischen: Vorschlag nach oben ziehen = sofort eintragen (Menge wie angezeigt), Eintrag nach unten ziehen = löschen (mit Rückgängig).
   // Waagerecht bleibt Scrollen der Reihe; ein Wischen löst kein Antippen aus
   var fsw = null, fswMoved = false;
@@ -761,7 +775,6 @@
   document.addEventListener('pointercancel', fswEnd);
   function foodPush(x, editIdx) {
     var st = foodState(), today = dayIdx(Date.now()), before = foodSum(today).p, goal = foodGoal(today).p;
-    ui.undo = '#' + JSON.stringify(st);
     // Uhrzeit aus dem Fenster (falls vorhanden) auf den Tag des Eintrags setzen
     var old = editIdx != null ? st.e[editIdx] : null, base = old ? old.t : Date.now() - (ui.fday || 0) * 864e5, tm = $('ftm') && $('sheet').classList.contains('open') ? $('ftm').value : '';
     if (/^\d\d:\d\d$/.test(tm)) { var q = new Date(base); q.setHours(+tm.slice(0, 2), +tm.slice(3), 0, 0); base = q.getTime(); }
@@ -770,7 +783,7 @@
     persist(); closeSheet(true); ui.fresh = false; render();
     var after = foodSum(today).p;
     if (editIdx == null && before < goal && after >= goal) { toast('Proteinziel erreicht', 'trophy'); sparks(90); buzz([40, 30, 40]); }
-    else toast((editIdx != null ? 'Geändert · ' : '+') + Math.round(x.k) + ' kcal · ' + fN(x.p) + ' g Protein' + (ui.fday ? ' · ' + (ui.fday === 1 ? 'gestern' : fmtDayL(dayIdx(Date.now()) - ui.fday)) : ''), 'check', true);
+    else toast((editIdx != null ? 'Geändert · ' : '+') + Math.round(x.k) + ' kcal · ' + fN(x.p) + ' g Protein' + (ui.fday ? ' · ' + (ui.fday === 1 ? 'gestern' : fmtDayL(dayIdx(Date.now()) - ui.fday)) : ''), 'check');
     ui.fday = 0;
   }
   function foodRef(id, a, editIdx) {
@@ -796,7 +809,12 @@
     if ((el = t.closest('[data-fscan]'))) { if (el.dataset.fscan === 'own') { ui.odraft = ownDraft(); ui.odraft.id = ui.sheet.fown; openScan('own'); } else openScan(); return true; }
     if ((el = t.closest('[data-oml]'))) { ui.sheet.ml = +el.dataset.oml; document.querySelectorAll('[data-oml]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === el)); }); return true; }
     if ((el = t.closest('[data-fsd]'))) { ui.fsd = +el.dataset.fsd; ui.fresh = false; render(); return true; }
-    if ((el = t.closest('[data-fwa]'))) { var wd = fSd(); st.wa[wd] = Math.max(0, Math.min(8000, (st.wa[wd] || 0) + +el.dataset.fwa)); if (!st.wa[wd]) delete st.wa[wd]; persist(); buzz(6); ui.fresh = false; render(); if (ui.sheet && ui.sheet.wa) $('sheet').innerHTML = waHtml(); return true; }
+    if ((el = t.closest('[data-fwa]'))) {
+      var wd = fSd(), rc = el.getBoundingClientRect(); st.wa[wd] = Math.max(0, Math.min(8000, (st.wa[wd] || 0) + +el.dataset.fwa)); if (!st.wa[wd]) delete st.wa[wd];
+      persist(); buzz(6); ui.fresh = false; render(); if (ui.sheet && ui.sheet.wa) $('sheet').innerHTML = waHtml(); else if (+el.dataset.fwa > 0) floaty('+' + el.dataset.fwa + ' ml', rc);
+      return true;
+    }
+    if ((el = t.closest('[data-fnut]'))) { openNut(el.dataset.fnut); return true; }
     if (t.closest('[data-fwao]')) { ui.sheet = { wa: true }; sheetOpen(waHtml()); return true; }
     if (t.closest('[data-dgs]')) { readDraft(); ui.ingm = true; openFsearch(); return true; }
     if (t.closest('[data-fownb]')) { var bt0 = fItem(ui.fpick.i), dr0 = { n: fName(bt0), un: bt0.u[0] ? bt0.u[0][0] : '', ug: bt0.u[0] ? bt0.u[0][1] : '', ml: bt0.ml ? 1 : 0 }; NK.forEach(function (k) { dr0[k] = bt0[k] != null ? bt0[k] : ''; }); openOwn('new', null, dr0); return true; }
@@ -836,9 +854,9 @@
     }
     if ((el = t.closest('[data-wdel]'))) { st.w = st.w.filter(function (y) { return y.t !== +el.dataset.wdel; }); persist(); openWeight(); ui.fresh = false; render(); return true; }
     if (t.closest('[data-fcopy]')) {
-      var sd1 = fSd(), ys = foodSum(sd1 - 1).items, nn = Date.now() - (dayIdx(Date.now()) - sd1) * 864e5; ui.undo = '#' + JSON.stringify(st);
+      var sd1 = fSd(), ys = foodSum(sd1 - 1).items, nn = Date.now() - (dayIdx(Date.now()) - sd1) * 864e5;
       ys.forEach(function (o, j) { var c = JSON.parse(JSON.stringify(o.x)); c.t = nn + j; st.e.push(c); });
-      persist(); ui.fresh = false; render(); toast(ys.length + ' Einträge wie gestern', 'check', true); return true;
+      persist(); ui.fresh = false; render(); toast(ys.length + ' Einträge wie gestern', 'check'); return true;
     }
     if ((el = t.closest('[data-fday]'))) { ui.fday = +el.dataset.fday; document.querySelectorAll('[data-fday]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === el)); }); if ($('ffit')) $('ffit').innerHTML = ffitHtml(); return true; }
     if ((el = t.closest('[data-gmode]'))) { calcRead(); ui.gmode = el.dataset.gmode; $('sheet').innerHTML = goalsHtml(); calcUpd(); return true; }

@@ -13,6 +13,11 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-26 – Essen: Nährwert-Fenster, Wasser per Glas/Flasche, ohne Rückgängig
+- Nährwert antippen (kcal-Zeile oder Mini-Balken, `data-fnut`): Fenster `openNut` mit allen Einträgen des Tages, sortiert nach diesem Wert, Menge, Anteil in % als Balken in der Wertfarbe, linker Rand = Mahlzeit; Eintrag antippen = ändern; „ohne Angabe“ zählt Einträge ohne diesen Wert.
+- Wasser: Balken nur Anzeige (`.wsl[data-ro]`, Ziehen nur noch im Feineingabe-Fenster), Knöpfe Glas +250 ml und Flasche +500 ml (`.fwq`, neue Icons `glass`, `bottle`) mit „+250 ml“-Floaty; Zahl antippen = Feineingabe.
+- Rückgängig im Essen entfernt (Eintragen, Löschen, „Wie gestern“): Toasts ohne Knopf, `ui.undo` wird dort nicht mehr gesetzt.
+
 ### 2026-10-26 – Heute als Spiel-Startseite mit Maskottchen, Essen: Grenzen und neues Zuviel
 - Heute (Variante A, Clash-Stil): oben Level-Plakette mit Titel und XP (Antippen = Bergpfad) und Serien-Chip (Tage, ×Bonus, Countdown; rot pulsierend bei letzter Chance), links Tagesziel-Ring und Aufwärmen, rechts Bergpfad und Ändern, Mitte Bühne (Himmel, Bergketten, Schein) mit Maskottchen (Antippen = Arena), unten Plan, Fortschritt, großer Start-Knopf. Ruhetag: Maskottchen schläft, Knopf „Trotzdem trainieren“. Alte Übersicht (`.tov`, `.hrow`, Serie-Zeile, `hudSlim`, `restCard`) entfernt; Vorwoche-Balken ist damit aus Heute raus.
 - Maskottchen `mascot(mood, tier)`: SVG-Platzhalter (idle/happy/sleep/cheer), Stirnband in Stufenfarbe, wächst mit der Titel-Stufe, wippt. In der Arena unten unter dem Knopf, freut sich ab Ziel, jubelt bei erledigter Übung. Arena blendet weich ein (`arin`).

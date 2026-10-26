@@ -3,15 +3,13 @@
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
 ## Offen / Ideen
-- Essen: Barcode-Scan und Online-Suche (Open Food Facts), eigene Runde
-- Essen: weitere Lebensmittel / Gerichtsvorlagen nach Bedarf
-- Foto der Nährwerttabelle
-- Deload-Wochen
-- Push-Erinnerungen (spät)
-- Schlaf (später)
-- Heute/Essen: doppelte CSS-Regeln aus der Chat-Zeit zusammenführen (39 Selektoren mehrfach, mit `tools/compare.js` absichern)
+- iPhone-Test offen: Arena (Zähler, Pause-Vollbild), Serie-Zeile, Essen (24 h, Wischen ohne iOS-Geste, Balken, Stapel), Freischalten nur über Voraussetzungen, Skilltree (Linien, Leuchten, Info-Leiste), Level-up-Effekte
+- Heute: Bergpfad-Belohnungen / Tages-Drops, Tagesaufgaben, Saison
+- Statistik-Detailansichten schlanker (Training sehr lang)
+- Icons / Text reduzieren in Heute, Essen, Verlauf, Profil
 - Weitere anstehende Termine im Kalender (z. B. Körpermaße monatlich, wie das Wiegen)
-- Icons / Text reduzieren in Heute, Essen, Verlauf, Profil (Plan ist fertig)
+- Später: Deload-Wochen, Foto der Nährwerttabelle, Push-Erinnerungen, Schlaf, mehr Lebensmittel/Gerichte
+- Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
 

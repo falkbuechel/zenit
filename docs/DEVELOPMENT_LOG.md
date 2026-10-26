@@ -8,7 +8,7 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Nächster Schritt: Heute weiter umbauen („darauf kann man aufbauen, braucht noch viel Veränderung“) – erst fragen, was am meisten stört, dann Varianten zeigen.
 - Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken, damit Linien zu Backlever/Frontlever kürzer werden (Linie vom Muskel-Emblem wird dafür länger)?
 - iPhone-Test offen: Essen-Tagesleiste wischen, Wasser-Balken ziehen, neues Wasser-Fenster, Mahlzeit-Zeilen mit Stapeln, Nährwert-Fenster, Mengen-Fenster, Marken-/Online-Suche.
-- Offen Essen: Gericht- und Eigenes-Lebensmittel-Fenster (openOwn, dishEditHtml) noch im alten Stil – bei Bedarf wie das Mengen-Fenster umbauen.
+- Offen Essen: Open Food Facts schneller (Bedingungen im Verlauf „Open Food Facts besser einbinden“).
 
 ## Offen / Ideen
 - iPhone-Test offen: Pause-Vollbild in der Arena, Skilltree (Linien, Leuchten, Info-Leiste)
@@ -22,6 +22,23 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-26 – Essen: Gegessen in einer Zeile, Icons statt Nährwert-Namen, kompaktes Mengen-Fenster, Suche mit Kategorie-Icons
+- Gegessen: eine Zeile Mahlzeit-Karten (`fMealCard`: Symbol, kcal, Kategorien als überlappende Kreise, Anzahl); antippen zeigt nur diese Mahlzeit in derselben Zeile (`fMeal`, Zurück-Knopf `.fmz`, `ui.fmeal` = Tagesindex + Mahlzeit). Kategorie-Stapel wie zuvor. `fCat` liefert jetzt nur den Schlüssel, Icon und Kurzname aus `CATI`.
+- Reihenfolge: Gegessen → Suchen/Gerichte/Schnell → Vorschläge.
+- Nährwert-Icons (eigene Linien-SVG, `P.nk/np/nf/nc/nfb/nsu`: Flamme, Keule, Avocado, Ähre, Blatt, Würfel; `NIC`, `nIc`) ersetzen die Namen in Bilanz, Nährwert-Fenster, Mengen-Kacheln, Schnell, Eigenes Lebensmittel, Gericht. Name bleibt als aria-label. Kategorie-Icons `P.bread/milk/egg/bean/carrot/nut/candy/burger/pot`.
+- Nährwert-Fenster: Zeilen als `div role=button` mit Flex-Kopf `.fnh` statt `button` mit Grid (Safari überlappte); Icon des Werts im Kopf.
+- Mengen-Fenster ohne Scrollen: Menge oben, 4 Schnellmengen, Kacheln mit Icons, Tag als ein Knopf (`dayTog` wechselt Heute → Gestern → älterer Tag, `.fdt`), Mahlzeit nur Symbole, „danach frei“ im Eintragen-Knopf (`ffitHtml` gibt nur Text). Fett/Zucker-Warnchips entfallen (Kacheln werden rot).
+- Suche leer: Zuletzt-Chips (`.frc`) und Kategorie-Icon-Kacheln (4 Spalten).
+- Wasser: Zahl feste Breite (Balken springt nicht mehr bei 1- vs. 2-stelligen Werten); Antippen ohne Ziehen öffnet das Fenster (`wsl.mv`).
+- Barcode: beim Scannen `body.scan` → Querformat-Hinweis aus, Kamera geht in jeder Lage.
+
+### Open Food Facts besser einbinden – Bedingungen (Notiz)
+- Heute: `cgi/search.pl` (de + world parallel, 8 s) – langsam, oft 503. Barcode (`api/v2/product/…`) ist zuverlässig und hat CORS.
+- `search.openfoodfacts.org` (search-a-licious, Elasticsearch, ~0,3 s) wäre ideal, schickt aber keinen `Access-Control-Allow-Origin` → im Browser blockiert. Bedingung: OFF aktiviert CORS dort (Issue im Repo openfoodfacts/search-a-licious beobachten) – dann nur URL und Antwortformat (`hits`, `brands` als Liste) in `offSearch` anpassen.
+- Alternative ohne OFF-Änderung: kleiner Proxy (z. B. Cloudflare Worker, kostenlos), der CORS ergänzt. Bedingung: Falk ist mit einem Server/Dienst einverstanden (Regel „keine Server ohne Rückfrage“), Adresse bleibt stabil.
+- Offline-Variante: deutsche Teilmenge (z. B. die 5–10 000 meistgescannten Produkte, nur Name/Marke/Barcode/Nährwerte) als JSON beim Build einbinden oder beim ersten Start laden und im Cache halten. Bedingung: Größe < ~2 MB gzip, Update-Skript in `tools/`, Lizenz ODbL (Quelle nennen).
+- Weitere Quellen: USDA FoodData Central nur mit API-Schlüssel und englisch; BLS (Bundeslebensmittelschlüssel) nicht frei. Daher bleibt OFF die Quelle.
 
 ### 2026-10-26 – Essen: Gegessen nach Mahlzeit und Kategorie, 4 Vorschläge, Nährwert- und Mengen-Fenster neu
 - Gegessen steht jetzt über den Vorschlägen. Je Mahlzeit eine Zeile (`fMeal`, `fGroups` gruppiert nur noch nach Mahlzeit, nicht mehr 45-min-Fenster), darin Einträge gleicher Kategorie (`fCat`: FCATS, Eigene, Gerichte, Schnell) ab 2 als Stapel mit Anzahl; Chips zeigen die Menge statt Mahlzeit/Uhrzeit.

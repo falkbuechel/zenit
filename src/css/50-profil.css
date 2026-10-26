@@ -59,7 +59,6 @@
 .wl span { flex: 1; } .wl b { font-family: var(--f-mono); color: var(--ink); }
 .wl .xs2 { width: 36px; height: 36px; }
 .seg.three { grid-template-columns: repeat(3, 1fr); }
-.seg.fday { margin: 0 0 10px; }
 
 @keyframes fdraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 .tabs .bdg { position: absolute; top: 6px; right: 14px; z-index: 2; min-width: 10px; height: 10px; padding: 0 3px; border-radius: 99px; background: var(--tc); color: var(--on); font: 800 9px/10px var(--f-mono); text-align: center; box-shadow: 0 0 0 2px var(--s1); }

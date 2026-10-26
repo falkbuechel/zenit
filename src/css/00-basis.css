@@ -283,11 +283,11 @@ button:active:not(:disabled) { transform: scale(.97); }
 .msp { width: 90px; height: 30px; flex: none; } .mv { font-family: var(--f-display); font-weight: 900; font-size: 22px; min-width: 52px; text-align: right; }
 .sheet.tall { max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 .sheet.tall::-webkit-scrollbar { display: none; }
-/* Hochformat: im Querformat nur ein Hinweis */
+/* Hochformat: im Querformat nur ein Hinweis (nicht beim Barcode-Scan, body.scan) */
 .rot { display: none; }
 @media (orientation: landscape) and (max-height: 500px) {
-  body > *:not(.rot):not(script) { display: none !important; }
-  .rot { position: fixed; inset: 0; z-index: 100; display: grid; place-content: center; justify-items: center; gap: 12px; background: var(--bg); color: var(--ink2); font-weight: 700; }
+  body:not(.scan) > *:not(.rot):not(script) { display: none !important; }
+  body:not(.scan) > .rot { position: fixed; inset: 0; z-index: 100; display: grid; place-content: center; justify-items: center; gap: 12px; background: var(--bg); color: var(--ink2); font-weight: 700; }
   .rot .ic { width: 48px; height: 48px; animation: rotp 2s var(--ease) infinite; }
   @keyframes rotp { 0%, 30% { transform: rotate(-90deg); } 60%, 100% { transform: rotate(0); } }
 }

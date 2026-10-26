@@ -4,7 +4,7 @@
   "allow": [
     "Bash(python *)", "Bash(node *)", "Bash(git *)", "Bash(gh *)",
     "Bash(cat *)", "Bash(sed *)", "Bash(grep *)", "Bash(ls *)", "Bash(cp *)", "Bash(wc *)", "Bash(tail *)", "Bash(head *)",
-    "Bash(cd *)", "Bash(echo *)", "Bash(npx *)", "Bash(npm *)", "Bash(mkdir *)", "Bash(find *)", "Bash(sort *)", "Bash(diff *)",
+    "Bash(cd *)", "Bash(echo *)", "Bash(npx *)", "Bash(npm *)", "Bash(mkdir *)", "Bash(find *)", "Bash(sort *)", "Bash(diff *)", "Bash(cut *)", "Bash(uniq *)", "Bash(curl *)",
     "PowerShell(python *)", "PowerShell(node *)", "PowerShell(git *)", "PowerShell(gh *)", "PowerShell(npx *)", "PowerShell(npm *)",
     "PowerShell(cd *)", "PowerShell(Get-Content *)", "PowerShell(Get-ChildItem *)", "PowerShell(Select-String *)",
     "PowerShell(Select-Object *)", "PowerShell(Copy-Item *)", "PowerShell(New-Item *)", "PowerShell(Measure-Object *)"

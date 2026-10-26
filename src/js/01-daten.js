@@ -117,6 +117,10 @@
   var REST = { pull: 120, push: 90, core: 60, kh: 75, skill: 120, cardio: 60, mob: 20 }, RESTX = { scap: 60, hang: 90 };
   var restOn = true;
   try { restOn = localStorage.getItem('zenit.rest') !== '0'; } catch (err) { /* egal */ }
+  // Design-Variante (Demo): setzt html[data-design], Regeln in 85-design.css
+  var design = '';
+  try { design = localStorage.getItem('zenit.design') || ''; } catch (err) { /* egal */ }
+  if (design) document.documentElement.dataset.design = design;
 
   /*PURE*/
   var EXB = {};

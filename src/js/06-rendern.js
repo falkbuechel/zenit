@@ -61,7 +61,7 @@
     var tb = $('tabs'), ind = tb.querySelector('.ind'), a = tb.querySelector('[aria-current]'); if (!ind || !a) return;
     var r = a.getBoundingClientRect(), r0 = tb.getBoundingClientRect(), bx = r.left - r0.left, by = r.top - r0.top;
     var mid = a.classList.contains('mid'), sz = mid ? 66 : 0, w = mid ? sz : r.width - 4, h = mid ? sz : r.height, x = bx + (r.width - w) / 2, y = mid ? by + r.height / 2 - sz / 2 - 10 : by;
-    ind.style.transform = 'translate(' + x + 'px,' + y + 'px)'; ind.style.width = w + 'px'; ind.style.height = h + 'px'; ind.style.borderRadius = mid ? '50%' : '16px';
+    ind.style.transform = 'translate(' + x + 'px,' + y + 'px)'; ind.style.width = w + 'px'; ind.style.height = h + 'px'; ind.style.borderRadius = mid ? 'var(--rmid, 50%)' : 'var(--r16)';
     ind.classList.toggle('mid', mid);
     if (!ind.classList.contains('on')) requestAnimationFrame(function () { requestAnimationFrame(function () { ind.classList.add('on'); }); });
   }

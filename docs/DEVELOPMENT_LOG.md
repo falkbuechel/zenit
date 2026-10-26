@@ -2,6 +2,11 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-26 Design-Demo „Kante“
+- Zahnrad > „Design Kante (Demo)“ setzt `html[data-design="kante"]` (localStorage `zenit.design`), Regeln nur in `src/css/85-design.css`: immer dunkel, hoher Kontrast, Ecken 2–4 px, flache Flächen statt Verläufen, Haarlinien; ein Fokus je Screen mit leuchtender Kante (Essen: Bilanz mit einmaligem Licht-Lauf über die Oberkante; Heute/Plan: Startknopf). Umschalter gewählt = Fläche + Akzentlinie unten statt Grünfüllung; Tab-Anzeige als Kante unten, Mitte als umrandetes Quadrat.
+- Dafür alle Radien in `src/css` als Tokens (`--r8` … `--r999`, Name = Standardwert, in `:root`); Tab-Anzeige nutzt `var(--rmid, 50%)` / `var(--r16)`. Standard-Design pixelgleich (`compare.js`: Alles gleich).
+- Wenn Kante übernommen wird: Tokens in `:root` ersetzen, `85-design.css` auflösen, Schalter entfernen; `theme-color` im Head (build.py) auf `#060808`.
+
 ## Stand 2026-10-26
 - Zuletzt: Essen-Tab in 7 Runden umgebaut (alles live, Commit 436f160): Tagesleiste wischbar, Gegessen als Mahlzeit-Karten mit Stapeln, Nährwert-Icons/-Farben, Nährwert-Fenster mit Ring, Mengen-Fenster, Suche (Zuletzt/Kategorien/Schnell), Gerichte-Menü, Rechner im Profil.
 - Falk testet am iPhone: letzte Runde (Bilanz-Kopf „offen“, Vorschlag auf Mahlzeit ziehen, leere Zeile, Suche mit Werten je 100 g, Gerichte-Menü mit Filter/„+“, Rechner im Profil, Wasser dunkler über 100 %).
@@ -11,6 +16,7 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Nicht committet: nichts.
 
 ## Offen / Ideen
+- Falks Essen-Rückmeldung (2026-10-26): Wasser in Logik/Animation wie die anderen Balken; Gegessen: leere Platzhalter je fehlender Mahlzeit als Ziehziel (Frage: welche Uhrzeit beim Reinziehen?); Suche: je Kategorie die relevanten Nährwerte (z. B. Zucker bei Süßem), Kategorien standardmäßig offen, Kreuz geht eine Ebene zurück statt ganz zu schließen (auch Gerichte); Gerichte: Stift und Plus weg, Hinzufügen beim Öffnen oder per Wischen, Mahlzeit-Zeit entfernen oder mehrere hinzufügen
 - iPhone-Test offen: Pause-Vollbild in der Arena, Skilltree (Linien, Leuchten, Info-Leiste)
 - iPhone-Test offen Essen: Barcode-Scan quer, Marken-/Online-Suche (Open Food Facts de+world parallel), Wischen/Ziehen auf echtem Touch
 - Essen: Open Food Facts schneller (Bedingungen im Verlauf „Open Food Facts besser einbinden“); Rückgängig beim Gruppen-Löschen

@@ -75,8 +75,7 @@
     var snap = snapshot();
     var tr = tierOfLevel(level(d.xp));
     document.documentElement.setAttribute('data-tier', tr);
-    $('hud').innerHTML = ui.tab === 'heute' ? hudSlim(d, now) : '';
-    $('hudw').classList.toggle('nohud', ui.tab !== 'heute');
+    $('hudw').classList.add('nohud');
     var T = [['tage', 'Plan', 'cal'], ['food', 'Essen', 'food'], ['heute', 'Heute', 'dumb'], ['fort', 'Sammlung', 'gem'], ['profil', 'Profil', 'user']];
     var tb = $('tabs');
     if (!tb.querySelector('.ind')) tb.innerHTML = '<i class="ind" aria-hidden="true"></i>' + T.map(function (t) { return '<button data-tab="' + t[0] + '" aria-label="' + t[1] + '"' + (t[0] === 'heute' ? ' class="mid"' : '') + '>' + ic(t[2]) + '</button>'; }).join('');
@@ -97,12 +96,6 @@
     jumpMode = ''; updJump();
     // Gesammelte Belohnungen zeigen, sobald Heute ohne Arena sichtbar ist (rwPlay prüft Tab, Arena, offenes Fenster)
     if (rwq.length && !rwOn) setTimeout(rwPlay, 600);
-  }
-  function hudSlim(d, now) {
-    // Heute: eine Zeile mit Tag, Serie und Konto-Level (Antippen = Bergpfad)
-    var lv = level(d.xp), c0 = lvXp(lv), c1 = lvXp(lv + 1), ss = streakInfo(now);
-    return '<div class="hsl" data-zoom="1" role="button" tabindex="0" aria-label="Bergpfad zum Zenit"><b>' + esc(dayHead(dayIdx(now))) + '</b><span class="hsl-f ' + ss.mode + '">' + FL + ss.n + '</span>' +
-      '<span class="hsl-l">Lv ' + lv + '<i><i style="--p:' + ((d.xp - c0) / (c1 - c0)).toFixed(3) + '"></i></i></span></div>';
   }
   function cardProg(d, e) {
     // gewählte Karte: nächstes Level braucht Leistung (Satzziel in einer Einheit) und Fleiß (KP)

@@ -72,22 +72,28 @@
 .fmb.c { --fc: var(--g-cardio); }
 .fmb.fb { --fc: var(--g-kh); }
 .fmb.su { --fc: var(--g-core); }
-.fbt > i.ov { position: absolute; top: 0; left: 0; width: calc(var(--o) * 100%); }
-.fmb .fbt > i.ov, .fbk .fbt > i.ov, .ffb.over i + i { background: repeating-linear-gradient(-45deg, var(--danger) 0 4px, color-mix(in srgb, var(--danger) 60%, var(--s3)) 4px 8px); }
+/* Zu viel: roter Balken füllt sich über der eigenen Farbe neu (gleicher Verlauf und Glanz), leuchtende Spitze; beim Überschreiten füllt er sich sichtbar nach */
+.fbt > i.ov, .wsl > i.ov { position: absolute; top: 0; left: 0; z-index: 1; width: calc(var(--o) * 100%); background: var(--danger); box-shadow: 0 0 8px 1px color-mix(in srgb, var(--danger) 70%, transparent); }
+.wsl > i.ov { top: 11px; }
+.fa-bad i.ov { animation: ovfill .8s var(--ease) both; }
+@keyframes ovfill { from { width: 0; } }
+.ffb.over i + i { background: var(--danger); }
 .fmb.over b, .fmb.over span { color: var(--danger); }
 .fmb.hit b { color: var(--fc); }
 .fmb.hit span::after { content: " ✓"; color: var(--fc); }
 .fmb.low b, .fmb.low span, .fbk.low > em { color: var(--flame); }
 /* Ziel erreicht: Balken leuchtet in seiner Farbe auf, Zahl springt. Zu viel (schlechte Werte): Balken ruckelt, roter Blitz */
-.fa-hit .fbt { animation: fgot .9s var(--ease) both; }
-.fa-hit > b { animation: fpop .5s cubic-bezier(.2, 1.6, .4, 1) both; }
-.fa-bad .fbt { animation: fbad .5s ease-in-out both; }
-.fa-bad > b, .fa-bad > em { animation: fred 1.2s ease-out both; }
+.fa-hit .fbt, .fwa.fa-hit .wsl > i { animation: fgot .9s var(--ease) both; }
+.fa-hit > b, .fwa.fa-hit .fwv b { animation: fpop .5s cubic-bezier(.2, 1.6, .4, 1) both; }
+.fa-bad .fbt, .fwa.fa-bad .wsl { animation: fbad .5s ease-in-out both; }
+.fa-bad > b, .fa-bad > em, .fwa.fa-bad .fwv b { animation: fred 1.2s ease-out both; }
+.fwa.hit .fwv b { color: var(--fc); }
+.fwa.over .fwv b { color: var(--danger); }
 @keyframes fgot { 0% { box-shadow: 0 0 0 0 var(--fc); } 40% { box-shadow: 0 0 14px 3px var(--fc); } 100% { box-shadow: 0 0 0 0 transparent; } }
 @keyframes fpop { 0% { transform: scale(1); } 50% { transform: scale(1.25); } 100% { transform: scale(1); } }
 @keyframes fbad { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
 @keyframes fred { 0%, 30% { color: var(--danger); text-shadow: 0 0 10px var(--danger); } 100% { text-shadow: none; } }
-@media (prefers-reduced-motion: reduce) { .fa-hit .fbt, .fa-hit > b, .fa-bad .fbt, .fa-bad > b, .fa-bad > em { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .fa-hit .fbt, .fa-hit > b, .fa-bad .fbt, .fa-bad > b, .fa-bad > em, .fwa.fa-hit .wsl > i, .fwa.fa-hit .fwv b, .fwa.fa-bad .wsl, .fwa.fa-bad .fwv b, .fa-bad i.ov { animation: none; } }
 .ftl { display: flex; gap: 8px; margin: 2px -16px 0; padding: 10px 16px 2px; touch-action: pan-x; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; scrollbar-width: none; }
 .ftl::-webkit-scrollbar { display: none; }
 .fti { flex: 0 0 calc((100% - 32px - 24px) / 4.3); scroll-snap-align: start; display: grid; align-content: space-between; gap: 4px; min-width: 0; min-height: 84px; padding: 9px 9px 8px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
@@ -159,7 +165,7 @@
 .fdd.over b { color: var(--danger); }
 .fdd.sel { background: var(--s2); }
 .fdd.sel b { color: var(--ink); }
-.fwa { display: grid; grid-template-columns: auto minmax(0, 1fr) 92px; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
+.fwa { --fc: #4a9fd8; display: grid; grid-template-columns: auto minmax(0, 1fr) 92px; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
 .fwv { display: block; min-width: 0; min-height: 34px; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; }
 .fwa > .ic { width: 18px; height: 18px; color: var(--ink3); }
 .fwa b { font-family: var(--f-mono); font-size: 13px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -170,7 +176,7 @@
 .wab .wsl { grid-column: 1 / -1; }
 .wsl { position: relative; display: block; height: 30px; cursor: pointer; touch-action: none; }
 .wsl::before { content: ""; position: absolute; top: 11px; right: 0; left: 0; height: 8px; border-radius: 4px; background: var(--s3); }
-.wsl > i { position: absolute; top: 11px; left: 0; overflow: hidden; width: calc(var(--p) * 100%); height: 8px; border-radius: 4px; background: #6f9fbf; }
+.wsl > i { position: absolute; top: 11px; left: 0; overflow: hidden; width: calc(var(--p) * 100%); height: 8px; border-radius: 4px; background: var(--fc); }
 /* Zahl wischen: waagerecht über Menge oder Wasser ziehen ändert den Wert */
 #wa-n, #wa-v, #fpcn, .fstep input { touch-action: pan-y; cursor: ew-resize; }
 .seg.fvs button { min-height: 34px; font-size: 13px; }
@@ -265,7 +271,7 @@ button.cday:active { transform: scale(.97); }
 .fcpi small { overflow: hidden; font-size: 11px; color: var(--mc); white-space: nowrap; text-overflow: ellipsis; }
 .fcpi em { margin-top: 4px; font-family: var(--f-display); font-size: 20px; font-style: normal; font-weight: 900; }
 .fcpi em i { margin-left: 3px; font-family: var(--f-mono); font-size: 10px; font-style: normal; font-weight: 600; color: var(--ink3); }
-.hrow.got > .ic:last-child { color: var(--ac); }
+
 /* Essen: Uhrzeit im Fenster, Mahlzeit-Farben der Chips */
 .fwh { display: grid; grid-template-columns: minmax(0, 1fr) 100px; align-items: stretch; gap: 8px; }
 .fwh .seg { margin: 0; }

@@ -13,6 +13,12 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-26 – Heute als Spiel-Startseite mit Maskottchen, Essen: Grenzen und neues Zuviel
+- Heute (Variante A, Clash-Stil): oben Level-Plakette mit Titel und XP (Antippen = Bergpfad) und Serien-Chip (Tage, ×Bonus, Countdown; rot pulsierend bei letzter Chance), links Tagesziel-Ring und Aufwärmen, rechts Bergpfad und Ändern, Mitte Bühne (Himmel, Bergketten, Schein) mit Maskottchen (Antippen = Arena), unten Plan, Fortschritt, großer Start-Knopf. Ruhetag: Maskottchen schläft, Knopf „Trotzdem trainieren“. Alte Übersicht (`.tov`, `.hrow`, Serie-Zeile, `hudSlim`, `restCard`) entfernt; Vorwoche-Balken ist damit aus Heute raus.
+- Maskottchen `mascot(mood, tier)`: SVG-Platzhalter (idle/happy/sleep/cheer), Stirnband in Stufenfarbe, wächst mit der Titel-Stufe, wippt. In der Arena unten unter dem Knopf, freut sich ab Ziel, jubelt bei erledigter Übung. Arena blendet weich ein (`arin`).
+- Essen: Grenzen `FLIM` (kcal/Fett/KH 110 %, Zucker 100 %, Protein 140 %, Ballaststoffe 160 %, Wasser 150 % als gesundes Maximum). Zu viel: roter, leuchtender Balken füllt sich über der eigenen Farbe neu (`fOv`, Animation `ovfill`); Wackeln bei jedem Eintrag, der über die Grenze bringt oder weiter darüber (`fAnim` merkt sich Wert und Zustand). Wasser in Blau mit Ziel-Leuchten und gleichem Zuviel.
+- Fehler: Das Entfernen toter CSS-Regeln per Regex hat zwei Kommentare abgeschnitten (Kommentartext mit `;` wurde Teil des Selektors); ein offener Kommentar verschluckt still alle folgenden Regeln (Arena ohne Layout). `check.py` prüft jetzt offene Kommentare und ungleiche Klammern je CSS-Datei.
+
 ### 2026-10-26 – Belohnungen nach dem Training, Essen-Farben und -Animationen, Skilltree-Feinschliff
 - Belohnungen (Freischaltung, Karten-Level, Muskel-Level, Wochen-/Monatsziel, Konto-Level) werden gesammelt (`rwq`, `rwAdd`, localStorage `zenit.rwq`) und erst im Heute-Tab außerhalb der Arena gezeigt (`rwPlay` aus `render()`), einzeln mit Zähler, Konto-Level als goldenes Finale (`.lvacc`, Zahl zählt hoch, neue Stufe = Titel). Freischaltung: gesperrte Karte bricht auf, darunter die erfüllten Voraussetzungen. In der Arena nur Toast „Belohnung gesammelt“.
 - Alter Dialog (`#scrim`, `.unlock`, `dq`, `nextDialog`) und `cardFx`/`musFx`/`fxq` entfernt; `fxShow` nimmt jetzt ein Objekt mit `done`-Callback.

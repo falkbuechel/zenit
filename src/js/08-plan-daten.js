@@ -130,10 +130,6 @@
     delete P.ov[today]; dsel = null; try { localStorage.removeItem('zenit.day'); } catch (err) { /* egal */ }
     ui.pg = 'all'; persist(); closeSheet(true); render();
   }
-  function restCard(today) {
-    var nx = nextDayText(today);
-    return '<section class="restday rise" style="--i:5"><span class="gi">' + ic('snow') + '</span><div><b>Heute frei</b><small>' + (nx ? 'Weiter: ' + nx : 'Erholung zählt') + '</small></div><button class="wb2" data-swap="1">Trotzdem</button></section>';
-  }
   function sessToday(today) {
     var t = 0; state.logs.forEach(function (l) { if (l.e === 'sess' && dayIdx(l.t) === today) t += l.s[0]; }); return t;
   }

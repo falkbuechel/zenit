@@ -50,6 +50,13 @@ for k, v in dupa.items(): print('FEHLER Klick-Attribut doppelt: data-%s in %s' %
 fail = fail or bool(dupa)
 say('Klick-Attribute: %d, %d doppelt' % (len(att), len(dupa)))
 
+# CSS: offene Kommentare oder Klammern verschlucken alle folgenden Regeln (Browser ignoriert sie still)
+import glob
+for f in sorted(glob.glob('src/css/*.css')):
+    c = open(f, encoding='utf-8').read()
+    if c.count('/*') != c.count('*/'): print('FEHLER CSS-Kommentar nicht geschlossen in %s' % f.replace('\\', '/')); fail = True
+    if c.count('{') != c.count('}'): print('FEHLER CSS-Klammern ungleich in %s' % f.replace('\\', '/')); fail = True
+
 # CSS: Regeln auf oberster Ebene (eine Regel je Zeile), jede Selektor-Liste nur einmal
 sel, depth = {}, 0
 for n, line in enumerate(lines, 1):

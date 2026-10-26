@@ -210,7 +210,6 @@ button:active:not(:disabled) { transform: scale(.97); }
 
 /* Clean-up: kompakter */
 
-
 .ex.collapsed { padding-bottom: 8px; cursor: pointer; }
 .ex.collapsed .nm small { color: var(--tc); }
 

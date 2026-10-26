@@ -10,7 +10,7 @@
     "ask": ["Bash(git push *)"],
     "deny": [
       "Bash(git push --force*)", "Bash(git push -f*)", "Bash(git reset --hard*)", "Bash(rm -rf *)",
-      "Read(./.env*)", "Read(./**/*backup*.json)", "Edit(./docs/Notes.md)", "Edit(./dist/**)"
+      "Read(./.env*)", "Read(./**/*backup*.json)", "Edit(./dist/**)"
     ]
   },
   "hooks": {

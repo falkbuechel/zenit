@@ -5,16 +5,20 @@ Home-Workout-Game als PWA für das iPhone, nur für Falk. Eine einzige Quelldate
 
 ## 2. Aufbau
 ```
-src/zenit.html     Quelle, EINE Datei (CSS + HTML + IIFE-Script, ~3600 Zeilen)
+src/zenit.html     Quelle, EINE Datei (CSS + HTML + IIFE-Script, ~5200 Zeilen)
 public/            manifest, Service Worker (sw.js, Netz zuerst, Cache offline), Icons
 build.py           python build.py -> dist/index.html (PWA-Head, Wrapper, window.ZENIT_V) + Kopie von public/*
 dist/              Build-Ausgabe zum Hosten (gitignored)
 tools/
-  check.py         Syntax (node --check), doppelte Namen und Klick-Attribute, Build; Exit 1 bei Fehler
+  check.py         Syntax (node --check), doppelte Namen und Klick-Attribute, Manifest-JSON, Build; Exit 1 bei Fehler. --fast: ohne Build, still
+  hook-check.py    Claude-Hook nach Edit/Write: check.py --fast für src/, public/
   smoke.js         Rauchtest: 5 Demo-Szenarien x 5 Tabs + Ansichten/Dialoge (Plan: Tag ändern, Planer, Editor), Screenshots -> tools/out/
   compare.js       Pixelvergleich aller Ansichten gegen einen Git-Stand (für Aufräumen: alles muss gleich bleiben)
   make-icons.js    Icons aus SVG -> public/ (Playwright)
 .github/workflows/pages.yml   Push auf main -> check + smoke -> GitHub Pages
+.claude/settings.json         Rechte (erlaubt/gesperrt) + Hook
+.claude/commands/             /check (alle Prüfungen), /handoff (Stand ins Log vor /clear)
+.claude/agents/reviewer.md    liest den Diff, meldet Bugs/Aufrufstellen/iOS/Datenverlust
 .claude/skills/               Design-Skills von Emil Kowalski (MIT), Quelle in .claude/skills/README.md
 docs/              DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 ```
@@ -22,7 +26,8 @@ docs/              DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 - Die gleiche Datei läuft auch als Claude-Artifact (dort `window.claude` mit db/downloads).
 - Hosting: GitHub Pages https://falkbuechel.github.io/zenit/ (öffentliches Repo). Adresse nicht wechseln, localStorage hängt an ihr.
 - Version: `build.py` setzt `window.ZENIT_V` (Commit · Datum, `+` = lokale ungesicherte Änderungen), sichtbar unten im Zahnrad-Menü.
-- Service-Worker-Cache heißt `zenit-v1` (`public/sw.js`). Netz zuerst, daher kein Versions-Bump für neue Builds nötig.
+- Service-Worker-Cache heißt `zenit-v2` (`public/sw.js`). Netz zuerst, daher kein Versions-Bump für neue Builds nötig; nur erhöhen, wenn sich die Dateiliste `FILES` ändert.
+- iOS-Datenrisiko: Daten nur in localStorage der Homescreen-App. App vom Homescreen löschen = Daten weg; Safari-Tab ist ein getrennter Speicher (kann nach 7 Tagen ohne Nutzung gelöscht werden). Schutz: Backup (Erinnerung im Profil).
 
 ## 3. Daten
 - localStorage `stufenbuch.v1`: `{u, logs, plan, food}`. Demo-Modus nutzt `stufenbuch.demo` (Profil > Zahnrad > Testdaten, 5 Szenarien, `demoData(kind)`).

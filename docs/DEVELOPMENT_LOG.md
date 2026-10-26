@@ -15,6 +15,12 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-26 – Claude-Code-Workflow: Hook, Rechte, /check, /handoff, Reviewer
+- Hook nach jedem Edit/Write an `src/`/`public/`: `tools/hook-check.py` → `check.py --fast` (Syntax, Duplikate, Manifest-JSON), still bei Erfolg, Exit 2 mit kurzer Meldung bei Fehler.
+- `.claude/settings.json`: zusätzlich erlaubt (compare, grep, git show/branch), gesperrt: force-push, `reset --hard`, `rm -rf`, `.env*`/Backup-Dateien lesen, `Notes.md`/`dist/` bearbeiten.
+- `/check` (alle Prüfungen + Aufrufstellen des Diffs), `/handoff` (Stand ins Log vor `/clear`), Agent `reviewer` (Diff auf Bugs, iOS, Datenverlust; Sonnet).
+- `CLAUDE.md` gestrafft, bindet `docs/DEVELOPMENT.md` per `@` ein (eine Leseaktion weniger je Session). Manifest mit `"id"`. Bewusst weggelassen: `/release` mit Cache-Bump (Service Worker ist „Netz zuerst“), PR-Template (Arbeit direkt auf `main`), zweiter Pages-Workflow (der vorhandene prüft vor dem Deploy).
+
 ### 2026-10-23 – Arena mit Zähler und Pause-Vollbild, Serie als kompakte Zeile
 - Arena: flache Karte oben (`.hc.arc`, wischen = andere Übung), darunter großer Zähler `#arn` für den nächsten Satz (±, waagerecht wischen 16 px je Schritt; Akzentfarbe ab Ziel), vorbelegt wie im Fenster (`setPrefill`). „Satz eintragen“ (`data-arsave`, `arSave`) speichert direkt, Gewicht wie zuletzt (Chip öffnet das Fenster). Erledigte Sätze als kleine Pills (antippen = ändern).
 - Speichern als gemeinsame Funktion `logSet` (Fenster und Arena). Pause: `startRest(e, nx)` mit Text „Satz 2 von 3“, −15 s (`data-rest="sub"`); in der Arena als Vollbild mit Ring (`body.arm .rest`, `--p` am `#rest`), nach Ablauf schließt sie sich nach 1,2 s von selbst.

@@ -1,33 +1,34 @@
-# Zenit – Home-Workout-Game (Web-App, nur für Falk)
+# Zenit – Home-Workout-Game (PWA fürs iPhone, nur für Falk)
 
-Sprache: Deutsch (UI und Antworten). Antworten kurz, ohne Einleitung/Recap. Änderungen als gezielte Edits, keine ganzen Dateien neu schreiben. Visuelles/Interaktives testet Falk selbst auf dem iPhone, nicht danach fragen.
+@docs/DEVELOPMENT.md
 
-## Vor der Arbeit
-1. Diese Datei, dann `docs/DEVELOPMENT.md` (Aufbau, Datenformen), bei Bedarf die passenden Abschnitte in `docs/DEVELOPMENT_LOG.md`.
-2. `git status --short` und `git diff --stat`.
-3. Betroffenen Code in `src/zenit.html` lesen, bevor etwas vorgeschlagen wird.
+## Arbeitsweise
+- Deutsch, kurz: keine Einleitung, keine Wiederholung der Aufgabe, keine Zusammenfassung, wenn nicht gefragt.
+- Gezielte Edits statt ganze Dateien neu schreiben. Vor Vorschlägen den betroffenen Code lesen.
+- Falk testet Visuelles/Interaktives selbst auf dem iPhone und meldet sich; nicht danach fragen.
+- Neue Screens oder Umbauten: erst Layout-Varianten (AskUserQuestion mit Vorschau) zeigen, dann bauen.
+- Rundenstart: `git status --short`, `gh run list --limit 1` (Deploy der letzten Runde).
+- `docs/DEVELOPMENT_LOG.md`: nur die relevanten Abschnitte lesen; Änderungen, Fehler, Lösungen oben eintragen. Offene Punkte stehen dort unter „Offen“.
 
 ## Dateien
-- Nur `src/zenit.html`, `public/`, `build.py`, `tools/` bearbeiten. `dist/` ist Build-Ausgabe (gitignored), nie von Hand ändern.
-- `docs/DEVELOPMENT_LOG.md`: relevante Änderungen, Fehler und Lösungen eintragen (neueste oben). `docs/DEVELOPMENT.md` nur ändern, wenn sich Aufbau oder Datenformen ändern.
-- `docs/Notes.md` ist Falks Notizbuch: lesen ja, nie bearbeiten.
-- `CLAUDE.md`, `README.md`, `docs/DEVELOPMENT.md` nur auf ausdrücklichen Wunsch umbauen.
+- Bearbeiten: `src/zenit.html`, `public/`, `build.py`, `tools/`. `dist/` ist Build-Ausgabe, nie von Hand.
+- `docs/Notes.md` = Falks Notizbuch: lesen ja, nie bearbeiten. `CLAUDE.md`, `README.md`, `docs/DEVELOPMENT.md` nur auf Wunsch umbauen (DEVELOPMENT.md auch bei neuen Datenformen).
 
-## Konventionen
-- `<!--PWA-->` in zenit.html ist der Platzhalter für den Head, nicht entfernen. Die gleiche Datei läuft auch als Claude-Artifact (dort `window.claude` mit db/downloads).
-- Funktionsnamen und Klick-Attribute (`data-x`) nicht doppelt vergeben (es gab schon `spark` und `data-pf` doppelt). `tools/check.py` prüft beides.
-- Ändert sich eine Datenform (Tupel/Objekt), alle Aufrufstellen per grep prüfen.
+## Code-Regeln
+- `<!--PWA-->` nicht entfernen (Head kommt aus `build.py`). Die Datei läuft auch als Claude-Artifact (`window.claude`).
+- Funktionsnamen und Klick-Attribute (`data-x`) nur einmal; der Hook prüft das nach jedem Edit.
+- Datenform/Signatur geändert → alle Aufrufstellen per grep prüfen. Migration muss alte Daten behalten (`clean*` verwirft sonst still); vorher Falk an Backup erinnern.
 - Klassenname `x` ist belegt (Button 40px). Icons: Objekt `P` + `ic(name)`.
-- Klicks laufen über einen Handler am `document`. Antippbare `div`/`span` bekommen `cursor: pointer` und `role="button"` (ältere iOS-Versionen klicken sonst nicht). Playwright-WebKit nur für Layout nutzen, Touch/Klick dort ist unzuverlässig; Interaktion mit Chromium + CDP-Touch testen.
-- Design: ruhiges Salbeigrün + Anthrazit, wenig Grün, wenig Text, Icons statt Beschriftung, klare Grenzen zwischen Bereichen.
-- Keine Abhängigkeiten/Frameworks/Server einführen ohne Rückfrage. Node nur für Dev-Tools.
+- Klicks über einen Handler am `document`. Antippbare `div`/`span`: `cursor: pointer` + `role="button"`.
+- Ein CSS-Selektor nur einmal; neue Werte in die bestehende Regel. Zeilen > 400 Zeichen beim Anfassen umbrechen.
+- Keine Abhängigkeiten/Frameworks/Server ohne Rückfrage.
+- Design: ruhiges Salbeigrün + Anthrazit, wenig Grün, wenig Text, Icons statt Beschriftung, klare Bereichsgrenzen.
 
 ## Prüfen und veröffentlichen
-- `python tools/check.py` (Syntax, doppelte Namen, Build) und `node tools/smoke.js` (alle Demo-Szenarien und Tabs parallel, ~10 s, schlägt bei JS-Fehlern fehl) müssen durchlaufen. Screenshots aller Dialoge: `--shots`.
-- Nach dem Push nicht auf den Deploy warten; das Ergebnis zu Beginn der nächsten Runde prüfen (`gh run list --limit 1`).
-- Push auf `main` = live auf Falks iPhone (GitHub Pages, die Action prüft vorher noch einmal). Nur nach bestandenen Prüfungen committen und pushen.
-- Commit-Nachrichten: Deutsch, ein kurzer Satz, was sich für die App ändert.
-- Datenform-Änderungen: Migration muss alte Daten behalten (`clean*`-Funktionen verwerfen sonst still). Vorher Falk an ein Backup erinnern.
-- Lange Zeilen (>400 Zeichen) beim Anfassen umbrechen, keine neuen anlegen.
-- Aufräumen (CSS zusammenführen, toten Code entfernen): danach `node tools/compare.js` muss „Alles gleich“ melden. Klassen aus Code-Teilen (`'g' + k`, `'t' + tier`, `'l' + n`) erkennt kein Scan.
-- Ein Selektor nur einmal im CSS definieren; neue Werte in die bestehende Regel, keine zweite Regel darunter.
+- Hook nach jedem Edit: `tools/check.py --fast` (Syntax, Duplikate, Manifest). Still bei Erfolg.
+- Vor dem Commit: `/check` (oder `python tools/check.py` + `node tools/smoke.js`, ~15 s). Vor größeren Commits: Agent `reviewer`.
+- Playwright: Chromium für Klick/Touch, WebKit nur für Layout. Messen statt Screenshot-Runden.
+- Aufräumen: danach `node tools/compare.js` → „Alles gleich“ (dynamische Klassen wie `'g' + k` erkennt kein Scan).
+- Push auf `main` = live auf Falks iPhone (die Action prüft vorher). Nach dem Push nicht auf den Deploy warten.
+- Commits: Deutsch, ein kurzer Satz, was sich für die App ändert.
+- Vor `/clear` oder Sessionende: `/handoff`.

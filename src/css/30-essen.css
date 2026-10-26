@@ -45,7 +45,7 @@
 
 /* Essen: Bilanz (kcal + 5 Mini-Balken), Schnell-Kacheln, Suche → Menge, Rechner */
 .fbal { display: grid; gap: 12px; margin-top: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
-.fbk { display: grid; grid-template-columns: auto auto auto 1fr; align-items: baseline; gap: 8px 6px; }
+.fbk { --fc: var(--g-push); display: grid; grid-template-columns: auto auto auto 1fr; align-items: baseline; gap: 8px 6px; }
 .fbk > b { font-family: var(--f-display); font-weight: 900; font-size: 40px; line-height: .9; }
 .fbk > span { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
 .fbk > .ftb { display: inline-flex; align-items: center; gap: 2px; color: var(--ac); }
@@ -55,29 +55,39 @@
 .fbk.hit > em { color: var(--ac); }
 .fbk.over > em { color: var(--danger); }
 .fbt { position: relative; display: block; height: 6px; border-radius: 99px; background: var(--s3); overflow: hidden; }
-.fbt > i { position: relative; display: block; overflow: hidden; width: calc(var(--p, 0) * 100%); height: 100%; border-radius: inherit; background: var(--g-push); transition: width .6s var(--ease); }
-.fbt > i::after, .wsl > i::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, rgba(255, 255, 255, .62), rgba(255, 255, 255, .25) 45%, rgba(255, 255, 255, 0) 90%); }
+.fbt > i { position: relative; display: block; overflow: hidden; width: calc(var(--p, 0) * 100%); height: 100%; border-radius: inherit; background: var(--fc, var(--g-push)); transition: width .6s var(--ease); }
+/* Verlauf: blass am Anfang, volle Farbe in der Mitte, dunkel und satt an der Spitze */
+.fbt > i::after, .wsl > i::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, .32)); }
 .fbt > i::before, .wsl > i::before { content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 40%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .3), transparent); animation: fshim 4s ease-in-out infinite; }
 @keyframes fshim { 0%, 30% { left: -40%; } 100% { left: 110%; } }
 @media (prefers-reduced-motion: reduce) { .fbt > i::before, .wsl > i::before { animation: none; display: none; } }
-.fbk.hit .fbt > i { background: var(--ac); }
+/* Jeder Wert hat seine eigene Farbe (--fc), auch im Ziel; Zustand zeigen Zahl und Animation (kcal: --fc in .fbk) */
 .fbm { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
 .fmb { display: grid; gap: 4px; min-width: 0; }
 .fmb span { overflow: hidden; font-size: 10px; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; text-overflow: ellipsis; color: var(--ink3); }
 .fmb b { font-family: var(--f-mono); font-size: 13px; font-weight: 600; }
 .fmb b small { font-size: 10px; font-weight: 500; color: var(--ink3); }
-.fmb.p .fbt > i { background: var(--ac); }
-.fmb.f .fbt > i { background: var(--g-mob); }
-.fmb.c .fbt > i { background: var(--g-cardio); }
-.fmb.fb .fbt > i { background: var(--g-skill); }
-.fmb.su .fbt > i { background: var(--ink3); }
+.fmb.p { --fc: var(--g-pull); }
+.fmb.f { --fc: var(--g-mob); }
+.fmb.c { --fc: var(--g-cardio); }
+.fmb.fb { --fc: var(--g-kh); }
+.fmb.su { --fc: var(--g-core); }
 .fbt > i.ov { position: absolute; top: 0; left: 0; width: calc(var(--o) * 100%); }
 .fmb .fbt > i.ov, .fbk .fbt > i.ov, .ffb.over i + i { background: repeating-linear-gradient(-45deg, var(--danger) 0 4px, color-mix(in srgb, var(--danger) 60%, var(--s3)) 4px 8px); }
 .fmb.over b, .fmb.over span { color: var(--danger); }
-.fmb.hit b { color: var(--ac); }
-.fmb.hit .fbt > i { background: var(--ac); }
-.fmb.low .fbt > i, .fbk.low .fbt > i { background: var(--flame); }
+.fmb.hit b { color: var(--fc); }
+.fmb.hit span::after { content: " ✓"; color: var(--fc); }
 .fmb.low b, .fmb.low span, .fbk.low > em { color: var(--flame); }
+/* Ziel erreicht: Balken leuchtet in seiner Farbe auf, Zahl springt. Zu viel (schlechte Werte): Balken ruckelt, roter Blitz */
+.fa-hit .fbt { animation: fgot .9s var(--ease) both; }
+.fa-hit > b { animation: fpop .5s cubic-bezier(.2, 1.6, .4, 1) both; }
+.fa-bad .fbt { animation: fbad .5s ease-in-out both; }
+.fa-bad > b, .fa-bad > em { animation: fred 1.2s ease-out both; }
+@keyframes fgot { 0% { box-shadow: 0 0 0 0 var(--fc); } 40% { box-shadow: 0 0 14px 3px var(--fc); } 100% { box-shadow: 0 0 0 0 transparent; } }
+@keyframes fpop { 0% { transform: scale(1); } 50% { transform: scale(1.25); } 100% { transform: scale(1); } }
+@keyframes fbad { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
+@keyframes fred { 0%, 30% { color: var(--danger); text-shadow: 0 0 10px var(--danger); } 100% { text-shadow: none; } }
+@media (prefers-reduced-motion: reduce) { .fa-hit .fbt, .fa-hit > b, .fa-bad .fbt, .fa-bad > b, .fa-bad > em { animation: none; } }
 .ftl { display: flex; gap: 8px; margin: 2px -16px 0; padding: 10px 16px 2px; touch-action: pan-x; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; scrollbar-width: none; }
 .ftl::-webkit-scrollbar { display: none; }
 .fti { flex: 0 0 calc((100% - 32px - 24px) / 4.3); scroll-snap-align: start; display: grid; align-content: space-between; gap: 4px; min-width: 0; min-height: 84px; padding: 9px 9px 8px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }

@@ -199,16 +199,6 @@ button:active:not(:disabled) { transform: scale(.97); }
 .toast span { white-space: nowrap; }
 #fl { position: fixed; inset: 0; pointer-events: none; z-index: 50; }
 .fly { position: absolute; font-family: var(--f-display); font-weight: 900; font-size: 26px; color: var(--gold); text-shadow: 0 2px 10px var(--bg); animation: fly .95s var(--ease) both; white-space: nowrap; }
-.scrim { position: fixed; inset: 0; z-index: 30; background: color-mix(in srgb, var(--bg) 86%, transparent); display: grid; place-items: center; padding: 24px; opacity: 0; visibility: hidden; transition: opacity .2s var(--ease), visibility 0s .2s; }
-.scrim.on { opacity: 1; visibility: visible; transition: opacity .2s var(--ease), visibility 0s; }
-.unlock { background: var(--s1); border: 1px solid color-mix(in srgb, var(--tc) 50%, var(--line)); border-radius: 20px; padding: 30px 24px 24px; text-align: center; max-width: 380px; width: 100%; display: grid; gap: 10px; justify-items: center; box-shadow: 0 0 80px color-mix(in srgb, var(--tc) 30%, transparent); transform: scale(.94); opacity: 0; transition: transform .3s var(--ease), opacity .25s var(--ease); }
-.scrim.on .unlock { transform: none; opacity: 1; }
-.unlock div.big { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--tc) 18%, var(--s2)); color: var(--tc); box-shadow: 0 0 0 6px color-mix(in srgb, var(--tc) 12%, transparent); }
-.unlock div.big .ic { width: 36px; height: 36px; }
-.unlock small { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--tc); font-weight: 700; }
-.unlock h2 { font-family: var(--f-display); font-weight: 900; font-size: 52px; line-height: .95; text-transform: uppercase; margin: 0; text-wrap: balance; }
-.unlock p { margin: 0; color: var(--ink2); font-size: 14px; }
-.unlock .btn { margin-top: 8px; width: 100%; }
 #fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 60; }
 
 /* Verlinkungen und Sprung */
@@ -318,6 +308,28 @@ button:active:not(:disabled) { transform: scale(.97); }
 .lvfx-t b { font-family: var(--f-display); font-size: 30px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .lvfx-t small { font-size: 14px; color: rgba(255, 255, 255, .75); }
 .lvfx.up .lvfx-t { opacity: 1; transform: none; }
+/* Kopf (Art + Zähler 2 / 4), Hinweis unten, Voraussetzungen bei Freischaltung */
+.lvfx-h { position: relative; z-index: 1; display: flex; align-items: center; gap: 8px; margin: 0; font-size: 12px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--fxc); }
+.lvfx-h .ic { width: 16px; height: 16px; }
+.lvfx-h em { padding: 2px 8px; border-radius: 99px; background: rgba(255, 255, 255, .1); font-family: var(--f-mono); font-style: normal; letter-spacing: 0; color: rgba(255, 255, 255, .7); }
+.lvfx-n { position: absolute; bottom: calc(28px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0; z-index: 1; text-align: center; font-size: 12px; color: rgba(255, 255, 255, .45); opacity: 0; transition: opacity .4s 1.2s; }
+.lvfx.up .lvfx-n { opacity: 1; }
+.lvfx-q { position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 320px; opacity: 0; transition: opacity .4s .4s; }
+.lvfx.up .lvfx-q { opacity: 1; }
+.lvfx-q span { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border: 1px solid color-mix(in srgb, var(--fxc) 50%, transparent); border-radius: 99px; font-size: 12px; color: #fff; }
+.lvfx-q .ic { width: 13px; height: 13px; color: var(--fxc); }
+/* Freischaltung: gesperrte Karte bricht auf (Schütteln, dann Aufleuchten); Konto: goldener Doppelring mit hochzählender Zahl; Ziel: Symbol im Ring */
+.lvfx.un .hc.big { animation: ushake .9s ease-in-out both; }
+.lvfx.un.up .hc.big { animation: cpop .6s cubic-bezier(.2, 1.4, .4, 1) both; box-shadow: 0 0 60px -6px var(--fxc); }
+.lvacc { position: relative; display: grid; place-content: center; justify-items: center; width: 200px; height: 200px; border: 4px solid var(--fxc); border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--fxc) 25%, transparent), transparent 70%); box-shadow: 0 0 60px -10px var(--fxc), inset 0 0 30px -10px var(--fxc); animation: forge 1s cubic-bezier(.2, .8, .2, 1) both; }
+.lvacc::before { content: ""; position: absolute; inset: -16px; border: 2px dashed color-mix(in srgb, var(--fxc) 60%, transparent); border-radius: 50%; animation: rays 12s linear infinite; }
+.lvacc small { font-size: 12px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--fxc); }
+.lvacc b { font-family: var(--f-display); font-size: 92px; font-weight: 900; line-height: .9; color: #fff; }
+.lvfx.acc.up .lvacc { animation: cpop .6s cubic-bezier(.2, 1.4, .4, 1) both; }
+.lvfx.acc .lvfx-r { animation-duration: 8s; }
+.lvgoal { display: grid; place-items: center; width: 140px; height: 140px; border: 3px solid var(--fxc); border-radius: 50%; color: var(--fxc); animation: forge 1s cubic-bezier(.2, .8, .2, 1) both; }
+.lvgoal .ic { width: 64px; height: 64px; }
+@keyframes ushake { 0% { opacity: 0; transform: scale(.7); } 30% { opacity: 1; transform: scale(1); } 45%, 75% { transform: rotate(-3deg); } 60%, 90% { transform: rotate(3deg); } 100% { transform: none; } }
 @keyframes fxin { from { opacity: 0; } }
 @keyframes fxout { to { opacity: 0; } }
 @keyframes rays { to { rotate: 360deg; } }

@@ -13,6 +13,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-26 – Belohnungen nach dem Training, Essen-Farben und -Animationen, Skilltree-Feinschliff
+- Belohnungen (Freischaltung, Karten-Level, Muskel-Level, Wochen-/Monatsziel, Konto-Level) werden gesammelt (`rwq`, `rwAdd`, localStorage `zenit.rwq`) und erst im Heute-Tab außerhalb der Arena gezeigt (`rwPlay` aus `render()`), einzeln mit Zähler, Konto-Level als goldenes Finale (`.lvacc`, Zahl zählt hoch, neue Stufe = Titel). Freischaltung: gesperrte Karte bricht auf, darunter die erfüllten Voraussetzungen. In der Arena nur Toast „Belohnung gesammelt“.
+- Alter Dialog (`#scrim`, `.unlock`, `dq`, `nextDialog`) und `cardFx`/`musFx`/`fxq` entfernt; `fxShow` nimmt jetzt ein Objekt mit `done`-Callback.
+- Essen: jeder Wert eigene Farbe (`--fc`: kcal orange, Protein türkis, Fett gelb, Kohlenhydrate blau, Ballaststoffe violett, Zucker pink), auch im Ziel; Ziel = Zahl in Farbe + ✓. Balkenende dunkler. Einmal-Animation beim Wechsel ins Ziel (`fa-hit`: Leuchten, Zahl springt) bzw. ins Zuviel (`fa-bad`: Ruckeln, roter Blitz), `fAnim` merkt sich den Zustand je Tag.
+- Skilltree: Geschwister nach Zugrichtung sortiert (Äste mit Linien in den Sektor davor zuerst), Knoten mit Voraussetzungen aus anderen Sektoren dürfen 15° über die Sektorgrenze. 4 → 3 Kreuzungen. Lange Linien (Hollow → Frontlever, Dead Hang → Backlever) bleiben ~340 px, weil die Ringe nach Stufe liegen (Dead Hang innen, Backlever außen: 268 px allein durch den Radius).
+- Serie-Zeile: passt, wird beim Redesign aufgewertet.
+
 ### 2026-10-26 – Quelle nach Bereichen aufgeteilt, CSS aufgeräumt, Tester-Agent
 - `src/zenit.html` (5200 Zeilen) → `src/index.html` (Gerüst) + `src/css/` (7 Bereichsdateien) + `src/js/` (15 Abschnitte der IIFE, Originalreihenfolge). `build.py` setzt zusammen (`assemble()`), der JS-Teil war byte-gleich zum alten Stand.
 - `check.py` arbeitet auf der zusammengesetzten Quelle, meldet Fehler als Datei:Zeile und prüft neu doppelte CSS-Selektoren.

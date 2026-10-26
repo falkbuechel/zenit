@@ -262,36 +262,72 @@
       requestAnimationFrame(frame);
     })(t0);
   }
-  // Level-Up-Moment: Bildschirm dunkel, Karte dreht sich herein bzw. Emblem wird geschmiedet, Strahlen in der Look-/Materialfarbe, Wert springt; Antippen schließt. Mehrere nacheinander
+  // Belohnungs-Moment (Vollbild): Kopfzeile mit Art und Zähler, Inhalt erscheint, nach ~1 s Aufstieg (Strahlen, Funken, swap setzt den neuen Stand); Antippen danach = weiter
   var LOOKC = ['#8fa39a', '#5b8fd6', '#a374d8', '#ffc94a', '#e0533d', '#57c7b8'], MATC = ['#8a6a4a', '#8d9399', '#b07a4a', '#b9c1cb', '#d9a82e', '#8fd8d2', '#6aa8ff', '#57c7b8'];
-  var fxq = [], fxOn = false;
-  function fxPush(f) { fxq.push(f); if (!fxOn) fxNext(); }
-  function fxNext() { var f = fxq.shift(); fxOn = !!f; if (f) f(); }
-  function fxShow(col, inner, title, sub, swap) {
+  function fxShow(f) {
     var o = document.createElement('div'), done = false, t1, t2;
-    o.className = 'lvfx'; o.style.setProperty('--fxc', col); o.setAttribute('role', 'status');
-    o.innerHTML = '<i class="lvfx-r"></i><div class="lvfx-c">' + inner + '</div><p class="lvfx-t"><b>' + title + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</p>';
+    o.className = 'lvfx ' + f.cls; o.style.setProperty('--fxc', f.col); o.setAttribute('role', 'status');
+    o.innerHTML = '<i class="lvfx-r"></i><p class="lvfx-h">' + f.head + (f.step ? '<em>' + f.step + '</em>' : '') + '</p><div class="lvfx-c">' + f.inner + '</div>' +
+      '<p class="lvfx-t"><b>' + f.title + '</b>' + (f.sub ? '<small>' + f.sub + '</small>' : '') + '</p>' + (f.more || '') + '<small class="lvfx-n">Antippen</small>';
     document.body.appendChild(o); buzz([20, 40, 20]);
-    function close() { if (done) return; done = true; clearTimeout(t1); clearTimeout(t2); o.classList.add('out'); setTimeout(function () { o.remove(); fxNext(); }, 320); }
-    t1 = setTimeout(function () { o.classList.add('up'); if (swap) swap(o); buzz([60, 40, 90]); sparks(60); }, reduce ? 0 : 950);
-    t2 = setTimeout(close, 4600);
-    o.addEventListener('click', function (ev) { ev.stopPropagation(); close(); });
+    function close() { if (done) return; done = true; clearTimeout(t1); clearTimeout(t2); o.classList.add('out'); setTimeout(function () { o.remove(); f.done(); }, 320); }
+    t1 = setTimeout(function () { o.classList.add('up'); if (f.swap) f.swap(o); buzz([60, 40, 90]); sparks(f.big ? 220 : 70); }, reduce ? 0 : 950);
+    t2 = setTimeout(close, 7000);
+    o.addEventListener('click', function (ev) { ev.stopPropagation(); if (o.classList.contains('up')) close(); });
   }
-  function cardFx(e, lv) {
-    var r = rarOf(e), l0 = lookOf(lv - 1), l1 = lookOf(lv);
-    fxPush(function () {
-      fxShow(LOOKC[l1], '<div class="hc big ' + RAR[r][2] + ' l' + l0 + '"><small>' + RAR[r][0] + '</small><b>' + esc(e.n) + '</b><em>Lv <i>' + (lv - 1) + '</i></em></div>', 'Level ' + lv, l1 !== l0 ? 'Neuer Look: ' + LOOK[l1] : esc(e.n),
-        function (o) { var c = o.querySelector('.hc'); c.className = c.className.replace(/ l\d/, ' l' + l1); c.querySelector('em i').textContent = lv; });
-    });
+  // Belohnungen sammeln statt mitten im Training zeigen: erst im Heute-Tab außerhalb der Arena (nach dem Training bzw. nach dem Eintragen), einzeln nacheinander.
+  // Reihenfolge: Freischaltungen, Karten, Muskeln, Ziele, Konto-Level als Finale. Die Schlange übersteht Neuladen (localStorage, Demo getrennt).
+  // Einträge: {t: 'un'|'card'|'mus'|'goal'|'acc', id, lv0?, lv?, tier0?, tier?}; mehrere Aufstiege derselben Karte/Gruppe werden zu einem (lv0 → lv)
+  var RWK = DEMO ? 'zenit.rwq.demo' : 'zenit.rwq', RWO = { un: 0, card: 1, mus: 2, goal: 3, acc: 4 }, rwq = [], rwOn = false;
+  try { rwq = JSON.parse(localStorage.getItem(RWK)) || []; } catch (e) { rwq = []; }
+  function rwSave() { try { if (rwq.length) localStorage.setItem(RWK, JSON.stringify(rwq)); else localStorage.removeItem(RWK); } catch (e) { /* egal */ } }
+  function rwAdd(x) {
+    var same = rwq.filter(function (y) { return y.t === x.t && y.id === x.id; })[0];
+    if (same) { same.lv = x.lv; same.tier = x.tier; } else rwq.push(x);
+    rwq.sort(function (a, b) { return RWO[a.t] - RWO[b.t]; }); rwSave();
   }
-  function musFx(k, lv) {
-    var m0 = matOf(lv - 1), m1 = matOf(lv);
-    fxPush(function () {
-      fxShow(MATC[m1], '<i class="emb-i big m' + m0 + '">' + ic(MUSI[k]) + '</i>', MUSN[k] + ' Lv ' + lv, m1 !== m0 ? 'Neues Material: ' + MAT[m1][1] : 'Muskelgruppe gestärkt',
-        function (o) { var c = o.querySelector('.emb-i'); c.className = c.className.replace(/ m\d/, ' m' + m1); });
-    });
+  function rwPlay() {
+    if (rwOn || !rwq.length || ui.tab !== 'heute' || ui.arena || ui.sheet) return;
+    var d = derive(state.logs), n = rwq.length, i = 0; rwOn = true;
+    rwq.sort(function (a, b) { return RWO[a.t] - RWO[b.t]; });
+    (function next() {
+      var x = rwq.shift(); rwSave();
+      if (!x) { rwOn = false; return; }
+      i++; fxShow(rwFx(x, d, n > 1 ? i + ' / ' + n : '', next));
+    })();
   }
-  window.__zfx = { card: function (id, lv) { cardFx(EXB[id], lv); }, mus: musFx };
+  function rwFx(x, d, step, next) {
+    var f = { step: step, done: next };
+    if (x.t === 'un') {
+      // Freigeschaltet: gesperrte Karte (gestrichelt, Schloss) bricht auf und zeigt sich; darunter die erfüllten Voraussetzungen
+      var e = EXB[x.id], r = rarOf(e), c = cardOf(d, e);
+      f.cls = 'un'; f.col = LOOKC[r]; f.head = ic('lock') + 'Freigeschaltet'; f.title = esc(e.n); f.sub = 'Neu in Sammlung, Skilltree und Plan';
+      f.inner = '<div class="hc big lk ' + RAR[r][2] + '"><small>' + RAR[r][0] + '</small><b>' + esc(e.n) + '</b><em>' + ic('lock') + '</em></div>';
+      f.more = '<div class="lvfx-q">' + (e.req || []).map(function (q) { var rl = reqLine(q, d); return '<span>' + ic('check') + esc(rl.name) + ' ' + rl.need + ' ' + esc(rl.u) + '</span>'; }).join('') + '</div>';
+      f.swap = function (o) { var h = o.querySelector('.hc'); h.className = h.className.replace(' lk', ' l' + lookOf(c.lv)); h.querySelector('em').textContent = 'Lv ' + c.lv; };
+    } else if (x.t === 'card') {
+      var e2 = EXB[x.id], r2 = rarOf(e2), l0 = lookOf(x.lv0), l1 = lookOf(x.lv);
+      f.cls = 'card'; f.col = LOOKC[l1]; f.head = ic('up') + 'Karte aufgestiegen'; f.title = 'Lv ' + x.lv0 + ' → ' + x.lv; f.sub = l1 !== l0 ? 'Neuer Look: ' + LOOK[l1] : esc(e2.n);
+      f.inner = '<div class="hc big ' + RAR[r2][2] + ' l' + l0 + '"><small>' + RAR[r2][0] + '</small><b>' + esc(e2.n) + '</b><em>Lv <i>' + x.lv0 + '</i></em></div>';
+      f.swap = function (o) { var h = o.querySelector('.hc'); h.className = h.className.replace(/ l\d/, ' l' + l1); h.querySelector('em i').textContent = x.lv; };
+    } else if (x.t === 'mus') {
+      var m0 = matOf(x.lv0), m1 = matOf(x.lv);
+      f.cls = 'mus'; f.col = MATC[m1]; f.head = ic(MUSI[x.id]) + (m1 !== m0 ? 'Neues Material' : 'Muskel gestärkt'); f.title = MUSN[x.id] + ' Lv ' + x.lv; f.sub = m1 !== m0 ? MAT[m0][1] + ' → ' + MAT[m1][1] : MAT[m1][1];
+      f.inner = '<i class="emb-i big m' + m0 + '">' + ic(MUSI[x.id]) + '</i>';
+      f.swap = function (o) { var h = o.querySelector('.emb-i'); h.className = h.className.replace(/ m\d/, ' m' + m1); };
+    } else if (x.t === 'goal') {
+      var mo = x.id === 'mo';
+      f.cls = 'goal'; f.col = mo ? '#ffc94a' : '#6dbf9c'; f.head = ic(mo ? 'trophy' : 'cal') + (mo ? 'Monatsziel' : 'Wochenziel'); f.title = (mo ? MO_GOAL : WK_GOAL) + ' Trainingstage'; f.sub = '+' + (mo ? MO_XP : WK_XP) + ' XP';
+      f.inner = '<i class="lvgoal">' + ic(mo ? 'trophy' : 'cal') + '</i>'; f.big = mo;
+    } else {
+      // Konto-Level: Gold, Doppelring, Zahl zählt hoch; neue Stufe (Titel) als eigener Hinweis
+      var nt = x.tier > x.tier0;
+      f.cls = 'acc'; f.col = '#ffc94a'; f.big = true; f.head = ic('peak') + (nt ? 'Neue Stufe' : 'Konto-Level'); f.title = nt ? TIERS[x.tier] : 'Level ' + x.lv; f.sub = nt ? 'Level ' + x.lv + ' · neuer Titel' : TIERS[x.tier];
+      f.inner = '<div class="lvacc"><small>Level</small><b>' + x.lv0 + '</b></div>';
+      f.swap = function (o) { var b = o.querySelector('.lvacc b'), v = x.lv0; (function up() { b.textContent = v; if (v++ < x.lv) setTimeout(up, 180); })(); };
+    }
+    return f;
+  }
   var hapEl = null;
   function buzz(ms) {
     try { if (navigator.vibrate) { navigator.vibrate(ms); return; } } catch (e) { /* egal */ }
@@ -302,29 +338,17 @@
       for (var i = 0; i < n; i++) setTimeout(function () { hapEl.click(); }, i * 90);
     } catch (e) { /* egal */ }
   }
-  var dq = [];
-  function nextDialog() {
-    var x = dq.shift();
-    if (!x) { $('scrim').classList.remove('on'); return; }
-    $('u-ic').innerHTML = ic(x.icon);
-    $('u-sm').textContent = x.sm; $('u-name').textContent = x.name; $('u-text').textContent = x.text || '';
-    $('scrim').classList.add('on');
-    $('u-ok').focus({ preventScroll: true });
-    sparks(x.big ? 220 : 120); buzz(30);
-  }
   function afterSave(before, after, e, rect, v) {
     var today = dayIdx(Date.now()), bt = before.byDay[today], at = after.byDay[today];
     var gain = after.xp - before.xp;
-    var lvB = level(before.xp), lvA = level(after.xp);
-    var newUn = EX.filter(function (x) { return after.unlocked[x.id] && !before.unlocked[x.id]; });
-    newUn.forEach(function (x) { dq.push({ icon: gOf(x.g).i, sm: 'Freigeschaltet', name: x.n, text: x.mu }); });
-    if (lvA > lvB) {
-      var tA = tierOfLevel(lvA), tB = tierOfLevel(lvB);
-      dq.push({ icon: 'bolt', sm: tA > tB ? 'Neue Stufe: ' + TIERS[tA] : 'Level aufgestiegen', name: 'Level ' + lvA, text: TIERS[tA], big: tA > tB });
-    }
-    var wkN = after.wkHit[wkOf(today)] && !before.wkHit[wkOf(today)], moN = after.moHit[moOf(today)] && !before.moHit[moOf(today)];
-    if (wkN) dq.push({ icon: 'cal', sm: 'Wochenziel geschafft', name: WK_GOAL + ' Trainingstage', text: '+' + WK_XP + ' XP', big: false });
-    if (moN) dq.push({ icon: 'trophy', sm: 'Monatsziel geschafft', name: MO_GOAL + ' Trainingstage', text: '+' + MO_XP + ' XP', big: true });
+    var lvB = level(before.xp), lvA = level(after.xp), n0 = rwq.length;
+    EX.forEach(function (x) { if (after.unlocked[x.id] && !before.unlocked[x.id]) rwAdd({ t: 'un', id: x.id }); });
+    if (lvA > lvB) rwAdd({ t: 'acc', id: 'acc', lv0: lvB, lv: lvA, tier0: tierOfLevel(lvB), tier: tierOfLevel(lvA) });
+    if (after.wkHit[wkOf(today)] && !before.wkHit[wkOf(today)]) rwAdd({ t: 'goal', id: 'wk' });
+    if (after.moHit[moOf(today)] && !before.moHit[moOf(today)]) rwAdd({ t: 'goal', id: 'mo' });
+    var c0 = cardOf(before, e).lv, c1 = cardOf(after, e).lv;
+    if (c1 > c0) rwAdd({ t: 'card', id: e.id, lv0: c0, lv: c1 });
+    Object.keys(musOf(e)).forEach(function (k) { var a0 = mLevel(before.mp[k] || 0).lv, a1 = mLevel(after.mp[k] || 0).lv; if (a1 > a0) rwAdd({ t: 'mus', id: k, lv0: a0, lv: a1 }); });
     var goalNow = at && at.goal && !(bt && bt.goal);
     var extraNow = at && bt && at.extra > bt.extra;
     var exT = exTier(after, e) > exTier(before, e);
@@ -333,11 +357,9 @@
     ui.fresh = false;
     render();
     if (gain > 0) floaty('+' + gain + ' XP', rect);
-    // Level-Up der Karte und der Muskelgruppen dieser Übung: großer Moment
-    if (cardOf(after, e).lv > cardOf(before, e).lv) cardFx(e, cardOf(after, e).lv);
-    Object.keys(musOf(e)).forEach(function (k) { var a1 = mLevel(after.mp[k] || 0).lv; if (a1 > mLevel(before.mp[k] || 0).lv) musFx(k, a1); });
     buzz(12);
-    if (dq.length) { setTimeout(nextDialog, 450); }
+    // Neue Belohnung: in der Arena nur ein kurzer Hinweis, gezeigt wird sie nach dem Training (rwPlay aus render)
+    if (rwq.length > n0) { toast(ui.arena ? 'Belohnung gesammelt · nach dem Training' : 'Belohnung!', 'trophy', true); sparks(40); }
     else if (goalNow) { toast('Tagesziel erreicht · +40 XP', 'target', true); sparks(90); }
     else if (extraNow) toast('Bonus-Übung · +30 XP', 'bolt', true);
     else if (goalEx) { toast('Ziel erreicht: ' + e.n, 'trophy', true); sparks(90); }

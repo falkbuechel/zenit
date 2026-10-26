@@ -126,7 +126,9 @@
     function place(id, a1, a2) {
       var mid = (a1 + a2) / 2, r = mid * Math.PI / 180, R = id.indexOf('m:') === 0 ? 170 : 245 + stageOf(EXB[id]) * 67;
       pos[id] = { x: STC + Math.cos(r) * R, y: STC + Math.sin(r) * R };
-      var ch = kids[id] || [], tot = ch.reduce(function (a, c) { return a + breadth(c); }, 0), cur = a1;
+      // Geschwister nach Zugrichtung: Äste mit Linien in einen Sektor davor (kleinerer Winkel) zuerst, in einen dahinter zuletzt
+      // (z. B. Backlever Tuck an den Rand zum Griff-Sektor, wo Dead Hang liegt)
+      var ch = (kids[id] || []).slice().sort(function (x, y) { return pull(x) - pull(y); }), tot = ch.reduce(function (a, c) { return a + breadth(c); }, 0), cur = a1;
       ch.forEach(function (c) { var w = breadth(c) / tot * (a2 - a1); place(c, cur, cur + w); cur += w; });
     }
     // Muskelgruppen: Bereich nach Breite, mindestens 30°
@@ -151,6 +153,22 @@
       }
       for (var k = 1; k < nM; k++) if (!used[k]) { used[k] = true; o.push(k); perm(o); o.pop(); used[k] = false; }
     })(ord);
+    // Sektormitten (Grad) und Zugrichtung eines Asts: mittlere Winkeldifferenz seiner Linien in andere Sektoren (für place)
+    var secC = {}, acc0 = a0; bestO.forEach(function (k) { secC[k] = acc0 + ws[k] / 2; acc0 += ws[k]; });
+    var plM = {};
+    function pull(c) {
+      if (plM[c] !== undefined) return plM[c];
+      var S = {}, own = rk(c), sum = 0, n = 0; (function walk(x) { S[x] = 1; (kids[x] || []).forEach(walk); })(c);
+      EX.forEach(function (e) {
+        if (stSat[e.id] || !e.req) return;
+        e.req.forEach(function (q) {
+          var a = q[0], b = e.id; if (!S[a] === !S[b]) return;
+          var o = rk(S[a] ? b : a); if (o === own) return;
+          var dg = secC[o] - secC[own]; dg = ((dg + 540) % 360) - 180; sum += dg; n++;
+        });
+      });
+      return (plM[c] = n ? sum / n : 0);
+    }
     stWed = []; bestO.forEach(function (k) { var m = MUS[k]; stWed.push({ k: m[0], a1: a0, a2: a0 + ws[k] }); place('m:' + m[0], a0, a0 + ws[k]); a0 += ws[k]; });
     // Linien entwirren: jeden Ast (Knoten samt Unterbaum) probeweise drehen und behalten, was weniger Kreuzungen und kürzere Linien ergibt
     function ang(id) { var q = pos[id]; return Math.atan2(q.y - STC, q.x - STC); }
@@ -170,7 +188,12 @@
     // jeder Ast bleibt im Sektor seiner Muskelgruppe
     var wd = {}; stWed.forEach(function (w) { wd['m:' + w.k] = w; });
     function root(id) { while (id.indexOf('m:') !== 0) id = par(EXB[id]); return wd[id]; }
-    function inside(id, w) { var a = ang(id) * 180 / Math.PI; while (a < w.a1) a += 360; while (a > w.a1 + 360) a -= 360; return a > w.a1 + 3 && a < w.a2 - 3 && (kids[id] || []).every(function (c) { return inside(c, w); }); }
+    // Ausnahme: Knoten mit Voraussetzungen aus anderen Sektoren dürfen bis zu 15° über die Grenze (näher an diese Eltern)
+    function inside(id, w) {
+      var a = ang(id) * 180 / Math.PI, ext = id.indexOf('m:') !== 0 && (EXB[id].req || []).some(function (q) { return rk(q[0]) !== rk(id); }) ? 15 : -3;
+      while (a < w.a1 - 180) a += 360; while (a > w.a1 + 180 + (w.a2 - w.a1)) a -= 360;
+      return a > w.a1 - ext && a < w.a2 + ext && (kids[id] || []).every(function (c) { return inside(c, w); });
+    }
     var best = cost(), DA = [-60, -45, -32, -24, -16, -10, -6, -3, -1, 1, 3, 6, 10, 16, 24, 32, 45, 60];
     for (var pass = 0; pass < 6; pass++) main.forEach(function (e) {
       var bd = 0, w = root(e.id); DA.forEach(function (dg) { var r = dg * Math.PI / 180; rot(e.id, r); var c = inside(e.id, w) ? cost() : 1e9; rot(e.id, -r); if (c < best - 1) { best = c; bd = r; } });

@@ -3,6 +3,6 @@
   .fresh .rise { animation-name: fade; }
 .status.last, .pill.next, .wd.today i, .tchip, .bar > i::after, .tchip::after { animation: none; }
 .fresh .draw { animation-name: fade; }
-  .sheet, .toast, .unlock { transition-duration: .01ms; }
+  .sheet, .toast { transition-duration: .01ms; }
 }
 @media (max-width: 380px) { .sk b { font-size: 64px; }  .pill { width: 52px; } .step { grid-template-columns: 56px 1fr 56px; } }

@@ -95,6 +95,8 @@
     hydrate(snap, fresh);
     if (ui.scroll) { var sc = ui.scroll; ui.scroll = null; setTimeout(function () { scrollToEl(sc); }, 60); }
     jumpMode = ''; updJump();
+    // Gesammelte Belohnungen zeigen, sobald Heute ohne Arena sichtbar ist (rwPlay prüft Tab, Arena, offenes Fenster)
+    if (rwq.length && !rwOn) setTimeout(rwPlay, 600);
   }
   function hudSlim(d, now) {
     // Heute: eine Zeile mit Tag, Serie und Konto-Level (Antippen = Bergpfad)

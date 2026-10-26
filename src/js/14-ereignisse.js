@@ -156,11 +156,10 @@
     }
   });
   document.addEventListener('keydown', function (ev) {
-    if (ev.key === 'Escape') { closeSheet(); if ($('scrim').classList.contains('on')) { dq = []; nextDialog(); } }
+    if (ev.key === 'Escape') closeSheet();
     if (ev.key === 'Enter' && ev.target.id === 'sv') saveSheet();
     if (ev.key === 'Enter' && (ev.target.id === 'f-p' || ev.target.id === 'f-k' || ev.target.id === 'f-n')) { var fb = document.querySelector('[data-fsave],[data-fgsave]'); if (fb) fb.click(); }
   });
-  $('u-ok').addEventListener('click', nextDialog);
 
   function saveFile(text) {
     var name = 'zenit-backup-' + new Date().toISOString().slice(0, 10) + '.json', done = function () { try { localStorage.setItem('zenit.lastBackup', String(Date.now())); } catch (e) { /* egal */ } toast('Backup gespeichert', 'check'); };

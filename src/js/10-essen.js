@@ -273,7 +273,13 @@
     // Mini-Balken: hit = im Ziel (grün), over = zu viel mit negativer Wirkung (rot, gestreift): Fett/Kohlenhydrate über 110 %, Zucker über der Grenze. Protein und Ballaststoffe dürfen drüber
     // low = orange: Protein/Ballaststoffe weit hinter dem, was zur Tageszeit zu erwarten ist (ex = erwarteter Anteil, fExp)
     var su = k === 'su', p = g ? v / g : 0, bad = k !== 'p' && k !== 'fb' && p > (su ? 1 : 1.1), hit = !bad && (k === 'p' || k === 'fb' ? p >= 0.9 : !su && p >= 0.85), low = !bad && !hit && (k === 'p' || k === 'fb') && ex >= 0.3 && p < ex * 0.6;
-    return '<div class="fmb ' + k + (bad ? ' over' : hit ? ' hit' : low ? ' low' : '') + '"><span>' + NSH[k] + '</span><i class="fbt"><i' + pv('fm' + k, Math.min(1, p)) + '></i>' + (k !== 'p' && k !== 'fb' && p > 1 ? '<i class="ov" style="--o:' + Math.min(1, (p - 1) * 3).toFixed(3) + '"></i>' : '') + '</i><b>' + Math.round(v) + '<small>/' + (su ? '≤' : '') + g + '</small></b></div>';
+    return '<div class="fmb ' + k + (bad ? ' over' : hit ? ' hit' : low ? ' low' : '') + fAnim(k, bad ? 'over' : hit ? 'hit' : '') + '"><span>' + NSH[k] + '</span><i class="fbt"><i' + pv('fm' + k, Math.min(1, p)) + '></i>' + (k !== 'p' && k !== 'fb' && p > 1 ? '<i class="ov" style="--o:' + Math.min(1, (p - 1) * 3).toFixed(3) + '"></i>' : '') + '</i><b>' + Math.round(v) + '<small>/' + (su ? '≤' : '') + g + '</small></b></div>';
+  }
+  // Einmal-Animation, wenn ein Wert seit dem letzten Zeichnen (gleicher Tag) ins Ziel kommt (fa-hit) oder darüber kippt (fa-bad)
+  function fAnim(k, st) {
+    var sd = fSd(); if (ui.fstd !== sd) { ui.fstd = sd; ui.fst = {}; }
+    var was = ui.fst[k]; ui.fst[k] = st;
+    return was === undefined || was === st || !st ? '' : st === 'hit' ? ' fa-hit' : ' fa-bad';
   }
   function dishTot(dd) {
     var o = {}; NK.forEach(function (k) { o[k] = 0; });
@@ -324,7 +330,7 @@
       ds += '<button class="fdd' + (di === sd ? ' sel' : '') + (di === today ? ' today' : '') + dc + '" data-fsd="' + di + '" aria-label="' + esc(fmtDayL(di)) + '"><small>' + WDN[wdOf(di)].slice(0, 2) + '</small><b>' + new Date(di * 864e5).getUTCDate() + '</b><i style="--p:' + Math.min(1, kq).toFixed(2) + '"></i></button>'; }
     h += '<nav class="fds rise" style="--i:0">' + ds + '</nav>';
     // Bilanz: kcal groß mit Balken, darunter Protein, Fett, Kohlenhydrate, Ballaststoffe, Zucker
-    h += '<section class="fbal rise" style="--i:1"><div class="fbk' + (kp > 1.1 ? ' over' : kp >= 0.9 ? ' hit' : ex >= 0.3 && kp < ex * 0.6 ? ' low' : '') + '"><b data-n="' + s.k + '" data-nk="fkv">' + s.k + '</b><span>/ ' + g.k + ' kcal</span>' +
+    h += '<section class="fbal rise" style="--i:1"><div class="fbk' + (kp > 1.1 ? ' over' : kp >= 0.9 ? ' hit' : ex >= 0.3 && kp < ex * 0.6 ? ' low' : '') + fAnim('k', kp > 1.1 ? 'over' : kp >= 0.9 ? 'hit' : '') + '"><b data-n="' + s.k + '" data-nk="fkv">' + s.k + '</b><span>/ ' + g.k + ' kcal</span>' +
       (g.tb ? '<span class="ftb">' + ic('dumb') + '+' + g.tb + '</span>' : '') + '<em>' + (g.k - s.k >= 0 ? (g.k - s.k) + ' offen' : (s.k - g.k) + ' drüber') + '</em><i class="fbt"><i' + pv('fkb', Math.min(1, kp)) + '></i>' + (kp > 1 ? '<i class="ov" style="--o:' + Math.min(1, (kp - 1) * 3).toFixed(3) + '"></i>' : '') + '</i></div>' +
       '<div class="fbm">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return fbar(k, s[k], g[k], ex); }).join('') + '</div>' +
       '<div class="fwa">' + ic('drop') + '<i id="fw-r" class="wsl" data-max="' + wg + '" data-v="' + Math.min(wa, wg) + '" style="--p:' + Math.min(1, wa / wg).toFixed(3) + '" role="slider" aria-label="Wasser" data-noswipe="1"><i></i></i>' +

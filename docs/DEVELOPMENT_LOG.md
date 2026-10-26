@@ -3,15 +3,18 @@
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
 ## Stand 2026-10-26
-- Zuletzt: Essen (Nährwert-Fenster, Wasser per Glas/Flasche, ohne Rückgängig), Heute als Spiel-Startseite mit Maskottchen-Platzhalter, Belohnungen nach dem Training (alles live, Deploy grün).
-- Falk testet am iPhone: neue Heute-Startseite, Belohnungsfolge nach dem Training, Essen-Zuviel/Wackeln, Wasser-Knöpfe, Nährwert-Fenster.
-- Nächster Schritt: Heute weiter umbauen („darauf kann man aufbauen, braucht noch viel Veränderung“) – erst fragen, was am meisten stört, dann Varianten zeigen.
-- Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken, damit Linien zu Backlever/Frontlever kürzer werden (Linie vom Muskel-Emblem wird dafür länger)?
-- iPhone-Test offen: Essen-Tagesleiste wischen, Wasser-Balken ziehen, neues Wasser-Fenster, Mahlzeit-Zeilen mit Stapeln, Nährwert-Fenster, Mengen-Fenster, Marken-/Online-Suche.
-- Offen Essen: Open Food Facts schneller (Bedingungen im Verlauf „Open Food Facts besser einbinden“).
+- Zuletzt: Essen-Tab in 7 Runden umgebaut (alles live, Commit 436f160): Tagesleiste wischbar, Gegessen als Mahlzeit-Karten mit Stapeln, Nährwert-Icons/-Farben, Nährwert-Fenster mit Ring, Mengen-Fenster, Suche (Zuletzt/Kategorien/Schnell), Gerichte-Menü, Rechner im Profil.
+- Falk testet am iPhone: letzte Runde (Bilanz-Kopf „offen“, Vorschlag auf Mahlzeit ziehen, leere Zeile, Suche mit Werten je 100 g, Gerichte-Menü mit Filter/„+“, Rechner im Profil, Wasser dunkler über 100 %).
+- Offene Entscheidung: Gruppe per Wischen löschen hat kein Rückgängig – Rückgängig oder Rückfrage gewünscht?
+- Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
+- Nächster Schritt: Falks Rückmeldung zu Essen abarbeiten; danach Heute weiter umbauen (erst fragen, was am meisten stört, dann Varianten).
+- Nicht committet: nichts.
 
 ## Offen / Ideen
 - iPhone-Test offen: Pause-Vollbild in der Arena, Skilltree (Linien, Leuchten, Info-Leiste)
+- iPhone-Test offen Essen: Barcode-Scan quer, Marken-/Online-Suche (Open Food Facts de+world parallel), Wischen/Ziehen auf echtem Touch
+- Essen: Open Food Facts schneller (Bedingungen im Verlauf „Open Food Facts besser einbinden“); Rückgängig beim Gruppen-Löschen
+- Essen: eigenes Lebensmittel nur noch über „Marke fehlt“ oder unbekannten Barcode anlegbar – prüfen, ob ein Weg in der Suche fehlt
 - Heute: weiterer Umbau der Startseite; Bergpfad-Belohnungen / Tages-Drops, Tagesaufgaben, Saison; Vorwoche-Vergleich ist aus Heute raus (neuen Platz finden)
 - Serie: zu langweilig, beim Redesign aufwerten
 - Maskottchen: echte Illustration mit Stufen (ComfyUI), ersetzt den SVG-Platzhalter `mascot()`

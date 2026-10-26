@@ -281,7 +281,8 @@ button:active:not(:disabled) { transform: scale(.97); }
 .mrow { display: flex; align-items: center; gap: 10px; padding: 8px 12px; margin-bottom: 6px; border-radius: 12px; border: 1px solid var(--line); background: var(--s1); }
 .mrow .mn { flex: 1; display: grid; min-width: 0; } .mrow .mn b { font-size: 14px; } .mrow .mn small { font-size: 11px; color: var(--ink3); }
 .msp { width: 90px; height: 30px; flex: none; } .mv { font-family: var(--f-display); font-weight: 900; font-size: 22px; min-width: 52px; text-align: right; }
-.sheet.tall { max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+/* Zeilen in voller Höhe (max-content): sonst schrumpft das Raster bei langem Inhalt und Teile überlappen die Überschrift */
+.sheet.tall { max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; grid-auto-rows: max-content; }
 .sheet.tall::-webkit-scrollbar { display: none; }
 /* Hochformat: im Querformat nur ein Hinweis (nicht beim Barcode-Scan, body.scan) */
 .rot { display: none; }

@@ -23,6 +23,16 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-26 – Essen: Feinschliff Icons, Suche mit Reitern, Nährwert-Fenster-Bug
+- Nährwert-Fenster überlappte die Überschrift: Klasse `stk` war schon in `40-sammlung.css` mit `position: absolute` belegt (check.py findet nur gleiche Selektoren, nicht gleiche Klassen in anderem Zusammenhang) → `fnrs`. Lehre: neue Klassennamen vorher per grep über `src/css` prüfen. Zusätzlich `.sheet.tall { grid-auto-rows: max-content }`, Nährwert-Fenster jetzt `tall` (scrollt).
+- Farben: Protein violett (`--g-kh`), Ballaststoffe türkis (`--g-pull`). Icons: Fett zwei Tropfen, Zucker drei Würfel, Kohlenhydrate drei Körner, Ballaststoffe Spross.
+- Bilanz: Icon und Wert nebeneinander (bis 999), Ziel klein unter dem Balken.
+- Gegessen: Mahlzeit-Karte Symbol + ×n oben, kcal groß ohne Einheit (passt 4-stellig); aufgeklappter Kategorie-Stapel hat vorne einen Zuklapp-Knopf (Icon, ×n, Kreuz).
+- Vorschläge im Stil der Karten (Akzent oben, gestrichelt, kcal groß).
+- Mengen-Fenster: 5 Schnellmengen (übliche Menge, Portionen, ½/1½/2×, runde Gramm; ≥ 15 % auseinander, aufsteigend) in einer Zeile; Kacheln Icon + Wert nebeneinander; `.sheet.fp` enger.
+- Suche: Reiter Zuletzt / Kategorien / Eigene (`ui.ftab`), alles als gleiche Zeilen (`fRow` mit Kategorie-Icon); Kategorien als Liste mit Anzahl und Pfeil.
+- Barcode: quadratischer Rahmen (10 % Rand), Text „egal wie herum“. Wasser-Zahl links neben dem Balken.
+
 ### 2026-10-26 – Essen: Gegessen in einer Zeile, Icons statt Nährwert-Namen, kompaktes Mengen-Fenster, Suche mit Kategorie-Icons
 - Gegessen: eine Zeile Mahlzeit-Karten (`fMealCard`: Symbol, kcal, Kategorien als überlappende Kreise, Anzahl); antippen zeigt nur diese Mahlzeit in derselben Zeile (`fMeal`, Zurück-Knopf `.fmz`, `ui.fmeal` = Tagesindex + Mahlzeit). Kategorie-Stapel wie zuvor. `fCat` liefert jetzt nur den Schlüssel, Icon und Kurzname aus `CATI`.
 - Reihenfolge: Gegessen → Suchen/Gerichte/Schnell → Vorschläge.

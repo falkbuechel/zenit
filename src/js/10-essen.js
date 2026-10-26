@@ -274,7 +274,7 @@
     // Mini-Balken: hit = im Ziel, over = über der Grenze (FLIM: Fett/Kohlenhydrate 110 %, Zucker 100 %, Protein 140 %, Ballaststoffe 160 % als gesundes Maximum)
     // low = orange: Protein/Ballaststoffe weit hinter dem, was zur Tageszeit zu erwarten ist (ex = erwarteter Anteil, fExp)
     var su = k === 'su', p = g ? v / g : 0, lim = FLIM[k], bad = p > lim, hit = !bad && (k === 'p' || k === 'fb' ? p >= 0.9 : !su && p >= 0.85), low = !bad && !hit && (k === 'p' || k === 'fb') && ex >= 0.3 && p < ex * 0.6;
-    return '<div class="fmb ' + k + (bad ? ' over' : hit ? ' hit' : low ? ' low' : '') + fAnim(k, bad ? 'over' : hit ? 'hit' : '', v) + '" data-fnut="' + k + '" role="button" tabindex="0"><span aria-label="' + NSH[k] + '">' + ic(NIC[k]) + '</span><i class="fbt"><i' + pv('fm' + k, Math.min(1, p)) + '></i>' + fOv(p, lim) + '</i><b>' + Math.round(v) + '<small>/' + (su ? '≤' : '') + g + '</small></b></div>';
+    return '<div class="fmb ' + k + (bad ? ' over' : hit ? ' hit' : low ? ' low' : '') + fAnim(k, bad ? 'over' : hit ? 'hit' : '', v) + '" data-fnut="' + k + '" role="button" tabindex="0"><span aria-label="' + NSH[k] + '">' + ic(NIC[k]) + '<b>' + Math.round(v) + '</b></span><i class="fbt"><i' + pv('fm' + k, Math.min(1, p)) + '></i>' + fOv(p, lim) + '</i><small>/' + (su ? '≤' : '') + g + '</small></div>';
   }
   // Grenzen als Anteil vom Ziel: darüber = zu viel (k = kcal, wa = Wasser)
   var FLIM = { k: 1.1, p: 1.4, f: 1.1, c: 1.1, fb: 1.6, su: 1, wa: 1.5 };
@@ -403,17 +403,17 @@
   }
   function fKc(l) { return Math.round(l.reduce(function (a, o) { return a + (o.x.k || 0); }, 0)); }
   function fMealCard(g) {
-    // Mahlzeit-Karte: Symbol + kcal, darunter die Kategorien als überlappende Kreise (höchstens 3) und die Anzahl
+    // Mahlzeit-Karte: Symbol und Anzahl, kcal groß (auch 4-stellig), darunter die Kategorien als überlappende Kreise (höchstens 3)
     var cs = fCats(g);
-    return '<button class="fmc m-' + g.m + '" data-fml="' + g.m + '" aria-label="' + mealOfE(g.l[0].x)[2] + ', ' + g.l.length + ' Einträge"><span class="fmt">' + ic(MEALI[g.m]) + '<b>' + fKc(g.l) + '</b><i>kcal</i></span>' +
-      '<span class="fcs">' + cs.slice(0, 3).map(function (q) { return '<i>' + ic(CATI[q.c][0]) + '</i>'; }).join('') + '<small>' + (g.l.length > 1 ? '×' + g.l.length : esc(g.l[0].x.n || '')) + '</small></span></button>';
+    return '<button class="fmc m-' + g.m + '" data-fml="' + g.m + '" aria-label="' + mealOfE(g.l[0].x)[2] + ', ' + g.l.length + ' Einträge, ' + fKc(g.l) + ' kcal"><span class="fmt">' + ic(MEALI[g.m]) + '<small>×' + g.l.length + '</small></span><b>' + fKc(g.l) + '</b>' +
+      '<span class="fcs">' + cs.slice(0, 3).map(function (q) { return '<i>' + ic(CATI[q.c][0]) + '</i>'; }).join('') + '</span></button>';
   }
   function fMeal(g) {
     // Eine Mahlzeit in der Zeile: Zurück-Knopf (Symbol, Uhrzeit), Einträge gleicher Kategorie ab 2 als Stapel mit Anzahl (antippen = aufklappen)
     return '<button class="fmz m-' + g.m + '" data-fml="" aria-label="Zurück zu allen Mahlzeiten">' + ic('back') + ic(MEALI[g.m]) + '<small>' + hmOf(g.t0) + '</small></button>' + fCats(g).map(function (q) {
       if (q.l.length < 2) return fChip(q.l[0]);
       var key = g.m + g.t0 + q.c;
-      if (ui.fstk[key]) return '<div class="fgrp m-' + g.m + '">' + q.l.map(fChip).join('') + '<button class="fgx" data-fstk="' + key + '" aria-label="Zuklappen">' + ic('close') + '</button></div>';
+      if (ui.fstk[key]) return '<div class="fgrp m-' + g.m + '"><button class="fgx" data-fstk="' + key + '" aria-label="' + CATI[q.c][1] + ' zuklappen">' + ic(CATI[q.c][0]) + '<small>×' + q.l.length + '</small>' + ic('close') + '</button>' + q.l.map(fChip).join('') + '</div>';
       return '<button class="fcpi fstk m-' + g.m + '" data-fstk="' + key + '"><b>' + ic(CATI[q.c][0]) + esc(CATI[q.c][1]) + '</b><small>' + q.l.length + '× · ' + q.l.map(function (o) { return esc(o.x.n || 'Mahlzeit'); }).join(', ') + '</small><em>' + fKc(q.l) + '<i>kcal</i></em></button>';
     }).join('');
   }
@@ -430,30 +430,36 @@
     $('sheet').classList.add('fs');
     setTimeout(function () { var i = $('fq'); if (i && !('ontouchstart' in window)) i.focus(); }, 350);
   }
+  function fRow(id) {
+    // Treffer-Zeile: Kategorie-Icon, Name, Marke/Menge und Protein, kcal (Fast Food je Verkaufsportion, sonst je 100 g)
+    var it = fItem(id), pa = it.pc ? it.d || it.u[it.ub ? 1 : 0][1] : 0, v = pa ? fNut(it, pa) : it, ck = it.dish ? 'dish' : /^u/.test(id) ? 'u' : CATI[it.cat] ? it.cat : 'x';
+    return '<button class="fsi" data-fpick="' + id + '"><i class="fsc">' + ic(CATI[ck][0]) + '</i><span><b>' + esc(fName(it)) + '</b><small>' + (it.b ? esc(it.b) + ' · ' : '') + (it.dish ? 'Portion' : pa ? fAmt(it, pa) : it.ml ? '100 ml' : '100 g') +
+      '<i style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + fN(v.p) + '</i></small></span><em>' + Math.round(v.k) + '</em></button>';
+  }
   function fresHtml() {
-    var q = fnorm(ui.fq.trim()), st = foodState(), list = [], seen = {};
-    if (!q && ui.fcat) {
-      // Kategorie: eingebaute Lebensmittel der Kategorie, „Eigene“ = eigene Lebensmittel, „Gerichte“ = Gerichte
-      list = ui.fcat === 'u' ? st.o.map(function (x) { return x.id; }) : ui.fcat === 'dish' ? st.d.map(function (x) { return x.id; }) : FOODS.filter(function (x) { return x.cat === ui.fcat && !x.vh; }).map(function (x) { return x.id; });
-    } else if (q) {
+    // Ohne Suchtext drei Reiter: Zuletzt, Kategorien (antippen = Liste, Zurück oben), Eigene (eigene Lebensmittel und Gerichte); mit Suchtext nur die Treffer
+    var q = fnorm(ui.fq.trim()), st = foodState(), tab = ui.ftab || 'r', list = [], h = '';
+    if (q) {
       var sc = [];
       st.o.map(function (x) { return x.id; }).concat((ui.ingm ? [] : st.d).map(function (x) { return x.id; }), FOODS.filter(function (x) { return !x.vh; }).map(function (x) { return x.id; })).forEach(function (id) {
         var it0 = fItem(id), n = fnorm(fHay(it0)), i = n.indexOf(q); if (i >= 0) sc.push([id, i === 0 ? 0 : n.indexOf(' ' + q) >= 0 ? 1 : 2]);
       });
-      sc.sort(function (a, b) { return a[1] - b[1]; }); list = sc.slice(0, 30).map(function (x) { return x[0]; });
+      sc.sort(function (a, b) { return a[1] - b[1]; });
+      h = sc.length ? sc.slice(0, 30).map(function (x) { return fRow(x[0]); }).join('') : '<p class="muted">Hier nichts gefunden.</p>';
+      h += '<div id="fon">' + fonHtml() + '</div>';
+    } else {
+      h = '<div class="seg fst">' + [['r', 'Zuletzt'], ['c', 'Kategorien'], ['u', 'Eigene']].map(function (x) { return '<button data-ftab="' + x[0] + '" aria-pressed="' + (tab === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>';
+      if (tab === 'r') st.e.slice().sort(function (a, b) { return b.t - a.t; }).forEach(function (x) { if (list.length < 15 && x.r && fItem(x.r.i) && list.indexOf(x.r.i) < 0 && !(ui.ingm && /^d/.test(x.r.i))) list.push(x.r.i); });
+      else if (tab === 'u') list = st.o.map(function (x) { return x.id; }).concat(ui.ingm ? [] : st.d.map(function (x) { return x.id; }));
+      else if (ui.fcat) {
+        h += '<button class="fcb" data-fcat="">' + ic('back') + ic(CATI[ui.fcat][0]) + '<b>' + FCATS.filter(function (c) { return c[0] === ui.fcat; })[0][1] + '</b></button>';
+        list = FOODS.filter(function (x) { return x.cat === ui.fcat && !x.vh; }).map(function (x) { return x.id; });
+      } else h += FCATS.map(function (c) {
+        return '<button class="fsi" data-fcat="' + c[0] + '"><i class="fsc">' + ic(CATI[c[0]][0]) + '</i><span><b>' + c[1] + '</b></span><small class="fsn">' + FOODS.filter(function (x) { return x.cat === c[0] && !x.vh; }).length + '</small>' + ic('chev') + '</button>';
+      }).join('');
+      h += list.map(fRow).join('') + (tab !== 'c' && !list.length ? '<p class="muted">' + (tab === 'r' ? 'Noch nichts eingetragen.' : 'Noch keine eigenen Lebensmittel.') + '</p>' : '');
     }
-    var cat = !q && ui.fcat ? (ui.fcat === 'u' || ui.fcat === 'dish' ? CATI[ui.fcat][1] : FCATS.filter(function (c) { return c[0] === ui.fcat; })[0][1]) : '';
-    var h = (cat ? '<button class="fcb" data-fcat="">' + ic('back') + ic(CATI[ui.fcat][0]) + '<b>' + cat + '</b></button>' : '') + (list.length ? list.map(function (id) {
-      var it = fItem(id), pa = it.pc ? it.d || it.u[it.ub ? 1 : 0][1] : 0, v = pa ? fNut(it, pa) : it;
-      return '<button class="fsi' + (it.dish ? ' dish' : /^u/.test(id) ? ' own' : '') + '" data-fpick="' + id + '"><span><b>' + esc(fName(it)) + '</b><small>' + (it.b ? esc(it.b) + ' · ' : '') + (it.dish ? 'Portion' : pa ? fAmt(it, pa) : it.ml ? '100 ml' : '100 g') + ' · ' + fN(v.p) + ' g Protein</small></span><em>' + Math.round(v.k) + '</em></button>';
-    }).join('') : q ? '<p class="muted">Nichts gefunden. Lege es als eigenes Lebensmittel an.</p>' : cat ? '<p class="muted">Noch leer.</p>' : '');
-    if (!q && !cat) {
-      // Leer: zuletzt gegessen als Chips, darunter Kategorien als Icon-Kacheln
-      var rc = []; st.e.slice().sort(function (a, b) { return b.t - a.t; }).forEach(function (x) { if (rc.length < 8 && x.r && fItem(x.r.i) && rc.indexOf(x.r.i) < 0 && !(ui.ingm && /^d/.test(x.r.i))) rc.push(x.r.i); });
-      if (rc.length) h += '<div class="frc" data-noswipe="1">' + ic('clock') + rc.map(function (id) { return '<button data-fpick="' + id + '">' + esc(fEn(fItem(id))) + '</button>'; }).join('') + '</div>';
-      h += '<div class="fcg">' + FCATS.map(function (c) { return c[0]; }).concat(['u'], ui.ingm ? [] : ['dish']).map(function (k) { return '<button data-fcat="' + k + '">' + ic(CATI[k][0]) + '<b>' + CATI[k][1] + '</b></button>'; }).join('') + '</div>';
-    }
-    return h + (q ? '<div id="fon">' + fonHtml() + '</div>' : '') + '<div class="fsb"><button class="btn small" data-fown="new">' + ic('plus') + 'Eigenes Lebensmittel</button><button class="btn small" data-fquick="1">' + ic('bolt') + 'Schnell</button></div>';
+    return h + '<div class="fsb"><button class="btn small" data-fown="new">' + ic('plus') + 'Eigenes Lebensmittel</button><button class="btn small" data-fquick="1">' + ic('bolt') + 'Schnell</button></div>';
   }
   // Online (Open Food Facts, frei, ohne Schlüssel): Suche ab 3 Zeichen kurz nach dem Tippen, Barcode über die Kamera.
   // Gewählte Produkte werden eigene Lebensmittel (mit Marke b und Barcode bc) und sind danach offline da.
@@ -524,7 +530,7 @@
   function scanStop() { if (scan) scanEnd(scan); }
   function openScan(mode) {
     scanStop(); ui.sheet = { fscan: true, from: mode === 'own' ? 'o' : 's', mode: mode };
-    sheetOpen(shHead('scan', 'Barcode', 'Packung vor die Kamera halten', true) + '<div class="fscan"><video id="fsv" playsinline muted autoplay></video><i></i></div><p class="muted fon" id="fsm">…</p>', true);
+    sheetOpen(shHead('scan', 'Barcode', 'In den Rahmen halten, egal wie herum', true) + '<div class="fscan"><video id="fsv" playsinline muted autoplay></video><i></i></div><p class="muted fon" id="fsm">…</p>', true);
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { $('fsm').textContent = 'Keine Kamera'; return; }
     var me = scan = { on: true, s: null }; document.body.classList.add('scan');
     navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false }).then(function (str) {
@@ -558,15 +564,17 @@
   function openPick(id, a, edit) {
     var it = fItem(id); if (!it) return;
     ui.sheet = { fpick: true }; ui.fpick = { i: id, a: a != null ? a : it.dish ? 1 : it.d || (it.u.length ? it.u[it.ub && it.u[1] ? 1 : 0][1] : 100), edit: edit };
-    sheetOpen(fpickHtml(), true);
+    sheetOpen(fpickHtml(), true); $('sheet').classList.add('fp');
   }
   function fpickHtml() {
     var pk = ui.fpick, it = fItem(pk.i), back = !!(ui.sheet && ui.sheet.from), un = it.ml ? 'ml' : 'g', b0 = it.u[0];
-    // Knöpfe: Portionen (1× und 2×), dazu feste Mengen in g/ml. Fast Food (pc): nur Verkaufsportionen, Schritte in der kleinsten Einheit
-    var ch = it.dish ? [[0.5], [1], [1.5], [2]] : it.pc ? (it.u.length > 1 ? it.u.slice(it.ub ? 1 : 0).map(function (u) { return [u[1]]; }) : [1, 2, 3].map(function (n) { return [b0[1] * n]; })) :
-      it.u.map(function (u) { return [u[1]]; }).concat(it.u.map(function (u) { return [u[1] * 2]; }));
-    if (!it.dish && !it.pc) [50, 100, 150, 200].forEach(function (g) { ch.push([g, 1]); });
-    ch = ch.filter(function (x, i, a) { return !a.slice(0, i).some(function (y) { return y[0] === x[0]; }); }).slice(0, 4);
+    // 5 Schnellmengen, aufsteigend und mindestens 15 % auseinander: Portionen der Einheit, dazu halbe, 1½- und doppelte übliche Menge und runde Grammzahlen.
+    // Gericht: halbe Portionen; Fast Food (pc): Verkaufsportionen bzw. Vielfache der kleinsten Einheit
+    var d0 = it.d || (b0 ? b0[1] : 100), r5 = function (x) { return Math.max(5, Math.round(x / 5) * 5); }, ch;
+    if (it.dish) ch = [[0.5], [1], [1.5], [2], [3]];
+    else if (it.pc) ch = (it.u.length > 1 ? it.u.slice(it.ub ? 1 : 0).map(function (u) { return [u[1]]; }) : []).concat([1, 2, 3, 4, 5].map(function (n) { return [b0[1] * n]; }));
+    else ch = [[d0]].concat(it.u.map(function (u) { return [u[1]]; }), [[d0 * 2], [r5(d0 / 2), 1], [r5(d0 * 1.5), 1], [100, 1], [200, 1], [50, 1], [300, 1]]);
+    ch = ch.filter(function (x, i, a) { return !a.slice(0, i).some(function (y) { return Math.abs(y[0] - x[0]) < Math.max(y[0], x[0]) * 0.15; }); }).slice(0, 5).sort(function (a, b) { return a[0] - b[0]; });
     var sub = it.dish ? 'Gericht · je Portion' : (it.b ? it.b + ' · ' : '') + (it.pc ? b0[0] + ' = ' + Math.round(it.k * b0[1] / 100) + ' kcal' : '100 ' + un + ' = ' + Math.round(it.k) + ' kcal');
     var amt = it.pc ? '<label class="fpcn"><b id="fpcn">' + fAmt(it, pk.a) + '</b></label>' :
       '<label><input id="fa" type="number" inputmode="decimal" min="0" step="' + (it.dish ? 0.5 : 5) + '" value="' + pk.a + '" aria-label="Menge"><span>' + (it.dish ? 'Port.' : un) + '</span></label>';
@@ -613,7 +621,7 @@
     return NK.map(function (k) {
       var bar = '';
       if (d) { var s0 = d.s[k] || 0, s1 = s0 + (v[k] || 0), gk = d.g[k] || 1, a = Math.min(1, s0 / gk), b = Math.max(0, Math.min(1, s1 / gk) - a); bar = '<i' + (s1 > gk * FLIM[k] ? ' class="over"' : '') + '><i style="width:' + (a * 100).toFixed(1) + '%"></i><i style="width:' + (b * 100).toFixed(1) + '%"></i></i>'; }
-      return '<div style="--nc:var(' + NCOL[k] + ')" aria-label="' + (k === 'k' ? 'kcal' : NSH[k]) + '">' + ic(NIC[k]) + '<b>' + fNv(k, v[k]) + '</b>' + bar + '</div>';
+      return '<div style="--nc:var(' + NCOL[k] + ')" aria-label="' + (k === 'k' ? 'kcal' : NSH[k]) + '"><span>' + ic(NIC[k]) + '<b>' + fNv(k, v[k]) + '</b></span>' + bar + '</div>';
     }).join('');
   }
   function fpickUpd() {
@@ -815,9 +823,7 @@
     return gs;
   }
   // Nährwertfarben (wie in der Bilanz) und -Icons statt Namen (Name bleibt als aria-label)
-  var NCOL = { k: '--g-push', p: '--g-pull', f: '--g-mob', c: '--g-cardio', fb: '--g-kh', su: '--g-core' }, NIC = { k: 'nk', p: 'np', f: 'nf', c: 'nc', fb: 'nfb', su: 'nsu' };
-  function nIc(k) { return '<i class="nic" style="--nc:var(' + NCOL[k] + ')" role="img" aria-label="' + (k === 'k' ? 'kcal' : NSH[k]) + '">' + ic(NIC[k]) + '</i>'; }
-  function fNv(k, v) { return v == null ? '–' : k === 'k' ? String(Math.round(v)) : fN(v); }
+  var NCOL = { k: '--g-push', p: '--g-kh', f: '--g-mob', c: '--g-cardio', fb: '--g-pull', su: '--g-core' }, NIC = { k: 'nk', p: 'np', f: 'nf', c: 'nc', fb: 'nfb', su: 'nsu' };  function fNv(k, v) { return v == null ? '–' : k === 'k' ? String(Math.round(v)) : fN(v); }
   // Nährwert antippen: gleiche Lebensmittel zusammengefasst (×n, gestapelt), sortiert nach diesem Wert, Anteil am Tag als Balken; antippen = übrige Nährwerte darunter (nur ansehen)
   function openNut(k) {
     var sd = fSd(), s = foodSum(sd), g = foodGoal(sd), u = k === 'k' ? ' kcal' : ' g', tot = s[k] || 0, gm = {}, gl = [], unk = 0;
@@ -828,13 +834,13 @@
     });
     var rows = gl.filter(function (q) { return q.v[k] > 0; }).sort(function (a, b) { return b.v[k] - a.v[k]; }).map(function (q) {
       var sh = tot ? q.v[k] / tot : 0;
-      return '<div class="fnr' + (q.c > 1 ? ' stk' : '') + '" data-fnx="1" role="button" tabindex="0" aria-expanded="false"><div class="fnh"><b>' + esc(q.n) + '</b>' + (q.c > 1 ? '<small>×' + q.c + '</small>' : '') + '<em>' + fNv(k, q.v[k]) + u + '</em><span>' + Math.round(sh * 100) + ' %</span></div><i style="--p:' + sh.toFixed(3) + '"></i>' +
+      return '<div class="fnr' + (q.c > 1 ? ' fnrs' : '') + '" data-fnx="1" role="button" tabindex="0" aria-expanded="false"><div class="fnh"><b>' + esc(q.n) + '</b>' + (q.c > 1 ? '<small>×' + q.c + '</small>' : '') + '<em>' + fNv(k, q.v[k]) + u + '</em><span>' + Math.round(sh * 100) + ' %</span></div><i style="--p:' + sh.toFixed(3) + '"></i>' +
         '<div class="fnd">' + NK.filter(function (j) { return j !== k; }).map(function (j) { return '<span style="--nc:var(' + NCOL[j] + ')" aria-label="' + (j === 'k' ? 'kcal' : NSH[j]) + '">' + ic(NIC[j]) + '<b>' + fNv(j, q.v[j]) + '</b></span>'; }).join('') + '</div></div>';
     }).join('');
     ui.sheet = { nut: k };
     sheetOpen(shHead(NIC[k], (k === 'k' ? 'Kalorien' : NSH[k]) + (sd === dayIdx(Date.now()) ? ' heute' : ''), (k === 'k' ? Math.round(tot) : fN(tot)) + ' / ' + (k === 'su' ? '≤' : '') + g[k] + u) +
       '<div class="fnl" style="--fc:var(' + NCOL[k] + ')"><i class="fnb" style="--p:' + Math.min(1, tot / (g[k] || 1)).toFixed(3) + '"></i>' + (rows || '<p class="muted">Noch nichts mit ' + (k === 'k' ? 'Kalorien' : NSH[k]) + '.</p>') + '</div>' +
-      (unk ? '<p class="sh-note">' + unk + (unk === 1 ? ' Eintrag' : ' Einträge') + ' ohne Angabe</p>' : ''));
+      (unk ? '<p class="sh-note">' + unk + (unk === 1 ? ' Eintrag' : ' Einträge') + ' ohne Angabe</p>' : ''), true);
   }
   function fChip(o) {
     // Eintrag-Chip in der Mahlzeit-Zeile: Name, Menge (sonst Uhrzeit), kcal
@@ -925,6 +931,7 @@
     if (t.closest('[data-fonr]')) { ui.fon = null; fonSearch(); return true; }
     if ((el = t.closest('[data-fbrp]'))) { var bx = ui.fbr && ui.fbr.r[+el.dataset.fbrp]; if (bx) pickFrom(offSave(bx)); return true; }
     if ((el = t.closest('[data-fcat]'))) { ui.fcat = el.dataset.fcat; $('fres').innerHTML = fresHtml(); $('sheet').scrollTop = 0; return true; }
+    if ((el = t.closest('[data-ftab]'))) { ui.ftab = el.dataset.ftab; ui.fcat = ''; $('fres').innerHTML = fresHtml(); buzz(4); return true; }
     if ((el = t.closest('[data-famt]'))) { ui.fpick.a = +el.dataset.famt; if ($('fa')) $('fa').value = ui.fpick.a; fpickUpd(); return true; }
     if ((el = t.closest('[data-fstep]'))) { var it0 = fItem(ui.fpick.i), stp = it0.dish ? 0.5 : it0.pc ? it0.u[0][1] : 10; ui.fpick.a = Math.max(stp, Math.round((ui.fpick.a + stp * (+el.dataset.fstep)) * 10) / 10); if ($('fa')) $('fa').value = ui.fpick.a; fpickUpd(); buzz(4); return true; }
     if (t.closest('[data-fpadd]')) { var pk = ui.fpick; if (ui.ingm) ingAdd(pk.i, pk.a); else foodRef(pk.i, pk.a, pk.edit); return true; }

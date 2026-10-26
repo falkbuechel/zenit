@@ -589,7 +589,7 @@
     var d = ui.ingm ? null : fDaySum();
     return NK.map(function (k) {
       var bar = '';
-      if (d) { var s0 = d.s[k] || 0, s1 = s0 + (v[k] || 0), a = Math.min(1, s0 / d.g[k]), b = Math.max(0, Math.min(1, s1 / d.g[k]) - a); bar = '<i' + (s1 > d.g[k] * FLIM[k] ? ' class="over"' : '') + '><i style="width:' + (a * 100).toFixed(1) + '%"></i><i style="width:' + (b * 100).toFixed(1) + '%"></i></i>'; }
+      if (d) { var s0 = d.s[k] || 0, s1 = s0 + (v[k] || 0), gk = d.g[k] || 1, a = Math.min(1, s0 / gk), b = Math.max(0, Math.min(1, s1 / gk) - a); bar = '<i' + (s1 > gk * FLIM[k] ? ' class="over"' : '') + '><i style="width:' + (a * 100).toFixed(1) + '%"></i><i style="width:' + (b * 100).toFixed(1) + '%"></i></i>'; }
       return '<div style="--nc:var(' + NCOL[k] + ')"><b>' + fNv(k, v[k]) + '</b><small>' + (k === 'k' ? 'kcal' : NSH[k]) + '</small>' + bar + '</div>';
     }).join('');
   }
@@ -804,7 +804,7 @@
     }).join('');
     ui.sheet = { nut: k };
     sheetOpen(shHead('chart', (k === 'k' ? 'Kalorien' : NSH[k]) + (sd === dayIdx(Date.now()) ? ' heute' : ''), (k === 'k' ? Math.round(tot) : fN(tot)) + ' / ' + (k === 'su' ? '≤' : '') + g[k] + u) +
-      '<div class="fnl" style="--fc:var(' + NCOL[k] + ')"><i class="fnb" style="--p:' + Math.min(1, tot / g[k]).toFixed(3) + '"></i>' + (rows || '<p class="muted">Noch nichts mit ' + (k === 'k' ? 'Kalorien' : NSH[k]) + '.</p>') + '</div>' +
+      '<div class="fnl" style="--fc:var(' + NCOL[k] + ')"><i class="fnb" style="--p:' + Math.min(1, tot / (g[k] || 1)).toFixed(3) + '"></i>' + (rows || '<p class="muted">Noch nichts mit ' + (k === 'k' ? 'Kalorien' : NSH[k]) + '.</p>') + '</div>' +
       (unk ? '<p class="sh-note">' + unk + (unk === 1 ? ' Eintrag' : ' Einträge') + ' ohne Angabe</p>' : ''));
   }
   function fChip(o) {

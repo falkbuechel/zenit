@@ -153,7 +153,17 @@
 .ffit p span { margin-left: auto; font-family: var(--f-mono); }
 .ffw { display: flex; flex-wrap: wrap; gap: 6px; }
 .ffw em { padding: 2px 8px; border-radius: 99px; background: color-mix(in srgb, var(--danger) 16%, transparent); color: var(--danger); font-family: var(--f-mono); font-size: 11px; font-style: normal; font-weight: 700; }
-.fds { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; margin-top: 6px; }
+/* Tagesleiste: wischbar (7 Tage zurück/vor), neuer Monat erscheint kurz darüber */
+.fdw { position: relative; margin-top: 6px; }
+.fds { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; touch-action: pan-y; will-change: transform; }
+.fds.in-r { animation: pcin-r .2s var(--ease); }
+.fds.in-l { animation: pcin-l .2s var(--ease); }
+.fmo {
+  position: absolute; top: -13px; right: 0; left: 0; z-index: 2; width: max-content; margin: 0 auto; padding: 2px 10px; border-radius: 99px;
+  background: var(--s3); color: var(--ink); font-size: 11px; font-weight: 700; pointer-events: none; animation: fmo 1.6s var(--ease) both;
+}
+@keyframes fmo { 0% { opacity: 0; transform: translateY(4px); } 15%, 75% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .fds.in-r, .fds.in-l { animation: none; } }
 .fdd { display: grid; justify-items: center; gap: 1px; padding: 4px 0 5px; border: 0; border-radius: 10px; background: transparent; color: var(--ink3); font: inherit; transition: background-color .16s var(--ease); }
 .fdd small { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .fdd b { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; font-family: var(--f-mono); font-size: 13px; font-weight: 600; color: var(--ink2); }
@@ -165,12 +175,8 @@
 .fdd.over b { color: var(--danger); }
 .fdd.sel { background: var(--s2); }
 .fdd.sel b { color: var(--ink); }
-.fwa { --fc: #4a9fd8; display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto auto; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
+.fwa { --fc: #4a9fd8; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
 .fwv { display: block; min-width: 0; min-height: 34px; padding: 0 2px; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
-/* Wasser: Glas (+250) und Flasche (+500) als runde Knöpfe in Wasserfarbe; Zahl antippen = Feineingabe */
-.fwq { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid color-mix(in srgb, var(--fc) 45%, var(--line)); border-radius: 50%; background: color-mix(in srgb, var(--fc) 14%, var(--s1)); color: var(--fc); transition: transform .14s var(--ease); }
-.fwq .ic { width: 20px; height: 20px; }
-.fwq:active { transform: scale(.88); background: color-mix(in srgb, var(--fc) 30%, var(--s1)); }
 /* Nährwert-Fenster: Einträge sortiert, Balken = Anteil am Tag, linker Rand = Mahlzeit */
 .fnl { display: grid; gap: 6px; }
 .fnr { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px 10px; overflow: hidden; padding: 10px 12px 12px; border: 1px solid var(--line); border-left: 3px solid var(--mc, var(--line)); border-radius: 12px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
@@ -184,15 +190,37 @@
 .fwa > .ic { width: 18px; height: 18px; color: var(--ink3); }
 .fwa b { font-family: var(--f-mono); font-size: 13px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .fwa b small { font-size: 11px; color: var(--ink3); }
-.wab { display: grid; grid-template-columns: auto 1fr; align-items: baseline; gap: 8px; }
-.wab b { font-family: var(--f-display); font-size: 40px; font-weight: 900; line-height: .9; font-variant-numeric: tabular-nums; }
-.wab span { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
-.wab .wsl { grid-column: 1 / -1; }
+/* Wasser-Regler: in der Bilanz ziehen (relativ, auch übers Ziel hinaus); im Fenster breit mit Skala */
 .wsl { position: relative; display: block; height: 30px; cursor: pointer; touch-action: none; }
 .wsl::before { content: ""; position: absolute; top: 11px; right: 0; left: 0; height: 8px; border-radius: 4px; background: var(--s3); }
 .wsl > i { position: absolute; top: 11px; left: 0; overflow: hidden; width: calc(var(--p) * 100%); height: 8px; border-radius: 4px; background: var(--fc); }
+.wsl.over > i { background: var(--danger); }
+/* Wasser-Fenster: Zahl mit ±50 ml, Regler mit Strichen je 250 ml und Ziel-Marke, Schnellwerte als Kacheln */
+.wahd { display: grid; grid-template-columns: 56px 1fr 56px; align-items: center; gap: 8px; margin-top: 4px; }
+.wahd .sb { height: 56px; }
+.wahd .sb:disabled, .wqk button:disabled { opacity: .35; }
+.wnum { display: grid; justify-items: center; gap: 2px; }
+.wnum span { display: flex; align-items: baseline; gap: 4px; }
+.wnum input { width: 4.2ch; padding: 0; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--ink); font-family: var(--f-display); font-size: 48px; font-weight: 900; line-height: 1; text-align: right; font-variant-numeric: tabular-nums; }
+.wnum input:focus { outline: none; border-color: var(--ac); }
+.wnum em { font-size: 20px; font-style: normal; font-weight: 700; color: var(--ink3); }
+.wnum small { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
+.wsc, .wqk { --fc: #4a9fd8; }
+.wsc { margin-top: 18px; }
+.wsl.wbig { height: 44px; }
+.wsl.wbig::before, .wsl.wbig > i { top: 14px; height: 16px; border-radius: 8px; }
+.wsl.wbig em { position: absolute; top: 8px; bottom: 8px; left: calc(var(--x) * 100%); width: 2px; margin-left: -1px; border-radius: 1px; background: var(--ink); }
+.wsx { position: relative; height: 24px; }
+.wsx::before { content: ""; position: absolute; top: 0; right: 0; left: 0; height: 6px; border-right: 1px solid var(--line); background: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px calc(100% / var(--n))); }
+.wsx span { position: absolute; top: 8px; left: calc(var(--x) * 100%); transform: translateX(-50%); font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
+.wqk { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+.wqk button { display: grid; place-items: center; gap: 4px; min-height: 66px; border: 1px solid var(--line); border-radius: 14px; background: var(--s2); color: var(--ink2); font: inherit; transition: transform .14s var(--ease); }
+.wqk button:active { transform: scale(.95); }
+.wqk .ic { width: 22px; height: 22px; color: var(--fc); }
+.wqk button:last-child .ic { color: var(--ink3); }
+.wqk b { font-family: var(--f-mono); font-size: 13px; }
 /* Zahl wischen: waagerecht über Menge oder Wasser ziehen ändert den Wert */
-#wa-n, #wa-v, #fpcn, .fstep input { touch-action: pan-y; cursor: ew-resize; }
+#wa-v, #fpcn, .fstep input { touch-action: pan-y; cursor: ew-resize; }
 .seg.fvs button { min-height: 34px; font-size: 13px; }
 .seg.fvs button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 .fscan { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 16px; background: #000; }

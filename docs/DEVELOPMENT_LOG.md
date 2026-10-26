@@ -7,7 +7,7 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Falk testet am iPhone: neue Heute-Startseite, Belohnungsfolge nach dem Training, Essen-Zuviel/Wackeln, Wasser-Knöpfe, Nährwert-Fenster.
 - Nächster Schritt: Heute weiter umbauen („darauf kann man aufbauen, braucht noch viel Veränderung“) – erst fragen, was am meisten stört, dann Varianten zeigen.
 - Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken, damit Linien zu Backlever/Frontlever kürzer werden (Linie vom Muskel-Emblem wird dafür länger)?
-- Nicht committet: `.claude/settings.json` (Falk hat die Erlaubnisliste erweitert, `defaultMode: acceptEdits`) – beim nächsten Commit mitnehmen.
+- iPhone-Test offen: Essen-Tagesleiste wischen, Wasser-Balken ziehen, neues Wasser-Fenster.
 
 ## Offen / Ideen
 - iPhone-Test offen: Pause-Vollbild in der Arena, Skilltree (Linien, Leuchten, Info-Leiste)
@@ -21,6 +21,12 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-26 – Essen: Tagesleiste wischbar, Wasser-Regler und neues Wasser-Fenster
+- Tagesleiste: Wischen springt 7 Tage zurück/vor (rollend, heute rechts, bis 1 Jahr zurück), Auswahl wandert mit; neuer Monat erscheint kurz als Pille darüber (`fdsMove`, `fMon`, Wischmodus `fds` neben `cal` in 15-start.js). `fSd` erlaubt jetzt jeden Tag im letzten Jahr.
+- Wasser in der Bilanz: Glas/Flasche-Knöpfe raus, Balken ziehbar (relativ, 50 ml, `data-rel`) – erneutes Ziehen addiert über das Ziel hinaus.
+- Wasser-Fenster neu (Variante „breiter Regler mit Skala“): Zahl in Litern tippen/wischen (Werte > 20 gelten als ml), ±50 ml, Regler mit Strichen je 250 ml, Ziel-Marke, rot über dem Höchstwert (1,5 × Ziel), Kacheln +250/+500/+750/0. Live-Anzeige gebündelt in `waShow`.
+- Falsch beim ersten Versuch: Klasse `.wtop` war schon im Profil belegt → `.wahd`.
 
 ### 2026-10-26 – Essen: Nährwert-Fenster, Wasser per Glas/Flasche, ohne Rückgängig
 - Nährwert antippen (kcal-Zeile oder Mini-Balken, `data-fnut`): Fenster `openNut` mit allen Einträgen des Tages, sortiert nach diesem Wert, Menge, Anteil in % als Balken in der Wertfarbe, linker Rand = Mahlzeit; Eintrag antippen = ändern; „ohne Angabe“ zählt Einträge ohne diesen Wert.

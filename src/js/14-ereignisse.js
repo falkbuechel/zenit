@@ -114,7 +114,8 @@
     var t = ev.target;
     if (t.id === 'sv') updSheetXp();
     if (/^c-/.test(t.id || '') && $('c-res')) calcUpd();
-    if (t.id === 'wa-v') { var wv = waSet(+t.value); $('wa-n').textContent = fN2(wv / 1000); var wr = $('wa-r'); wr.dataset.v = wv; wr.style.setProperty('--p', Math.min(1, wv / +wr.dataset.max).toFixed(3)); }
+    // Wasser-Feld in Litern (Komma erlaubt); Zahlen über 20 gelten als ml
+    if (t.id === 'wa-v') { var wl = parseFloat(t.value.replace(',', '.')) || 0, wv = waSet(wl > 20 ? wl : wl * 1000); $('wa-r').dataset.v = wv; waShow(wv); }
     if (t.id === 'ftm' && /^\d\d:\d\d/.test(t.value)) $('ftmv').textContent = t.value.slice(0, 5);
     if (t.id === 'ftm' && $('fmk') && !$('fmk').dataset.man && /^\d\d:\d\d$/.test(t.value)) { var qd = new Date(); qd.setHours(+t.value.slice(0, 2), +t.value.slice(3), 0, 0); fmkSet(mealOf(qd.getTime())[1]); }
     if (t.id === 'fq') { ui.fq = t.value; $('fres').innerHTML = fresHtml(); clearTimeout(fonT); fonT = setTimeout(fonSearch, 600); }
@@ -128,7 +129,7 @@
   // Zahl wischen (auch der Arena-Zähler #arn, 16 px je Schritt): ab 8 px waagerecht wird aus dem Tippen ein Ziehen; je 10 px ein Schritt (Menge: 5 g, ½ Portion oder eine Grundeinheit; Wasser: 50 ml)
   var nsw = null;
   document.addEventListener('pointerdown', function (ev) {
-    var el = ev.target.closest && ev.target.closest('#fa, #fpcn, #wa-n, #wa-v, #arn'); if (!el) return;
+    var el = ev.target.closest && ev.target.closest('#fa, #fpcn, #wa-v, #arn'); if (!el) return;
     nsw = { el: el, x: ev.clientX, on: false, wa: /^wa-/.test(el.id), ar: el.id === 'arn', v0: el.id === 'arn' ? ui.arv && ui.arv.v : /^wa-/.test(el.id) ? foodState().wa[fSd()] || 0 : ui.fpick ? ui.fpick.a : 0 };
   });
   document.addEventListener('pointermove', function (ev) {
@@ -137,14 +138,13 @@
     ev.preventDefault(); var n = Math.round(dx / 10);
     if (nsw.ar) { var ae = EXB[ui.hcur], av = nsw.v0 + Math.round(dx / 16) * (ae && ae.u === 'Sek.' ? 5 : 1); if (ui.arv && av !== ui.arv.v) { arvSet(av); buzz(3); } }
     else if (nsw.wa) {
-      var v = Math.max(0, Math.min(8000, nsw.v0 + n * 50)); if (v === nsw.v) return; nsw.v = v; buzz(3);
-      $('wa-n').textContent = fN2(v / 1000); $('wa-v').value = v; var wr = $('wa-r'); if (v > +wr.dataset.max) wr.dataset.max = Math.ceil(v / 500) * 500; wr.dataset.v = v; wr.style.setProperty('--p', (v / +wr.dataset.max).toFixed(3));
+      var v = Math.max(0, Math.min(8000, nsw.v0 + n * 50)); if (v === nsw.v) return; nsw.v = v; buzz(3); waShow(v);
     } else if (ui.fpick) {
       var it = fItem(ui.fpick.i), stp = it.dish ? 0.5 : it.pc ? it.u[0][1] : 5, a = Math.max(stp, Math.round((nsw.v0 + n * stp) * 10) / 10);
       if (a !== ui.fpick.a) { ui.fpick.a = a; if ($('fa')) $('fa').value = a; fpickUpd(); buzz(3); }
     }
   }, { passive: false });
-  function numEnd() { if (nsw && nsw.on && nsw.wa && nsw.v != null) waSet(nsw.v); nsw = null; }
+  function numEnd() { if (nsw && nsw.on && nsw.wa && nsw.v != null) { waSet(nsw.v); $('sheet').innerHTML = waHtml(); } nsw = null; }
   document.addEventListener('pointerup', numEnd);
   document.addEventListener('pointercancel', numEnd);
   document.addEventListener('change', function (ev) {

@@ -17,6 +17,7 @@
     if (tg.closest('#tabs')) sMode = 'bar';
     else if (tg.closest('#sheet .grab, #sheet .sh-h')) sMode = 'sheet';
     else if (!ui.sheet && tg.closest('.pcal2')) { sMode = 'cal'; calLock = ''; }
+    else if (!ui.sheet && tg.closest('.fds')) { sMode = 'fds'; calLock = ''; }
     else if (!ui.sheet && tg.closest('#view') && !tg.closest('input,textarea,select,.wsp,[data-noswipe]')) sMode = 'page';
   }, { passive: true });
   document.addEventListener('touchmove', function (e) {
@@ -24,9 +25,9 @@
     var t = e.touches[0];
     if (sMode === 'bar') { var el = document.elementFromPoint(t.clientX, t.clientY), b = el && el.closest ? el.closest('#tabs [data-tab]') : null; if (b && b.dataset.tab !== ui.tab) { goTab(b.dataset.tab); buzz(5); } }
     else if (sMode === 'sheet') { sheetDy = Math.max(0, t.clientY - sy); var sh = $('sheet'); sh.style.transition = 'none'; sh.style.transform = 'translateY(' + sheetDy + 'px)'; }
-    else if (sMode === 'cal') {
-      // Richtung nach 8 px festlegen; seitlich: Kalender folgt gedämpft dem Finger, Seite scrollt nicht mit
-      var cdx = t.clientX - sx, cdy = t.clientY - sy, cg = document.querySelector('.pc2-g');
+    else if (sMode === 'cal' || sMode === 'fds') {
+      // Richtung nach 8 px festlegen; seitlich: Kalender bzw. Essen-Tagesleiste folgt gedämpft dem Finger, Seite scrollt nicht mit
+      var cdx = t.clientX - sx, cdy = t.clientY - sy, cg = document.querySelector(sMode === 'cal' ? '.pc2-g' : '.fds');
       if (!calLock && (Math.abs(cdx) > 8 || Math.abs(cdy) > 8)) calLock = Math.abs(cdx) > Math.abs(cdy) ? 'x' : 'y';
       if (calLock === 'x') { e.preventDefault(); if (cg) { cg.style.transition = 'none'; cg.style.transform = 'translateX(' + cdx * 0.55 + 'px)'; cg.style.opacity = Math.max(0.4, 1 - Math.abs(cdx) / 500); } }
     }
@@ -34,10 +35,10 @@
   document.addEventListener('touchend', function (e) {
     var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy, m = sMode; sMode = '';
     if (m === 'sheet') { var sh = $('sheet'); sh.style.transition = ''; sh.style.transform = ''; if (sheetDy > 90) closeSheet(); return; }
-    if (m === 'cal') {
+    if (m === 'cal' || m === 'fds') {
       if (calLock !== 'x') return;
-      var fast = Math.abs(dx) / Math.max(1, Date.now() - st0) > 0.35, cg = document.querySelector('.pc2-g');
-      if ((Math.abs(dx) > 50 || fast) && calMove(dx < 0 ? 1 : -1)) return;
+      var fast = Math.abs(dx) / Math.max(1, Date.now() - st0) > 0.35, cg = document.querySelector(m === 'cal' ? '.pc2-g' : '.fds');
+      if ((Math.abs(dx) > 50 || fast) && (m === 'cal' ? calMove : fdsMove)(dx < 0 ? 1 : -1)) return;
       if (cg) { cg.style.transition = 'transform .25s var(--ease), opacity .25s var(--ease)'; cg.style.transform = ''; cg.style.opacity = ''; }
       return;
     }

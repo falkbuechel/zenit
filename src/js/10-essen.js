@@ -299,18 +299,37 @@
     // Erwarteter Anteil des Tagesziels: vergangene Tage 1, heute von 8 bis 20 Uhr linear 0 → 1
     var t = dayIdx(Date.now()); if (di < t) return 1; var n = new Date(); return Math.max(0, Math.min(1, (n.getHours() + n.getMinutes() / 60 - 8) / 12));
   }
-  function fSd() { var t = dayIdx(Date.now()); return ui.fsd != null && ui.fsd <= t && ui.fsd > t - 7 ? ui.fsd : t; }
-  function waGoal(di) { var kg = wAt(di) || 75; return Math.max(1500, Math.min(4000, Math.round(kg * 35 / 250) * 250)); }
-  // Wasser-Regler: Antippen oder Ziehen auf dem Balken setzt den Wert in 50-ml-Schritten, Loslassen speichert
-  var wsl = null;
-  function wslSet(x) {
-    var r = wsl.getBoundingClientRect(), mx = +wsl.dataset.max, v = Math.round(Math.max(0, Math.min(1, (x - r.left) / r.width)) * mx / 50) * 50;
-    if (v === +wsl.dataset.v) return;
-    wsl.dataset.v = v; wsl.style.setProperty('--p', (v / mx).toFixed(3)); buzz(3);
-    $('wa-n').textContent = fN2(v / 1000); $('wa-v').value = v;
+  function fSd() { var t = dayIdx(Date.now()); return ui.fsd != null && ui.fsd <= t && ui.fsd > t - 366 ? ui.fsd : t; }
+  function fMon(di) { var q = new Date(di * 864e5); return q.toLocaleDateString('de-DE', q.getUTCFullYear() === new Date().getFullYear() ? { month: 'long', timeZone: 'UTC' } : { month: 'long', year: 'numeric', timeZone: 'UTC' }); }
+  function fdsMove(dir) {
+    // Tagesleiste wischen: 7 Tage zurück/vor (höchstens bis heute, ein Jahr zurück); neuer Monat wird kurz eingeblendet
+    var t = dayIdx(Date.now()), sd = fSd(), pg = Math.floor((t - sd) / 7), n = sd + dir * 7;
+    if ((dir > 0 && !pg) || n <= t - 366) return false;
+    n = Math.min(t, n); var e0 = t - pg * 7, e1 = t - (pg - dir) * 7, a = dir < 0 ? e0 - 6 : e0, b = dir < 0 ? e1 - 6 : e1;
+    if (fMon(a) !== fMon(b)) ui.fmon = fMon(b);
+    ui.fsd = n; ui.fdir = dir; ui.fresh = false; buzz(4); render(); return true;
   }
-  function wslEnd() { if (!wsl) return; var v = +wsl.dataset.v; wsl = null; waSet(v); }
-  document.addEventListener('pointerdown', function (ev) { var el = ev.target.closest && ev.target.closest('.wsl:not([data-ro])'); if (!el) return; wsl = el; wslSet(ev.clientX); });
+  function waGoal(di) { var kg = wAt(di) || 75; return Math.max(1500, Math.min(4000, Math.round(kg * 35 / 250) * 250)); }
+  // Wasser-Regler in 50-ml-Schritten, Loslassen speichert. Fenster (Skala): Antippen/Ziehen setzt den Wert direkt.
+  // Bilanz (data-rel): nur die Bewegung zählt, so geht weiteres Ziehen auch über das Ziel hinaus
+  var wsl = null;
+  function waShow(v) {
+    // Wasser-Wert live in Zahl, Feld und Fenster-Regler zeigen (ohne Speichern)
+    document.querySelectorAll('[data-wav]').forEach(function (e) { e.textContent = fN2(v / 1000); });
+    var f = $('wa-v'), r = $('wa-r'); if (f && f !== document.activeElement) f.value = fN2(v / 1000);
+    if (r) { r.firstElementChild.style.setProperty('--p', Math.min(1, v / +r.dataset.max).toFixed(3)); r.classList.toggle('over', v > +r.dataset.lim); }
+  }
+  function wslSet(x) {
+    var r = wsl.el.getBoundingClientRect(), mx = +wsl.el.dataset.max;
+    var v = wsl.rel ? wsl.v0 + Math.round((x - wsl.x) / r.width * mx / 50) * 50 : Math.round(Math.max(0, Math.min(1, (x - r.left) / r.width)) * mx / 50) * 50;
+    v = Math.max(0, Math.min(8000, v)); if (v === wsl.v) return;
+    wsl.v = v; wsl.el.firstElementChild.style.setProperty('--p', Math.min(1, v / mx).toFixed(3)); buzz(3); waShow(v);
+  }
+  function wslEnd() { if (!wsl) return; var w = wsl; wsl = null; if (w.v !== w.v0) waSet(w.v); if (ui.sheet && ui.sheet.wa) $('sheet').innerHTML = waHtml(); }
+  document.addEventListener('pointerdown', function (ev) {
+    var el = ev.target.closest && ev.target.closest('.wsl'); if (!el) return;
+    wsl = { el: el, x: ev.clientX, rel: !!el.dataset.rel, v0: +el.dataset.v, v: +el.dataset.v }; if (!wsl.rel) wslSet(ev.clientX);
+  });
   document.addEventListener('pointermove', function (ev) { if (wsl) wslSet(ev.clientX); });
   document.addEventListener('pointerup', wslEnd);
   document.addEventListener('pointercancel', wslEnd);
@@ -320,29 +339,34 @@
     if (v) fs.wa[wd] = v; else delete fs.wa[wd]; persist(); ui.fresh = false; render(); return v;
   }
   function waHtml() {
-    // Wasser genau: Regler, Chips addieren, Stepper ±50 ml, Feld setzt den Wert
-    var sd = fSd(), wa = foodState().wa[sd] || 0, wg = waGoal(sd);
-    return shHead('drop', 'Wasser', (sd === dayIdx(Date.now()) ? 'Heute' : fmtDayL(sd)) + ' · Ziel ' + fN(wg / 1000) + ' l') +
-      '<div class="wab"><b id="wa-n">' + fN2(wa / 1000) + '</b><span>/ ' + fN(wg / 1000) + ' l</span><i id="wa-r" class="wsl" data-max="' + Math.max(wg, Math.ceil(wa / 500) * 500) + '" data-v="' + wa + '" style="--p:' + Math.min(1, wa / Math.max(wg, Math.ceil(wa / 500) * 500)).toFixed(3) + '" role="slider" aria-label="Wasser" data-noswipe="1"><i></i></i></div>' +
-      '<div class="fpc">' + [150, 250, 330, 500, 750].map(function (m) { return '<button data-fwa="' + m + '">+' + m + ' ml</button>'; }).join('') + '</div>' +
-      '<div class="fstep"><button class="sb" data-fwa="-50" aria-label="50 ml weniger">' + ic('minus') + '</button><label><input id="wa-v" type="number" inputmode="numeric" min="0" step="50" value="' + wa + '" aria-label="Wasser in ml"><span>ml</span></label><button class="sb" data-fwa="50" aria-label="50 ml mehr">' + ic('plus') + '</button></div>';
+    // Wasser genau: Zahl (tippen oder wischen) mit ±50 ml, breiter Regler mit Skala (Striche je 250 ml, Ziel-Marke, rot über dem Höchstwert), Schnellwerte
+    var sd = fSd(), wa = foodState().wa[sd] || 0, wg = waGoal(sd), lim = wg * FLIM.wa, mx = Math.max(Math.ceil(lim / 500) * 500, Math.ceil(wa / 500) * 500), lb = '';
+    for (var l = 0; l * 1000 <= mx; l++) lb += '<span style="--x:' + (l * 1000 / mx).toFixed(4) + '">' + l + '</span>';
+    return shHead('drop', 'Wasser', (sd === dayIdx(Date.now()) ? 'Heute' : fmtDayL(sd))) +
+      '<div class="wahd"><button class="sb" data-fwa="-50" aria-label="50 ml weniger"' + (wa ? '' : ' disabled') + '>' + ic('minus') + '</button>' +
+      '<label class="wnum"><span><input id="wa-v" type="text" inputmode="decimal" value="' + fN2(wa / 1000) + '" aria-label="Wasser in Litern"><em>l</em></span><small>von ' + fN(wg / 1000) + ' l</small></label>' +
+      '<button class="sb" data-fwa="50" aria-label="50 ml mehr">' + ic('plus') + '</button></div>' +
+      '<div class="wsc" data-noswipe="1"><i id="wa-r" class="wsl wbig' + (wa > lim ? ' over' : '') + '" data-max="' + mx + '" data-lim="' + lim + '" data-v="' + wa + '" role="slider" aria-label="Wasser">' +
+      '<i style="--p:' + Math.min(1, wa / mx).toFixed(3) + '"></i><em style="--x:' + (wg / mx).toFixed(4) + '"></em></i><div class="wsx" style="--n:' + mx / 250 + '">' + lb + '</div></div>' +
+      '<div class="wqk">' + [['glass', 250], ['bottle', 500], ['bottle', 750]].map(function (q) { return '<button data-fwa="' + q[1] + '">' + ic(q[0]) + '<b>+' + q[1] + '</b></button>'; }).join('') +
+      '<button data-fwaz="1" aria-label="Auf 0 setzen"' + (wa ? '' : ' disabled') + '>' + ic('undo') + '<b>0</b></button></div>';
   }
   function viewFood(d, now) {
     var today = dayIdx(now), sd = fSd(), ex = fExp(sd), g = foodGoal(sd), s = foodSum(sd), tl = fTiles(), kp = s.k / g.k, wa = foodState().wa[sd] || 0, wg = waGoal(sd);
     ui.ftiles = tl;
     var h = '<div class="fd-h rise" style="--i:0"><h2>Essen</h2><button class="x" data-fgoal="1" aria-label="Ziele und Rechner">' + ic('calc') + '</button></div>';
-    // Tagesleiste: 7 Tage, Balken = kcal vom Ziel; grün = Protein (fast) erreicht und kcal im Rahmen, orange = deutlich zu wenig, rot = über 110 %
-    var ds = ''; for (var i = 6; i >= 0; i--) { var di = today - i, sm = foodSum(di), gd = foodGoal(di), kq = sm.k / gd.k, dc = !sm.items.length ? '' : kq > 1.1 ? ' over' : sm.p >= gd.p * 0.9 && kq >= 0.85 ? ' ok' : di < today && (sm.p < gd.p * 0.6 || kq < 0.6) ? ' low' : '';
+    // Tagesleiste: 7 Tage bis heute (wischen = 7 Tage zurück/vor), Balken = kcal vom Ziel; grün = Protein (fast) erreicht und kcal im Rahmen, orange = deutlich zu wenig, rot = über 110 %
+    var ds = '', pe = today - Math.floor((today - sd) / 7) * 7; for (var i = 6; i >= 0; i--) { var di = pe - i, sm = foodSum(di), gd = foodGoal(di), kq = sm.k / gd.k, dc = !sm.items.length ? '' : kq > 1.1 ? ' over' : sm.p >= gd.p * 0.9 && kq >= 0.85 ? ' ok' : di < today && (sm.p < gd.p * 0.6 || kq < 0.6) ? ' low' : '';
       ds += '<button class="fdd' + (di === sd ? ' sel' : '') + (di === today ? ' today' : '') + dc + '" data-fsd="' + di + '" aria-label="' + esc(fmtDayL(di)) + '"><small>' + WDN[wdOf(di)].slice(0, 2) + '</small><b>' + new Date(di * 864e5).getUTCDate() + '</b><i style="--p:' + Math.min(1, kq).toFixed(2) + '"></i></button>'; }
-    h += '<nav class="fds rise" style="--i:0">' + ds + '</nav>';
+    h += '<div class="fdw rise" style="--i:0">' + (ui.fmon ? '<b class="fmo">' + esc(ui.fmon) + '</b>' : '') + '<nav class="fds' + (ui.fdir ? (ui.fdir > 0 ? ' in-r' : ' in-l') : '') + '">' + ds + '</nav></div>';
+    ui.fmon = ''; ui.fdir = 0;
     // Bilanz: kcal groß mit Balken, darunter Protein, Fett, Kohlenhydrate, Ballaststoffe, Zucker
     h += '<section class="fbal rise" style="--i:1"><div class="fbk' + (kp > FLIM.k ? ' over' : kp >= 0.9 ? ' hit' : ex >= 0.3 && kp < ex * 0.6 ? ' low' : '') + fAnim('k', kp > FLIM.k ? 'over' : kp >= 0.9 ? 'hit' : '', s.k) + '" data-fnut="k" role="button" tabindex="0"><b data-n="' + s.k + '" data-nk="fkv">' + s.k + '</b><span>/ ' + g.k + ' kcal</span>' +
       (g.tb ? '<span class="ftb">' + ic('dumb') + '+' + g.tb + '</span>' : '') + '<em>' + (g.k - s.k >= 0 ? (g.k - s.k) + ' offen' : (s.k - g.k) + ' drüber') + '</em><i class="fbt"><i' + pv('fkb', Math.min(1, kp)) + '></i>' + fOv(kp, FLIM.k) + '</i></div>' +
       '<div class="fbm">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return fbar(k, s[k], g[k], ex); }).join('') + '</div>' +
       '<div class="fwa' + (wa > wg * FLIM.wa ? ' over' : wa >= wg ? ' hit' : '') + fAnim('wa', wa > wg * FLIM.wa ? 'over' : wa >= wg ? 'hit' : '', wa) + '">' + ic('drop') +
-      '<i class="wsl" data-ro="1"><i' + pv('fwa', Math.min(1, wa / wg)) + '></i>' + fOv(wa / wg, FLIM.wa) + '</i>' +
-      '<button class="fwv" data-fwao="1" aria-label="Wasser genau eintragen"><b>' + fN2(wa / 1000) + '<small>/' + fN(wg / 1000) + ' l</small></b></button>' +
-      '<button class="fwq" data-fwa="250" aria-label="Ein Glas, 250 ml">' + ic('glass') + '</button><button class="fwq" data-fwa="500" aria-label="Eine Flasche, 500 ml">' + ic('bottle') + '</button>' +
+      '<i class="wsl" data-rel="1" data-max="' + wg + '" data-v="' + wa + '" role="slider" aria-label="Wasser, ziehen" data-noswipe="1"><i' + pv('fwa', Math.min(1, wa / wg)) + '></i>' + fOv(wa / wg, FLIM.wa) + '</i>' +
+      '<button class="fwv" data-fwao="1" aria-label="Wasser genau eintragen"><b><span data-wav="1">' + fN2(wa / 1000) + '</span><small>/' + fN(wg / 1000) + ' l</small></b></button>' +
       '</div></section>';
     // Schnell-Kacheln
     h += '<section class="ftl rise" style="--i:2" data-noswipe="1">' + tl.map(function (x, j) {
@@ -809,9 +833,9 @@
     if ((el = t.closest('[data-fscan]'))) { if (el.dataset.fscan === 'own') { ui.odraft = ownDraft(); ui.odraft.id = ui.sheet.fown; openScan('own'); } else openScan(); return true; }
     if ((el = t.closest('[data-oml]'))) { ui.sheet.ml = +el.dataset.oml; document.querySelectorAll('[data-oml]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === el)); }); return true; }
     if ((el = t.closest('[data-fsd]'))) { ui.fsd = +el.dataset.fsd; ui.fresh = false; render(); return true; }
-    if ((el = t.closest('[data-fwa]'))) {
-      var wd = fSd(), rc = el.getBoundingClientRect(); st.wa[wd] = Math.max(0, Math.min(8000, (st.wa[wd] || 0) + +el.dataset.fwa)); if (!st.wa[wd]) delete st.wa[wd];
-      persist(); buzz(6); ui.fresh = false; render(); if (ui.sheet && ui.sheet.wa) $('sheet').innerHTML = waHtml(); else if (+el.dataset.fwa > 0) floaty('+' + el.dataset.fwa + ' ml', rc);
+    if ((el = t.closest('[data-fwa], [data-fwaz]'))) {
+      var rc = el.getBoundingClientRect(), wq = +el.dataset.fwa || 0; waSet(el.dataset.fwaz ? 0 : (st.wa[fSd()] || 0) + wq); buzz(6);
+      if (ui.sheet && ui.sheet.wa) $('sheet').innerHTML = waHtml(); if (wq > 50) floaty('+' + wq + ' ml', rc);
       return true;
     }
     if ((el = t.closest('[data-fnut]'))) { openNut(el.dataset.fnut); return true; }

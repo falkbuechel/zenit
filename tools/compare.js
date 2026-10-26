@@ -7,16 +7,17 @@ const fs = require('fs'), path = require('path'), { execSync } = require('child_
 const ROOT = path.join(__dirname, '..'), REF = process.argv[2] || 'HEAD';
 const OUT = path.join(__dirname, 'out', 'compare'), OLD = path.join(__dirname, 'out', 'ref');
 fs.rmSync(OUT, { recursive: true, force: true }); fs.mkdirSync(OUT, { recursive: true });
-// Alten Stand bauen: src aus Git, build.py und public von dort
-fs.rmSync(OLD, { recursive: true, force: true }); fs.mkdirSync(path.join(OLD, 'src'), { recursive: true });
-const show = f => execSync('git show ' + REF + ':' + f, { cwd: ROOT, maxBuffer: 1 << 26 });
-fs.writeFileSync(path.join(OLD, 'src', 'zenit.html'), show('src/zenit.html')); fs.writeFileSync(path.join(OLD, 'build.py'), show('build.py'));
-fs.cpSync(path.join(ROOT, 'public'), path.join(OLD, 'public'), { recursive: true });
+// Alten Stand bauen: src/, build.py und public/ aus Git (funktioniert für die alte Einzeldatei und die aufgeteilte Quelle)
+fs.rmSync(OLD, { recursive: true, force: true }); fs.mkdirSync(OLD, { recursive: true });
+fs.writeFileSync(path.join(OLD, 'a.tar'), execSync('git archive --format=tar ' + REF + ' src build.py public', { cwd: ROOT, maxBuffer: 1 << 28 }));
+execSync('tar -xf a.tar', { cwd: OLD });
 execSync('python build.py', { cwd: OLD });
 const FIX = `(() => { const T = new Date('2026-10-21T14:00:00').getTime(), D = Date;
   globalThis.Date = class extends D { constructor(...a) { super(...(a.length ? a : [T])); } static now() { return T; } }; Math.random = () => 0.5; })();`;
 const NOANIM = '*, *::before, *::after { animation: none !important; transition: none !important; }';
-const VIEWS = [['heute'], ['food'], ['fort'], ['profil'], ['tage'], ['tage', '[data-pchg]'], ['tage', '[data-pman]'], ['fort', '[data-seg="ex"]'], ['fort', '[data-seg="pf"]'], ['food', '[data-seg="kp"]']];
+// Ansichten: Tab, optional ein Klick (Bereich, Fenster). Fenster werden danach geschlossen
+const VIEWS = [['heute'], ['heute', '[data-arena]'], ['food'], ['food', '[data-ftile="0"]'], ['fort'], ['fort', '[data-col="mu"]'], ['fort', '[data-col="sk"]'], ['fort', '[data-cardo]'],
+  ['profil'], ['profil', '[data-pstat="tr"]'], ['profil', '[data-pstat="er"]'], ['tage'], ['tage', '[data-pchg]'], ['tage', '[data-pman]']];
 (async () => {
   const b = await chromium.launch(), shots = {};
   for (const [lab, file] of [['alt', path.join(OLD, 'dist', 'index.html')], ['neu', path.join(ROOT, 'dist', 'index.html')]]) {
@@ -30,10 +31,12 @@ const VIEWS = [['heute'], ['food'], ['fort'], ['profil'], ['tage'], ['tage', '[d
         await p.click(`#tabs [data-tab="${t}"]`); await p.waitForTimeout(900);
         if (extra) { await p.click(extra, { force: true }).catch(() => {}); await p.waitForTimeout(400); }
         await p.addStyleTag({ content: NOANIM }); await p.addStyleTag({ content: 'html, body { height: auto !important; overflow: visible !important; } #app { position: static !important; overflow: visible !important; }' }); await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(150);
-        const key = cs + '-' + t + (extra ? '-' + extra.replace(/[^a-z]/g, '') : '');
+        const key = cs + '-' + t + (extra ? '-' + extra.replace(/[^a-z0-9]/g, '') : '');
         (shots[key] = shots[key] || {})[lab] = (await p.screenshot({ fullPage: true })).toString('base64');
         if (extra === '[data-pman]') await p.click('[data-pmanx]').catch(() => {});
         if (extra === '[data-pchg]') await p.click('[data-pchg]').catch(() => {});
+        if (extra === '[data-arena]') await p.click('[data-arx]').catch(() => {});
+        await p.click('[data-sheet-close]', { timeout: 500 }).catch(() => {});
       }
       await ctx.close();
     }

@@ -13,7 +13,7 @@
 ## Dateien
 - Bearbeiten: `src/` (Gerüst, `css/`, `js/` nach Bereichen, siehe Aufbau), `public/`, `build.py`, `tools/`. `dist/` ist Build-Ausgabe, nie von Hand.
 - Nur die Dateien des betroffenen Bereichs lesen; Funktionen/Klassen per grep über `src/` finden statt ganze Dateien zu lesen.
-- `docs/Notes.md` = Falks Notizbuch: lesen ja, nie bearbeiten. `CLAUDE.md`, `README.md`, `docs/DEVELOPMENT.md` nur auf Wunsch umbauen (DEVELOPMENT.md auch bei neuen Datenformen).
+- `docs/Notes.md` = Falks Notizbuch: lesen ja, bearbeiten nur auf ausdrückliche Bitte. `CLAUDE.md`, `README.md`, `docs/DEVELOPMENT.md` nur auf Wunsch umbauen (DEVELOPMENT.md auch bei neuen Datenformen).
 
 ## Code-Regeln
 - `<!--PWA-->` nicht entfernen (Head kommt aus `build.py`). Die Datei läuft auch als Claude-Artifact (`window.claude`).

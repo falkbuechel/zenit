@@ -15,6 +15,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-26 – Quelle nach Bereichen aufgeteilt, CSS aufgeräumt, Tester-Agent
+- `src/zenit.html` (5200 Zeilen) → `src/index.html` (Gerüst) + `src/css/` (7 Bereichsdateien) + `src/js/` (15 Abschnitte der IIFE, Originalreihenfolge). `build.py` setzt zusammen (`assemble()`), der JS-Teil war byte-gleich zum alten Stand.
+- `check.py` arbeitet auf der zusammengesetzten Quelle, meldet Fehler als Datei:Zeile und prüft neu doppelte CSS-Selektoren.
+- CSS: 58 Selektoren des alten Serie-Blocks entfernt (hero, rw, chase, ringw, week …), 22 doppelte Selektoren in die erste Regel zusammengeführt (spätere Werte gewinnen), dann nach Bereichen verteilt; globale Media-Queries in `90-medien.css` (müssen zuletzt kommen). 6 KB kleiner.
+- `compare.js` baut den alten Stand per `git archive` (funktioniert für alte und neue Struktur) und vergleicht jetzt 17 Ansichten × hell/dunkel (Arena, Muskeln, Skilltree, Karte, Statistik, Suche, Wasser, Bergpfad dazu). Ergebnis jeder Stufe: Alles gleich.
+- Agent `tester` (Haiku): führt check/smoke/compare aus und meldet nur Fehler, damit lange Ausgaben nicht im Hauptgespräch landen.
+
 ### 2026-10-26 – Claude-Code-Workflow: Hook, Rechte, /check, /handoff, Reviewer
 - Hook nach jedem Edit/Write an `src/`/`public/`: `tools/hook-check.py` → `check.py --fast` (Syntax, Duplikate, Manifest-JSON), still bei Erfolg, Exit 2 mit kurzer Meldung bei Fehler.
 - `.claude/settings.json`: zusätzlich erlaubt (compare, grep, git show/branch), gesperrt: force-push, `reset --hard`, `rm -rf`, `.env*`/Backup-Dateien lesen, `Notes.md`/`dist/` bearbeiten.

@@ -4,7 +4,7 @@ description: Prüft den aktuellen git diff (nur lesend) auf Bugs, kaputte Aufruf
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
-Du prüfst Änderungen an Zenit, einer Single-File-PWA (`src/zenit.html`, ES5-Stil, IIFE, `render()` baut `#view` per innerHTML neu, ein Klick-Handler am `document` mit `data-*`-Attributen). Daten nur in localStorage, Laden über `clean*`-Funktionen.
+Du prüfst Änderungen an Zenit, einer PWA (Quelle in `src/`: `index.html`, `css/`, `js/` = Abschnitte EINER IIFE, ES5-Stil; `render()` baut `#view` per innerHTML neu, ein Klick-Handler am `document` mit `data-*`-Attributen). Daten nur in localStorage, Laden über `clean*`-Funktionen.
 
 Vorgehen (nichts ändern, nur lesen; Bash nur für `git diff`/`git log`/`grep`):
 1. `git diff HEAD` (bzw. den genannten Bereich) lesen.

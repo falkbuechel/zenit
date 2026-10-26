@@ -1,29 +1,44 @@
 # Zenit – Entwicklung
 
 ## 1. Überblick
-Home-Workout-Game als PWA für das iPhone, nur für Falk. Eine einzige Quelldatei, kein Framework, kein Server. Daten liegen nur lokal im Browser (localStorage), Sicherung über Backup-Datei.
+Home-Workout-Game als PWA für das iPhone, nur für Falk. Quelle in Bereiche aufgeteilt (src/), Build zu einer Seite, kein Framework, kein Server. Daten liegen nur lokal im Browser (localStorage), Sicherung über Backup-Datei.
 
 ## 2. Aufbau
 ```
-src/zenit.html     Quelle, EINE Datei (CSS + HTML + IIFE-Script, ~5200 Zeilen)
-public/            manifest, Service Worker (sw.js, Netz zuerst, Cache offline), Icons
-build.py           python build.py -> dist/index.html (PWA-Head, Wrapper, window.ZENIT_V) + Kopie von public/*
-dist/              Build-Ausgabe zum Hosten (gitignored)
+src/                  Quelle; build.py setzt sie zu EINER Seite zusammen
+  index.html          Gerüst: Head-Platzhalter <!--PWA-->, feste Elemente (Leisten, Sheet, Toast, Dialog), <!--CSS-->, <!--JS--> in der IIFE
+  css/                nach Bereichen, Reihenfolge = Dateiname
+    00-basis.css      Tokens (Farben, Schriften), Grundlayout, iOS-Eigenheiten, Kopf, Navigation, Sheet, Rückmeldung, gemeinsame Bausteine, Level-up
+    10-heute.css 20-plan.css 30-essen.css 40-sammlung.css 50-profil.css
+    90-medien.css     globale Media-Queries, müssen zuletzt kommen
+  js/                 Abschnitte EINER Funktion (gemeinsamer Gültigkeitsbereich), laufen in Dateinamen-Reihenfolge
+    01-daten.js       Übungen (EX), Gruppen, Konstanten        09-training.js  Satz-Fenster, Stoppuhr, Gesamtuhr, Pause, Rückmeldung/Effekte
+    02-karten.js      Karten, Muskeln, derive()                10-essen.js     Essen-Tab, Lebensmittel, Rechner, Open Food Facts
+    03-speicher.js    Zustand, localStorage, clean*            11-plan.js      Tage-Tab, Editor, Wochenpläne
+    04-demo.js        Testdaten                                12-sammlung.js  Verlauf, Sammlung (Karten, Muskeln, Skilltree), Profil
+    05-hilfen.js      Hilfsfunktionen, Icons (P, ic)           13-statistik.js Statistik, Diagramme
+    06-rendern.js     render(), Tabs, Kopf                     14-ereignisse.js Klick-Handler am document
+    07-heute.js       Heute, Arena, Bergpfad                   15-start.js     Wischen zwischen Tabs, Start
+    08-plan-daten.js  Plan-Hilfen (GORDER, Presets)
+public/               manifest, Service Worker (sw.js, Netz zuerst, Cache offline), Icons
+build.py              python build.py -> dist/index.html (eine Datei: PWA-Head, CSS, JS, window.ZENIT_V) + public/*; assemble() auch für check.py
+dist/                 Build-Ausgabe zum Hosten (gitignored); dist/index.html läuft auch als Claude-Artifact
 tools/
-  check.py         Syntax (node --check), doppelte Namen und Klick-Attribute, Manifest-JSON, Build; Exit 1 bei Fehler. --fast: ohne Build, still
-  hook-check.py    Claude-Hook nach Edit/Write: check.py --fast für src/, public/
-  smoke.js         Rauchtest: 5 Demo-Szenarien x 5 Tabs + Ansichten/Dialoge (Plan: Tag ändern, Planer, Editor), Screenshots -> tools/out/
-  compare.js       Pixelvergleich aller Ansichten gegen einen Git-Stand (für Aufräumen: alles muss gleich bleiben)
-  make-icons.js    Icons aus SVG -> public/ (Playwright)
+  check.py            Syntax, doppelte Namen/Klick-Attribute/CSS-Selektoren, Manifest-JSON, Build; Fehler als Datei:Zeile. --fast: ohne Build, still
+  hook-check.py       Claude-Hook nach Edit/Write an src/ oder public/: check.py --fast
+  smoke.js            Rauchtest: 5 Demo-Szenarien x 5 Tabs + Ansichten/Dialoge, Screenshots -> tools/out/
+  compare.js          Pixelvergleich vieler Ansichten (hell/dunkel) gegen einen Git-Stand: beim Aufräumen muss alles gleich bleiben
+  make-icons.js       Icons aus SVG -> public/ (Playwright)
 .github/workflows/pages.yml   Push auf main -> check + smoke -> GitHub Pages
 .claude/settings.json         Rechte (erlaubt/gesperrt) + Hook
 .claude/commands/             /check (alle Prüfungen), /handoff (Stand ins Log vor /clear)
-.claude/agents/reviewer.md    liest den Diff, meldet Bugs/Aufrufstellen/iOS/Datenverlust
+.claude/agents/               reviewer (Sonnet, prüft den Diff), tester (Haiku, führt Prüfungen aus, meldet nur Fehler)
 .claude/skills/               Design-Skills von Emil Kowalski (MIT), Quelle in .claude/skills/README.md
-docs/              DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
+docs/                 DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 ```
-- `<!--PWA-->` in zenit.html wird beim Build entfernt, der Head kommt aus `build.py`.
-- Die gleiche Datei läuft auch als Claude-Artifact (dort `window.claude` mit db/downloads).
+- `<!--PWA-->` wird beim Build entfernt, der Head kommt aus `build.py`.
+- Neue JS-Funktionen in die passende Datei; Code, der beim Laden läuft (z. B. `GORDER.forEach`), braucht alles Vorherige → Reihenfolge beachten.
+- CSS: Regel in die Datei des Bereichs; Media-Queries direkt hinter ihre Grundregeln in derselben Datei, globale in `90-medien.css`.
 - Hosting: GitHub Pages https://falkbuechel.github.io/zenit/ (öffentliches Repo). Adresse nicht wechseln, localStorage hängt an ihr.
 - Version: `build.py` setzt `window.ZENIT_V` (Commit · Datum, `+` = lokale ungesicherte Änderungen), sichtbar unten im Zahnrad-Menü.
 - Service-Worker-Cache heißt `zenit-v2` (`public/sw.js`). Netz zuerst, daher kein Versions-Bump für neue Builds nötig; nur erhöhen, wenn sich die Dateiliste `FILES` ändert.

@@ -16,7 +16,7 @@ const FIX = `(() => { const T = new Date('2026-10-21T14:00:00').getTime(), D = D
   globalThis.Date = class extends D { constructor(...a) { super(...(a.length ? a : [T])); } static now() { return T; } }; Math.random = () => 0.5; })();`;
 const NOANIM = '*, *::before, *::after { animation: none !important; transition: none !important; }';
 // Ansichten: Tab, optional ein Klick (Bereich, Fenster). Fenster werden danach geschlossen
-const VIEWS = [['heute'], ['heute', '[data-arena]'], ['food'], ['food', '[data-ftile="0"]'], ['fort'], ['fort', '[data-col="mu"]'], ['fort', '[data-col="sk"]'], ['fort', '[data-cardo]'],
+const VIEWS = [['heute'], ['heute', '[data-arena]'], ['food'], ['food', '[data-ftile="0"]'], ['food', '[data-fsearch]'], ['food', '[data-fwao]'], ['heute', '[data-zoom]'], ['fort'], ['fort', '[data-col="mu"]'], ['fort', '[data-col="sk"]'], ['fort', '[data-cardo]'],
   ['profil'], ['profil', '[data-pstat="tr"]'], ['profil', '[data-pstat="er"]'], ['tage'], ['tage', '[data-pchg]'], ['tage', '[data-pman]']];
 (async () => {
   const b = await chromium.launch(), shots = {};

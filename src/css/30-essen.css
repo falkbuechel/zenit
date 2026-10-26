@@ -62,15 +62,15 @@
 
 /* Essen: Bilanz (kcal + 5 Mini-Balken), Schnell-Kacheln, Suche → Menge, Rechner */
 .fbal { display: grid; gap: 12px; margin-top: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); }
-.fbk { --fc: var(--g-push); cursor: pointer; display: grid; grid-template-columns: auto auto auto 1fr; align-items: baseline; gap: 8px 6px; }
+/* Kopf: gegessen groß, Ziel klein, rechts im Fokus was noch offen ist (bzw. drüber) */
+.fbk { --fc: var(--g-push); cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 8px 6px; }
 .fbk > b { font-family: var(--f-display); font-weight: 900; font-size: 40px; line-height: .9; }
 .fbk > span { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
-.fbk > .ftb { display: inline-flex; align-items: center; gap: 2px; color: var(--ac); }
-.ftb .ic { width: 13px; height: 13px; }
-.fbk > em { justify-self: end; font-style: normal; font-size: 12px; font-weight: 700; color: var(--ink2); }
+.fbk > em { display: grid; justify-items: end; font-style: normal; font-size: 11px; font-weight: 700; line-height: 1.1; color: var(--ink3); }
+.fbk > em b { font-family: var(--f-display); font-size: 26px; font-weight: 900; color: var(--ink); }
 .fbk > .fbt { grid-column: 1 / -1; height: 8px; }
-.fbk.hit > em { color: var(--ac); }
-.fbk.over > em { color: var(--danger); }
+.fbk.hit > em, .fbk.hit > em b { color: var(--ac); }
+.fbk.over > em, .fbk.over > em b { color: var(--danger); }
 .fbt { position: relative; display: block; height: 6px; border-radius: 99px; background: var(--s3); overflow: hidden; }
 .fbt > i { position: relative; display: block; overflow: hidden; width: calc(var(--p, 0) * 100%); height: 100%; border-radius: inherit; background: var(--fc, var(--g-push)); transition: width .6s var(--ease); }
 /* Verlauf: blass am Anfang, volle Farbe in der Mitte, dunkel und satt an der Spitze */
@@ -124,7 +124,9 @@
 .fti em { margin-left: 3px; font-family: var(--f-mono); font-style: normal; font-size: 10px; font-weight: 600; color: var(--ink3); }
 .fti.done { animation: ftok .6s var(--ease); }
 .fti, .fcpi { transition: transform .2s var(--ease), box-shadow .15s, opacity .16s; }
-.fti.arm { box-shadow: 0 0 0 2px var(--ac); }
+.fti.arm { position: relative; z-index: 5; box-shadow: 0 0 0 2px var(--ac), 0 12px 24px -10px rgba(0, 0, 0, .45); }
+/* Ziel beim Hochziehen eines Vorschlags: die Mahlzeit unter dem Finger leuchtet */
+.fdl .drop { outline: 3px solid var(--ac); outline-offset: 2px; }
 .fcpi.arm { box-shadow: 0 0 0 2px var(--danger); }
 .fcpi.gone { opacity: 0; transform: translateY(60px) !important; }
 @keyframes ftok { 0% { background: color-mix(in srgb, var(--ac) 30%, var(--s1)); transform: scale(.96); } }
@@ -143,21 +145,30 @@
 .fdck small { margin-left: 3px; font-family: var(--f-mono); font-size: 10px; font-weight: 600; color: var(--ink3); }
 .fdce { position: absolute; top: 4px; right: 4px; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 10px; background: transparent; color: var(--ink3); }
 .fdce .ic { width: 16px; height: 16px; }
-/* Makro-Leiste: Protein/Fett/Kohlenhydrate als Anteil an den kcal */
-.fmx { display: flex; gap: 1px; height: 4px; overflow: hidden; border-radius: 2px; background: var(--s3); font-style: normal; }
-.fmx i { background: var(--nc); }
-/* Suche „Meins“: drei Aktionskacheln */
-.fmy { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 6px; }
-.fmy button { display: grid; justify-items: center; gap: 4px; padding: 12px 4px 10px; border: 1px dashed color-mix(in srgb, var(--ac) 50%, var(--line)); border-radius: 14px; background: color-mix(in srgb, var(--ac) 8%, var(--s1)); color: var(--ink); font: inherit; }
-.fmy .ic { width: 20px; height: 20px; color: var(--ac); }
-.fmy b { font-size: 12px; }
-/* Suchzeile rechts: kcal groß, Protein klein darunter */
+/* Werte je 100 g (Suche) bzw. je Portion (Gericht): klein in festen Spalten mit Nährwert-Icons */
+.f100 { display: flex; align-items: center; gap: 0; margin-top: 2px; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
+.f100 i { display: inline-flex; align-items: center; gap: 2px; width: 46px; font-style: normal; color: var(--nc); }
+.f100 .ic { flex: none; width: 12px; height: 12px; }
+.f100 em { font-style: normal; font-size: 10px; }
+/* Suchzeile rechts: kcal der üblichen Menge, darunter die Menge */
 .fsk { display: grid; justify-items: end; flex: none; font-style: normal; }
 .fsk b { font-family: var(--f-mono); font-size: 14px; }
 .fsk b small { margin-left: 2px; font-size: 10px; font-weight: 500; color: var(--ink3); }
-.fsk > small { display: flex; align-items: center; gap: 2px; font-family: var(--f-mono); font-size: 11px; color: var(--nc); }
-.fsk .ic { width: 12px; height: 12px; }
-.fsi .fmx { margin-top: 5px; max-width: 160px; }
+.fsk > small { font-size: 11px; color: var(--ink3); }
+/* Kategorien alphabetisch in zwei Spalten */
+.fcl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.fcl button { display: flex; align-items: center; gap: 8px; min-width: 0; min-height: 46px; padding: 0 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--s1); color: var(--ink); font: inherit; text-align: left; }
+.fcl .ic { flex: none; width: 18px; height: 18px; color: var(--ac); }
+.fcl b { flex: 1; min-width: 0; overflow: hidden; font-size: 12.5px; line-height: 1.15; }
+.fcl small { flex: none; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
+/* Gerichte-Menü: Filter nach Mahlzeit, Karte mit „+ 1 Portion“ unten rechts, Kopie im Editor */
+.seg.fdm { grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr)); margin: 0; }
+.seg.fdm button { min-height: 38px; padding: 0; font-size: 13px; }
+.seg.fdm .ic { width: 17px; height: 17px; }
+.fdcq { position: absolute; right: 6px; bottom: 6px; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 50%; background: var(--dc); color: #fff; }
+.fdcq .ic { width: 18px; height: 18px; }
+.btn.fpdup { flex: none; width: 58px; padding: 0; }
+.fdc .f100 i { width: 36px; }
 .fact2 .btn { min-height: 44px; padding: 0 8px; font-size: 14px; }
 /* Gegessen leer: Platzhalter je Mahlzeit (blass, gestrichelt), davor „Wie gestern“ – die Zeile bleibt gleich hoch */
 .fmc.fme { place-items: center; border-style: dashed; border-top-width: 3px; border-top-style: solid; border-top-color: color-mix(in srgb, var(--mc) 35%, transparent); background: transparent; color: color-mix(in srgb, var(--mc) 55%, var(--ink3)); opacity: .7; }
@@ -165,9 +176,9 @@
 .fmc.fcp { place-items: center; align-content: center; gap: 6px; border-top-color: var(--ac); color: var(--ac); }
 .fmc.fcp .ic { width: 20px; height: 20px; }
 .fmc.fcp b { font-size: 12px; color: var(--ink); }
-/* Ziel-Symbol hinter „/ 3160 kcal“: öffnet Ziele und Rechner */
-.fgo { display: inline-grid; place-items: center; width: 26px; height: 26px; margin: -6px 0 -6px 4px; padding: 0; border: 0; border-radius: 50%; background: var(--s2); color: var(--ink2); vertical-align: middle; }
-.fgo .ic { width: 15px; height: 15px; }
+/* leere Zeile: alle Karten passen nebeneinander, kein Wischen */
+.fchips.fem { overflow: hidden; touch-action: auto; }
+.fem > .fmc { flex: 1 1 0; width: auto; min-width: 0; }
 .fsr { display: grid; gap: 6px; }
 .fsr .xg { margin: 4px 0 0; color: var(--ink3); }
 .fsi {
@@ -180,8 +191,8 @@
 .fsi span { flex: 1; min-width: 0; }
 .fsi b { display: block; font-size: 14px; }
 .fsi small { display: block; overflow: hidden; font-size: 11px; white-space: nowrap; text-overflow: ellipsis; color: var(--ink3); }
-.fsi em { font-family: var(--f-mono); font-size: 13px; font-style: normal; font-weight: 600; color: var(--ink2); }
-.fsi em::after { content: " kcal"; font-size: 10px; color: var(--ink3); }
+.fsi > em { font-family: var(--f-mono); font-size: 13px; font-style: normal; font-weight: 600; color: var(--ink2); }
+.fsi > em::after { content: " kcal"; font-size: 10px; color: var(--ink3); }
 .fsb { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
 /* Suche: Reiter, darunter immer gleiche Zeilen mit Kategorie-Icon */
 .seg.fst { grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 4px; }
@@ -254,7 +265,7 @@
 .wsl { position: relative; display: block; height: 30px; cursor: pointer; touch-action: none; }
 .wsl::before { content: ""; position: absolute; top: 11px; right: 0; left: 0; height: 8px; border-radius: 4px; background: var(--s3); }
 .wsl > i { position: absolute; top: 11px; left: 0; overflow: hidden; width: calc(var(--p) * 100%); height: 8px; border-radius: 4px; background: var(--fc); }
-.wsl.hi > i { background: color-mix(in srgb, var(--fc) 62%, #0b2a44); }
+.wsl.hi > i { background: color-mix(in srgb, var(--fc) 30%, #041a2e); }
 .wsl.over > i { background: var(--danger); }
 /* Ziel-Strich, sobald mehr als das Ziel getrunken ist (Balken skaliert mit) */
 .wsl > em { position: absolute; top: 7px; bottom: 7px; left: calc(var(--x) * 100%); z-index: 1; width: 2px; margin-left: -1px; border-radius: 1px; background: var(--ink); }
@@ -334,42 +345,42 @@
 .dgl { font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
 .dg .dg3.two { margin: 0; }
 .dgl .ic { width: 13px; height: 13px; }
-.crg { display: grid; gap: 2px; margin-top: 10px; }
+.crg { display: grid; gap: 2px; }
 .crn { display: inline-flex; align-items: center; gap: 5px; font-style: normal; }
 .crn .ic { width: 15px; height: 15px; color: var(--nc); }
 .crg > span { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; font-weight: 800; color: var(--ink3); text-transform: uppercase; letter-spacing: .06em; }
 .crg b { font-family: var(--f-mono); font-size: 12px; font-weight: 600; color: var(--ink); text-transform: none; letter-spacing: 0; text-align: right; }
-.crg input[type="range"] { width: 100%; height: 28px; margin: 0; accent-color: var(--ac); }
+.crg input[type="range"] { width: 100%; height: 24px; margin: 0; accent-color: var(--ac); }
 .crg .seg { margin: 4px 0 0; }
 .crl { display: flex; justify-content: space-between; margin-top: -2px; font-style: normal; font-size: 10.5px; color: var(--ink3); }
 .crl em { font-style: normal; }
-.cin { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) 84px; gap: 6px; align-items: end; margin-top: 12px; }
+.cin { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) 84px; gap: 6px; align-items: end; }
 .cin label { display: grid; gap: 3px; font-size: 10.5px; font-weight: 800; color: var(--ink3); text-transform: uppercase; letter-spacing: .06em; }
-.cin input { width: 100%; height: 42px; padding: 0 8px; border-radius: 10px; border: 1px solid var(--line); background: var(--s1); color: var(--ink); font-family: var(--f-mono); font-size: 16px; }
+.cin input { width: 100%; height: 40px; padding: 0 8px; border-radius: 10px; border: 1px solid var(--line); background: var(--s1); color: var(--ink); font-family: var(--f-mono); font-size: 16px; }
 .cin .seg { margin: 0; padding: 3px; }
 .cin .seg button { min-height: 34px; }
 .seg.six { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .seg.six button { min-height: 38px; padding: 0; font-size: 12px; }
 /* Ergebnis bleibt beim Schieben oben stehen (sticky im Sheet), feste Höhe, Ziffern gleich breit: nichts springt */
-.cres { position: sticky; top: -10px; z-index: 3; display: grid; gap: 10px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--s2); box-shadow: 0 12px 18px -16px rgba(0, 0, 0, .7); }
+.cres { position: sticky; top: -10px; z-index: 3; display: grid; gap: 8px; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--line); background: var(--s2); box-shadow: 0 12px 18px -16px rgba(0, 0, 0, .7); }
 .cres > .muted { margin: 0; }
 .ctop { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .cday { display: grid; gap: 3px; justify-items: start; min-width: 0; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
 button.cday:active { transform: scale(.97); }
 .cday small { display: flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
 .cday small .ic { width: 15px; height: 15px; }
-.cday b { font-family: var(--f-display); font-size: 30px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+.cday b { font-family: var(--f-display); font-size: 26px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
 .cday b em { margin-left: 4px; font-family: var(--f-mono); font-size: 11px; font-style: normal; font-weight: 400; color: var(--ink3); }
 .cday[aria-pressed="false"] b { color: var(--ink3); }
 .ctg { display: grid; place-items: center; width: 16px; height: 16px; border: 1.5px solid var(--ink3); border-radius: 5px; }
 .ctg .ic { width: 12px; height: 12px; }
 .cday[aria-pressed="true"] .ctg { border-color: var(--ac); background: var(--ac); color: var(--on); }
-.cmac { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; padding-top: 10px; border-top: 1px solid var(--line); }
+.cmac { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; padding-top: 8px; border-top: 1px solid var(--line); }
 .cmac div { display: grid; justify-items: center; gap: 3px; min-width: 0; color: var(--nc); }
 .cmac .ic { width: 16px; height: 16px; }
 .cmac b { font-family: var(--f-mono); font-size: 14px; font-variant-numeric: tabular-nums; color: var(--ink); }
 .cmac b small { margin-left: 1px; font-size: 10px; font-weight: 400; color: var(--ink3); }
-.clearn { display: grid; gap: 8px; margin-top: 14px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 12px; }
+.clearn { display: grid; gap: 8px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 12px; }
 .clearn:empty { display: none; }
 .clearn > div { display: flex; align-items: flex-start; gap: 10px; }
 .clearn .ic { flex: none; width: 20px; height: 20px; color: var(--ink2); }
@@ -379,7 +390,7 @@ button.cday:active { transform: scale(.97); }
 .clearn .ok .ic { width: 15px; height: 15px; color: var(--ac); }
 .cprg { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
 .cprg i { width: 64px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--ac) calc(var(--p) * 100%), var(--s3) 0); }
-.cway { margin-top: 10px; padding: 0 12px; border: 1px solid var(--line); border-radius: 12px; }
+.cway { padding: 0 12px; border: 1px solid var(--line); border-radius: 12px; }
 .cway summary { display: flex; align-items: center; gap: 6px; min-height: 40px; cursor: pointer; list-style: none; font-size: 13px; font-weight: 700; color: var(--ink2); }
 .cway summary::-webkit-details-marker { display: none; }
 .cway summary .ic { width: 14px; height: 14px; transition: transform .2s var(--ease); }

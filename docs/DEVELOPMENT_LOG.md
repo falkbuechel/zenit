@@ -23,6 +23,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-26 – Essen: Kopf mit Fokus „offen“, Vorschläge auf Mahlzeit ziehen, Suche mit Schnell-Reiter, Gerichte-Menü, Rechner im Profil
+- „Montag · Heute“ wieder da (ohne kcal-Zusatz). Bilanz-Kopf: gegessen, Ziel klein, rechts groß „offen“/„drüber“; Trainings-Zuschlag-Chip und Ziel-Symbol entfernt.
+- Rechner: Rechner-Icon, Knopf im Profil (`.pid-a`, 6 Spalten, `data-fgoal`), kompakter (Sheet-Klasse `fp`, kleinere Abstände).
+- Wasser über 100 % deutlich dunkler.
+- Gegessen leer: Platzhalter passen in die Breite (`.fchips.fem`), kein Wischen. Vorschlag hochziehen folgt dem Finger; über einer Mahlzeit (Karte, Platzhalter, Gruppe) wird sie markiert (`.drop`) und der Eintrag bekommt diese Mahlzeit (`ui.fdmk` → `foodPush`), sonst nach Uhrzeit.
+- Suche: Zuletzt nur 6; Kategorien alphabetisch in zwei Spalten (+ „Eigene“, wenn vorhanden); dritter Reiter „Schnell“ mit dem Schnell-Formular im Fenster (`quickHtml`, auch für `openQuick`). Zeilen: kleine Werte je 100 g (Protein/Fett/Kohlenhydrate in festen Spalten, `.f100`), rechts kcal und „1 Einheit“. `.fsi em`-Regeln nur noch für direkte Kinder (hängten sonst „kcal“ an).
+- Gerichte-Menü (`openDishes`/`dishesHtml`): Filter nach meist gegessener Mahlzeit (`ui.dmf`), Karten mit „+“ = 1 Portion sofort eintragen (`data-fdq`), Stift = bearbeiten, „Neues Gericht“ unten. Editor: Kopie anlegen (`data-ddup`).
+
 ### 2026-10-26 – Essen: ohne Überschrift, Gruppen löschen, „Meins“ in der Suche, Gerichte mit Farbe, Rechner neu
 - Essen-Seite ohne „Essen“-Überschrift und ohne „Montag · Heute“-Zeile; Ziele/Rechner über das Ziel-Symbol (`.fgo`) hinter „/ kcal“ in der Bilanz (data-fgoal wird vor data-fnut geprüft).
 - Offenen Tab erneut antippen (14-ereignisse.js): kein Neuzeichnen, nur sanft nach oben (außer in Unteransichten).

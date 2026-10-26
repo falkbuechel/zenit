@@ -74,7 +74,7 @@
 .pid-t small { font-size: 12.5px; color: var(--ink3); }
 .pid-t .hcb { height: 5px; }
 .pid-t .hcb > i { background: var(--ac); }
-.pid-a { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.pid-a { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; }
 .pid-a button { display: grid; justify-items: center; gap: 4px; padding: 9px 0 8px; border: 1px solid var(--line); border-radius: 12px; background: var(--s2); color: var(--ink); font: inherit; font-size: 10.5px; font-weight: 700; transition: transform .14s var(--ease); }
 .pid-a button:active { transform: scale(.95); }
 .pid-a .ic { width: 20px; height: 20px; color: var(--ink2); }

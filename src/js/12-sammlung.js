@@ -489,7 +489,7 @@
     h += '<section class="pid rise" style="--i:1"><div class="pid-t"><i class="pid-l">' + ic('peak') + '<b>' + lv + '</b></i><div><b>' + (TIERS[tierOfLevel(lv)] || 'Level ' + lv) + '</b><small>' +
       [p.h ? p.h + ' cm' : '', lw ? fN(lw.kg) + ' kg' : '', p.a ? p.a + ' Jahre' : ''].filter(Boolean).join(' · ') + '</small><i class="hcb"><i style="--p:' + ((d.xp - c0) / (c1 - c0)).toFixed(3) + '"></i></i></div></div>' +
       '<div class="pid-a"><button data-wgt="1">' + ic('scale') + 'Gewicht</button>' + [['body', 'user', 'Körper'], ['meas', 'ruler', 'Maße'], ['goal', 'target', 'Ziel'], ['train', 'dumb', 'Geräte']].map(function (x) {
-        return '<button data-pf="' + x[0] + '">' + ic(x[1]) + x[2] + '</button>'; }).join('') + '</div></section>';
+        return '<button data-pf="' + x[0] + '">' + ic(x[1]) + x[2] + '</button>'; }).join('') + '<button data-fgoal="1">' + ic('calc') + 'Rechner</button></div></section>';
     // Statistik-Kacheln: Kernzahl + Mini-Diagramm
     var sets = [], kc = [], nTr = 0, hk = 0, i;
     for (i = 13; i >= 0; i--) {

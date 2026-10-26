@@ -1,12 +1,24 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python tools/check.py)", "Bash(python build.py)",
-      "Bash(node tools/smoke.js)", "Bash(node --check *)",
-      "Bash(git status *)", "Bash(git diff *)", "Bash(git log *)",
-      "Bash(git add *)", "Bash(git commit *)",
+      "Bash(python tools/check.py)", "Bash(python tools/check.py *)", "Bash(python build.py)",
+      "Bash(node tools/smoke.js)", "Bash(node tools/smoke.js *)", "Bash(node tools/compare.js *)", "Bash(node --check *)",
+      "Bash(git status *)", "Bash(git diff *)", "Bash(git log *)", "Bash(git show *)", "Bash(git branch *)",
+      "Bash(git add *)", "Bash(git commit *)", "Bash(grep *)",
       "Bash(gh run list *)", "Bash(gh run view *)", "Bash(gh run watch *)"
     ],
-    "ask": ["Bash(git push *)"]
+    "ask": ["Bash(git push *)"],
+    "deny": [
+      "Bash(git push --force*)", "Bash(git push -f*)", "Bash(git reset --hard*)", "Bash(rm -rf *)",
+      "Read(./.env*)", "Read(./**/*backup*.json)", "Edit(./docs/Notes.md)", "Edit(./dist/**)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [{ "type": "command", "command": "python \"$CLAUDE_PROJECT_DIR/tools/hook-check.py\"", "timeout": 30 }]
+      }
+    ]
   }
 }

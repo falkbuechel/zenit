@@ -144,7 +144,7 @@ button:active:not(:disabled) { transform: scale(.97); }
 /* Sheet */
 .shade { position: fixed; inset: 0; z-index: 24; background: rgba(0, 0, 0, .55); opacity: 0; visibility: hidden; transition: opacity .25s var(--ease), visibility 0s .25s; }
 .shade.open { opacity: 1; visibility: visible; transition: opacity .25s var(--ease), visibility 0s; }
-.sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; max-width: 680px; margin: 0 auto; background: var(--s1); border: 1px solid var(--line); border-bottom: 0; border-radius: 20px 20px 0 0; padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 14px; transform: translateY(104%); visibility: hidden; transition: transform .34s var(--drawer), visibility 0s .34s; }
+.sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; max-width: 680px; margin: 0 auto; background: var(--s1); border: 1px solid var(--line); border-bottom: 0; border-radius: 20px 20px 0 0; padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; transform: translateY(104%); visibility: hidden; transition: transform .34s var(--drawer), visibility 0s .34s; }
 .sheet.open { transform: none; visibility: visible; transition: transform .34s var(--drawer), visibility 0s; }
 .grab { width: 40px; height: 4px; border-radius: 4px; background: var(--s3); margin: 0 auto; }
 .sh-h { display: flex; align-items: center; gap: 10px; }
@@ -282,7 +282,7 @@ button:active:not(:disabled) { transform: scale(.97); }
 .mrow .mn { flex: 1; display: grid; min-width: 0; } .mrow .mn b { font-size: 14px; } .mrow .mn small { font-size: 11px; color: var(--ink3); }
 .msp { width: 90px; height: 30px; flex: none; } .mv { font-family: var(--f-display); font-weight: 900; font-size: 22px; min-width: 52px; text-align: right; }
 /* Zeilen in voller Höhe (max-content): sonst schrumpft das Raster bei langem Inhalt und Teile überlappen die Überschrift */
-.sheet.tall { max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; grid-auto-rows: max-content; }
+.sheet.tall { max-height: 90dvh; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; grid-auto-rows: max-content; }
 .sheet.tall::-webkit-scrollbar { display: none; }
 /* Hochformat: im Querformat nur ein Hinweis (nicht beim Barcode-Scan, body.scan) */
 .rot { display: none; }

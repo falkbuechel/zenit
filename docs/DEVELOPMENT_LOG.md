@@ -23,6 +23,15 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-26 – Essen: Anteil-Ring, Ziel neben Icon, Wasser live, ein Stapel offen, Schnellmengen nach Einheit, Gerichte als Karten
+- Nährwert-Fenster: Ring links (`.fnp`, conic-gradient) mit Prozent am Tag, darunter „n× gegessen“; Balken unten entfällt (war bei Stapeln schief).
+- Bilanz: Icon, Wert und Ziel klein in einer Zeile (`.fmb span`), Balken darunter; ✓ entfällt.
+- Wasser: `waBar` füllt den Bilanz-Balken live; über dem Ziel bleibt er voll, Ziel-Strich (`em`) rückt nach links, rot über 1,5 × Ziel. Rote `fOv`-Schicht beim Wasser entfällt.
+- Gegessen: nur ein Stapel offen (`ui.fstk` hat höchstens einen Schlüssel); alle Karten 96 px hoch, Klammer per Schatten-Ring → nichts verschiebt sich beim Öffnen.
+- Mengen-Fenster: Schnellmengen nach Einheit (Stück 1×–5×, Getränke 200–750 ml, sonst um die übliche Menge), letzte Pille = zuletzt eingetragene Menge (Uhr); Pillen füllen die Breite. Kacheln: Balken + % = Anteil dieser Menge am Tagesziel (rot, wenn der Tag damit über die Grenze geht). `.sheet` mit `grid-template-columns: minmax(0, 1fr)` und `.sheet.tall` `overflow-x: hidden` (Marken-Liste machte das Fenster seitlich scrollbar).
+- Suche: Zeilen zeigen eine ganze Einheit (Stück, Glas, Portion; Getränke ohne Einheit 250 ml) und alle Nährwerte ≥ 0,5 g als farbige Icons; Marke klein hinter dem Namen. Schnell als Blitz-Knopf neben Barcode; auf der Essen-Seite nur noch „Suchen, scannen …“ und „Gerichte“.
+- Gerichte-Fenster: Karten in zwei Spalten (zuletzt gegessene zuerst), kcal groß, Protein/Fett/Kohlenhydrate je Portion, Stift oben rechts, gestrichelte Karte „Neues Gericht“.
+
 ### 2026-10-26 – Essen: Feinschliff Icons, Suche mit Reitern, Nährwert-Fenster-Bug
 - Nährwert-Fenster überlappte die Überschrift: Klasse `stk` war schon in `40-sammlung.css` mit `position: absolute` belegt (check.py findet nur gleiche Selektoren, nicht gleiche Klassen in anderem Zusammenhang) → `fnrs`. Lehre: neue Klassennamen vorher per grep über `src/css` prüfen. Zusätzlich `.sheet.tall { grid-auto-rows: max-content }`, Nährwert-Fenster jetzt `tall` (scrollt).
 - Farben: Protein violett (`--g-kh`), Ballaststoffe türkis (`--g-pull`). Icons: Fett zwei Tropfen, Zucker drei Würfel, Kohlenhydrate drei Körner, Ballaststoffe Spross.

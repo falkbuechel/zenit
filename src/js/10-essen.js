@@ -274,7 +274,7 @@
     // Mini-Balken: hit = im Ziel, over = über der Grenze (FLIM: Fett/Kohlenhydrate 110 %, Zucker 100 %, Protein 140 %, Ballaststoffe 160 % als gesundes Maximum)
     // low = orange: Protein/Ballaststoffe weit hinter dem, was zur Tageszeit zu erwarten ist (ex = erwarteter Anteil, fExp)
     var su = k === 'su', p = g ? v / g : 0, lim = FLIM[k], bad = p > lim, hit = !bad && (k === 'p' || k === 'fb' ? p >= 0.9 : !su && p >= 0.85), low = !bad && !hit && (k === 'p' || k === 'fb') && ex >= 0.3 && p < ex * 0.6;
-    return '<div class="fmb ' + k + (bad ? ' over' : hit ? ' hit' : low ? ' low' : '') + fAnim(k, bad ? 'over' : hit ? 'hit' : '', v) + '" data-fnut="' + k + '" role="button" tabindex="0"><span aria-label="' + NSH[k] + '">' + ic(NIC[k]) + '<b>' + Math.round(v) + '</b></span><i class="fbt"><i' + pv('fm' + k, Math.min(1, p)) + '></i>' + fOv(p, lim) + '</i><small>/' + (su ? '≤' : '') + g + '</small></div>';
+    return '<div class="fmb ' + k + (bad ? ' over' : hit ? ' hit' : low ? ' low' : '') + fAnim(k, bad ? 'over' : hit ? 'hit' : '', v) + '" data-fnut="' + k + '" role="button" tabindex="0"><span aria-label="' + NSH[k] + '">' + ic(NIC[k]) + '<b>' + Math.round(v) + '</b><small>/' + (su ? '≤' : '') + g + '</small></span><i class="fbt"><i' + pv('fm' + k, Math.min(1, p)) + '></i>' + fOv(p, lim) + '</i></div>';
   }
   // Grenzen als Anteil vom Ziel: darüber = zu viel (k = kcal, wa = Wasser)
   var FLIM = { k: 1.1, p: 1.4, f: 1.1, c: 1.1, fb: 1.6, su: 1, wa: 1.5 };
@@ -324,7 +324,14 @@
     var r = wsl.el.getBoundingClientRect(), mx = +wsl.el.dataset.max; wsl.mv = Math.max(wsl.mv || 0, Math.abs(x - wsl.x));
     var v = wsl.rel ? wsl.v0 + Math.round((x - wsl.x) / r.width * mx / 50) * 50 : Math.round(Math.max(0, Math.min(1, (x - r.left) / r.width)) * mx / 50) * 50;
     v = Math.max(0, Math.min(8000, v)); if (v === wsl.v) return;
-    var fi = wsl.el.firstElementChild, fp = Math.min(1, v / mx).toFixed(4); wsl.v = v; fi.style.setProperty('--p', fp); fi.dataset.p = fp; buzz(3); waShow(v);
+    wsl.v = v; buzz(3); waShow(v);
+    if (wsl.rel) waBar(wsl.el, v); else wsl.el.firstElementChild.style.setProperty('--p', Math.min(1, v / mx).toFixed(4));
+  }
+  function waBar(el, v) {
+    // Bilanz-Balken live: bis zum Ziel füllt er sich, darüber bleibt er voll und der Ziel-Strich rückt nach links; rot über dem Höchstwert
+    var mx = +el.dataset.max, ds = Math.max(mx, v), fi = el.firstElementChild, fp = (v / ds).toFixed(4), gm = el.querySelector('em');
+    fi.style.setProperty('--p', fp); fi.dataset.p = fp; el.classList.toggle('over', v > mx * FLIM.wa);
+    if (gm) { gm.style.setProperty('--x', (mx / ds).toFixed(4)); gm.hidden = v <= mx; }
   }
   function wslEnd() {
     // Bilanz-Balken nur angetippt (kaum bewegt) = Wasser-Fenster öffnen
@@ -370,14 +377,15 @@
       (g.tb ? '<span class="ftb">' + ic('dumb') + '+' + g.tb + '</span>' : '') + '<em>' + (g.k - s.k >= 0 ? (g.k - s.k) + ' offen' : (s.k - g.k) + ' drüber') + '</em><i class="fbt"><i' + pv('fkb', Math.min(1, kp)) + '></i>' + fOv(kp, FLIM.k) + '</i></div>' +
       '<div class="fbm">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return fbar(k, s[k], g[k], ex); }).join('') + '</div>' +
       '<div class="fwa' + (wa > wg * FLIM.wa ? ' over' : wa >= wg ? ' hit' : '') + fAnim('wa', wa > wg * FLIM.wa ? 'over' : wa >= wg ? 'hit' : '', wa) + '">' + ic('drop') +
-      '<i class="wsl" data-rel="1" data-max="' + wg + '" data-v="' + wa + '" role="slider" aria-label="Wasser, ziehen" data-noswipe="1"><i' + pv('fwa', Math.min(1, wa / wg)) + '></i>' + fOv(wa / wg, FLIM.wa) + '</i>' +
+      '<i class="wsl' + (wa > wg * FLIM.wa ? ' over' : '') + '" data-rel="1" data-max="' + wg + '" data-v="' + wa + '" role="slider" aria-label="Wasser, ziehen" data-noswipe="1"><i' + pv('fwa', wa / Math.max(wg, wa)) + '></i>' +
+      '<em style="--x:' + (wg / Math.max(wg, wa)).toFixed(4) + '"' + (wa > wg ? '' : ' hidden') + '></em></i>' +
       '<button class="fwv" data-fwao="1" aria-label="Wasser genau eintragen"><b><span data-wav="1">' + fN2(wa / 1000) + '</span><small>/' + fN(wg / 1000) + ' l</small></b></button>' +
       '</div></section>';
     // Gegessen in einer Zeile: Mahlzeit-Karten (kcal, Kategorien überlappend); antippen = diese Mahlzeit in derselben Zeile (Kategorie-Stapel, Einträge); leer: „Wie gestern“
     var cp = !s.items.length && foodSum(sd - 1).items.length, gs = fGroups(s.items), gm = gs.filter(function (q) { return ui.fmeal === sd + q.m; })[0];
     h += '<section class="fdl rise" style="--i:2"><h2 class="sec-h">' + esc(dayHead(sd)) + '<small>' + s.items.length + ' · ' + Math.round(s.k) + ' kcal</small></h2>' +
       (s.items.length ? '<div class="fchips" data-noswipe="1">' + (gm ? fMeal(gm) : gs.map(fMealCard).join('')) + '</div>' : cp ? '<button class="agn fcp" data-fcopy="1">' + ic('swap') + '<span>Wie gestern eintragen</span></button>' : '<p class="muted">Noch nichts eingetragen.</p>') + '</section>';
-    h += '<div class="fact2 rise" style="--i:3"><button class="btn" data-fsearch="1">' + ic('search') + 'Suchen</button><button class="btn" data-fdishes="1">' + ic('pot') + 'Gerichte</button><button class="btn" data-fquick="1">' + ic('bolt') + 'Schnell</button></div>';
+    h += '<div class="fact2 rise" style="--i:3"><button class="btn fsrb" data-fsearch="1">' + ic('search') + 'Suchen, scannen …</button><button class="btn" data-fdishes="1">' + ic('pot') + 'Gerichte</button></div>';
     // Vorschläge: 2 zuletzt, 2 häufig (antippen = Menge wählen, nach oben ziehen = sofort eintragen)
     h += '<section class="ftl rise" style="--i:4" data-noswipe="1">' + tl.map(function (x, j) {
       var it = fItem(x.i), v = fNut(it, x.g);
@@ -426,15 +434,15 @@
   function sheetOpen(html, tall) { $('sheet').className = 'sheet' + (tall ? ' tall' : ''); $('sheet').innerHTML = html; $('shade').classList.add('open'); $('sheet').classList.add('open'); }
   function openFsearch(keep) {
     ui.sheet = { fsearch: true }; ui.fq = ''; ui.fcat = keep ? ui.fcat : ''; ui.fpick = null; ui.fday = dayIdx(Date.now()) - fSd();
-    sheetOpen(shHead('search', ui.ingm ? 'Zutat' : 'Eintragen', ui.ingm ? 'Für das Gericht' : 'Lebensmittel oder Gericht suchen', !!ui.ingm) + '<div class="fqw"><input id="fq" class="fnm fq" type="search" placeholder="Suchen, z. B. Skyr" autocomplete="off" aria-label="Suchen"><button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button></div><div id="fres" class="fsr">' + fresHtml() + '</div>', true);
+    sheetOpen(shHead('search', ui.ingm ? 'Zutat' : 'Eintragen', ui.ingm ? 'Für das Gericht' : 'Lebensmittel oder Gericht suchen', !!ui.ingm) + '<div class="fqw"><input id="fq" class="fnm fq" type="search" placeholder="Suchen, z. B. Skyr" autocomplete="off" aria-label="Suchen"><button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button>' + (ui.ingm ? '' : '<button class="x" data-fquick="1" aria-label="Schnell eintragen ohne Lebensmittel">' + ic('bolt') + '</button>') + '</div><div id="fres" class="fsr">' + fresHtml() + '</div>', true);
     $('sheet').classList.add('fs');
     setTimeout(function () { var i = $('fq'); if (i && !('ontouchstart' in window)) i.focus(); }, 350);
   }
   function fRow(id) {
-    // Treffer-Zeile: Kategorie-Icon, Name, Marke/Menge und Protein, kcal (Fast Food je Verkaufsportion, sonst je 100 g)
-    var it = fItem(id), pa = it.pc ? it.d || it.u[it.ub ? 1 : 0][1] : 0, v = pa ? fNut(it, pa) : it, ck = it.dish ? 'dish' : /^u/.test(id) ? 'u' : CATI[it.cat] ? it.cat : 'x';
-    return '<button class="fsi" data-fpick="' + id + '"><i class="fsc">' + ic(CATI[ck][0]) + '</i><span><b>' + esc(fName(it)) + '</b><small>' + (it.b ? esc(it.b) + ' · ' : '') + (it.dish ? 'Portion' : pa ? fAmt(it, pa) : it.ml ? '100 ml' : '100 g') +
-      '<i style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + fN(v.p) + '</i></small></span><em>' + Math.round(v.k) + '</em></button>';
+    // Treffer-Zeile: Kategorie-Icon, Name, übliche Menge (Stück/Portion statt 100 g, Getränke 250 ml) mit allen nennenswerten Nährwerten (≥ 0,5 g), kcal dieser Menge
+    var it = fItem(id), pa = it.dish ? 1 : it.pc ? it.d || it.u[it.ub ? 1 : 0][1] : it.u.length ? it.u[it.ub && it.u[1] ? 1 : 0][1] : it.ml ? 250 : 100, v = fNut(it, pa), ck = it.dish ? 'dish' : /^u/.test(id) ? 'u' : CATI[it.cat] ? it.cat : 'x';
+    return '<button class="fsi" data-fpick="' + id + '"><i class="fsc">' + ic(CATI[ck][0]) + '</i><span><b>' + esc(fName(it)) + (it.b ? ' <small>' + esc(it.b) + '</small>' : '') + '</b><small>' + fAmt(it, pa) +
+      ['p', 'f', 'c', 'fb', 'su'].filter(function (k) { return v[k] >= 0.5; }).map(function (k) { return '<i style="--nc:var(' + NCOL[k] + ')" aria-label="' + NSH[k] + '">' + ic(NIC[k]) + fN(v[k]) + '</i>'; }).join('') + '</small></span><em>' + Math.round(v.k) + '</em></button>';
   }
   function fresHtml() {
     // Ohne Suchtext drei Reiter: Zuletzt, Kategorien (antippen = Liste, Zurück oben), Eigene (eigene Lebensmittel und Gerichte); mit Suchtext nur die Treffer
@@ -459,7 +467,7 @@
       }).join('');
       h += list.map(fRow).join('') + (tab !== 'c' && !list.length ? '<p class="muted">' + (tab === 'r' ? 'Noch nichts eingetragen.' : 'Noch keine eigenen Lebensmittel.') + '</p>' : '');
     }
-    return h + '<div class="fsb"><button class="btn small" data-fown="new">' + ic('plus') + 'Eigenes Lebensmittel</button><button class="btn small" data-fquick="1">' + ic('bolt') + 'Schnell</button></div>';
+    return h + '<div class="fsb"><button class="btn small" data-fown="new">' + ic('plus') + 'Eigenes Lebensmittel</button></div>';
   }
   // Online (Open Food Facts, frei, ohne Schlüssel): Suche ab 3 Zeichen kurz nach dem Tippen, Barcode über die Kamera.
   // Gewählte Produkte werden eigene Lebensmittel (mit Marke b und Barcode bc) und sind danach offline da.
@@ -568,13 +576,19 @@
   }
   function fpickHtml() {
     var pk = ui.fpick, it = fItem(pk.i), back = !!(ui.sheet && ui.sheet.from), un = it.ml ? 'ml' : 'g', b0 = it.u[0];
-    // 5 Schnellmengen, aufsteigend und mindestens 15 % auseinander: Portionen der Einheit, dazu halbe, 1½- und doppelte übliche Menge und runde Grammzahlen.
-    // Gericht: halbe Portionen; Fast Food (pc): Verkaufsportionen bzw. Vielfache der kleinsten Einheit
-    var d0 = it.d || (b0 ? b0[1] : 100), r5 = function (x) { return Math.max(5, Math.round(x / 5) * 5); }, ch;
+    // Schnellmengen passend zur Einheit, aufsteigend, mindestens 15 % auseinander: Stück/Portionen als 1×–3× (ein Ei wiegt keiner), Getränke in Glas-/Flaschengrößen,
+    // sonst runde Mengen um die übliche; Gericht halbe Portionen, Fast Food Verkaufsportionen. Letzte Pille = zuletzt eingetragene Menge (Uhr), sonst eine fünfte Stufe
+    var d0 = it.d || (b0 ? b0[1] : 100), r5 = function (x) { return Math.max(5, Math.round(x / 5) * 5); }, ch, last = null;
+    foodState().e.forEach(function (x) { if (x.r && x.r.i === pk.i && (!last || x.t > last.t)) last = { t: x.t, g: x.r.g }; });
     if (it.dish) ch = [[0.5], [1], [1.5], [2], [3]];
-    else if (it.pc) ch = (it.u.length > 1 ? it.u.slice(it.ub ? 1 : 0).map(function (u) { return [u[1]]; }) : []).concat([1, 2, 3, 4, 5].map(function (n) { return [b0[1] * n]; }));
-    else ch = [[d0]].concat(it.u.map(function (u) { return [u[1]]; }), [[d0 * 2], [r5(d0 / 2), 1], [r5(d0 * 1.5), 1], [100, 1], [200, 1], [50, 1], [300, 1]]);
-    ch = ch.filter(function (x, i, a) { return !a.slice(0, i).some(function (y) { return Math.abs(y[0] - x[0]) < Math.max(y[0], x[0]) * 0.15; }); }).slice(0, 5).sort(function (a, b) { return a[0] - b[0]; });
+    else if (it.pc) ch = (it.u.length > 1 ? it.u.slice(it.ub ? 1 : 0).map(function (u) { return [u[1]]; }) : []).concat([1, 2, 3, 4].map(function (n) { return [b0[1] * n]; }));
+    else if (it.u.length) ch = it.u.map(function (u) { return [u[1]]; }).concat([[b0[1] * 2], [b0[1] * 3]], it.u[1] ? [[it.u[1][1] * 2]] : [], [[b0[1] * 4]]);
+    else if (it.ml) ch = [[200, 1], [250, 1], [330, 1], [500, 1], [750, 1]];
+    else ch = [[r5(d0 / 2), 1], [d0, 1], [r5(d0 * 1.5), 1], [d0 * 2, 1], [d0 * 3, 1]];
+    for (var cn = 5; ch.length < 12 && !it.dish; cn++) ch.push([(b0 && !it.ml ? b0[1] : d0) * cn, !b0 || it.ml ? 1 : 0]);
+    ch = ch.filter(function (x, i, a) { return !a.slice(0, i).some(function (y) { return Math.abs(y[0] - x[0]) < Math.max(y[0], x[0]) * 0.15; }); });
+    if (last && !ch.slice(0, 4).some(function (y) { return y[0] === last.g; })) ch = ch.slice(0, 4).sort(function (a, b) { return a[0] - b[0]; }).concat([[last.g, 0, 1]]);
+    else ch = ch.slice(0, 5).sort(function (a, b) { return a[0] - b[0]; });
     var sub = it.dish ? 'Gericht · je Portion' : (it.b ? it.b + ' · ' : '') + (it.pc ? b0[0] + ' = ' + Math.round(it.k * b0[1] / 100) + ' kcal' : '100 ' + un + ' = ' + Math.round(it.k) + ' kcal');
     var amt = it.pc ? '<label class="fpcn"><b id="fpcn">' + fAmt(it, pk.a) + '</b></label>' :
       '<label><input id="fa" type="number" inputmode="decimal" min="0" step="' + (it.dish ? 0.5 : 5) + '" value="' + pk.a + '" aria-label="Menge"><span>' + (it.dish ? 'Port.' : un) + '</span></label>';
@@ -585,7 +599,7 @@
     var ex = (/^u/.test(pk.i) ? '<button class="btn ghost small" data-fown="' + pk.i + '">' + ic('edit') + 'Lebensmittel</button>' : '') + (pk.edit != null ? '<button class="btn ghost small" data-fdel="' + pk.edit + '">' + ic('trash') + 'Löschen</button>' : '');
     return hd + '<div id="fbr">' + fbrHtml() + '</div>' + fvarHtml(it, pk.i) +
       '<div class="fstep"><button class="sb" data-fstep="-1" aria-label="Weniger">' + ic('minus') + '</button>' + amt + '<button class="sb" data-fstep="1" aria-label="Mehr">' + ic('plus') + '</button></div>' +
-      '<div class="fpc">' + ch.map(function (c) { return '<button data-famt="' + c[0] + '" aria-pressed="' + (c[0] === pk.a) + '">' + fAmt(it, c[0], c[1]) + '</button>'; }).join('') + '</div>' +
+      '<div class="fpc">' + ch.map(function (c) { return '<button data-famt="' + c[0] + '" aria-pressed="' + (c[0] === pk.a) + '"' + (c[2] ? ' aria-label="Zuletzt: ' + fAmt(it, c[0]) + '">' + ic('clock') : '>') + fAmt(it, c[0], c[1]) + '</button>'; }).join('') + '</div>' +
       '<div class="ftot" id="ftot">' + ftotHtml(fNut(it, pk.a)) + '</div>' + (ui.ingm ? '' : whenFor(pk.edit)) +
       '<button class="btn primary big fpgo" data-fpadd="1">' + ic('check') + '<span>' + (ui.ingm ? 'Hinzufügen' : pk.edit != null ? 'Ändern' : 'Eintragen') + (ui.ingm ? '' : '<small id="ffit">' + ffitHtml() + '</small>') + '</span></button>' +
       (ex ? '<div class="fsb fpx">' + ex + '</div>' : '');
@@ -616,11 +630,12 @@
     return '<h3 class="xg">' + ic('globe') + 'Marken</h3>' + b.r.map(function (x, i) { return '<button class="fsi web" data-fbrp="' + i + '"><span><b>' + esc(x.n) + '</b><small>' + esc([x.b, x.qt].filter(Boolean).join(' · ')) + '</small></span><em>' + x.k + '</em></button>'; }).join('') + foot;
   }
   function ftotHtml(v) {
-    // Nährwert-Kacheln in den Nährwertfarben: Wert dieser Menge; Balken = Tag bisher (blass) + diese Menge (kräftig), rot über der Grenze. Beim Gericht-Zutat ohne Balken
+    // Nährwert-Kacheln in den Nährwertfarben: Wert dieser Menge; Balken + Prozent = Anteil dieser Menge am Tagesziel, rot wenn der Tag damit über die Grenze geht.
+    // Beim Gericht-Zutat ohne Balken
     var d = ui.ingm ? null : fDaySum();
     return NK.map(function (k) {
       var bar = '';
-      if (d) { var s0 = d.s[k] || 0, s1 = s0 + (v[k] || 0), gk = d.g[k] || 1, a = Math.min(1, s0 / gk), b = Math.max(0, Math.min(1, s1 / gk) - a); bar = '<i' + (s1 > gk * FLIM[k] ? ' class="over"' : '') + '><i style="width:' + (a * 100).toFixed(1) + '%"></i><i style="width:' + (b * 100).toFixed(1) + '%"></i></i>'; }
+      if (d) { var gk = d.g[k] || 1, a = (v[k] || 0) / gk; bar = '<em' + ((d.s[k] || 0) + (v[k] || 0) > gk * FLIM[k] ? ' class="over"' : '') + '><i><i style="width:' + Math.min(100, a * 100).toFixed(1) + '%"></i></i>' + Math.round(a * 100) + '%</em>'; }
       return '<div style="--nc:var(' + NCOL[k] + ')" aria-label="' + (k === 'k' ? 'kcal' : NSH[k]) + '"><span>' + ic(NIC[k]) + '<b>' + fNv(k, v[k]) + '</b></span>' + bar + '</div>';
     }).join('');
   }
@@ -655,11 +670,15 @@
   }
   function ownDraft() { var d = { n: $('o-n').value, b: $('o-b').value, un: $('o-un').value, ug: $('o-ug').value, ml: ui.sheet.ml, bc: $('o-bc').value }; NK.forEach(function (k) { d[k] = $('o-' + k).value; }); return d; }
   function openDishes() {
-    ui.sheet = { fdishes: true }; var st = foodState();
-    sheetOpen(shHead('food', 'Gerichte', 'Aus Zutaten, durch Portionen geteilt') + '<div class="fsr">' + st.d.map(function (x) {
+    // Gerichte als Karten (zuletzt gegessene zuerst): Name, kcal und Nährwerte je Portion; Karte antippen = Portion wählen, Stift = bearbeiten, letzte Karte = neues Gericht
+    ui.sheet = { fdishes: true }; var st = foodState(), lt = {};
+    st.e.forEach(function (x) { if (x.r && /^d/.test(x.r.i)) lt[x.r.i] = Math.max(lt[x.r.i] || 0, x.t); });
+    sheetOpen(shHead('pot', 'Gerichte', 'Je Portion · antippen zum Eintragen') + '<div class="fdg">' + st.d.slice().sort(function (a, b) { return (lt[b.id] || 0) - (lt[a.id] || 0); }).map(function (x) {
       var t = dishTot(x);
-      return '<div class="fsi dish"><button class="fsb2" data-fpick="' + x.id + '"><span><b>' + esc(x.n) + '</b><small>Portion · ' + fN(t.pp) + ' g Protein</small></span><em>' + Math.round(t.pk) + '</em></button><button class="x" data-fde="' + x.id + '" aria-label="Bearbeiten">' + ic('edit') + '</button></div>';
-    }).join('') + (st.d.length ? '' : '<p class="muted">Noch kein Gericht.</p>') + '</div><button class="btn primary big" data-fde="new">' + ic('plus') + 'Neues Gericht</button>', true);
+      return '<div class="fdc"><button class="fdcb" data-fpick="' + x.id + '"><b>' + esc(x.n) + '</b><span>' + Math.round(t.pk) + '<em>kcal</em></span><small>' +
+        [['p', t.pp], ['f', t.pf], ['c', t.pc]].map(function (q) { return '<i style="--nc:var(' + NCOL[q[0]] + ')" aria-label="' + NSH[q[0]] + '">' + ic(NIC[q[0]]) + Math.round(q[1]) + '</i>'; }).join('') + '</small></button>' +
+        '<button class="fdce" data-fde="' + x.id + '" aria-label="' + esc(x.n) + ' bearbeiten">' + ic('edit') + '</button></div>';
+    }).join('') + '<button class="fdc fdcn" data-fde="new">' + ic('plus') + '<b>Neues Gericht</b></button></div>', true);
   }
   // Gericht bearbeiten: Zutaten aus der Datenbank füllen alle Nährwerte, sonst kcal und Protein von Hand
   function libFind(name) {
@@ -834,7 +853,9 @@
     });
     var rows = gl.filter(function (q) { return q.v[k] > 0; }).sort(function (a, b) { return b.v[k] - a.v[k]; }).map(function (q) {
       var sh = tot ? q.v[k] / tot : 0;
-      return '<div class="fnr' + (q.c > 1 ? ' fnrs' : '') + '" data-fnx="1" role="button" tabindex="0" aria-expanded="false"><div class="fnh"><b>' + esc(q.n) + '</b>' + (q.c > 1 ? '<small>×' + q.c + '</small>' : '') + '<em>' + fNv(k, q.v[k]) + u + '</em><span>' + Math.round(sh * 100) + ' %</span></div><i style="--p:' + sh.toFixed(3) + '"></i>' +
+      // Ring links = Anteil am Tag (Prozent darin), Name mit „n× gegessen“, rechts der Wert
+      return '<div class="fnr' + (q.c > 1 ? ' fnrs' : '') + '" data-fnx="1" role="button" tabindex="0" aria-expanded="false"><div class="fnh"><i class="fnp" style="--p:' + sh.toFixed(3) + '" aria-label="' + Math.round(sh * 100) + ' Prozent des Tages">' + Math.round(sh * 100) + '</i>' +
+        '<span><b>' + esc(q.n) + '</b>' + (q.c > 1 ? '<small>' + q.c + '× gegessen</small>' : '') + '</span><em>' + fNv(k, q.v[k]) + u + '</em></div>' +
         '<div class="fnd">' + NK.filter(function (j) { return j !== k; }).map(function (j) { return '<span style="--nc:var(' + NCOL[j] + ')" aria-label="' + (j === 'k' ? 'kcal' : NSH[j]) + '">' + ic(NIC[j]) + '<b>' + fNv(j, q.v[j]) + '</b></span>'; }).join('') + '</div></div>';
     }).join('');
     ui.sheet = { nut: k };
@@ -900,7 +921,7 @@
     if ((el = t.closest('[data-fdel]'))) { foodDel(+el.dataset.fdel); return true; }
     if ((el = t.closest('[data-fmk]'))) { fmkSet(el.dataset.fmk); $('fmk').dataset.man = '1'; buzz(4); return true; }
     if ((el = t.closest('[data-fml]'))) { ui.fmeal = el.dataset.fml ? fSd() + el.dataset.fml : null; ui.fresh = false; render(); buzz(4); return true; }
-    if ((el = t.closest('[data-fstk]'))) { ui.fstk[el.dataset.fstk] = !ui.fstk[el.dataset.fstk]; ui.fresh = false; render(); buzz(4); return true; }
+    if ((el = t.closest('[data-fstk]'))) { var sk = el.dataset.fstk, son = !ui.fstk[sk]; ui.fstk = {}; if (son) ui.fstk[sk] = 1; ui.fresh = false; render(); buzz(4); return true; }
     if ((el = t.closest('[data-fedit]'))) { if (fswMoved) { fswMoved = false; return true; } var x = st.e[+el.dataset.fedit]; if (x && x.r && fItem(x.r.i)) openPick(x.r.i, x.r.g, +el.dataset.fedit); else openQuick(+el.dataset.fedit); return true; }
     if ((el = t.closest('[data-ftile]'))) { if (fswMoved) { fswMoved = false; return true; } var tl = (ui.ftiles || [])[+el.dataset.ftile]; if (tl) { ui.fday = dayIdx(Date.now()) - fSd(); buzz(8); openPick(tl.i, tl.g); } return true; }
     if (t.closest('[data-fsearch]')) { openFsearch(); return true; }

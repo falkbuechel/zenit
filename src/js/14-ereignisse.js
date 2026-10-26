@@ -62,7 +62,9 @@
       if (nt.k === 'wg') openWeight();
       return;
     }
-    if ((el = t.closest('[data-tab]'))) { ui.sw = TABS.indexOf(el.dataset.tab) - TABS.indexOf(ui.tab); ui.fdrawn = false; ui.tab = el.dataset.tab; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0); return; }
+    // Offenen Tab erneut antippen: nicht neu laden, nur sanft nach oben
+    if ((el = t.closest('[data-tab]')) && el.dataset.tab === ui.tab && !ui.sel && !ui.pe && !ui.pman) { if (ui.sheet) closeSheet(); else $('app').scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (el) { ui.sw = TABS.indexOf(el.dataset.tab) - TABS.indexOf(ui.tab); ui.fdrawn = false; ui.tab = el.dataset.tab; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0); return; }
     if ((el = t.closest('[data-pill]'))) { var pr = el.dataset.pill.split(':'); openSheet(pr[0], +pr[1]); return; }
     if (t.closest('[data-sheet-close]') || t.id === 'shade') { closeSheet(); return; }
     if ((el = t.closest('[data-step]'))) { var inp = $('sv'), nv = Math.max(0, sheetVal() + (+el.dataset.step) * ui.sheet.step); inp.value = nv; updSheetXp(); buzz(6); return; }

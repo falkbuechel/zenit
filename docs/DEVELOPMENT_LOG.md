@@ -23,6 +23,17 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-26 – Essen: ohne Überschrift, Gruppen löschen, „Meins“ in der Suche, Gerichte mit Farbe, Rechner neu
+- Essen-Seite ohne „Essen“-Überschrift und ohne „Montag · Heute“-Zeile; Ziele/Rechner über das Ziel-Symbol (`.fgo`) hinter „/ kcal“ in der Bilanz (data-fgoal wird vor data-fnut geprüft).
+- Offenen Tab erneut antippen (14-ereignisse.js): kein Neuzeichnen, nur sanft nach oben (außer in Unteransichten).
+- Gegessen: leer = Platzhalter-Karten je Mahlzeit (+ „Wie gestern“), Zeile bleibt 118 px. Mahlzeit-Karten und Stapel per Ziehen nach unten löschen (`data-fdelg` = Indizes, `foodDel` nimmt Liste). Stapel-Schlüssel ohne Uhrzeit (Tag + Mahlzeit + Kategorie) → Löschen des ersten Eintrags schließt die Gruppe nicht mehr. Geöffnete Gruppe rastet links ein (`.fgrp` scroll-snap-align). Gruppen getönt in Mahlzeitfarbe.
+- Wasser: über 100 % dunkler (`.wsl.hi`), über 150 % rot.
+- Mengen-Fenster: genau 5 Pillen ohne Wischen (gleich breit, kürzen); Löschen als kleiner roter Mülleimer neben Eintragen (`.fpgo`-Zeile, auch Gericht und Ziele); Marke fehlt → „Selbst anlegen“ über ganze Breite, Barcode dort entfernt (oben vorhanden).
+- Suche: Reiter Zuletzt / Kategorien / Meins (Kacheln Schnell, + Lebensmittel, + Gericht; Gerichte als Karten; eigene Lebensmittel). Gerichte-Knopf öffnet „Meins“ (`openDishes`). Zeilen: Menge + Makro-Leiste (`fMx`, Anteil P/F/K an kcal), rechts kcal und Protein.
+- Gerichte-Karten (`fDishCard`): Farbe und Icon der Zutat-Kategorie mit den meisten kcal (`CCOL`), dazu Symbol der meist gegessenen Mahlzeit.
+- Gericht-Editor: Summe je Portion + Portionen ± oben, Zutat-Zeile Name/Gramm/✕, Nährwerte aus der Datenbank als Icons, von Hand kcal/Protein; `readDraft` behält Werte, wenn das Feld fehlt.
+- Rechner: Ziel-Symbol, Nährwert-Icons und -Farben (Makros, Schieber, eigene Werte), Übernehmen unten fixiert.
+
 ### 2026-10-26 – Essen: Anteil-Ring, Ziel neben Icon, Wasser live, ein Stapel offen, Schnellmengen nach Einheit, Gerichte als Karten
 - Nährwert-Fenster: Ring links (`.fnp`, conic-gradient) mit Prozent am Tag, darunter „n× gegessen“; Balken unten entfällt (war bei Stapeln schief).
 - Bilanz: Icon, Wert und Ziel klein in einer Zeile (`.fmb span`), Balken darunter; ✓ entfällt.

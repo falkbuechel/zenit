@@ -88,7 +88,6 @@
     v.innerHTML = ui.tab === 'heute' ? viewToday(d, now) : ui.tab === 'tage' ? viewPlan(d, now) : ui.tab === 'food' ? viewFood(d, now) : ui.tab === 'fort' ? viewProgress(d, now) : viewProfile(d, now);
     document.body.classList.toggle('arm', ui.tab === 'heute' && !!ui.arena);
     stApply();
-    var fcs = document.querySelector('.fchips'); if (fcs) fcs.scrollLeft = fcs.scrollWidth;
     if (ui.tab === 'fort' && (ui.col || 'ka') === 'ka') { var un0 = EX.filter(function (e) { return d.unlocked[e.id]; }).map(function (e) { return e.id; }); if (!seenUx || un0.length !== seenUx.length) { saveSeen(un0); badges(notices(d, now)); } }
     if (ui.sheet && ui.sheet.settings && $('sheet').classList.contains('open')) $('sheet').innerHTML = setHtml();
     hydrate(snap, fresh);

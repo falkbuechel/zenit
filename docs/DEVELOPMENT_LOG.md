@@ -7,7 +7,8 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Falk testet am iPhone: neue Heute-Startseite, Belohnungsfolge nach dem Training, Essen-Zuviel/Wackeln, Wasser-Knöpfe, Nährwert-Fenster.
 - Nächster Schritt: Heute weiter umbauen („darauf kann man aufbauen, braucht noch viel Veränderung“) – erst fragen, was am meisten stört, dann Varianten zeigen.
 - Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken, damit Linien zu Backlever/Frontlever kürzer werden (Linie vom Muskel-Emblem wird dafür länger)?
-- iPhone-Test offen: Essen-Tagesleiste wischen, Wasser-Balken ziehen, neues Wasser-Fenster.
+- iPhone-Test offen: Essen-Tagesleiste wischen, Wasser-Balken ziehen, neues Wasser-Fenster, Mahlzeit-Zeilen mit Stapeln, Nährwert-Fenster, Mengen-Fenster, Marken-/Online-Suche.
+- Offen Essen: Gericht- und Eigenes-Lebensmittel-Fenster (openOwn, dishEditHtml) noch im alten Stil – bei Bedarf wie das Mengen-Fenster umbauen.
 
 ## Offen / Ideen
 - iPhone-Test offen: Pause-Vollbild in der Arena, Skilltree (Linien, Leuchten, Info-Leiste)
@@ -21,6 +22,15 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-26 – Essen: Gegessen nach Mahlzeit und Kategorie, 4 Vorschläge, Nährwert- und Mengen-Fenster neu
+- Gegessen steht jetzt über den Vorschlägen. Je Mahlzeit eine Zeile (`fMeal`, `fGroups` gruppiert nur noch nach Mahlzeit, nicht mehr 45-min-Fenster), darin Einträge gleicher Kategorie (`fCat`: FCATS, Eigene, Gerichte, Schnell) ab 2 als Stapel mit Anzahl; Chips zeigen die Menge statt Mahlzeit/Uhrzeit.
+- Vorschläge (`fTiles`): 2 zuletzt + 2 häufigste der letzten 21 Tage, je Lebensmittel einmal, aufgefüllt aus `TILEDEF`; 4er-Raster statt Scrollreihe.
+- Nährwert-Fenster: gleiche Lebensmittel zusammengefasst (×n, gestapelt), Gesamtbalken oben, nicht mehr editierbar; Antippen klappt die übrigen Nährwerte in ihren Farben auf (`data-fnx`). Nährwertfarben zentral in `NCOL`, Zahlformat `fNv` (ersetzt `fV`).
+- Mengen-Fenster: Barcode-Knopf im Kopf (neben Marke), Nährwert-Kacheln in Nährwertfarben mit Tagesbalken (Tag bisher blass + diese Menge, rot über `FLIM`), `fDaySum` gemeinsam für Kacheln und „danach frei“, Eintragen-Knopf klebt unten (`.fpgo`).
+- Open Food Facts: `cgi/search.pl` antwortete oft 503/langsam. Jetzt de und world parallel mit 8 s Zeitlimit, de mit Treffern gewinnt. `search.openfoodfacts.org` (schnell) geht nicht: kein CORS-Header. Andere freie Quellen ohne Schlüssel/CORS gibt es kaum (USDA braucht Schlüssel, englisch). Klarere Meldungen bei „nicht gefunden“.
+- Wasser-Balken sprang nach dem Ziehen zurück: `hydrate` animierte vom alten `data-p` → `wslSet` setzt jetzt auch `data-p`. Monatsanzeige höher.
+- Fehler gefunden: `render()` scrollte die erste `.fchips` ans Ende (Rest aus der alten Leiste) → entfernt.
 
 ### 2026-10-26 – Essen: Tagesleiste wischbar, Wasser-Regler und neues Wasser-Fenster
 - Tagesleiste: Wischen springt 7 Tage zurück/vor (rollend, heute rechts, bis 1 Jahr zurück), Auswahl wandert mit; neuer Monat erscheint kurz als Pille darüber (`fdsMove`, `fMon`, Wischmodus `fds` neben `cal` in 15-start.js). `fSd` erlaubt jetzt jeden Tag im letzten Jahr.

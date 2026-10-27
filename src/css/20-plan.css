@@ -122,12 +122,14 @@
 .pday .ptg button { min-height: 36px; }
 .pday.in-d { animation: fade .15s var(--ease); }
 .pday.fl { animation: agfl .7s var(--ease); }
-.pd-h { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
-.pd-h b { font-family: var(--f-display); font-weight: 800; font-size: 19px; letter-spacing: .04em; text-transform: uppercase; }
-.pd-c { margin-left: auto; display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--r10); border: 1px solid var(--line); background: var(--s2); color: var(--ink2); transition: transform .14s var(--ease); }
-.pd-c:active { transform: scale(.95); }
-.pd-c[aria-expanded="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
-.pd-c .ic { width: 16px; height: 16px; }
+.pd-h { display: flex; align-items: center; gap: 4px; }
+.pd-h b { flex: 1; font-family: var(--f-display); font-weight: 800; font-size: 19px; letter-spacing: .04em; text-transform: uppercase; }
+/* Kopf der Fokus-Karte: Glocke mit Zahl (Zu tun), Stift = Tag ändern (hervorgehoben, wenn der Tag eine Ausnahme hat) */
+.pd-n, .pd-e { position: relative; width: 38px; height: 38px; }
+.pd-n { color: var(--danger); }
+.pd-n i { position: absolute; top: 3px; right: 2px; min-width: 15px; height: 15px; padding: 0 3px; border-radius: var(--r99); background: var(--danger); color: #fff; font: 700 9.5px/15px var(--f-mono); font-style: normal; }
+.pd-e.on { color: var(--ac); }
+.pd-n .ic, .pd-e .ic { width: 19px; height: 19px; }
 .ptg button .ic { width: 16px; height: 16px; color: var(--pc, var(--ink3)); }
 .pday > .pd-x > div { padding: 0; }
 .pday.open > .pd-x > div { padding: 10px 0 2px; }
@@ -287,6 +289,17 @@ button.pdb-h:active { background: var(--s2); }
 .pda button.act { border-color: var(--ac); background: color-mix(in srgb, var(--ac) 18%, var(--s2)); color: var(--ink); }
 .pdh { display: flex; align-items: center; gap: 8px; margin: 0; padding: 8px 10px; border-radius: var(--r10); background: var(--s2); font-size: 13px; font-weight: 700; color: var(--ink2); }
 .pdh .ic { width: 16px; height: 16px; }
+.pdh .x { width: 30px; height: 30px; margin-left: auto; }
+/* Trainingstage (Fächer der Karten = Bausteine) und Wochenplan (Mo–So = Anordnung): der Knopf zeigt, was drin ist */
+.pfx { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.pfx .btn { display: grid; justify-items: center; gap: 6px; min-height: 84px; padding: 10px 8px; font-size: 13px; }
+.pfan { display: flex; justify-content: center; height: 36px; }
+.pfan i { display: grid; place-items: center; width: 26px; height: 34px; margin: 0 -5px; border: 1px solid color-mix(in srgb, var(--pc) 55%, var(--line)); border-radius: 4px; background: color-mix(in srgb, var(--pc) 22%, var(--s1)); color: var(--pc); transform: rotate(calc(var(--j) * 8deg)) translateY(calc(var(--j) * var(--j) * 1.5px)); box-shadow: -2px 0 4px -2px rgba(0, 0, 0, .5); }
+.pfan .ic { width: 14px; height: 14px; }
+.pmw { display: grid; grid-template-columns: repeat(7, 12px); gap: 3px; align-content: center; height: 36px; }
+.pmw i { height: 22px; border-radius: 3px; background: color-mix(in srgb, var(--pc, var(--line)) 75%, transparent); }
+.pmw i:not([style]) { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+.pmw i.t { outline: 1.5px solid var(--ink); outline-offset: 1px; }
 .pdur { display: grid; gap: 6px; grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .pdur button { display: grid; align-items: center; justify-content: space-between; gap: 2px; min-height: 44px; padding: 6px 2px; border-radius: var(--r12); border: 1px solid var(--line); background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); justify-items: center; }
 .pdur b { font-size: 17px; }

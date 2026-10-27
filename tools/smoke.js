@@ -57,12 +57,13 @@ async function scenario(b, sc, errs) {
     // Plan: Tag ändern (Tauschen über den Kalender, Ersetzen, Aussetzen, Urlaub; jede Aktion schaltet sich beim zweiten Tippen aus)
     if (tab === 'tage') {
       await click('[data-cnow]');
-      await click('[data-pft="d"]');
-      await click('[data-pmode="swap"]'); await click('.pc2.pick'); await click('[data-pmode="swap"]');
-      await click('[data-pmode="repl"]'); await click('[data-preplx]'); await click('[data-pmode="repl"]');
-      await click('[data-pmode="skip"]'); await click('[data-pmode="skip"]'); await click('[data-pmode="add"]'); await click('[data-paddx]'); await click('[data-pft="d"]');
-      await click('[data-pmode="vac"]'); await click('[data-poff="3"]'); await shot('tage-urlaub');
-      await click('[data-pmode="vac"]'); await click('[data-pft="e"]'); await click('[data-pft="t"]');
+      const ed = () => click('[data-pdedit]');
+      await ed(); await click('[data-pmode="swap"]'); await click('.pc2.pick'); await ed(); await click('[data-pmode="swap"]');
+      await ed(); await click('[data-pmode="repl"]'); await click('[data-preplx]'); await ed(); await click('[data-pmode="repl"]');
+      await ed(); await click('[data-pmode="skip"]'); await ed(); await click('[data-pmode="skip"]'); await ed(); await click('[data-pmode="add"]'); await click('[data-paddx]');
+      await ed(); await click('[data-pmode="vac"]'); await click('[data-poff="3"]'); await shot('tage-urlaub');
+      await ed(); await click('[data-pmode="vac"]'); await click('[data-pft="e"]'); await click('[data-pft="t"]');
+      if (await click('[data-pnts]')) await closeSheet();
       await click('[data-pdays]'); await shot('tage-tage'); await click('[data-sheet-close]');
     }
     // Plan: Wochenplaner (Karte antippen + Tag antippen, entfernen, speichern, neuer Plan, aktivieren), daraus den Editor öffnen

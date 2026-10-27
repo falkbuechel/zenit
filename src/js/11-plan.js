@@ -123,7 +123,7 @@
     if (ui.cm) { from = Date.UTC(q.getUTCFullYear(), q.getUTCMonth(), 1) / 864e5; to = Date.UTC(q.getUTCFullYear(), q.getUTCMonth() + 1, 0) / 864e5; lead = wdOf(from); }
     else { from = a - 3; to = a + 3; }
     var tq = new Date((ui.cm ? from : a) * 864e5), title = tq.toLocaleDateString('de-DE', { month: 'long', timeZone: 'UTC' });
-    var cells = '', swp = ft === 'd' && ui.pmode === 'swap', lw = lastW(), wdue = lw ? dayIdx(lw.t) + 7 : today;
+    var cells = '', swp = ui.pmode === 'swap', lw = lastW(), wdue = lw ? dayIdx(lw.t) + 7 : today;
     for (k = 0; k < lead; k++) cells += '<i></i>';
     for (k = from; k <= to; k++) {
       var ds = schedFor(k), tr = d.byDay[k], of = offAt(k), skp = ovF(k).s ? P.days.filter(function (x) { return onDay(x, k); }) : [], pk = swp ? (swapOk(sd, k, today) ? ' pick' : ' nop') : '';
@@ -144,13 +144,21 @@
       (wk ? '<p class="pc2-n">' + ic('cal') + esc(wk.t) + ' · ' + esc(wk.s) + '</p>' : '') + '</section>';
     ui.cdir = 0; ui.cmx = false;
 
-    // Fokus: der gewählte Tag mit Umschalter Training / Essen / Tag (Tag = Zu tun, Ausnahmen, Urlaub/Krank); Punkt am Reiter, wenn dort etwas ansteht
+    // Fokus: der gewählte Tag mit Umschalter Training / Essen. Kopf: Glocke (Zu tun, Wiegen fällig) und „Tag ändern“ (Ausnahmen, Urlaub/Krank) öffnen je ein Fenster
     var sc = schedFor(sd), st = d.byDay[sd], off = offAt(sd), fd = ovF(sd), kd = fd.s ? 'skip' : fd.w !== undefined ? 'swap' : fd.r ? 'repl' : '', c = '';
-    var dHot = (sd === today && todo.length) || (sd === wdue && sd > today) || !!off || !!kd || !!fd.a, edt = sd >= today - 14;
-    c += '<div class="pd-h"><b>' + dayHead(sd) + '</b></div><div class="seg pft">' + [['t', 'dumb', 'Training'], ['e', 'food', 'Essen'], ['d', 'cal', 'Tag']].map(function (x) {
-      return '<button data-pft="' + x[0] + '" aria-pressed="' + (ft === x[0]) + '">' + ic(x[1]) + x[2] + (x[0] === 'd' && dHot ? '<i class="pfd"></i>' : '') + '</button>'; }).join('') + '</div>';
+    var nts = (sd === today ? todo.length : 0) + (sd === wdue && sd > today ? 1 : 0), edt = sd >= today - 14;
+    if (ft === 'd') ft = 't';
+    c += '<div class="pd-h"><b>' + dayHead(sd) + '</b>' + (nts ? '<button class="x pd-n" data-pnts="1" aria-label="' + nts + ' Hinweise">' + ic('bell') + '<i>' + nts + '</i></button>' : '') +
+      (edt ? '<button class="x pd-e' + (kd || off || fd.a ? ' on' : '') + '" data-pdedit="1" aria-label="Tag ändern">' + ic('edit') + '</button>' : '') + '</div>' +
+      '<div class="seg pft">' + [['t', 'dumb', 'Training'], ['e', 'food', 'Essen']].map(function (x) { return '<button data-pft="' + x[0] + '" aria-pressed="' + (ft === x[0]) + '">' + ic(x[1]) + x[2] + '</button>'; }).join('') + '</div>';
+    if (swp) c += '<p class="pdh">' + ic('swap') + 'Tag im Kalender wählen<button class="x" data-pmode="swap" aria-label="Tauschen abbrechen">' + ic('close') + '</button></p>';
     if (ft === 't') {
       var shown = {};
+      if (kd && !off) {
+        var was = P.days.filter(function (x) { return onDay(x, sd); }), pt = fd.w !== undefined ? fd.w : null;
+        c += '<div class="pwas">' + ic(kd === 'skip' ? 'skip' : kd === 'swap' ? 'swap' : 'repl') + '<span>' + (kd === 'skip' ? 'Ausgesetzt' : kd === 'swap' ? 'Getauscht' + (pt !== null ? ' mit ' + WDN[wdOf(pt)] + ' ' + fmtShort(pt) : '') : 'Statt') + '</span>' +
+          (was.length ? was.map(function (x) { return '<s style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + '</s>'; }).join('') : '<s>' + ic('snow') + 'Frei</s>') + '</div>';
+      }
       if (off) c += '<div class="pdb off"><div class="pdb-h"><span class="pdi">' + ic(off.k === 'vac' ? 'sun' : 'sick') + '</span><span class="nm"><b>' + (off.k === 'vac' ? 'Urlaub' : 'Krank') + '</b><small>' + fmtShort(off.a) + ' – ' + fmtShort(off.b) + ' · Serie geschützt</small></span></div></div>';
       sc.forEach(function (x) {
         var ids = sortIds(x.ex.filter(function (id) { return d.unlocked[id]; })), dn = ids.filter(function (id) { return st && st.ex[id]; }).length, key = sd + ':' + x.id, open = !!ui.pdo[key];
@@ -176,23 +184,16 @@
         return '<div class="pfr2' + (pr > FLIM[x[0]] ? ' over' : pr >= 0.9 ? ' hit' : '') + '" style="--fc:var(' + NCOL[x[0]] + ')"><span><b>' + Math.round(v) + '</b><small>/ ' + gv + ' ' + x[1] + '</small></span><i class="fbt"><i style="--p:' + Math.min(1, pr).toFixed(3) + '"></i></i></div>';
       }).join('') + '</div>';
       if (sd <= today) c += '<button class="btn small pfo" data-pfo="' + sd + '">' + ic('food') + 'In Essen öffnen</button>';
-    } else {
-      if (sd === today && todo.length) c += '<div class="todo open"><div class="tdh">' + ic('bell') + '<b>Zu tun</b><span>' + todo.length + '</span></div>' +
-        '<div class="agx"><div>' + todo.map(function (n) { return '<button class="tdo" data-nt="' + n.k + '">' + ic(n.i) + '<span><b>' + esc(n.t) + '</b><small>' + esc(n.s) + '</small></span>' + ic('chev', 'chv') + '</button>'; }).join('') + '</div></div></div>';
-      if (sd === wdue && sd > today) c += '<button class="pup" data-wgnow="1">' + ic('scale') + '<span><b>Wiegen fällig</b><small>Passt es schon heute? Dann jetzt eintragen.</small></span>' + ic('chev', 'chv') + '</button>';
-      if (kd && !off) {
-        var was = P.days.filter(function (x) { return onDay(x, sd); }), pt = fd.w !== undefined ? fd.w : null;
-        c += '<div class="pwas">' + ic(kd === 'skip' ? 'skip' : kd === 'swap' ? 'swap' : 'repl') + '<span>' + (kd === 'skip' ? 'Ausgesetzt' : kd === 'swap' ? 'Getauscht' + (pt !== null ? ' mit ' + WDN[wdOf(pt)] + ' ' + fmtShort(pt) : '') : 'Statt') + '</span>' +
-          (was.length ? was.map(function (x) { return '<s style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + '</s>'; }).join('') : '<s>' + ic('snow') + 'Frei</s>') + '</div>';
-      }
-      if (off) c += '<div class="pdb off"><div class="pdb-h"><span class="pdi">' + ic(off.k === 'vac' ? 'sun' : 'sick') + '</span><span class="nm"><b>' + (off.k === 'vac' ? 'Urlaub' : 'Krank') + '</b><small>' + fmtShort(off.a) + ' – ' + fmtShort(off.b) + ' · Serie geschützt</small></span></div></div>';
-      c += edt ? dayEdit(P, sd, sc, today) : '<p class="pfn">' + ic('lock') + 'Zu lange her zum Ändern</p>';
     }
     h += '<section class="pday rise' + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
     ui.pfl = null; ui.pdx = false;
 
     // Darunter wie in Essen: zwei Knöpfe (Vorlagen als Fenster, Wochenplan), dann Vorlagen, die heute/künftig noch nicht dran sind (antippen = zusätzlich an diesem Tag)
-    h += '<div class="fact2 rise" style="--i:3"><button class="btn" data-pdays="1">' + ic('dumb') + 'Trainingstage</button><button class="btn" data-pman="1">' + ic('cards') + 'Wochenplan</button></div>';
+    // Trainingstage = Bausteine (Fächer der farbigen Karten), Wochenplan = Anordnung (Mo–So mit den Farben des aktiven Plans)
+    var fan = P.days.slice(0, 5).map(function (x, j, l) { return '<i style="--pc:var(' + PCOL[x.c] + ');--j:' + (j - (l.length - 1) / 2).toFixed(1) + '">' + ic(dIcon(x)) + '</i>'; }).join('');
+    var mw = WDN.map(function (n, w) { var x = P.days.filter(function (y) { return wdAt(y, today + w - wdOf(today)).indexOf(w) >= 0; })[0]; return '<i' + (x ? ' style="--pc:var(' + PCOL[x.c] + ')"' : '') + (w === wdOf(today) ? ' class="t"' : '') + '></i>'; }).join('');
+    h += '<div class="pfx rise" style="--i:3"><button class="btn pfx-d" data-pdays="1" aria-label="Trainingstage"><span class="pfan">' + fan + '</span><b>Trainingstage</b></button>' +
+      '<button class="btn pfx-w" data-pman="1" aria-label="Wochenplan"><span class="pmw">' + mw + '</span><b>Wochenplan</b></button></div>';
     var cur0 = sc.map(function (x) { return x.id; }), add = sd >= today && !off ? P.days.filter(function (x) { return cur0.indexOf(x.id) < 0; }).slice(0, 4) : [];
     if (add.length) h += '<section class="pvl rise" style="--i:4">' + add.map(function (x) {
       var n = x.ex.filter(function (id) { return d.unlocked[id]; }).length;
@@ -202,6 +203,19 @@
     if (ux) h += '<button class="agn gold pux rise" style="--i:5" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>';
     return h;
   }
+  function pdayHtml() {
+    // Tag ändern als Fenster: Aktionen (Tauschen schließt es und wählt im Kalender), darunter die Auswahl der gewählten Aktion
+    var today = dayIdx(Date.now()), sd = ui.pd == null ? today : ui.pd;
+    return shHead('edit', 'Tag ändern', dayHead(sd)) + dayEdit(plan(), sd, schedFor(sd), today);
+  }
+  function openNts() {
+    var today = dayIdx(Date.now()), NT = ui.nts || [], lw = lastW(), todo = ['st', 'tr', 'wg', 'f0', 'fp'].map(function (x) { return NT.filter(function (n) { return n.k === x; })[0]; }).filter(Boolean), sd = ui.pd == null ? today : ui.pd;
+    ui.sheet = { pnts: true };
+    sheetOpen(shHead('bell', 'Zu tun', dayHead(sd)) + '<div class="todo open"><div class="agx"><div>' +
+      (sd === today ? todo.map(function (n) { return '<button class="tdo" data-nt="' + n.k + '">' + ic(n.i) + '<span><b>' + esc(n.t) + '</b><small>' + esc(n.s) + '</small></span>' + ic('chev', 'chv') + '</button>'; }).join('') : '') + '</div></div></div>' +
+      (lw && sd === dayIdx(lw.t) + 7 && sd > today ? '<button class="pup" data-wgnow="1">' + ic('scale') + '<span><b>Wiegen fällig</b><small>Passt es schon heute? Dann jetzt eintragen.</small></span>' + ic('chev', 'chv') + '</button>' : ''));
+  }
+  function pdDone() { if (ui.sheet && ui.sheet.pday) closeSheet(true); ui.fresh = false; render(); }
   function openDays() {
     // Trainingstage als Fenster (wie Gerichte): Karten antippen = bearbeiten, darunter neu aus Vorlage
     var P = plan(), d = derive(state.logs); ui.sheet = { pdays: true };
@@ -415,7 +429,7 @@
     var el, today = dayIdx(Date.now());
     if ((el = t.closest('[data-cday]'))) {
       var cd = +el.dataset.cday, s0 = ui.pd == null ? today : ui.pd;
-      if (ui.pft === 'd' && ui.pmode === 'swap') {
+      if (ui.pmode === 'swap') {
         // Tauschen: zweiter Tag im Kalender; gleiche Tage und Urlaub/Krank gehen nicht
         if (!swapOk(s0, cd, today)) { buzz(20); return true; }
         // Getauscht wird das geplante Training (ohne Zusätzliches); ein früherer Tausch der beiden Tage wird vorher gelöst
@@ -428,7 +442,9 @@
     if ((el = t.closest('[data-cnav]'))) { calMove(+el.dataset.cnav); return true; }
     if (t.closest('[data-cmode]')) { ui.cm = !ui.cm; ui.ca = ui.pd == null ? today : ui.pd; ui.cmx = true; ui.fresh = false; render(); return true; }
     if (t.closest('[data-cnow]')) { ui.pd = today; ui.ca = today; ui.pdx = true; ui.fresh = false; render(); return true; }
-    if ((el = t.closest('[data-pft]'))) { ui.pft = el.dataset.pft; ui.pmode = null; ui.fresh = false; render(); buzz(4); return true; }
+    if ((el = t.closest('[data-pft]'))) { ui.pft = el.dataset.pft; ui.fresh = false; render(); buzz(4); return true; }
+    if (t.closest('[data-pdedit]')) { ui.pmode = null; ui.sheet = { pday: true }; sheetOpen(pdayHtml()); return true; }
+    if (t.closest('[data-pnts]')) { openNts(); return true; }
     if ((el = t.closest('[data-pfo]'))) { ui.fsd = +el.dataset.pfo; goTab('food'); return true; }
     if (t.closest('[data-pdays]')) { openDays(); return true; }
     if ((el = t.closest('[data-pdb]'))) { var pk = el.dataset.pdb; ui.pdo[pk] = !ui.pdo[pk]; el.setAttribute('aria-expanded', ui.pdo[pk]); el.parentNode.classList.toggle('open', ui.pdo[pk]); return true; }
@@ -439,15 +455,18 @@
     var sd = ui.pd == null ? today : ui.pd, ids = function (di) { return schedFor(di).map(function (x) { return x.id; }); };
     if ((el = t.closest('[data-pmode]'))) {
       var pm = el.dataset.pmode, of0 = offAt(sd), f0 = ovF(sd), P3 = plan(), on0 = { swap: f0.w !== undefined, skip: !!f0.s, repl: !!f0.r, add: !!f0.a }[pm];
-      if ((pm === 'vac' || pm === 'sick') && of0 && of0.k === pm) { P3.off.splice(of0.i, 1); ui.pmode = null; persist(); ui.fresh = false; render(); toast('Zeitraum gelöscht', pm === 'vac' ? 'sun' : 'sick'); return true; }
-      if (on0) { if (pm === 'swap') swapClear(sd); else { delete f0[{ skip: 's', repl: 'r', add: 'a' }[pm]]; ovSetF(sd, f0); } ui.pmode = null; ui.pfl = sd; persist(); ui.fresh = false; render(); return true; }
-      if (pm === 'skip') { swapClear(sd); ovSetF(sd, { s: 1 }); ui.pmode = null; ui.pfl = sd; persist(); ui.fresh = false; render(); toast('Ausgesetzt', 'skip'); return true; }
-      ui.pmode = ui.pmode === pm ? null : pm; ui.fresh = false; render(); return true;
+      if (pm === 'swap' && ui.pmode === 'swap') { ui.pmode = null; ui.fresh = false; render(); return true; }
+      if ((pm === 'vac' || pm === 'sick') && of0 && of0.k === pm) { P3.off.splice(of0.i, 1); ui.pmode = null; persist(); pdDone(); toast('Zeitraum gelöscht', pm === 'vac' ? 'sun' : 'sick'); return true; }
+      if (on0) { if (pm === 'swap') swapClear(sd); else { delete f0[{ skip: 's', repl: 'r', add: 'a' }[pm]]; ovSetF(sd, f0); } ui.pmode = null; ui.pfl = sd; persist(); pdDone(); return true; }
+      if (pm === 'skip') { swapClear(sd); ovSetF(sd, { s: 1 }); ui.pmode = null; ui.pfl = sd; persist(); pdDone(); toast('Ausgesetzt', 'skip'); return true; }
+      // Tauschen: Fenster zu, zweiter Tag im Kalender; übrige Aktionen zeigen ihre Auswahl im Fenster
+      if (pm === 'swap') { ui.pmode = 'swap'; ui.pft = 't'; if (ui.sheet) closeSheet(true); ui.fresh = false; render(); return true; }
+      ui.pmode = ui.pmode === pm ? null : pm; if (ui.sheet && ui.sheet.pday) $('sheet').innerHTML = pdayHtml(); else { ui.fresh = false; render(); } return true;
     }
-    if ((el = t.closest('[data-preplx]'))) { swapClear(sd); var fr = ovF(sd); delete fr.s; fr.r = [el.dataset.preplx]; ovSetF(sd, fr); ui.pmode = null; ui.pfl = sd; persist(); ui.fresh = false; render(); return true; }
-    if ((el = t.closest('[data-paddx]'))) { var fx = ovF(sd), pa = pDay(el.dataset.paddx); delete fx.s; fx.a = (fx.a || []).concat([el.dataset.paddx]); ovSetF(sd, fx); ui.pmode = null; ui.pfl = sd; ui.pft = 't'; if (pa) toast(pa.n + ' zusätzlich', 'plus'); buzz(8); persist(); ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-preplx]'))) { swapClear(sd); var fr = ovF(sd); delete fr.s; fr.r = [el.dataset.preplx]; ovSetF(sd, fr); ui.pmode = null; ui.pfl = sd; persist(); pdDone(); return true; }
+    if ((el = t.closest('[data-paddx]'))) { var fx = ovF(sd), pa = pDay(el.dataset.paddx); delete fx.s; fx.a = (fx.a || []).concat([el.dataset.paddx]); ovSetF(sd, fx); ui.pmode = null; ui.pfl = sd; ui.pft = 't'; if (pa) toast(pa.n + ' zusätzlich', 'plus'); buzz(8); persist(); pdDone(); return true; }
     if (t.closest('[data-wgnow]')) { openWeight(); return true; }
-    if ((el = t.closest('[data-poff]'))) { var P0 = plan(), n = +el.dataset.poff; P0.off = (P0.off || []).concat([{ a: sd, b: sd + n - 1, k: ui.pmode === 'sick' ? 'sick' : 'vac' }]); toast(ui.pmode === 'sick' ? 'Krank eingetragen' : 'Urlaub eingetragen', ui.pmode === 'sick' ? 'sick' : 'sun'); ui.pmode = null; persist(); ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-poff]'))) { var P0 = plan(), n = +el.dataset.poff; P0.off = (P0.off || []).concat([{ a: sd, b: sd + n - 1, k: ui.pmode === 'sick' ? 'sick' : 'vac' }]); toast(ui.pmode === 'sick' ? 'Krank eingetragen' : 'Urlaub eingetragen', ui.pmode === 'sick' ? 'sick' : 'sun'); ui.pmode = null; persist(); pdDone(); return true; }
     return false;
   }
   function planClick(t) {

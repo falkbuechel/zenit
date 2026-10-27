@@ -2,6 +2,12 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-28 Planen: Reiter Tag aufgelöst, Trainingstage/Wochenplan als Bild-Knöpfe
+- Umschalter nur noch Training | Essen. Ausnahme-Status (getauscht/ausgesetzt/statt) und Urlaub/Krank stehen im Reiter Training. Kopf der Fokus-Karte: Glocke mit Zahl (`data-pnts`, Fenster mit Zu tun und Wiegen fällig, nur wenn etwas ansteht), Stift = „Tag ändern“ (`data-pdedit`, Fenster `pdayHtml` mit `dayEdit`; grün, wenn der Tag eine Ausnahme hat).
+- Im Fenster: Aussetzen/Ersetzen/Zusätzlich/Urlaub/Krank zeigen ihre Auswahl im Fenster und schließen es beim Abschluss (`pdDone`); Tauschen schließt es sofort, Hinweis „Tag im Kalender wählen“ mit ✕ in der Fokus-Karte, Kalender markiert die möglichen Tage (`ui.pmode === 'swap'`).
+- Knöpfe zeigen ihren Inhalt statt Erklärtext: Trainingstage = Fächer der farbigen Karten (Bausteine), Wochenplan = Mo–So-Felder in den Farben des aktiven Plans, heute umrandet (Anordnung). Gleiche Karte (Farbe + Icon) in Vorlagen, Fächer, Planer und Kalender.
+- Rauchtest geht den Weg über das Fenster.
+
 ## 2026-10-27 Essen: Gegessen-Zeile aufgeräumt
 - Karten waren 32 px zu schmal (`.fmc` rechnete mit dem negativen Rand von `.fchips`): jetzt `(100% - 24px) / 4`, ohne aufgeklappte Mahlzeit immer gleich breit (`.fem`) und bündig mit den Vorschlägen.
 - Gegessen-Karten und Einträge im Stil der Vorschläge, aber gefüllt: Tönung in der Mahlzeitfarbe statt Farbkante oben, „kcal“ klein hinter der Zahl, 90 px hoch. Platzhalter nur noch gestrichelt.

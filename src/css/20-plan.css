@@ -54,7 +54,16 @@
 .pc2-w span { padding: 6px 0 4px; text-align: center; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
 .pc2 { position: relative; display: grid; justify-items: center; align-content: start; gap: 4px; min-height: 54px; padding: 4px 0; border: 0; border-radius: var(--r12); background: transparent; color: var(--ink); font: inherit; -webkit-user-select: none; user-select: none; transition: background-color .16s var(--ease); }
 .pc2:active { background: var(--s2); }
-.pc2 b { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; font-family: var(--f-mono); font-size: 14px; font-weight: 600; }
+.pc2 b { position: relative; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; font-family: var(--f-mono); font-size: 14px; font-weight: 600; }
+/* Wochenleiste: Wochentag über der Zahl (der Monat hat dafür die Kopfzeile) */
+.pc2 > small { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink3); }
+.pc2.today > small { color: var(--ink); }
+/* Essen-Ring um die Tageszahl: Anteil vom kcal-Ziel, grün im Rahmen, rot drüber */
+.pfr { --fc: var(--ink3); position: absolute; inset: -3px; border-radius: 50%; background: conic-gradient(var(--fc) calc(var(--p) * 360deg), color-mix(in srgb, var(--ink3) 22%, transparent) 0); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px)); mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px)); pointer-events: none; }
+.pfr.ok { --fc: var(--ac); }
+.pfr.over { --fc: var(--danger); }
+/* Wochenleiste: Meldungen neben der Zahl statt über dem Wochentag */
+.pcal2:not(.mon) .pc2 :is(.nd, .nf) { top: 17px; right: calc(50% - 25px); }
 .pc2.past b { color: var(--ink3); }
 .pc2.today b { background: var(--ink); color: var(--bg); font-weight: 700; }
 .pc2.sel { background: var(--s2); box-shadow: inset 0 0 0 1px var(--line); }
@@ -73,7 +82,39 @@
 .pc2-n { display: flex; align-items: center; gap: 6px; margin: 6px 4px 0; font-size: 12px; font-weight: 700; color: var(--flame); }
 .pc2-n .ic { width: 14px; height: 14px; }
 /* Tageskarte */
-.pday { display: grid; margin-top: 10px; padding: 12px; border: 1px solid var(--line); border-radius: var(--r16); background: var(--s1); }
+/* Fokus des Tabs (wie die Bilanz in Essen): dünne leuchtende Kante */
+.pday { display: grid; margin-top: 10px; padding: 12px; border: 1px solid transparent; border-radius: var(--r16); background: var(--s1); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 60%, transparent), 0 0 24px -8px color-mix(in srgb, var(--ac) 55%, transparent); }
+/* Umschalter Training / Essen / Tag, Punkt = im Reiter Tag steht etwas an */
+.seg.pft { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 0; }
+.seg.pft button { position: relative; min-height: 38px; font-size: 13px; }
+.seg.pft .ic { width: 16px; height: 16px; }
+.pfd { position: absolute; top: 6px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--danger); }
+.pfn { display: flex; align-items: center; gap: 8px; margin: 0; padding: 14px 4px; font-size: 13px; color: var(--ink3); }
+.pfn .ic { width: 18px; height: 18px; }
+.pfs { display: grid; gap: 12px; }
+.pfr2 { display: grid; gap: 6px; }
+.pfr2 span { display: flex; align-items: baseline; gap: 6px; }
+.pfr2 b { font-family: var(--f-display); font-size: 26px; font-weight: 900; line-height: 1; }
+.pfr2 small { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
+.pfr2.hit b { color: var(--fc); }
+.pfr2.over b { color: var(--danger); }
+.pfo { justify-self: start; }
+/* Vorlagen unter dem Fokus (wie die Vorschläge in Essen): antippen = zusätzlich an diesem Tag */
+.pvl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+.ptv { position: relative; display: grid; align-content: space-between; justify-items: start; gap: 4px; min-width: 0; min-height: 80px; padding: 9px; border: 1px solid color-mix(in srgb, var(--pc) 35%, var(--line)); border-radius: var(--r14); background: linear-gradient(160deg, color-mix(in srgb, var(--pc) 12%, transparent), transparent 70%); box-shadow: var(--hs); color: var(--ink); font: inherit; text-align: left; }
+.ptv:active { transform: translateY(2px); box-shadow: none; }
+.ptv::after { content: "+"; position: absolute; top: 5px; right: 8px; font: 600 14px/1 var(--f-mono); color: var(--pc); }
+.ptv > .ic { width: 20px; height: 20px; color: var(--pc); }
+.ptv b { overflow: hidden; max-width: 100%; font-size: 13px; white-space: nowrap; text-overflow: ellipsis; }
+.ptv small { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink3); }
+/* Trainingstage-Fenster: Karten in zwei Spalten */
+.pdg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.pdc2 { display: grid; justify-items: start; gap: 4px; min-width: 0; padding: 10px 12px; border: 1px solid var(--line); border-left: 3px solid var(--pc); border-radius: var(--r12); background: var(--s1); box-shadow: var(--hs); color: var(--ink); font: inherit; text-align: left; }
+.pdc2:active { transform: translateY(2px); box-shadow: none; }
+.pdc2 i { display: grid; color: var(--pc); }
+.pdc2 i .ic { width: 22px; height: 22px; }
+.pdc2 b { overflow: hidden; max-width: 100%; font-size: 14px; white-space: nowrap; text-overflow: ellipsis; }
+.pdc2 small { font-size: 11px; color: var(--ink3); }
 /* Abstände über Ränder statt gap: so nimmt der zugeklappte Bereich (0fr) keinen Platz ein */
 .pday > * + * { margin-top: 10px; }
 .pday > .agx { margin-top: 0; }

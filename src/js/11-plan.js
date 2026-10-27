@@ -112,67 +112,105 @@
       ui.pe = null;
     }
     if (ui.pman) return viewPlanner(d, now);
-    var NT = ui.nts || [], dur = durEst(), sd = ui.pd == null ? today : ui.pd, a = ui.ca == null ? today : ui.ca, k;
+    var NT = ui.nts || [], dur = durEst(), sd = ui.pd == null ? today : ui.pd, a = ui.ca == null ? today : ui.ca, k, ft = ui.pft || 't';
     function nt(x) { return NT.filter(function (n) { return n.k === x; })[0]; }
     var todo = ['st', 'tr', 'wg', 'f0', 'fp'].map(nt).filter(Boolean), wk = nt('wk'), ux = nt('ux');
     var h = '<div class="pt-h rise" style="--i:0"><h2>Plan</h2></div>';
 
-    // Kalender: Wochenstreifen, aufklappbar zum Monat. Zellen zeigen das Icon des Trainingstags, die Glocke Meldungen
+    // Kalender: Wochenleiste mit dem gewählten Tag in der Mitte (wischen = 7 Tage), Monatsname klappt den Monat aus.
+    // Zellen: Icon des Trainingstags, Haken = trainiert, Ring um die Zahl = Essen (Anteil vom kcal-Ziel; grün im Rahmen, rot drüber), Glocke/Waage = Meldungen
     var q = new Date(a * 864e5), from, to, lead = 0;
     if (ui.cm) { from = Date.UTC(q.getUTCFullYear(), q.getUTCMonth(), 1) / 864e5; to = Date.UTC(q.getUTCFullYear(), q.getUTCMonth() + 1, 0) / 864e5; lead = wdOf(from); }
-    else { from = a - wdOf(a); to = from + 6; }
-    var tq = new Date((ui.cm ? from : from + 3) * 864e5), title = tq.toLocaleDateString('de-DE', { month: 'long', timeZone: 'UTC' });
-    var cells = '', swp = ui.pchg && ui.pmode === 'swap', lw = lastW(), wdue = lw ? dayIdx(lw.t) + 7 : today;
+    else { from = a - 3; to = a + 3; }
+    var tq = new Date((ui.cm ? from : a) * 864e5), title = tq.toLocaleDateString('de-DE', { month: 'long', timeZone: 'UTC' });
+    var cells = '', swp = ft === 'd' && ui.pmode === 'swap', lw = lastW(), wdue = lw ? dayIdx(lw.t) + 7 : today;
     for (k = 0; k < lead; k++) cells += '<i></i>';
     for (k = from; k <= to; k++) {
       var ds = schedFor(k), tr = d.byDay[k], of = offAt(k), skp = ovF(k).s ? P.days.filter(function (x) { return onDay(x, k); }) : [], pk = swp ? (swapOk(sd, k, today) ? ' pick' : ' nop') : '';
+      var fs = k <= today ? foodSum(k) : null, fq = fs && fs.items.length ? fs.k / foodGoal(k).k : 0;
+      var fr = fq ? '<i class="pfr' + (fq > 1.1 ? ' over' : fq >= 0.85 ? ' ok' : '') + '" style="--p:' + Math.min(1, fq).toFixed(2) + '"></i>' : '';
       cells += '<button class="pc2' + pk + (skp.length ? ' skp' : '') + (k === today ? ' today' : '') + (k === sd ? ' sel' : '') + (k < today ? ' past' : '') + (tr ? ' done' : '') + '" data-cday="' + k + '" aria-label="' + fmtDayL(k) + '">' +
-        '<b>' + new Date(k * 864e5).getUTCDate() + '</b><span class="ics">' + skp.slice(0, 2).map(function (x) { return '<em class="sk" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }).join('') + (of ? '<em class="off">' + ic(of.k === 'vac' ? 'sun' : 'sick') + '</em>' : '') + ds.slice(0, 2).map(function (x) { return '<em style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }).join('') + (ds.length > 2 ? '<small>+</small>' : '') + '</span>' +
+        (ui.cm ? '' : '<small>' + WDN[wdOf(k)].slice(0, 2) + '</small>') + '<b>' + fr + new Date(k * 864e5).getUTCDate() + '</b><span class="ics">' +
+        skp.slice(0, 2).map(function (x) { return '<em class="sk" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }).join('') + (of ? '<em class="off">' + ic(of.k === 'vac' ? 'sun' : 'sick') + '</em>' : '') +
+        ds.slice(0, 2).map(function (x) { return '<em style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }).join('') + (ds.length > 2 ? '<small>+</small>' : '') + '</span>' +
         (tr ? ic('check', 'dn') : '') + (k === today && todo.length ? ic('bell', 'nd') : k === wdue && k > today ? ic('scale', 'nf') : '') + '</button>';
     }
     var showNow = sd !== today || today < from || today > to;
-    h += '<section class="pcal2 rise" style="--i:1"><div class="pc2-h"><button class="x" data-cnav="-1" aria-label="Zurück">' + ic('back') + '</button>' +
+    h += '<section class="pcal2 rise' + (ui.cm ? ' mon' : '') + '" style="--i:1"><div class="pc2-h"><button class="x" data-cnav="-1" aria-label="Zurück">' + ic('back') + '</button>' +
       '<button class="pc2-t" data-cmode="1" aria-expanded="' + !!ui.cm + '" aria-label="' + (ui.cm ? 'Woche zeigen' : 'Monat zeigen') + '"><b>' + title + '</b><small>' + tq.getUTCFullYear() + '</small>' + ic('chev') + '</button>' +
-      '<button class="x pc2-now" data-cnow="1" aria-label="Heute"' + (showNow ? '' : ' hidden') + '>' + ic('caltd') + '</button>' + '<button class="x pc2-pl" data-pman="1" aria-label="Wochenpläne">' + ic('cards') + '</button><button class="x" data-cnav="1" aria-label="Weiter">' + ic('chev') + '</button></div>' +
-      '<div class="pc2-w">' + WDN.map(function (n) { return '<span>' + n + '</span>'; }).join('') + '</div>' +
+      '<button class="x pc2-now" data-cnow="1" aria-label="Heute"' + (showNow ? '' : ' hidden') + '>' + ic('caltd') + '</button><button class="x" data-cnav="1" aria-label="Weiter">' + ic('chev') + '</button></div>' +
+      (ui.cm ? '<div class="pc2-w">' + WDN.map(function (n) { return '<span>' + n + '</span>'; }).join('') + '</div>' : '') +
       '<div class="pc2-g' + (swp ? ' swp' : '') + (ui.cdir ? (ui.cdir > 0 ? ' in-r' : ' in-l') : '') + (ui.cmx ? ' in-m' : '') + '">' + cells + '</div>' +
       (wk ? '<p class="pc2-n">' + ic('cal') + esc(wk.t) + ' · ' + esc(wk.s) + '</p>' : '') + '</section>';
     ui.cdir = 0; ui.cmx = false;
 
-    // Tageskarte: Zu tun (heute), Kopf mit Ändern, je Trainingstag eine kompakte Box, die Übungsliste klappt auf
-    var sc = schedFor(sd), st = d.byDay[sd], off = offAt(sd), fd = ovF(sd), kd = fd.s ? 'skip' : fd.w !== undefined ? 'swap' : fd.r ? 'repl' : '', rel = sd === today ? 'Heute' : sd === today + 1 ? 'Morgen' : sd === today - 1 ? 'Gestern' : fmtDay(sd), c = '';
-    if (sd === today && todo.length) c += '<div class="todo' + (ui.todo ? ' open' : '') + '"><button class="tdh" data-todo="1" aria-expanded="' + !!ui.todo + '">' + ic('bell') + '<b>Zu tun</b><span>' + todo.length + '</span>' + ic('chev', 'chv') + '</button>' +
-      '<div class="agx"><div>' + todo.map(function (n) { return '<button class="tdo" data-nt="' + n.k + '">' + ic(n.i) + '<span><b>' + esc(n.t) + '</b><small>' + esc(n.s) + '</small></span>' + ic('chev', 'chv') + '</button>'; }).join('') + '</div></div></div>';
-    c += '<div class="pd-h"><b>' + dayHead(sd) + '</b>' + (sd >= today - 14 ? '<button class="pd-c" data-pchg="1" aria-expanded="' + !!ui.pchg + '" aria-label="Für diesen Tag ändern">' + ic('edit') + '</button>' : '') + '</div>';
-    if (sd >= today - 14) c += '<div class="agx pd-x"><div>' + dayEdit(P, sd, sc, today) + '</div></div>';
-    if (sd === wdue && sd > today) c += '<button class="pup" data-wgnow="1">' + ic('scale') + '<span><b>Wiegen fällig</b><small>Passt es schon heute? Dann jetzt eintragen.</small></span>' + ic('chev', 'chv') + '</button>';
-    if (kd && !off) {
-      var was = P.days.filter(function (x) { return onDay(x, sd); }), pt = fd.w !== undefined ? fd.w : null;
-      c += '<div class="pwas">' + ic(kd === 'skip' ? 'skip' : kd === 'swap' ? 'swap' : 'repl') + '<span>' + (kd === 'skip' ? 'Ausgesetzt' : kd === 'swap' ? 'Getauscht' + (pt !== null ? ' mit ' + WDN[wdOf(pt)] + ' ' + fmtShort(pt) : '') : 'Statt') + '</span>' +
-        (was.length ? was.map(function (x) { return '<s style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + '</s>'; }).join('') : '<s>' + ic('snow') + 'Frei</s>') + '</div>';
+    // Fokus: der gewählte Tag mit Umschalter Training / Essen / Tag (Tag = Zu tun, Ausnahmen, Urlaub/Krank); Punkt am Reiter, wenn dort etwas ansteht
+    var sc = schedFor(sd), st = d.byDay[sd], off = offAt(sd), fd = ovF(sd), kd = fd.s ? 'skip' : fd.w !== undefined ? 'swap' : fd.r ? 'repl' : '', c = '';
+    var dHot = (sd === today && todo.length) || (sd === wdue && sd > today) || !!off || !!kd || !!fd.a, edt = sd >= today - 14;
+    c += '<div class="pd-h"><b>' + dayHead(sd) + '</b></div><div class="seg pft">' + [['t', 'dumb', 'Training'], ['e', 'food', 'Essen'], ['d', 'cal', 'Tag']].map(function (x) {
+      return '<button data-pft="' + x[0] + '" aria-pressed="' + (ft === x[0]) + '">' + ic(x[1]) + x[2] + (x[0] === 'd' && dHot ? '<i class="pfd"></i>' : '') + '</button>'; }).join('') + '</div>';
+    if (ft === 't') {
+      var shown = {};
+      if (off) c += '<div class="pdb off"><div class="pdb-h"><span class="pdi">' + ic(off.k === 'vac' ? 'sun' : 'sick') + '</span><span class="nm"><b>' + (off.k === 'vac' ? 'Urlaub' : 'Krank') + '</b><small>' + fmtShort(off.a) + ' – ' + fmtShort(off.b) + ' · Serie geschützt</small></span></div></div>';
+      sc.forEach(function (x) {
+        var ids = sortIds(x.ex.filter(function (id) { return d.unlocked[id]; })), dn = ids.filter(function (id) { return st && st.ex[id]; }).length, key = sd + ':' + x.id, open = !!ui.pdo[key];
+        var sub = [ids.length + ' Übungen']; if (dur[x.id] && sd >= today) sub.push('~' + dur[x.id] + '′'); if (sd <= today) sub.push(dn + '/' + ids.length + ' ✓');
+        ids.forEach(function (id) { shown[id] = 1; });
+        c += '<div class="pdb' + (open ? ' open' : '') + '" style="--pc:var(' + PCOL[x.c] + ')"><button class="pdb-h" data-pdb="' + key + '" aria-expanded="' + open + '"><span class="pdi">' + ic(dIcon(x)) + '</span><span class="nm"><b>' + esc(x.n) + '</b><small>' + sub.join(' · ') + '</small>' +
+          (sd <= today && ids.length ? '<i class="pdp"><i style="width:' + Math.round(dn / ids.length * 100) + '%"></i></i>' : '') + '</span>' + ic('chev', 'chv') + '</button>' +
+          '<div class="agx"><div><div class="pdl">' + ids.map(function (id) {
+            var e = EXB[id], ok = !!(st && st.ex[id]), lb = lastBest(e, sd);
+            return '<div class="pdr' + (ok ? ' ok' : '') + '">' + ic(ok ? 'check' : 'dash') + '<span>' + esc(e.n) + '</span><small>' + esc(goalText(e)) + (lb ? '<br>zul. ' + esc(lb) : '') + '</small></div>';
+          }).join('') + '</div></div></div></div>';
+      });
+      if (!sc.length && !off) c += '<div class="pdb rest"><div class="pdb-h"><span class="pdi">' + ic('snow') + '</span><span class="nm"><b>Frei</b><small>' + (kd === 'skip' ? 'Training ausgesetzt' : sd >= today ? 'Erholung' : 'Kein Training geplant') + '</small></span></div></div>';
+      var extra = st ? Object.keys(st.ex).filter(function (id) { return !shown[id]; }) : [];
+      if (extra.length) c += '<p class="agp">Außerdem: ' + extra.map(function (id) { return esc(EXB[id].n); }).join(' · ') + '</p>';
+      if (sd === today && sc.length) c += '<button class="btn primary pd-go" data-gotab="heute">' + ic('play') + 'Training starten</button>';
+    } else if (ft === 'e') {
+      // Essen des Tages: gegessen (bis heute) als kcal- und Protein-Balken; Planen von Mahlzeiten folgt
+      var es = foodSum(sd), eg = foodGoal(sd);
+      if (sd > today || !es.items.length) c += '<p class="pfn">' + ic('food') + (sd > today ? 'Noch nichts geplant' : 'Nichts eingetragen') + '</p>';
+      else c += '<div class="pfs">' + [['k', 'kcal'], ['p', 'g Protein']].map(function (x) {
+        var v = es[x[0]] || 0, gv = eg[x[0]] || 1, pr = v / gv;
+        return '<div class="pfr2' + (pr > FLIM[x[0]] ? ' over' : pr >= 0.9 ? ' hit' : '') + '" style="--fc:var(' + NCOL[x[0]] + ')"><span><b>' + Math.round(v) + '</b><small>/ ' + gv + ' ' + x[1] + '</small></span><i class="fbt"><i style="--p:' + Math.min(1, pr).toFixed(3) + '"></i></i></div>';
+      }).join('') + '</div>';
+      if (sd <= today) c += '<button class="btn small pfo" data-pfo="' + sd + '">' + ic('food') + 'In Essen öffnen</button>';
+    } else {
+      if (sd === today && todo.length) c += '<div class="todo open"><div class="tdh">' + ic('bell') + '<b>Zu tun</b><span>' + todo.length + '</span></div>' +
+        '<div class="agx"><div>' + todo.map(function (n) { return '<button class="tdo" data-nt="' + n.k + '">' + ic(n.i) + '<span><b>' + esc(n.t) + '</b><small>' + esc(n.s) + '</small></span>' + ic('chev', 'chv') + '</button>'; }).join('') + '</div></div></div>';
+      if (sd === wdue && sd > today) c += '<button class="pup" data-wgnow="1">' + ic('scale') + '<span><b>Wiegen fällig</b><small>Passt es schon heute? Dann jetzt eintragen.</small></span>' + ic('chev', 'chv') + '</button>';
+      if (kd && !off) {
+        var was = P.days.filter(function (x) { return onDay(x, sd); }), pt = fd.w !== undefined ? fd.w : null;
+        c += '<div class="pwas">' + ic(kd === 'skip' ? 'skip' : kd === 'swap' ? 'swap' : 'repl') + '<span>' + (kd === 'skip' ? 'Ausgesetzt' : kd === 'swap' ? 'Getauscht' + (pt !== null ? ' mit ' + WDN[wdOf(pt)] + ' ' + fmtShort(pt) : '') : 'Statt') + '</span>' +
+          (was.length ? was.map(function (x) { return '<s style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + esc(x.n) + '</s>'; }).join('') : '<s>' + ic('snow') + 'Frei</s>') + '</div>';
+      }
+      if (off) c += '<div class="pdb off"><div class="pdb-h"><span class="pdi">' + ic(off.k === 'vac' ? 'sun' : 'sick') + '</span><span class="nm"><b>' + (off.k === 'vac' ? 'Urlaub' : 'Krank') + '</b><small>' + fmtShort(off.a) + ' – ' + fmtShort(off.b) + ' · Serie geschützt</small></span></div></div>';
+      c += edt ? dayEdit(P, sd, sc, today) : '<p class="pfn">' + ic('lock') + 'Zu lange her zum Ändern</p>';
     }
-    if (off) c += '<div class="pdb off"><div class="pdb-h"><span class="pdi">' + ic(off.k === 'vac' ? 'sun' : 'sick') + '</span><span class="nm"><b>' + (off.k === 'vac' ? 'Urlaub' : 'Krank') + '</b><small>' + fmtShort(off.a) + ' – ' + fmtShort(off.b) + ' · Serie geschützt</small></span></div></div>';
-    var shown = {};
-    sc.forEach(function (x) {
-      var ids = sortIds(x.ex.filter(function (id) { return d.unlocked[id]; })), dn = ids.filter(function (id) { return st && st.ex[id]; }).length, key = sd + ':' + x.id, open = !!ui.pdo[key];
-      var sub = [ids.length + ' Übungen']; if (dur[x.id] && sd >= today) sub.push('~' + dur[x.id] + '′'); if (sd <= today) sub.push(dn + '/' + ids.length + ' ✓');
-      ids.forEach(function (id) { shown[id] = 1; });
-      c += '<div class="pdb' + (open ? ' open' : '') + '" style="--pc:var(' + PCOL[x.c] + ')"><button class="pdb-h" data-pdb="' + key + '" aria-expanded="' + open + '"><span class="pdi">' + ic(dIcon(x)) + '</span><span class="nm"><b>' + esc(x.n) + '</b><small>' + sub.join(' · ') + '</small>' +
-        (sd <= today && ids.length ? '<i class="pdp"><i style="width:' + Math.round(dn / ids.length * 100) + '%"></i></i>' : '') + '</span>' + ic('chev', 'chv') + '</button>' +
-        '<div class="agx"><div><div class="pdl">' + ids.map(function (id) {
-          var e = EXB[id], ok = !!(st && st.ex[id]), lb = lastBest(e, sd);
-          return '<div class="pdr' + (ok ? ' ok' : '') + '">' + ic(ok ? 'check' : 'dash') + '<span>' + esc(e.n) + '</span><small>' + esc(goalText(e)) + (lb ? '<br>zul. ' + esc(lb) : '') + '</small></div>';
-        }).join('') + '</div></div></div></div>';
-    });
-    if (!sc.length && !off) c += '<div class="pdb rest"><div class="pdb-h"><span class="pdi">' + ic('snow') + '</span><span class="nm"><b>Frei</b><small>' + (kd === 'skip' ? 'Training ausgesetzt' : sd >= today ? 'Erholung' : 'Kein Training geplant') + '</small></span></div></div>';
-    var extra = st ? Object.keys(st.ex).filter(function (id) { return !shown[id]; }) : [];
-    if (extra.length) c += '<p class="agp">Außerdem: ' + extra.map(function (id) { return esc(EXB[id].n); }).join(' · ') + '</p>';
-    if (sd === today && sc.length) c += '<button class="btn primary pd-go" data-gotab="heute">' + ic('play') + 'Training starten</button>';
-    h += '<section class="pday rise' + (ui.pchg ? ' open' : '') + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
+    h += '<section class="pday rise' + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
     ui.pfl = null; ui.pdx = false;
 
-    if (ux) h += '<button class="agn gold pux rise" style="--i:3" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>';
+    // Darunter wie in Essen: zwei Knöpfe (Vorlagen als Fenster, Wochenplan), dann Vorlagen, die heute/künftig noch nicht dran sind (antippen = zusätzlich an diesem Tag)
+    h += '<div class="fact2 rise" style="--i:3"><button class="btn" data-pdays="1">' + ic('dumb') + 'Trainingstage</button><button class="btn" data-pman="1">' + ic('cards') + 'Wochenplan</button></div>';
+    var cur0 = sc.map(function (x) { return x.id; }), add = sd >= today && !off ? P.days.filter(function (x) { return cur0.indexOf(x.id) < 0; }).slice(0, 4) : [];
+    if (add.length) h += '<section class="pvl rise" style="--i:4">' + add.map(function (x) {
+      var n = x.ex.filter(function (id) { return d.unlocked[id]; }).length;
+      return '<button class="ptv" data-paddx="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')" aria-label="' + esc(x.n) + ' zusätzlich am ' + fmtDayL(sd) + '">' + ic(dIcon(x)) + '<b>' + esc(x.n) + '</b><small>' + n + ' Üb.' + (dur[x.id] ? ' · ~' + dur[x.id] + '′' : '') + '</small></button>';
+    }).join('') + '</section>';
+
+    if (ux) h += '<button class="agn gold pux rise" style="--i:5" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>';
     return h;
+  }
+  function openDays() {
+    // Trainingstage als Fenster (wie Gerichte): Karten antippen = bearbeiten, darunter neu aus Vorlage
+    var P = plan(), d = derive(state.logs); ui.sheet = { pdays: true };
+    sheetOpen(shHead('dumb', 'Trainingstage', P.days.length + (P.days.length === 1 ? ' Tag' : ' Tage')) +
+      '<div class="pdg">' + P.days.map(function (x) {
+        var n = x.ex.filter(function (id) { return d.unlocked[id]; }).length;
+        return '<button class="pdc2" data-pedit="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')"><i>' + ic(dIcon(x)) + '</i><b>' + esc(x.n) + '</b><small>' + n + ' Übungen' + (rpText(x) ? ' · ' + esc(rpText(x)) : '') + '</small></button>';
+      }).join('') + '</div>' +
+      (P.days.length < 8 ? '<h3 class="xg">' + ic('plus') + 'Neuer Tag aus Vorlage</h3><div class="ppre">' + PRESETS.map(function (pr, j) { return '<button data-ppre="' + j + '" style="--pc:var(' + PCOL[pr.c] + ')">' + ic(pr.i) + pr.n + '</button>'; }).join('') + '</div>' : ''), true);
   }
   // ---------- Wochenpläne: mehrere gespeicherte Pläne (plan.wp), welcher gilt, legt der Zeitstrahl plan.act fest ([{a: ab Tag, p: Plan-id}])
   var LIM = { pull: 3, push: 3, kh: 3, core: 3, skill: 3, cardio: 4, mob: 7 };
@@ -377,7 +415,7 @@
     var el, today = dayIdx(Date.now());
     if ((el = t.closest('[data-cday]'))) {
       var cd = +el.dataset.cday, s0 = ui.pd == null ? today : ui.pd;
-      if (ui.pchg && ui.pmode === 'swap') {
+      if (ui.pft === 'd' && ui.pmode === 'swap') {
         // Tauschen: zweiter Tag im Kalender; gleiche Tage und Urlaub/Krank gehen nicht
         if (!swapOk(s0, cd, today)) { buzz(20); return true; }
         // Getauscht wird das geplante Training (ohne Zusätzliches); ein früherer Tausch der beiden Tage wird vorher gelöst
@@ -385,14 +423,15 @@
         fa.w = cd; fa.b = a2; fb.w = s0; fb.b = a1; ovSetF(s0, fa); ovSetF(cd, fb);
         ui.pmode = null; ui.pfl = s0; persist(); ui.fresh = false; render(); toast('Getauscht mit ' + WDN[wdOf(cd)] + ' ' + fmtShort(cd), 'swap'); return true;
       }
-      if (cd !== s0) { ui.pd = cd; ui.pdx = true; ui.pchg = false; ui.pmode = null; } ui.fresh = false; render(); return true;
+      if (cd !== s0) { ui.pd = cd; ui.pdx = true; ui.pmode = null; } ui.fresh = false; render(); return true;
     }
     if ((el = t.closest('[data-cnav]'))) { calMove(+el.dataset.cnav); return true; }
     if (t.closest('[data-cmode]')) { ui.cm = !ui.cm; ui.ca = ui.pd == null ? today : ui.pd; ui.cmx = true; ui.fresh = false; render(); return true; }
-    if (t.closest('[data-cnow]')) { ui.pd = today; ui.ca = today; ui.pdx = true; ui.pchg = false; ui.fresh = false; render(); return true; }
-    if ((el = t.closest('[data-todo]'))) { ui.todo = !ui.todo; el.setAttribute('aria-expanded', ui.todo); el.parentNode.classList.toggle('open', ui.todo); return true; }
+    if (t.closest('[data-cnow]')) { ui.pd = today; ui.ca = today; ui.pdx = true; ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-pft]'))) { ui.pft = el.dataset.pft; ui.pmode = null; ui.fresh = false; render(); buzz(4); return true; }
+    if ((el = t.closest('[data-pfo]'))) { ui.fsd = +el.dataset.pfo; goTab('food'); return true; }
+    if (t.closest('[data-pdays]')) { openDays(); return true; }
     if ((el = t.closest('[data-pdb]'))) { var pk = el.dataset.pdb; ui.pdo[pk] = !ui.pdo[pk]; el.setAttribute('aria-expanded', ui.pdo[pk]); el.parentNode.classList.toggle('open', ui.pdo[pk]); return true; }
-    if ((el = t.closest('[data-pchg]'))) { ui.pchg = !ui.pchg; el.setAttribute('aria-expanded', ui.pchg); el.closest('.pday').classList.toggle('open', ui.pchg); return true; }
     if ((el = t.closest('[data-pman]'))) { ui.pman = true; ui.draft = null; ui.psel = null; ui.pdisc = 0; ui.pnew = el.dataset.pman === 'new'; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true; }
     if ((el = t.closest('[data-gotab]'))) { goTab(el.dataset.gotab); return true; }
     if ((el = t.closest('[data-rm]'))) { ui.rm = Math.max(-11, Math.min(0, ui.rm + (+el.dataset.rm))); ui.fresh = false; render(); return true; }
@@ -406,9 +445,9 @@
       ui.pmode = ui.pmode === pm ? null : pm; ui.fresh = false; render(); return true;
     }
     if ((el = t.closest('[data-preplx]'))) { swapClear(sd); var fr = ovF(sd); delete fr.s; fr.r = [el.dataset.preplx]; ovSetF(sd, fr); ui.pmode = null; ui.pfl = sd; persist(); ui.fresh = false; render(); return true; }
-    if ((el = t.closest('[data-paddx]'))) { var fx = ovF(sd); delete fx.s; fx.a = (fx.a || []).concat([el.dataset.paddx]); ovSetF(sd, fx); ui.pmode = null; ui.pfl = sd; persist(); ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-paddx]'))) { var fx = ovF(sd), pa = pDay(el.dataset.paddx); delete fx.s; fx.a = (fx.a || []).concat([el.dataset.paddx]); ovSetF(sd, fx); ui.pmode = null; ui.pfl = sd; ui.pft = 't'; if (pa) toast(pa.n + ' zusätzlich', 'plus'); buzz(8); persist(); ui.fresh = false; render(); return true; }
     if (t.closest('[data-wgnow]')) { openWeight(); return true; }
-    if ((el = t.closest('[data-poff]'))) { var P0 = plan(), n = +el.dataset.poff; P0.off = (P0.off || []).concat([{ a: sd, b: sd + n - 1, k: ui.pmode === 'sick' ? 'sick' : 'vac' }]); toast(ui.pmode === 'sick' ? 'Krank eingetragen' : 'Urlaub eingetragen', ui.pmode === 'sick' ? 'sick' : 'sun'); ui.pmode = null; ui.pchg = false; persist(); ui.fresh = false; render(); return true; }
+    if ((el = t.closest('[data-poff]'))) { var P0 = plan(), n = +el.dataset.poff; P0.off = (P0.off || []).concat([{ a: sd, b: sd + n - 1, k: ui.pmode === 'sick' ? 'sick' : 'vac' }]); toast(ui.pmode === 'sick' ? 'Krank eingetragen' : 'Urlaub eingetragen', ui.pmode === 'sick' ? 'sick' : 'sun'); ui.pmode = null; persist(); ui.fresh = false; render(); return true; }
     return false;
   }
   function planClick(t) {
@@ -416,11 +455,11 @@
     if (calClick(t)) return true;
     var el, P = plan(), day, a;
     function done(keepScroll) { persist(); ui.fresh = false; render(); }
-    if ((el = t.closest('[data-pedit]'))) { ui.pe = el.dataset.pedit; ui.pdel = 0; ui.pf = domGroup(pDay(ui.pe)) || 'all'; ui.pq = ''; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true; }
+    if ((el = t.closest('[data-pedit]'))) { if (ui.sheet && ui.sheet.pdays) closeSheet(true); ui.pe = el.dataset.pedit; ui.pdel = 0; ui.pf = domGroup(pDay(ui.pe)) || 'all'; ui.pq = ''; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true; }
     if (t.closest('[data-pback]')) { ui.pe = null; ui.pdel = 0; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true; }
     if (t.closest('[data-pnew]')) { ui.pnew = !ui.pnew; ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-ppre]'))) {
-      var pr = PRESETS[+el.dataset.ppre], ids = pr.ids ? pr.ids.slice() : EX.filter(function (e) { return pr.f.indexOf(e.g) >= 0; }).map(function (e) { return e.id; });
+      if (ui.sheet && ui.sheet.pdays) closeSheet(true); var pr = PRESETS[+el.dataset.ppre], ids = pr.ids ? pr.ids.slice() : EX.filter(function (e) { return pr.f.indexOf(e.g) >= 0; }).map(function (e) { return e.id; });
       var nd = { id: 'p' + Date.now().toString(36), n: pr.n === 'Eigener Tag' ? 'Tag ' + (P.days.length + 1) : pr.n, c: pr.c, i: pr.i, wd: [], ex: ids };
       P.cu = true; P.days.push(nd); ui.pnew = false; ui.pe = nd.id; ui.pf = 'all'; ui.pq = ''; ui.fresh = true; persist(); render(); $('app').scrollTo(0, 0); return true;
     }

@@ -2,6 +2,23 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-27 Planen Schritt 1: Hauptansicht im Essen-Prinzip (Variante C, Kalender ausklappbar)
+- Kalender: Wochenleiste um den gewählten Tag zentriert (`from = a - 3`, heute in der Mitte), Wochentag in der Zelle; Monatsname klappt den Monat aus (`.pcal2.mon`, Kopfzeile Mo–So). Jede Zelle bis heute mit Essen-Ring (`.pfr`, Anteil vom kcal-Ziel, grün im Rahmen, rot über 110 %). Wochenplan-Knopf aus dem Kopf entfernt.
+- Fokus-Karte (`.pday`, Leuchtkante wie die Bilanz) mit Umschalter `ui.pft`: Training (Trainingstage des Tages, Start), Essen (gegessen: kcal/Protein-Balken, „In Essen öffnen“ setzt `ui.fsd`; Zukunft „Noch nichts geplant“), Tag (Zu tun immer offen, Wiegen fällig, Ausnahme-Status, Urlaub/Krank, Aktionen `dayEdit`; roter Punkt am Reiter, wenn etwas ansteht). `ui.pchg`/`ui.todo` entfallen, Tauschen über den Kalender gilt bei `ui.pft === 'd'`.
+- Darunter wie Essen: Knöpfe Trainingstage (Fenster `openDays`: Karten → Editor, „Neuer Tag aus Vorlage“) und Wochenplan (bisheriger Planer), dann Vorlagen-Kacheln (`.ptv`, Trainingstage, die an dem Tag nicht dran sind; antippen = zusätzlich, ab heute).
+- Rauchtest angepasst (`data-pft` statt `data-pchg`/`data-todo`, Trainingstage-Fenster).
+
+## 2026-10-27 Planen: Konzept (abgestimmt, noch nicht gebaut)
+- Planen = alles, was kommt; Essen/Heute = was ist. Gleiche Bausteine und Bedienung wie Essen, Geplantes im Umriss-Stil. Trainingstage ↔ Gerichte (Vorlagen), Übungen ↔ Lebensmittel.
+- Essen-Tagesleiste: plant nicht, zeigt aber geplante Tage an (schnell navigieren), heute in der Mitte. Heute Geplantes erscheint in Gegessen als Umriss-Karte (antippen = gegessen). Geplantes getrennt gespeichert (`food.pl`), zählt nicht in Bilanz/Verlauf.
+- Einkaufsliste aus dem Plan (Zeitraum), gerundet auf Stück/Packungen, nach Kategorie, abhaken. Preis: eventuell geschätzt (Richtwert je Lebensmittel, eigene Preise optional).
+- „Was habe ich“: nur abgeleitet (abgehakt = könnte da sein, Gegessenes/Geplantes zieht ab), möglichst keine Pflege. Kein Vorrat mit Mengen/Ablaufdatum.
+- Vorschläge „fehlt noch“: reine Logik (Protein je kcal, passt in den Rest, oft gegessen, vermutlich da).
+- Besondere Tage: Cheatday ohne Sonderregel (Bilanz wird trotzdem rot); Event (kcal reservieren) ordentlich umsetzen; Urlaub/Krank bleiben wichtig.
+- Wochenpläne, Rhythmus, Ausnahmen in Fenster wie die Gerichte; Monatskalender über den Monatsnamen.
+- Später: Rezepte abgewandelt; Erinnerungen ganz am Ende mit Widgets.
+- Reihenfolge: 1 Planen-Umbau (nur Training) → 2 Essen planen → 3 Einkaufsliste → 4 Vorschläge → 5 Event/besondere Tage → 6 „Was habe ich“.
+
 ## 2026-10-27 Essen: Platzhalter, Wasser, Rückgängig, Suche, Gerichte, Schnell, Open Food Facts, CSS aufgeräumt
 - Farben: Oliv grüner (dunkel `--ac #86b06e`, hell `#456b31`), Grautöne entsprechend; Mahlzeitfarben als Tokens `--m-fr/mi/sn/ab` (hell/dunkel), `.m-*` setzt `--mc`.
 - Balken als Fokus kräftiger: Bilanz-kcal 12 px, übrige 8 px, weniger Weißschleier im Verlauf; Glanz bleibt.

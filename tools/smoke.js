@@ -10,7 +10,7 @@ const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const SCEN = ['mid', 'gold', 'broken', 'fresh', 'empty'];
 const TABS = ['heute', 'tage', 'food', 'fort', 'profil'];
 // Je Tab: Schalter, von denen jeweils jeder Wert einmal angeklickt wird (alle harmlos, nichts löscht)
-const TOGGLES = ['[data-xr]', '[data-xm]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-todo]', '[data-pdb]', '[data-pchg]', '[data-fsd]', '[data-fwa]', '[data-hsel]', '[data-col]', '[data-cf2]', '[data-cg]', '[data-pstat]', '[data-srng]', '[data-sall]', '[data-kmon]', '[data-lcf]', '[data-msel]', '[data-fstk]'];
+const TOGGLES = ['[data-xr]', '[data-xm]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-pft]', '[data-pdb]', '[data-fsd]', '[data-fwa]', '[data-hsel]', '[data-col]', '[data-cf2]', '[data-cg]', '[data-pstat]', '[data-srng]', '[data-sall]', '[data-kmon]', '[data-lcf]', '[data-msel]', '[data-fstk]'];
 const NOANIM = '*, *::before, *::after { animation: none !important; transition: none !important; }';
 
 async function scenario(b, sc, errs) {
@@ -57,12 +57,13 @@ async function scenario(b, sc, errs) {
     // Plan: Tag ändern (Tauschen über den Kalender, Ersetzen, Aussetzen, Urlaub; jede Aktion schaltet sich beim zweiten Tippen aus)
     if (tab === 'tage') {
       await click('[data-cnow]');
-      if (!(await p.$('.pday.open'))) await click('[data-pchg]');
+      await click('[data-pft="d"]');
       await click('[data-pmode="swap"]'); await click('.pc2.pick'); await click('[data-pmode="swap"]');
       await click('[data-pmode="repl"]'); await click('[data-preplx]'); await click('[data-pmode="repl"]');
-      await click('[data-pmode="skip"]'); await click('[data-pmode="skip"]'); await click('[data-pmode="add"]'); await click('[data-paddx]');
+      await click('[data-pmode="skip"]'); await click('[data-pmode="skip"]'); await click('[data-pmode="add"]'); await click('[data-paddx]'); await click('[data-pft="d"]');
       await click('[data-pmode="vac"]'); await click('[data-poff="3"]'); await shot('tage-urlaub');
-      await click('[data-pmode="vac"]'); await click('[data-pchg]');
+      await click('[data-pmode="vac"]'); await click('[data-pft="e"]'); await click('[data-pft="t"]');
+      await click('[data-pdays]'); await shot('tage-tage'); await click('[data-sheet-close]');
     }
     // Plan: Wochenplaner (Karte antippen + Tag antippen, entfernen, speichern, neuer Plan, aktivieren), daraus den Editor öffnen
     if (tab === 'tage' && await click('[data-pman]')) {

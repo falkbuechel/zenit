@@ -2,6 +2,11 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-27 Essen: Gegessen-Zeile aufgeräumt
+- Karten waren 32 px zu schmal (`.fmc` rechnete mit dem negativen Rand von `.fchips`): jetzt `(100% - 24px) / 4`, ohne aufgeklappte Mahlzeit immer gleich breit (`.fem`) und bündig mit den Vorschlägen.
+- Gegessen-Karten und Einträge im Stil der Vorschläge, aber gefüllt: Tönung in der Mahlzeitfarbe statt Farbkante oben, „kcal“ klein hinter der Zahl, 90 px hoch. Platzhalter nur noch gestrichelt.
+- „Wie gestern“ als kleiner Knopf rechts in der Kopfzeile (`.fcpy`), die Zeile springt nicht mehr.
+
 ## 2026-10-27 Planen Schritt 1: Hauptansicht im Essen-Prinzip (Variante C, Kalender ausklappbar)
 - Kalender: Wochenleiste um den gewählten Tag zentriert (`from = a - 3`, heute in der Mitte), Wochentag in der Zelle; Monatsname klappt den Monat aus (`.pcal2.mon`, Kopfzeile Mo–So). Jede Zelle bis heute mit Essen-Ring (`.pfr`, Anteil vom kcal-Ziel, grün im Rahmen, rot über 110 %). Wochenplan-Knopf aus dem Kopf entfernt.
 - Fokus-Karte (`.pday`, Leuchtkante wie die Bilanz) mit Umschalter `ui.pft`: Training (Trainingstage des Tages, Start), Essen (gegessen: kcal/Protein-Balken, „In Essen öffnen“ setzt `ui.fsd`; Zukunft „Noch nichts geplant“), Tag (Zu tun immer offen, Wiegen fällig, Ausnahme-Status, Urlaub/Krank, Aktionen `dayEdit`; roter Punkt am Reiter, wenn etwas ansteht). `ui.pchg`/`ui.todo` entfallen, Tauschen über den Kalender gilt bei `ui.pft === 'd'`.

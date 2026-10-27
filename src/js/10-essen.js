@@ -374,10 +374,9 @@
       '<button class="fwv" data-fwao="1" aria-label="Wasser genau eintragen"><b><span data-wav="1">' + fN2(wa / 1000) + '</span><small>/' + fN(wg / 1000) + ' l</small></b></button>' +
       '</div></section>';
     // Gegessen in einer Zeile (immer gleich hoch): je Mahlzeit in fester Reihenfolge eine Karte (kcal, Kategorien überlappend), fehlende als leerer Platzhalter
-    // (antippen = Suche, Vorschlag hineinziehen = in diese Mahlzeit). Karte antippen = diese Mahlzeit in derselben Zeile (Kategorie-Stapel, Einträge). Leer: dazu „Wie gestern“
+    // (antippen = Suche, Vorschlag hineinziehen = in diese Mahlzeit). Karte antippen = diese Mahlzeit in derselben Zeile (Kategorie-Stapel, Einträge). Leer: „Wie gestern“ klein in der Kopfzeile
     var cp = !s.items.length && foodSum(sd - 1).items.length, gs = fGroups(s.items), gm = gs.filter(function (q) { return ui.fmeal === sd + q.m; })[0];
-    h += '<section class="fdl rise" style="--i:2"><h2 class="sec-h">' + esc(dayHead(sd)) + '</h2><div class="fchips' + (s.items.length ? '' : ' fem') + '" data-noswipe="1">' + (gm ? fMeal(gm) :
-      (cp ? '<button class="fmc fcp" data-fcopy="1">' + ic('swap') + '<b>Wie gestern</b></button>' : '') + MEALS.map(function (m) {
+    h += '<section class="fdl rise" style="--i:2"><h2 class="sec-h">' + esc(dayHead(sd)) + (cp ? '<button class="fcpy" data-fcopy="1">' + ic('swap') + 'Wie gestern</button>' : '') + '</h2><div class="fchips' + (gm ? '' : ' fem') + '" data-noswipe="1">' + (gm ? fMeal(gm) : MEALS.map(function (m) {
         var q = gs.filter(function (x) { return x.m === m[1]; })[0];
         return q ? fMealCard(q) : '<button class="fmc fme m-' + m[1] + '" data-fsearch="1" aria-label="' + m[2] + ' eintragen">' + ic(MEALI[m[1]]) + '</button>';
       }).join('')) + '</div></section>';
@@ -409,7 +408,7 @@
   function fMealCard(g) {
     // Mahlzeit-Karte: Symbol und Anzahl, kcal groß (auch 4-stellig), darunter die Kategorien als überlappende Kreise (höchstens 3)
     var cs = fCats(g);
-    return '<button class="fmc m-' + g.m + '" data-fml="' + g.m + '" data-fdelg="' + g.l.map(function (o) { return o.i; }).join(',') + '" aria-label="' + mealOfE(g.l[0].x)[2] + ', ' + g.l.length + ' Einträge, ' + fKc(g.l) + ' kcal"><span class="fmt">' + ic(MEALI[g.m]) + '<small>×' + g.l.length + '</small></span><b>' + fKc(g.l) + '</b>' +
+    return '<button class="fmc m-' + g.m + '" data-fml="' + g.m + '" data-fdelg="' + g.l.map(function (o) { return o.i; }).join(',') + '" aria-label="' + mealOfE(g.l[0].x)[2] + ', ' + g.l.length + ' Einträge, ' + fKc(g.l) + ' kcal"><span class="fmt">' + ic(MEALI[g.m]) + '<small>×' + g.l.length + '</small></span><b>' + fKc(g.l) + '<em>kcal</em></b>' +
       '<span class="fcs">' + cs.slice(0, 3).map(function (q) { return '<i>' + ic(CATI[q.c][0]) + '</i>'; }).join('') + '</span></button>';
   }
   function fMeal(g) {

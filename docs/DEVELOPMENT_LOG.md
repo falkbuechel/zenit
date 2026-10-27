@@ -2,31 +2,66 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
-## 2026-10-28 Planen Schritt 1 fertig (Planer/Editor als Fenster) und Schritt 2: Essen planen
+## Stand 2026-10-28
+- Zuletzt (alles live, Commit 1bdd691): neues Design (Stencil-Akzent, mittlere Ecken, Tastenkante, Zenit-Oliv), Essen-Feinschliff (Platzhalter, Rückgängig, Suche, Gerichte, Schnell merken, Open Food Facts), Planen Schritt 1 (Kalender, Fokus Training/Essen, Trainingstage/Wochenplan, Planer/Editor als Fenster) und Schritt 2 (Essen planen, `food.pl`).
+- Falk testet am iPhone: Essen planen (Planen › Essen, Geplantes in Essen essen), Planer/Editor als Fenster inkl. Karten-Ziehen, Wochenleiste wischen, Gerichte wischen, Ziehen in Platzhalter.
+- Nächster Schritt: Falks Essen-Rückmeldung vom 28.10. (unter „Offen“, darin ein Fehler bei „Wie gestern“), danach Planen Schritt 3 Einkaufsliste.
+- Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
+- Nicht committet: nichts.
+
+## Offen / Ideen
+- Fehler Essen: „Wie gestern“ packt alle Einträge in dieselbe Mahlzeit (Uhrzeit/Mahlzeit von gestern nicht übernommen).
+- Fehler Essen: „Wie gestern“-Knopf zu groß, Kopfzeile springt.
+- Essen: Vorschläge 4×2, aufgeteilt in zuletzt / häufig / typisch für die Uhrzeit, Gruppen optisch minimal unterschieden.
+- Essen: Knöpfe „Suchen, scannen …“ und „Gerichte“ passen nicht zum Stil, sollen klare Knöpfe bleiben und sich anders abheben.
+- Essen: Vorschlag ziehen ohne Ziel = nächste passende Mahlzeit nach Uhrzeit (nicht immer Frühstück).
+- Essen: ganze Mahlzeit nicht mehr per Wischen löschbar, nur Einträge innerhalb einer Mahlzeit.
+- Essen: Fokus (Bilanz) braucht neben dem Glow mehr Fokus im Design, clean bleiben.
+- Planen: Inhalt von Wochenplaner und Tag-Editor (im Fenster) optisch noch im alten Stil, an Essen angleichen.
+- Planen Schritt 3: Einkaufsliste aus dem Plan (Zeitraum, gerundet auf Stück/Packung, nach Kategorie, abhaken; Preis eventuell geschätzt).
+- Planen Schritt 4: Vorschläge „fehlt noch“ (reine Logik: Protein je kcal, passt in den Rest, oft gegessen, vermutlich da).
+- Planen Schritt 5: Event (kcal reservieren) ordentlich umsetzen; Cheatday ohne Sonderregel, Urlaub/Krank bleiben.
+- Planen Schritt 6: „Was habe ich“ nur abgeleitet (abgehakt = könnte da sein), keine Pflege.
+- App-Icon (public/, `tools/make-icons.js`) noch mintgrün, an Oliv anpassen.
+- iPhone-Test offen: Pause-Vollbild in der Arena, Skilltree (Linien, Leuchten, Info-Leiste)
+- iPhone-Test offen Essen: Barcode-Scan quer, Marken-/Online-Suche (Open Food Facts mit Zwischenspeicher), Wischen/Ziehen auf echtem Touch
+- Heute: weiterer Umbau der Startseite; Bergpfad-Belohnungen / Tages-Drops, Tagesaufgaben, Saison; Vorwoche-Vergleich ist aus Heute raus (neuen Platz finden)
+- Serie: zu langweilig, beim Redesign aufwerten
+- Effekte und Funken („brutal“, Dopamin) später einbauen
+- Maskottchen: echte Illustration mit Stufen (ComfyUI), ersetzt den SVG-Platzhalter `mascot()`
+- Statistik-Detailansichten schlanker (Training sehr lang)
+- Icons / Text reduzieren in Heute, Essen, Verlauf, Profil
+- Weitere anstehende Termine im Kalender (z. B. Körpermaße monatlich, wie das Wiegen)
+- Später: Rezepte (abgewandelt), Deload-Wochen, Foto der Nährwerttabelle, Schlaf, mehr Lebensmittel/Gerichte; Erinnerungen ganz am Ende mit Widgets
+- Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
+
+## Verlauf
+
+### 2026-10-28 – Planen Schritt 1 fertig (Planer/Editor als Fenster) und Schritt 2: Essen planen
 - Wochenplaner und Tag-Editor öffnen als Fenster über Planen (`planSheet`, von `render()` mitgezeichnet, Scroll bleibt; `ui.sheet.plan = 'pm' | 'pe'`). `closeSheet` setzt `ui.pman`/`ui.pe` zurück. Schließen (✕/Hintergrund, `pSheetBack`): Editor aus dem Planer → zurück in den Planer; ungespeicherte Woche → erst Hinweis „Nicht gespeichert“.
 - Neue Datenform `food.pl` (siehe DEVELOPMENT.md), `planSum(di)`.
 - Planen › Essen: Balken kcal/Protein = gegessen + geplant (schraffiert, `fGh`), vier Mahlzeiten (gegessen gefüllt, nur geplant gestrichelt, leer „+“). Ab heute antippen = „Mahlzeit planen“ (`openPlanMeal`): Geplantes mit ✕, Kacheln (Gerichte dieser Mahlzeit zuerst, dann häufige Lebensmittel; antippen = einplanen), Suchen und Schnell im Plan-Modus (`ui.fplan`: Knopf „Einplanen“, ohne Uhrzeit, „danach frei“ zählt Geplantes mit; ✕ in Suche/Schnell führt zurück zur Mahlzeit). Rückgängig wie in Essen. Kalender: künftige Tage mit Plan haben einen blassen Ring.
 - Essen: Tagesleiste mit heute in der Mitte (3 Tage voraus), künftige Tage im Umriss (mit Plan grün umrandet, Balken = geplant), antippen öffnet den Tag in Planen › Essen (`data-pgo`). Bilanz-Balken zeigen heute Geplantes schraffiert. Gegessen: nur geplante Mahlzeit = gestrichelte Karte mit Haken (antippen = gegessen, `planEat`: jetzt oder übliche Uhrzeit, Rückgängig); schon gegessen + geplant = „+n“ an der Karte, aufgeklappt eine „Geplant“-Karte zum Eintragen.
 - Geprüft mit Chromium-Ablauf (planen, Suche einplanen, entfernen, heute essen, Zukunftstag → Planen, Planer/Editor im Fenster mit Verwerfen) und Rauchtest.
 
-## 2026-10-28 Planen: Reiter Tag aufgelöst, Trainingstage/Wochenplan als Bild-Knöpfe
+### 2026-10-28 – Planen: Reiter Tag aufgelöst, Trainingstage/Wochenplan als Bild-Knöpfe
 - Umschalter nur noch Training | Essen. Ausnahme-Status (getauscht/ausgesetzt/statt) und Urlaub/Krank stehen im Reiter Training. Kopf der Fokus-Karte: Glocke mit Zahl (`data-pnts`, Fenster mit Zu tun und Wiegen fällig, nur wenn etwas ansteht), Stift = „Tag ändern“ (`data-pdedit`, Fenster `pdayHtml` mit `dayEdit`; grün, wenn der Tag eine Ausnahme hat).
 - Im Fenster: Aussetzen/Ersetzen/Zusätzlich/Urlaub/Krank zeigen ihre Auswahl im Fenster und schließen es beim Abschluss (`pdDone`); Tauschen schließt es sofort, Hinweis „Tag im Kalender wählen“ mit ✕ in der Fokus-Karte, Kalender markiert die möglichen Tage (`ui.pmode === 'swap'`).
 - Knöpfe zeigen ihren Inhalt statt Erklärtext: Trainingstage = Fächer der farbigen Karten (Bausteine), Wochenplan = Mo–So-Felder in den Farben des aktiven Plans, heute umrandet (Anordnung). Gleiche Karte (Farbe + Icon) in Vorlagen, Fächer, Planer und Kalender.
 - Rauchtest geht den Weg über das Fenster.
 
-## 2026-10-27 Essen: Gegessen-Zeile aufgeräumt
+### 2026-10-27 – Essen: Gegessen-Zeile aufgeräumt
 - Karten waren 32 px zu schmal (`.fmc` rechnete mit dem negativen Rand von `.fchips`): jetzt `(100% - 24px) / 4`, ohne aufgeklappte Mahlzeit immer gleich breit (`.fem`) und bündig mit den Vorschlägen.
 - Gegessen-Karten und Einträge im Stil der Vorschläge, aber gefüllt: Tönung in der Mahlzeitfarbe statt Farbkante oben, „kcal“ klein hinter der Zahl, 90 px hoch. Platzhalter nur noch gestrichelt.
 - „Wie gestern“ als kleiner Knopf rechts in der Kopfzeile (`.fcpy`), die Zeile springt nicht mehr.
 
-## 2026-10-27 Planen Schritt 1: Hauptansicht im Essen-Prinzip (Variante C, Kalender ausklappbar)
+### 2026-10-27 – Planen Schritt 1: Hauptansicht im Essen-Prinzip (Variante C, Kalender ausklappbar)
 - Kalender: Wochenleiste um den gewählten Tag zentriert (`from = a - 3`, heute in der Mitte), Wochentag in der Zelle; Monatsname klappt den Monat aus (`.pcal2.mon`, Kopfzeile Mo–So). Jede Zelle bis heute mit Essen-Ring (`.pfr`, Anteil vom kcal-Ziel, grün im Rahmen, rot über 110 %). Wochenplan-Knopf aus dem Kopf entfernt.
 - Fokus-Karte (`.pday`, Leuchtkante wie die Bilanz) mit Umschalter `ui.pft`: Training (Trainingstage des Tages, Start), Essen (gegessen: kcal/Protein-Balken, „In Essen öffnen“ setzt `ui.fsd`; Zukunft „Noch nichts geplant“), Tag (Zu tun immer offen, Wiegen fällig, Ausnahme-Status, Urlaub/Krank, Aktionen `dayEdit`; roter Punkt am Reiter, wenn etwas ansteht). `ui.pchg`/`ui.todo` entfallen, Tauschen über den Kalender gilt bei `ui.pft === 'd'`.
 - Darunter wie Essen: Knöpfe Trainingstage (Fenster `openDays`: Karten → Editor, „Neuer Tag aus Vorlage“) und Wochenplan (bisheriger Planer), dann Vorlagen-Kacheln (`.ptv`, Trainingstage, die an dem Tag nicht dran sind; antippen = zusätzlich, ab heute).
 - Rauchtest angepasst (`data-pft` statt `data-pchg`/`data-todo`, Trainingstage-Fenster).
 
-## 2026-10-27 Planen: Konzept (abgestimmt, noch nicht gebaut)
+### 2026-10-27 – Planen: Konzept (abgestimmt, noch nicht gebaut)
 - Planen = alles, was kommt; Essen/Heute = was ist. Gleiche Bausteine und Bedienung wie Essen, Geplantes im Umriss-Stil. Trainingstage ↔ Gerichte (Vorlagen), Übungen ↔ Lebensmittel.
 - Essen-Tagesleiste: plant nicht, zeigt aber geplante Tage an (schnell navigieren), heute in der Mitte. Heute Geplantes erscheint in Gegessen als Umriss-Karte (antippen = gegessen). Geplantes getrennt gespeichert (`food.pl`), zählt nicht in Bilanz/Verlauf.
 - Einkaufsliste aus dem Plan (Zeitraum), gerundet auf Stück/Packungen, nach Kategorie, abhaken. Preis: eventuell geschätzt (Richtwert je Lebensmittel, eigene Preise optional).
@@ -37,7 +72,7 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Später: Rezepte abgewandelt; Erinnerungen ganz am Ende mit Widgets.
 - Reihenfolge: 1 Planen-Umbau (nur Training) → 2 Essen planen → 3 Einkaufsliste → 4 Vorschläge → 5 Event/besondere Tage → 6 „Was habe ich“.
 
-## 2026-10-27 Essen: Platzhalter, Wasser, Rückgängig, Suche, Gerichte, Schnell, Open Food Facts, CSS aufgeräumt
+### 2026-10-27 – Essen: Platzhalter, Wasser, Rückgängig, Suche, Gerichte, Schnell, Open Food Facts, CSS aufgeräumt
 - Farben: Oliv grüner (dunkel `--ac #86b06e`, hell `#456b31`), Grautöne entsprechend; Mahlzeitfarben als Tokens `--m-fr/mi/sn/ab` (hell/dunkel), `.m-*` setzt `--mc`.
 - Balken als Fokus kräftiger: Bilanz-kcal 12 px, übrige 8 px, weniger Weißschleier im Verlauf; Glanz bleibt.
 - Wasser in der Bilanz = normaler Balken (`.fbt`, Antippen öffnet das Wasser-Fenster), über dem Ziel voll und dunkler (`.fbt.hi`), über 150 % rot wie die anderen. Ziehen am Bilanz-Balken entfernt (`waBar`, `data-rel`); der Regler im Fenster bleibt.
@@ -52,19 +87,19 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Geprüft mit Chromium-Ablauf (Platzhalter, Kreuz zurück, Gericht wischen, Rückgängig, Schnell merken, Ziehen auf Frühstück = 08:00) und Rauchtest.
 - Nächster Schritt: Planen überarbeiten, Falk hat neue Ideen; Essen gibt Struktur, Design und Handhabung vor.
 
-## 2026-10-27 Farben: Zenit-Oliv statt Mint, Grautöne mit Oliv-Stich
+### 2026-10-27 – Farben: Zenit-Oliv statt Mint, Grautöne mit Oliv-Stich
 - Falk: Grautöne zu Standard, Grün soll kräftiges entsättigtes Military-Grün sein, andere Farben kräftig, nicht bunt.
 - Dunkel: Grund/Flächen oliv-anthrazit (`--bg #0e0f0c` … `--line #373c2d`), Tinte warmweiß, `--ac #9db36a`. Hell: Sand-Grau (`--bg #ebebe3`), `--ac #556b26`. Gruppenfarben (`--g-*`) von Tailwind-Tönen auf eine abgestimmte, etwas entsättigte Reihe; gold/danger/flame angepasst. Stufenfarben (`--t*`) unverändert (Dopamin).
 - Maskottchen in Oliv (Verlauf `#b9cc8c` → `#5f7236`), `theme-color` in build.py und Manifest `#0e0f0c`, Wochenziel-Effekt in `09-training.js` mit neuen Farben.
 - Offen: App-Icon (public/, `tools/make-icons.js`) ist noch mintgrün.
 
-## 2026-10-27 Look beruhigt: Tastenkante statt Versatz-Schatten, Stencil nur als Akzent, Balken wieder glatt
+### 2026-10-27 – Look beruhigt: Tastenkante statt Versatz-Schatten, Stencil nur als Akzent, Balken wieder glatt
 - Falk: an manchen Stellen zu tief und kindisch, Skalenbalken gefallen nicht mehr. Glanz auf Balken und Hauptknopf bleibt (Fokus, Dopamin).
 - `--hs` = feine Kante nach unten (dunkel `0 2px 0` schwarz 55 %, hell Tinte 22 %), beim Drücken `translateY(2px)` ohne Kante.
 - `--f-display` wieder Big Shoulders Display; neu `--f-stencil` nur für Seitentitel (`.fd-h h2`, `.pt-h h2`), kcal in der Bilanz, Level, Tagesname Heute, Arena-Zahl, Level-up. Beide Schriften im Link in `src/index.html`.
 - Segmente (`--n`) überall entfernt, Spuren wieder `var(--s3)`.
 
-## 2026-10-27 Beste Labor-Details ins Standard-Design übernommen, Demo-Schalter entfernt
+### 2026-10-27 – Beste Labor-Details ins Standard-Design übernommen, Demo-Schalter entfernt
 - Falk: Grund (Raster, Körnung), Warnstreifen, Flackern, Dopamin-Teile (Streifen, Achtecke, Schrägecken, Nummern) nein. Ecken mittlerer Weg. Kennungen nur, wo sie etwas sagen. „Brutal“ meinte er eigentlich als Effekte/Funken, kommt später.
 - Schrift: `--f-display` = Big Shoulders Stencil Display (gleiche Maße, in `src/index.html` statt Big Shoulders Display).
 - Ecken: Radius-Tokens neu belegt (Karten 10, Knöpfe/Felder 8, Chips/Pillen 6, Bühne 12; Kreise bleiben).
@@ -74,43 +109,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Fokus Essen: Bilanz mit dünner Leuchtkante, glimmt beim Einstieg einmal weich auf (`fglow`). Fokus Heute: Kennung = Zustand (`data-tag`: Bereit/Läuft/Erledigt/Ruht) und Scan-Streifen alle 7 s (nicht in Ruhe, nicht bei reduzierter Bewegung).
 - `85-design.css`, Schalter und `designSet` entfernt; alter Wert `zenit.design` wird beim Start gelöscht (Zeile kann später raus).
 
-## 2026-10-27 Design-Demo „Labor“ (ersetzt „Kante“)
+### 2026-10-27 – Design-Demo „Labor“ (ersetzt „Kante“)
 - Falk zu „Kante“: nur anderer Look, gleicher Stil und gleiche Farben, wirkt wie Standard-AI-Schwarz. Wunsch: Anordnung und feste Farben (Nährwerte, Stufen, Mahlzeiten) bleiben, Rest im Ideen-Theme „System-Labor, das das Maskottchen hochlevelt“, brutal, rough, dopamingeladen. Klappt es nicht, Einzelteile übernehmen; Falk gestaltet später UI-Elemente selbst, die nachgebaut werden.
 - Zahnrad > „Design Labor (Demo)“ (`designSet`, localStorage `zenit.design`, `html[data-design="labor"]`, lädt Big Shoulders Stencil Display nach, setzt `theme-color`). Regeln nur in `src/css/85-design.css`: Beton-Schwarz mit Rasterpapier und Körnung (fixes `body::after`), Stencil für alle Display-Texte, harte schwarze Versatz-Schatten, Knöpfe sinken beim Drücken in den Schatten, Hauptknopf mit laufenden Streifen, Abschnitte nummeriert (01, 02 …), Marken mit abgeschnittenen Ecken, gewählt = weiß auf schwarz, Balken als Segment-Skala, Zuviel und Warnungen als Gefahrenstreifen, Griff im Fenster als Warnband, Toast als Terminal-Zeile.
 - Fokus: Essen = Bilanz als Messgerät (Leuchtkante, Eckmarken, Kennung „MESSUNG // NAHRUNG“, flackerndes Hochfahren beim Einstieg); Heute = Versuchskammer (Raster, Glasglanz, Kennung „KAMMER 01 · PROBE ZENIT“, laufender Scan), Mitte der Leiste als Achteck, Level als goldenes Achteck.
 
-## 2026-10-26 Design-Demo „Kante“ (verworfen)
+### 2026-10-26 – Design-Demo „Kante“ (verworfen)
 - Erst „Kante“: dunkel, Ecken 2–4 px, flach, eine leuchtende Kante je Screen.
 - Dafür alle Radien in `src/css` als Tokens (`--r8` … `--r999`, Name = Standardwert, in `:root`); Tab-Anzeige nutzt `var(--rmid, 50%)` / `var(--r16)`. Standard-Design pixelgleich (`compare.js`: Alles gleich).
-
-## Stand 2026-10-26
-- Zuletzt: Essen-Tab in 7 Runden umgebaut (alles live, Commit 436f160): Tagesleiste wischbar, Gegessen als Mahlzeit-Karten mit Stapeln, Nährwert-Icons/-Farben, Nährwert-Fenster mit Ring, Mengen-Fenster, Suche (Zuletzt/Kategorien/Schnell), Gerichte-Menü, Rechner im Profil.
-- Falk testet am iPhone: letzte Runde (Bilanz-Kopf „offen“, Vorschlag auf Mahlzeit ziehen, leere Zeile, Suche mit Werten je 100 g, Gerichte-Menü mit Filter/„+“, Rechner im Profil, Wasser dunkler über 100 %).
-- Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
-- Nächster Schritt: Falks Rückmeldung zu Essen abarbeiten; danach Heute weiter umbauen (erst fragen, was am meisten stört, dann Varianten).
-- Nicht committet: nichts.
-
-## Offen / Ideen
-- Falks Essen-Rückmeldung (2026-10-28):
-  - Vorschläge 4×2 (Platz ist da), logisch aufgeteilt: zuletzt, häufig, typisch für die Uhrzeit; die Gruppen optisch minimal unterscheiden.
-  - Knöpfe „Suchen, scannen …“ und „Gerichte“ passen nicht ganz zum Stil, sollen aber klare Knöpfe bleiben und sich anders abheben als der Rest.
-  - Vorschlag ziehen: ohne Ziel in die nächste passende Mahlzeit (nach Uhrzeit) statt immer Frühstück.
-  - Ganze Mahlzeiten nicht mehr per Wischen löschbar, nur Einträge innerhalb einer Mahlzeit.
-  - Fokus (Bilanz) braucht neben dem Glow mehr Fokus im Design, bleibt aber clean.
-  - Bug: „Wie gestern“ packt alle Einträge in dieselbe Mahlzeit (Uhrzeit/Mahlzeit nicht übernommen).
-  - „Wie gestern“-Knopf ist zu groß, die Kopfzeile springt.
-- iPhone-Test offen: Pause-Vollbild in der Arena, Skilltree (Linien, Leuchten, Info-Leiste)
-- iPhone-Test offen Essen: Barcode-Scan quer, Marken-/Online-Suche (Open Food Facts de+world parallel), Wischen/Ziehen auf echtem Touch
-- Heute: weiterer Umbau der Startseite; Bergpfad-Belohnungen / Tages-Drops, Tagesaufgaben, Saison; Vorwoche-Vergleich ist aus Heute raus (neuen Platz finden)
-- Serie: zu langweilig, beim Redesign aufwerten
-- Maskottchen: echte Illustration mit Stufen (ComfyUI), ersetzt den SVG-Platzhalter `mascot()`
-- Statistik-Detailansichten schlanker (Training sehr lang)
-- Icons / Text reduzieren in Heute, Essen, Verlauf, Profil
-- Weitere anstehende Termine im Kalender (z. B. Körpermaße monatlich, wie das Wiegen)
-- Später: Deload-Wochen, Foto der Nährwerttabelle, Push-Erinnerungen, Schlaf, mehr Lebensmittel/Gerichte
-- Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
-
-## Verlauf
 
 ### 2026-10-26 – Essen: Kopf mit Fokus „offen“, Vorschläge auf Mahlzeit ziehen, Suche mit Schnell-Reiter, Gerichte-Menü, Rechner im Profil
 - „Montag · Heute“ wieder da (ohne kcal-Zusatz). Bilanz-Kopf: gegessen, Ziel klein, rechts groß „offen“/„drüber“; Trainings-Zuschlag-Chip und Ziel-Symbol entfernt.

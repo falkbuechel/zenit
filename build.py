@@ -29,7 +29,7 @@ def build():
     if ver: ver+=('+' if git('status','--porcelain') else '')+' · '+git('log','-1','--format=%cd','--date=format:%d.%m.%y %H:%M')
     s=assemble()[0]
     head='''<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0c1110">
+<meta name="theme-color" content="#0e0f0c">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Zenit">
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">'''

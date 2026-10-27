@@ -317,7 +317,7 @@
       f.swap = function (o) { var h = o.querySelector('.emb-i'); h.className = h.className.replace(/ m\d/, ' m' + m1); };
     } else if (x.t === 'goal') {
       var mo = x.id === 'mo';
-      f.cls = 'goal'; f.col = mo ? '#ffc94a' : '#6dbf9c'; f.head = ic(mo ? 'trophy' : 'cal') + (mo ? 'Monatsziel' : 'Wochenziel'); f.title = (mo ? MO_GOAL : WK_GOAL) + ' Trainingstage'; f.sub = '+' + (mo ? MO_XP : WK_XP) + ' XP';
+      f.cls = 'goal'; f.col = mo ? '#f2c14e' : '#9db36a'; f.head = ic(mo ? 'trophy' : 'cal') + (mo ? 'Monatsziel' : 'Wochenziel'); f.title = (mo ? MO_GOAL : WK_GOAL) + ' Trainingstage'; f.sub = '+' + (mo ? MO_XP : WK_XP) + ' XP';
       f.inner = '<i class="lvgoal">' + ic(mo ? 'trophy' : 'cal') + '</i>'; f.big = mo;
     } else {
       // Konto-Level: Gold, Doppelring, Zahl zählt hoch; neue Stufe (Titel) als eigener Hinweis

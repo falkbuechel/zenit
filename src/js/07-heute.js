@@ -51,7 +51,7 @@
     var mouth = mood === 'sleep' ? '<ellipse cx="60" cy="80" rx="3" ry="2.5" class="ey"/>' : mood === 'idle' ? '<path d="M53 78q7 6 14 0" class="ln"/>' : '<path d="M49 75q11 16 22 0z" class="ey"/>';
     var arms = mood === 'cheer' ? '<path d="M22 70 8 44M98 70l14-26" class="ar"/>' : '<path d="M20 82 10 96M100 82l10 14" class="ar"/>';
     return '<svg class="masc ' + mood + '" viewBox="0 0 120 130" style="--mt:' + MTC[tr] + ';--ms:' + (0.86 + tr * 0.04).toFixed(2) + '" aria-hidden="true">' +
-      '<defs><linearGradient id="zmg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd8b8"/><stop offset="1" stop-color="#3f8f70"/></linearGradient></defs>' +
+      '<defs><linearGradient id="zmg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9cc8c"/><stop offset="1" stop-color="#5f7236"/></linearGradient></defs>' +
       '<ellipse cx="60" cy="123" rx="34" ry="5" class="sh"/><g class="bd">' + arms +
       '<path d="M60 18c32 0 44 28 44 58s-18 42-44 42-44-12-44-42 12-58 44-58z" fill="url(#zmg)"/><ellipse cx="60" cy="90" rx="26" ry="19" fill="#fff" opacity=".18"/>' +
       '<rect x="19" y="38" width="82" height="9" rx="4.5" fill="var(--mt)"/><path d="M98 42l12-6-2 12z" fill="var(--mt)"/>' + eyes + mouth +

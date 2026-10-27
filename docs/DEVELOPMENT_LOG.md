@@ -2,6 +2,12 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-27 Farben: Zenit-Oliv statt Mint, Grautöne mit Oliv-Stich
+- Falk: Grautöne zu Standard, Grün soll kräftiges entsättigtes Military-Grün sein, andere Farben kräftig, nicht bunt.
+- Dunkel: Grund/Flächen oliv-anthrazit (`--bg #0e0f0c` … `--line #373c2d`), Tinte warmweiß, `--ac #9db36a`. Hell: Sand-Grau (`--bg #ebebe3`), `--ac #556b26`. Gruppenfarben (`--g-*`) von Tailwind-Tönen auf eine abgestimmte, etwas entsättigte Reihe; gold/danger/flame angepasst. Stufenfarben (`--t*`) unverändert (Dopamin).
+- Maskottchen in Oliv (Verlauf `#b9cc8c` → `#5f7236`), `theme-color` in build.py und Manifest `#0e0f0c`, Wochenziel-Effekt in `09-training.js` mit neuen Farben.
+- Offen: App-Icon (public/, `tools/make-icons.js`) ist noch mintgrün.
+
 ## 2026-10-27 Look beruhigt: Tastenkante statt Versatz-Schatten, Stencil nur als Akzent, Balken wieder glatt
 - Falk: an manchen Stellen zu tief und kindisch, Skalenbalken gefallen nicht mehr. Glanz auf Balken und Hauptknopf bleibt (Fokus, Dopamin).
 - `--hs` = feine Kante nach unten (dunkel `0 2px 0` schwarz 55 %, hell Tinte 22 %), beim Drücken `translateY(2px)` ohne Kante.

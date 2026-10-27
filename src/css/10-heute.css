@@ -284,9 +284,9 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 .masc.happy .bd, .masc.cheer .bd { animation: mjump 1.1s cubic-bezier(.3, 1.5, .5, 1) infinite; }
 .masc.sleep .bd { animation-duration: 4.5s; }
 .masc .sh { fill: rgba(0, 0, 0, .22); }
-.masc .ey { fill: #102018; }
-.masc .ln { fill: none; stroke: #102018; stroke-width: 3; stroke-linecap: round; }
-.masc .ar { fill: none; stroke: #3f8f70; stroke-width: 9; stroke-linecap: round; }
+.masc .ey { fill: #161b0c; }
+.masc .ln { fill: none; stroke: #161b0c; stroke-width: 3; stroke-linecap: round; }
+.masc .ar { fill: none; stroke: #5f7236; stroke-width: 9; stroke-linecap: round; }
 .masc .zz { font-family: var(--f-display); font-size: 14px; font-weight: 900; fill: var(--ink3); }
 @keyframes mbob { 50% { transform: scale(var(--ms, 1)) translateY(-3px) scaleY(1.02); } }
 @keyframes mjump { 0%, 100% { transform: scale(var(--ms, 1)); } 40% { transform: scale(var(--ms, 1)) translateY(-10px); } }

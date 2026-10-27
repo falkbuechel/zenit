@@ -1,6 +1,6 @@
 /* Essen: Bilanz und Balken, Kacheln, Suche, Mengenwahl, Rechner, gegessene Einträge */
 .fd-h { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
-.fd-h h2 { margin: 4px 0 0; font-family: var(--f-display); font-weight: 900; font-size: 36px; text-transform: uppercase; line-height: 1; }
+.fd-h h2 { margin: 4px 0 0; font-family: var(--f-stencil); font-weight: 900; font-size: 36px; text-transform: uppercase; line-height: 1; }
 .fq { display: flex; gap: 8px; margin: 10px 0; overflow-x: auto; scrollbar-width: none; margin-bottom: 8px; }
 .fq::-webkit-scrollbar { display: none; }
 .fq button { flex: none; display: grid; gap: 2px; min-height: 52px; padding: 6px 14px; border-radius: var(--r12); border: 1px solid var(--line); background: var(--s1); color: var(--ink); text-align: left; transition: transform .16s var(--ease); }
@@ -67,14 +67,14 @@
 @keyframes fglow { from { box-shadow: 0 0 0 1px var(--line), 0 0 0 0 transparent; } }
 /* Kopf: gegessen groß, Ziel klein, rechts im Fokus was noch offen ist (bzw. drüber) */
 .fbk { --fc: var(--g-push); cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 8px 6px; }
-.fbk > b { font-family: var(--f-display); font-weight: 900; font-size: 40px; line-height: .9; }
+.fbk > b { font-family: var(--f-stencil); font-weight: 900; font-size: 40px; line-height: .9; }
 .fbk > span { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
 .fbk > em { display: grid; justify-items: end; font-style: normal; font-size: 11px; font-weight: 700; line-height: 1.1; color: var(--ink3); }
 .fbk > em b { font-family: var(--f-display); font-size: 26px; font-weight: 900; color: var(--ink); }
 .fbk > .fbt { grid-column: 1 / -1; height: 8px; }
 .fbk.hit > em, .fbk.hit > em b { color: var(--ac); }
 .fbk.over > em, .fbk.over > em b { color: var(--danger); }
-.fbt { position: relative; display: block; height: 6px; border-radius: var(--r99); background: repeating-linear-gradient(90deg, var(--s3) 0 calc(100% / var(--n, 10) - 2px), transparent 0 calc(100% / var(--n, 10))); overflow: hidden; }
+.fbt { position: relative; display: block; height: 6px; border-radius: var(--r99); background: var(--s3); overflow: hidden; }
 .fbt > i { position: relative; display: block; overflow: hidden; width: calc(var(--p, 0) * 100%); height: 100%; border-radius: inherit; background: var(--fc, var(--g-push)); transition: width .6s var(--ease); }
 /* Verlauf: blass am Anfang, volle Farbe in der Mitte, dunkel und satt an der Spitze */
 .fbt > i::after, .wsl > i::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, .32)); }
@@ -83,7 +83,7 @@
 @media (prefers-reduced-motion: reduce) { .fbt > i::before, .wsl > i::before { animation: none; display: none; } }
 /* Jeder Wert hat seine eigene Farbe (--fc), auch im Ziel; Zustand zeigen Zahl und Animation (kcal: --fc in .fbk) */
 .fbm { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
-.fmb { --n: 5; display: grid; gap: 4px; min-width: 0; cursor: pointer; }
+.fmb { display: grid; gap: 4px; min-width: 0; cursor: pointer; }
 /* Icon, Wert und Ziel klein in einer Zeile (bis 999/999), darunter der Balken */
 .fmb span { display: flex; align-items: center; gap: 2px; min-width: 0; color: var(--fc); white-space: nowrap; }
 .fmb span .ic { flex: none; width: 14px; height: 14px; margin-right: 1px; }
@@ -266,7 +266,7 @@
 .fwa b small { font-size: 11px; color: var(--ink3); }
 /* Wasser-Regler: in der Bilanz ziehen (relativ, auch übers Ziel hinaus); im Fenster breit mit Skala */
 .wsl { position: relative; display: block; height: 30px; cursor: pointer; touch-action: none; }
-.wsl::before { content: ""; position: absolute; top: 11px; right: 0; left: 0; height: 8px; border-radius: 4px; background: repeating-linear-gradient(90deg, var(--s3) 0 calc(100% / var(--n, 10) - 2px), transparent 0 calc(100% / var(--n, 10))); }
+.wsl::before { content: ""; position: absolute; top: 11px; right: 0; left: 0; height: 8px; border-radius: 4px; background: var(--s3); }
 .wsl > i { position: absolute; top: 11px; left: 0; overflow: hidden; width: calc(var(--p) * 100%); height: 8px; border-radius: 4px; background: var(--fc); }
 .wsl.hi > i { background: color-mix(in srgb, var(--fc) 30%, #041a2e); }
 .wsl.over > i { background: var(--danger); }

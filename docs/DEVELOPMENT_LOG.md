@@ -2,6 +2,12 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-27 Look beruhigt: Tastenkante statt Versatz-Schatten, Stencil nur als Akzent, Balken wieder glatt
+- Falk: an manchen Stellen zu tief und kindisch, Skalenbalken gefallen nicht mehr. Glanz auf Balken und Hauptknopf bleibt (Fokus, Dopamin).
+- `--hs` = feine Kante nach unten (dunkel `0 2px 0` schwarz 55 %, hell Tinte 22 %), beim Drücken `translateY(2px)` ohne Kante.
+- `--f-display` wieder Big Shoulders Display; neu `--f-stencil` nur für Seitentitel (`.fd-h h2`, `.pt-h h2`), kcal in der Bilanz, Level, Tagesname Heute, Arena-Zahl, Level-up. Beide Schriften im Link in `src/index.html`.
+- Segmente (`--n`) überall entfernt, Spuren wieder `var(--s3)`.
+
 ## 2026-10-27 Beste Labor-Details ins Standard-Design übernommen, Demo-Schalter entfernt
 - Falk: Grund (Raster, Körnung), Warnstreifen, Flackern, Dopamin-Teile (Streifen, Achtecke, Schrägecken, Nummern) nein. Ecken mittlerer Weg. Kennungen nur, wo sie etwas sagen. „Brutal“ meinte er eigentlich als Effekte/Funken, kommt später.
 - Schrift: `--f-display` = Big Shoulders Stencil Display (gleiche Maße, in `src/index.html` statt Big Shoulders Display).

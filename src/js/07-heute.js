@@ -39,7 +39,7 @@
       '<button class="hm-b" data-swap="1" aria-label="Heute ändern"><i>' + ic('swap') + '</i><small>Ändern</small></button></div>' +
       '<div class="hm-hero"' + (cur ? ' data-arena="1" role="button" tabindex="0" aria-label="Training öffnen"' : '') + '>' + mascot(mood, tr) + '</div>' +
       '<div class="hm-plan"><b>' + esc(rest ? 'Heute frei' : tname) + '</b><small>' + (cur ? L.length + ' Übungen' + (mins ? ' · ~' + mins + ' Min' : '') : rest ? (nx ? 'Weiter: ' + esc(nx) : 'Erholung zählt') : 'Heute keine Übungen') + '</small>' +
-      (cur ? '<i class="hm-pb" style="--n:' + L.length + '"><i style="--p:' + (nd / L.length).toFixed(3) + '"></i></i>' : '') + '</div>' +
+      (cur ? '<i class="hm-pb"><i style="--p:' + (nd / L.length).toFixed(3) + '"></i></i>' : '') + '</div>' +
       (cur ? '<button class="btn primary big hm-go" data-arena="1">' + ic(all ? 'check' : 'play') + (all ? 'Erledigt · ansehen' : nd ? 'Weiter trainieren · ' + nd + '/' + L.length : 'Training starten') + '</button>'
         : '<button class="btn big hm-go" data-swap="1">' + ic('swap') + (rest ? 'Trotzdem trainieren' : 'Training wählen') + '</button>') + '</section>';
   }

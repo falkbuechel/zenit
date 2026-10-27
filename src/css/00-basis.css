@@ -15,14 +15,16 @@
   --gold: #ffc94a; --danger: #ff6b5b; --flame: #ff8a1f;
   --g-pull: #2dd4bf; --g-push: #fb923c; --g-core: #f472b6; --g-kh: #a78bfa; --g-skill: #a3e635; --g-cardio: #38bdf8; --g-mob: #facc15;
   --tc: var(--ac); --tf: var(--ac); --pt: var(--t0); --pf: var(--tf0);
-  --f-display: 'Big Shoulders Stencil Display', 'Big Shoulders Display', 'Arial Narrow', Impact, sans-serif;
+  --f-display: 'Big Shoulders Display', 'Arial Narrow', Impact, sans-serif;
+  /* Stencil nur als Akzent: Seitentitel und die eine große Zahl je Screen */
+  --f-stencil: 'Big Shoulders Stencil Display', var(--f-display);
   --f-body: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --f-mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
   --ease: cubic-bezier(0.23, 1, 0.32, 1); --drawer: cubic-bezier(0.32, 0.72, 0, 1);
   /* Ecken als Tokens (Name = früherer Wert): mittlerer Weg zwischen rund und kantig. Karten 10, Knöpfe/Felder 8, Chips 6, Bühne 12 */
   --r8: 6px; --r9: 6px; --r10: 8px; --r12: 8px; --r14: 10px; --r16: 10px; --r18: 10px; --r20: 10px; --r22: 10px; --r28: 12px; --r99: 6px; --r999: 6px;
-  /* Harter Versatz-Schatten für Antippbares (hell: dunkelgrün, kürzer) */
-  --hs: 3px 3px 0 #000;
+  /* Tastenkante für Antippbares: feine Kante nach unten, beim Drücken senkt es sich hinein */
+  --hs: 0 2px 0 rgba(0, 0, 0, .55);
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
@@ -33,7 +35,7 @@
     --t0: #5d6c65; --t1: #1b8a3a; --t2: #1a5fd0; --t3: #8a2fd0; --t4: #b45f00; --t5a: #007f93; --t5b: #b0147e;
     --gold: #9a6200; --danger: #c4281b; --flame: #d9620a;
     --g-pull: #0b8f7e; --g-push: #c25e0a; --g-core: #be2b78; --g-kh: #6d3fd1; --g-skill: #5f8f0a; --g-cardio: #0b79b0; --g-mob: #a16207;
-    --hs: 2px 2px 0 color-mix(in srgb, var(--ink) 85%, transparent);
+    --hs: 0 2px 0 color-mix(in srgb, var(--ink) 22%, transparent);
   }
 }
 :root[data-theme="light"] {
@@ -44,10 +46,10 @@
   --t0: #5d6c65; --t1: #1b8a3a; --t2: #1a5fd0; --t3: #8a2fd0; --t4: #b45f00; --t5a: #007f93; --t5b: #b0147e;
   --gold: #9a6200; --danger: #c4281b; --flame: #d9620a;
   --g-pull: #0b8f7e; --g-push: #c25e0a; --g-core: #be2b78; --g-kh: #6d3fd1; --g-skill: #5f8f0a; --g-cardio: #0b79b0; --g-mob: #a16207;
-  --hs: 2px 2px 0 color-mix(in srgb, var(--ink) 85%, transparent);
+  --hs: 0 2px 0 color-mix(in srgb, var(--ink) 22%, transparent);
 }
 :root[data-theme="dark"] {
-  color-scheme: dark; --hs: 3px 3px 0 #000;
+  color-scheme: dark; --hs: 0 2px 0 rgba(0, 0, 0, .55);
   --bg: #0c1110; --s1: #151b19; --s2: #1d2523; --s3: #29322f; --line: #313d38;
   --ink: #f1f5f3; --ink2: #bcc9c3; --ink3: #8b9a93; --on: #04140d; --mx: #ffffff;
   --ac: #6dbf9c;
@@ -96,8 +98,7 @@ button { cursor: pointer; touch-action: manipulation; transition: transform .14s
 .tchip.t4 { background: var(--tf); color: #2b1600; border-color: transparent; }
 .tchip.t5 { background: var(--tf); background-size: 300% 100%; color: #fff; border-color: transparent; text-shadow: 0 1px 3px rgba(0, 0, 0, .55); animation: holo 6s linear infinite; }
 .tchip.t3::after, .tchip.t4::after, .tchip.t5::after, .bar.t3 > i::after, .bar.t4 > i::after, .bar.t5 > i::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .55) 50%, transparent 62%); transform: translateX(-130%); animation: sweep 3.4s ease-in-out infinite; }
-/* Leere Spur als Skala in --n Segmenten (Standard 10), die Füllung darüber bleibt glatt */
-.bar { height: 8px; background: repeating-linear-gradient(90deg, var(--s3) 0 calc(100% / var(--n, 10) - 2px), transparent 0 calc(100% / var(--n, 10))); border-radius: var(--r99); overflow: hidden; }
+.bar { height: 8px; background: var(--s3); border-radius: var(--r99); overflow: hidden; box-shadow: inset 0 1px 2px rgba(0, 0, 0, .25); }
 .bar > i { position: relative; overflow: hidden; display: block; width: 100%; height: 100%; background: var(--tf); border-radius: var(--r99); transform: scaleX(var(--p, 0)); transform-origin: left; transition: transform .7s var(--ease); }
 .bar.gold > i { background: linear-gradient(90deg, #ffd23a, #ff9a1a); }
 .bar.t5 > i { background-size: 300% 100%; animation: holo 6s linear infinite; }
@@ -123,9 +124,9 @@ input, textarea { -webkit-user-select: text; user-select: text; }
 @keyframes fly { 0% { opacity: 0; transform: translate(-50%, 0) scale(.8); } 15% { opacity: 1; transform: translate(-50%, -10px) scale(1.05); } 100% { opacity: 0; transform: translate(-50%, -64px) scale(1); } }
 
 button:active:not(:disabled) { transform: scale(.97); }
-/* Antippbares hat einen harten Versatz-Schatten und sinkt beim Drücken hinein; reine Anzeigen bleiben flach */
+/* Antippbares hat eine Tastenkante und senkt sich beim Drücken hinein; reine Anzeigen bleiben flach */
 .btn, .sb, .seg2 button, .swl button, .swg button, .fti, .fcpi, .fmc { box-shadow: var(--hs); }
-:is(.btn, .sb, .seg2 button, .swl button, .swg button, .fti, .fcpi, .fmc):active:not(:disabled) { transform: translate(2px, 2px); box-shadow: none; }
+:is(.btn, .sb, .seg2 button, .swl button, .swg button, .fti, .fcpi, .fmc):active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
 @media (hover: hover) and (pointer: fine) { .btn:hover, .fchip:hover, .pill:hover { border-color: var(--tc); } }
 
 .sk { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 6px; }
@@ -316,7 +317,7 @@ button:active:not(:disabled) { transform: scale(.97); }
 .lvfx .emb-i.big .ic { width: 64px; height: 64px; }
 .lvfx.up .hc.big, .lvfx.up .emb-i.big { animation: cpop .6s cubic-bezier(.2, 1.4, .4, 1) both; }
 .lvfx-t { position: relative; z-index: 1; display: grid; justify-items: center; gap: 4px; margin: 0; color: #fff; opacity: 0; transform: translateY(10px); transition: opacity .4s .15s, transform .4s .15s var(--ease); }
-.lvfx-t b { font-family: var(--f-display); font-size: 30px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.lvfx-t b { font-family: var(--f-stencil); font-size: 30px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .lvfx-t small { font-size: 14px; color: rgba(255, 255, 255, .75); }
 .lvfx.up .lvfx-t { opacity: 1; transform: none; }
 /* Kopf (Art + Zähler 2 / 4), Hinweis unten, Voraussetzungen bei Freischaltung */
@@ -335,7 +336,7 @@ button:active:not(:disabled) { transform: scale(.97); }
 .lvacc { position: relative; display: grid; place-content: center; justify-items: center; width: 200px; height: 200px; border: 4px solid var(--fxc); border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--fxc) 25%, transparent), transparent 70%); box-shadow: 0 0 60px -10px var(--fxc), inset 0 0 30px -10px var(--fxc); animation: forge 1s cubic-bezier(.2, .8, .2, 1) both; }
 .lvacc::before { content: ""; position: absolute; inset: -16px; border: 2px dashed color-mix(in srgb, var(--fxc) 60%, transparent); border-radius: 50%; animation: rays 12s linear infinite; }
 .lvacc small { font-size: 12px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--fxc); }
-.lvacc b { font-family: var(--f-display); font-size: 92px; font-weight: 900; line-height: .9; color: #fff; }
+.lvacc b { font-family: var(--f-stencil); font-size: 92px; font-weight: 900; line-height: .9; color: #fff; }
 .lvfx.acc.up .lvacc { animation: cpop .6s cubic-bezier(.2, 1.4, .4, 1) both; }
 .lvfx.acc .lvfx-r { animation-duration: 8s; }
 .lvgoal { display: grid; place-items: center; width: 140px; height: 140px; border: 3px solid var(--fxc); border-radius: 50%; color: var(--fxc); animation: forge 1s cubic-bezier(.2, .8, .2, 1) both; }

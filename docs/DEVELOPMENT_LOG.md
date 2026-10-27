@@ -2,6 +2,13 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-28 Planen Schritt 1 fertig (Planer/Editor als Fenster) und Schritt 2: Essen planen
+- Wochenplaner und Tag-Editor öffnen als Fenster über Planen (`planSheet`, von `render()` mitgezeichnet, Scroll bleibt; `ui.sheet.plan = 'pm' | 'pe'`). `closeSheet` setzt `ui.pman`/`ui.pe` zurück. Schließen (✕/Hintergrund, `pSheetBack`): Editor aus dem Planer → zurück in den Planer; ungespeicherte Woche → erst Hinweis „Nicht gespeichert“.
+- Neue Datenform `food.pl` (siehe DEVELOPMENT.md), `planSum(di)`.
+- Planen › Essen: Balken kcal/Protein = gegessen + geplant (schraffiert, `fGh`), vier Mahlzeiten (gegessen gefüllt, nur geplant gestrichelt, leer „+“). Ab heute antippen = „Mahlzeit planen“ (`openPlanMeal`): Geplantes mit ✕, Kacheln (Gerichte dieser Mahlzeit zuerst, dann häufige Lebensmittel; antippen = einplanen), Suchen und Schnell im Plan-Modus (`ui.fplan`: Knopf „Einplanen“, ohne Uhrzeit, „danach frei“ zählt Geplantes mit; ✕ in Suche/Schnell führt zurück zur Mahlzeit). Rückgängig wie in Essen. Kalender: künftige Tage mit Plan haben einen blassen Ring.
+- Essen: Tagesleiste mit heute in der Mitte (3 Tage voraus), künftige Tage im Umriss (mit Plan grün umrandet, Balken = geplant), antippen öffnet den Tag in Planen › Essen (`data-pgo`). Bilanz-Balken zeigen heute Geplantes schraffiert. Gegessen: nur geplante Mahlzeit = gestrichelte Karte mit Haken (antippen = gegessen, `planEat`: jetzt oder übliche Uhrzeit, Rückgängig); schon gegessen + geplant = „+n“ an der Karte, aufgeklappt eine „Geplant“-Karte zum Eintragen.
+- Geprüft mit Chromium-Ablauf (planen, Suche einplanen, entfernen, heute essen, Zukunftstag → Planen, Planer/Editor im Fenster mit Verwerfen) und Rauchtest.
+
 ## 2026-10-28 Planen: Reiter Tag aufgelöst, Trainingstage/Wochenplan als Bild-Knöpfe
 - Umschalter nur noch Training | Essen. Ausnahme-Status (getauscht/ausgesetzt/statt) und Urlaub/Krank stehen im Reiter Training. Kopf der Fokus-Karte: Glocke mit Zahl (`data-pnts`, Fenster mit Zu tun und Wiegen fällig, nur wenn etwas ansteht), Stift = „Tag ändern“ (`data-pdedit`, Fenster `pdayHtml` mit `dayEdit`; grün, wenn der Tag eine Ausnahme hat).
 - Im Fenster: Aussetzen/Ersetzen/Zusätzlich/Urlaub/Krank zeigen ihre Auswahl im Fenster und schließen es beim Abschluss (`pdDone`); Tauschen schließt es sofort, Hinweis „Tag im Kalender wählen“ mit ✕ in der Fokus-Karte, Kalender markiert die möglichen Tage (`ui.pmode === 'swap'`).
@@ -84,6 +91,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Nicht committet: nichts.
 
 ## Offen / Ideen
+- Falks Essen-Rückmeldung (2026-10-28):
+  - Vorschläge 4×2 (Platz ist da), logisch aufgeteilt: zuletzt, häufig, typisch für die Uhrzeit; die Gruppen optisch minimal unterscheiden.
+  - Knöpfe „Suchen, scannen …“ und „Gerichte“ passen nicht ganz zum Stil, sollen aber klare Knöpfe bleiben und sich anders abheben als der Rest.
+  - Vorschlag ziehen: ohne Ziel in die nächste passende Mahlzeit (nach Uhrzeit) statt immer Frühstück.
+  - Ganze Mahlzeiten nicht mehr per Wischen löschbar, nur Einträge innerhalb einer Mahlzeit.
+  - Fokus (Bilanz) braucht neben dem Glow mehr Fokus im Design, bleibt aber clean.
+  - Bug: „Wie gestern“ packt alle Einträge in dieselbe Mahlzeit (Uhrzeit/Mahlzeit nicht übernommen).
+  - „Wie gestern“-Knopf ist zu groß, die Kopfzeile springt.
 - iPhone-Test offen: Pause-Vollbild in der Arena, Skilltree (Linien, Leuchten, Info-Leiste)
 - iPhone-Test offen Essen: Barcode-Scan quer, Marken-/Online-Suche (Open Food Facts de+world parallel), Wischen/Ziehen auf echtem Touch
 - Heute: weiterer Umbau der Startseite; Bergpfad-Belohnungen / Tages-Drops, Tagesaufgaben, Saison; Vorwoche-Vergleich ist aus Heute raus (neuen Platz finden)

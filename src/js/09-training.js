@@ -87,7 +87,7 @@
     logsOf(id).forEach(function (l) { l.s.forEach(function (x) { if (x > m) m = x; }); });
     return m;
   }
-  function closeSheet(force) { ui.dd = null; ui.ingm = false; scanStop(); if (tm && (tm.phase === 'cd' || tm.phase === 'run') && !force) return; clearInterval(tmT); tm = null; ui.sheet = null; $('shade').classList.remove('open'); $('sheet').classList.remove('open'); }
+  function closeSheet(force) { ui.dd = null; ui.ingm = false; ui.fplan = null; ui.pman = false; ui.pe = null; scanStop(); if (tm && (tm.phase === 'cd' || tm.phase === 'run') && !force) return; clearInterval(tmT); tm = null; ui.sheet = null; $('shade').classList.remove('open'); $('sheet').classList.remove('open'); }
   function sheetVal() { var v = parseFloat($('sv').value); return isFinite(v) && v >= 0 ? Math.round(v) : 0; }
   function updSheetXp() { /* XP hängt vom ganzen Übungsblock ab, keine Satz-Vorschau */ }
   function saveSheet() {
@@ -138,6 +138,8 @@
     ui.undo = null; persist(); stopRest();
     $('toast').className = 'toast';
     render();
+    // Offenes „Mahlzeit planen“ neu aufbauen, sonst zeigen die Zeilen alte Indizes in food.pl
+    if (ui.fplan && ui.sheet && ui.sheet.plmeal) openPlanMeal(ui.fplan.d, ui.fplan.mk);
   }
   // ---------- Gesamtuhr
   var SKEY = DEMO ? 'zenit.sess.demo' : 'zenit.sess', sess = null, sessI = null, sessArm = 0;

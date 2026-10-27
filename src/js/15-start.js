@@ -34,7 +34,7 @@
   }, { passive: false });
   document.addEventListener('touchend', function (e) {
     var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy, m = sMode; sMode = '';
-    if (m === 'sheet') { var sh = $('sheet'); sh.style.transition = ''; sh.style.transform = ''; if (sheetDy > 90) closeSheet(); return; }
+    if (m === 'sheet') { var sh = $('sheet'); sh.style.transition = ''; sh.style.transform = ''; if (sheetDy > 90 && !pSheetBack()) closeSheet(); return; }
     if (m === 'cal' || m === 'fds') {
       if (calLock !== 'x') return;
       var fast = Math.abs(dx) / Math.max(1, Date.now() - st0) > 0.35, cg = document.querySelector(m === 'cal' ? '.pc2-g' : '.fds');

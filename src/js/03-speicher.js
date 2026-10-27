@@ -18,6 +18,13 @@
       if (/^(fr|mi|sn|ab)$/.test(x.mk)) o.mk = x.mk;
       return o;
     });
+    // pl: geplante Einträge (Tag d, Mahlzeit mk, Werte und Quelle wie e), höchstens 30 Tage zurück
+    var pl = (Array.isArray(f.pl) ? f.pl : []).filter(function (x) { return x && isFinite(x.d) && x.d >= dayIdx(Date.now()) - 30 && /^(fr|mi|sn|ab)$/.test(x.mk) && isFinite(x.k) && x.k >= 0 && x.k <= 20000; }).slice(0, 400).map(function (x) {
+      var o = { d: Math.round(x.d), mk: x.mk, n: String(x.n || '').slice(0, 30), k: Math.round(x.k), p: nv(x.p, 1000) };
+      NX.forEach(function (k) { if (x[k] != null && isFinite(x[k])) o[k] = nv(x[k], 2000); });
+      if (x.r && typeof x.r.i === 'string' && isFinite(x.r.g) && x.r.g > 0) o.r = { i: x.r.i.slice(0, 24), g: nv(x.r.g, 5000) };
+      return o;
+    });
     var o = (Array.isArray(f.o) ? f.o : []).filter(function (x) { return x && typeof x.id === 'string' && /^u/.test(x.id) && typeof x.n === 'string'; }).slice(0, 600).map(function (x) {
       var r = { id: x.id.slice(0, 24), n: x.n.slice(0, 30), k: nv(x.k, 1000), p: nv(x.p, 100), f: nv(x.f, 100), c: nv(x.c, 100), fb: nv(x.fb, 100), su: nv(x.su, 100), u: [] };
       if (Array.isArray(x.u)) x.u.slice(0, 4).forEach(function (q) { if (Array.isArray(q) && typeof q[0] === 'string' && +q[1] > 0) r.u.push([q[0].slice(0, 12), nv(q[1], 5000)]); });
@@ -42,7 +49,7 @@
     var m = (Array.isArray(f.m) ? f.m : []).filter(function (x) { return x && isFinite(x.t); }).slice(-400).map(function (x) { return { t: x.t, w: mv(x.w), c: mv(x.c), a: mv(x.a), th: mv(x.th), sh: mv(x.sh) }; });
     // Wasser: {Tagesindex: ml}
     var wa = {}; if (f.wa && typeof f.wa === 'object') Object.keys(f.wa).forEach(function (k) { var v = +f.wa[k]; if (/^\d+$/.test(k) && v > 0) wa[k] = Math.min(8000, Math.round(v)); });
-    return { g: g, e: e, d: d, w: w, pr: q, m: m, o: o, wa: wa };
+    return { g: g, e: e, d: d, w: w, pr: q, m: m, o: o, wa: wa, pl: pl };
   }
   function cleanPlan(p) {
     if (!p || !Array.isArray(p.days)) return null;

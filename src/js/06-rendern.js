@@ -90,6 +90,7 @@
     stApply();
     if (ui.tab === 'fort' && (ui.col || 'ka') === 'ka') { var un0 = EX.filter(function (e) { return d.unlocked[e.id]; }).map(function (e) { return e.id; }); if (!seenUx || un0.length !== seenUx.length) { saveSeen(un0); badges(notices(d, now)); } }
     if (ui.sheet && ui.sheet.settings && $('sheet').classList.contains('open')) $('sheet').innerHTML = setHtml();
+    if ((ui.sheet && ui.sheet.plan) || ui.pman || ui.pe) planSheet(d, now);
     hydrate(snap, fresh);
     if (ui.scroll) { var sc = ui.scroll; ui.scroll = null; setTimeout(function () { scrollToEl(sc); }, 60); }
     jumpMode = ''; updJump();

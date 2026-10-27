@@ -47,7 +47,8 @@ docs/                 DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 ## 3. Daten
 - localStorage `stufenbuch.v1`: `{u, logs, plan, food}`. Demo-Modus nutzt `stufenbuch.demo` (Profil > Zahnrad > Testdaten, 5 Szenarien, `demoData(kind)`).
 - logs: `{t, e, s:[…], k?}`; `e` = Übungs-id, `'warm'` oder `'sess'`.
-- food: `{g, e, d, o, w, pr, m, wa}` (`wa`: Wasser je Tag `{Tagesindex: ml}`)
+- food: `{g, e, d, o, w, pr, m, wa, pl}` (`wa`: Wasser je Tag `{Tagesindex: ml}`)
+  - `pl: [{d, mk, n, k, p, f?, c?, fb?, su?, r?}]` – geplante Einträge (Tagesindex `d`, Mahlzeit `mk`, Werte wie `e`), getrennt vom Gegessenen, zählen nicht in Bilanz/Verlauf (`planSum`). Heute Geplantes wird in Essen per Antippen gegessen (`planEat` → `e`); `cleanFood` behält 30 Tage zurück.
   - `e: [{t, n, k, p, f?, c?, fb?, su?, r?: {i, g}}]` – Einträge: kcal, Protein, Fett, Kohlenhydrate, Ballaststoffe, Zucker (fehlende = unbekannt, alte Einträge haben nur k/p). `r` = Quelle (`FOODS`-id, eigenes `u…`, Gericht `d…`) und Menge (Gramm, beim Gericht Portionen); daraus entstehen die Schnell-Kacheln (`fTiles`).
   - `FOODS` im Code: ca. 100 Lebensmittel je 100 g mit Portionen (Richtwerte). Kategorien für die Suche: `FCATS` (`[key, Name, ids]`, setzt `.cat`). `o: [{id: 'u…', n, b?, bc?, k, p, f, c, fb, su, u: [[Portion, g]]}]` eigene Lebensmittel (`b` Marke, `bc` Barcode, aus Open Food Facts oder Scan). In `FOODS` markiert `*` die vorgewählte Portion (`.d`), `FVAR` verbindet Varianten (`.vg`, `.vh`). `d: [{id, n, por, ing: [{n, a, k, p, f?, c?, fb?, su?, i?}], m?}]` Gerichte (Zutatenwerte je 100 g; `m` = fest gewählte Mahlzeiten `fr|mi|sn|ab`, fehlt = automatisch aus dem Verlauf, `dishMeals`). Open-Food-Facts-Treffer je Suchwort liegen in localStorage `zenit.offc` (30 Suchen, 7 Tage).
   - `g` – Ziele: `{a: 1}` = automatisch aus dem Rechner (je Tag, `foodGoal(tag)`), sonst eigene Werte `{k, p, f?, c?, fb?, su?}` (fehlende aus kcal abgeleitet).

@@ -2,6 +2,16 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-27 Beste Labor-Details ins Standard-Design übernommen, Demo-Schalter entfernt
+- Falk: Grund (Raster, Körnung), Warnstreifen, Flackern, Dopamin-Teile (Streifen, Achtecke, Schrägecken, Nummern) nein. Ecken mittlerer Weg. Kennungen nur, wo sie etwas sagen. „Brutal“ meinte er eigentlich als Effekte/Funken, kommt später.
+- Schrift: `--f-display` = Big Shoulders Stencil Display (gleiche Maße, in `src/index.html` statt Big Shoulders Display).
+- Ecken: Radius-Tokens neu belegt (Karten 10, Knöpfe/Felder 8, Chips/Pillen 6, Bühne 12; Kreise bleiben).
+- Harter Versatz-Schatten `--hs` (dunkel 3 px schwarz, hell 2 px dunkelgrün) nur für Antippbares (`.btn`, `.sb`, `.seg2`/`.swl`/`.swg`-Knöpfe, `.fti`, `.fcpi`, `.fmc`); beim Drücken sinkt es hinein (`translate(2px, 2px)`, Schatten weg). Reine Anzeigen bleiben flach.
+- Gewählt = Tinte (`--ink` Fläche, `--bg` Text) bei `.seg`, `.seg2`, `.fchip`, `.eqs` statt Grünfüllung. Überschriften ohne `small` mit Linie bis zum Rand.
+- Skalen: leere Spur in `--n` Segmenten (Standard 10), Füllung glatt. Makros 5, Wasser 1 Segment = 250 ml (`--n` im Render), Trainingsfortschritt Heute = Anzahl Übungen.
+- Fokus Essen: Bilanz mit dünner Leuchtkante, glimmt beim Einstieg einmal weich auf (`fglow`). Fokus Heute: Kennung = Zustand (`data-tag`: Bereit/Läuft/Erledigt/Ruht) und Scan-Streifen alle 7 s (nicht in Ruhe, nicht bei reduzierter Bewegung).
+- `85-design.css`, Schalter und `designSet` entfernt; alter Wert `zenit.design` wird beim Start gelöscht (Zeile kann später raus).
+
 ## 2026-10-27 Design-Demo „Labor“ (ersetzt „Kante“)
 - Falk zu „Kante“: nur anderer Look, gleicher Stil und gleiche Farben, wirkt wie Standard-AI-Schwarz. Wunsch: Anordnung und feste Farben (Nährwerte, Stufen, Mahlzeiten) bleiben, Rest im Ideen-Theme „System-Labor, das das Maskottchen hochlevelt“, brutal, rough, dopamingeladen. Klappt es nicht, Einzelteile übernehmen; Falk gestaltet später UI-Elemente selbst, die nachgebaut werden.
 - Zahnrad > „Design Labor (Demo)“ (`designSet`, localStorage `zenit.design`, `html[data-design="labor"]`, lädt Big Shoulders Stencil Display nach, setzt `theme-color`). Regeln nur in `src/css/85-design.css`: Beton-Schwarz mit Rasterpapier und Körnung (fixes `body::after`), Stencil für alle Display-Texte, harte schwarze Versatz-Schatten, Knöpfe sinken beim Drücken in den Schatten, Hauptknopf mit laufenden Streifen, Abschnitte nummeriert (01, 02 …), Marken mit abgeschnittenen Ecken, gewählt = weiß auf schwarz, Balken als Segment-Skala, Zuviel und Warnungen als Gefahrenstreifen, Griff im Fenster als Warnband, Toast als Terminal-Zeile.
@@ -10,7 +20,6 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 ## 2026-10-26 Design-Demo „Kante“ (verworfen)
 - Erst „Kante“: dunkel, Ecken 2–4 px, flach, eine leuchtende Kante je Screen.
 - Dafür alle Radien in `src/css` als Tokens (`--r8` … `--r999`, Name = Standardwert, in `:root`); Tab-Anzeige nutzt `var(--rmid, 50%)` / `var(--r16)`. Standard-Design pixelgleich (`compare.js`: Alles gleich).
-- Wenn ein Design übernommen wird: Tokens in `:root` ersetzen, `85-design.css` in die Bereichsdateien auflösen, Schalter und `designSet` entfernen, Schrift in `src/index.html`, `theme-color` in build.py.
 
 ## Stand 2026-10-26
 - Zuletzt: Essen-Tab in 7 Runden umgebaut (alles live, Commit 436f160): Tagesleiste wischbar, Gegessen als Mahlzeit-Karten mit Stapeln, Nährwert-Icons/-Farben, Nährwert-Fenster mit Ring, Mengen-Fenster, Suche (Zuletzt/Kategorien/Schnell), Gerichte-Menü, Rechner im Profil.

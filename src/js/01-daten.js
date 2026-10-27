@@ -117,17 +117,7 @@
   var REST = { pull: 120, push: 90, core: 60, kh: 75, skill: 120, cardio: 60, mob: 20 }, RESTX = { scap: 60, hang: 90 };
   var restOn = true;
   try { restOn = localStorage.getItem('zenit.rest') !== '0'; } catch (err) { /* egal */ }
-  // Design-Variante (Demo): setzt html[data-design], Regeln in 85-design.css
-  var design = '';
-  try { design = localStorage.getItem('zenit.design') === 'labor' ? 'labor' : ''; } catch (err) { /* egal */ }
-  designSet(design);
-  function designSet(d) {
-    var r = document.documentElement, m = document.querySelector('meta[name="theme-color"]'); design = d;
-    if (d) r.dataset.design = d; else delete r.dataset.design;
-    if (m) m.content = d ? '#0b0c0b' : '#0c1110';
-    // Stencil-Schrift nur für das Labor-Design laden
-    if (d && !document.getElementById('lfont')) { var l = document.createElement('link'); l.id = 'lfont'; l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@800;900&display=swap'; document.head.appendChild(l); }
-  }
+  try { localStorage.removeItem('zenit.design'); } catch (err) { /* egal */ }
 
   /*PURE*/
   var EXB = {};

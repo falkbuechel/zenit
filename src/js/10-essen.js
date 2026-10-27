@@ -358,7 +358,7 @@
       '<div class="wahd"><button class="sb" data-fwa="-50" aria-label="50 ml weniger"' + (wa ? '' : ' disabled') + '>' + ic('minus') + '</button>' +
       '<label class="wnum"><span><input id="wa-v" type="text" inputmode="decimal" value="' + fN2(wa / 1000) + '" aria-label="Wasser in Litern"><em>l</em></span><small>von ' + fN(wg / 1000) + ' l</small></label>' +
       '<button class="sb" data-fwa="50" aria-label="50 ml mehr">' + ic('plus') + '</button></div>' +
-      '<div class="wsc" data-noswipe="1"><i id="wa-r" class="wsl wbig' + (wa > lim ? ' over' : '') + '" data-max="' + mx + '" data-lim="' + lim + '" data-v="' + wa + '" role="slider" aria-label="Wasser">' +
+      '<div class="wsc" data-noswipe="1"><i id="wa-r" class="wsl wbig' + (wa > lim ? ' over' : '') + '" style="--n:' + Math.max(1, Math.round(mx / 250)) + '" data-max="' + mx + '" data-lim="' + lim + '" data-v="' + wa + '" role="slider" aria-label="Wasser">' +
       '<i style="--p:' + Math.min(1, wa / mx).toFixed(3) + '"></i><em style="--x:' + (wg / mx).toFixed(4) + '"></em></i><div class="wsx" style="--n:' + mx / 250 + '">' + lb + '</div></div>' +
       '<div class="wqk">' + [['glass', 250], ['bottle', 500], ['bottle', 750]].map(function (q) { return '<button data-fwa="' + q[1] + '">' + ic(q[0]) + '<b>+' + q[1] + '</b></button>'; }).join('') +
       '<button data-fwaz="1" aria-label="Auf 0 setzen"' + (wa ? '' : ' disabled') + '>' + ic('undo') + '<b>0</b></button></div>';
@@ -378,7 +378,7 @@
       '<em><b>' + Math.abs(g.k - s.k) + '</b>' + (g.k - s.k >= 0 ? 'offen' : 'drüber') + '</em><i class="fbt"><i' + pv('fkb', Math.min(1, kp)) + '></i>' + fOv(kp, FLIM.k) + '</i></div>' +
       '<div class="fbm">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return fbar(k, s[k], g[k], ex); }).join('') + '</div>' +
       '<div class="fwa' + (wa > wg * FLIM.wa ? ' over' : wa >= wg ? ' hit' : '') + fAnim('wa', wa > wg * FLIM.wa ? 'over' : wa >= wg ? 'hit' : '', wa) + '">' + ic('drop') +
-      '<i class="wsl' + (wa > wg * FLIM.wa ? ' over' : wa > wg ? ' hi' : '') + '" data-rel="1" data-max="' + wg + '" data-v="' + wa + '" role="slider" aria-label="Wasser, ziehen" data-noswipe="1"><i' + pv('fwa', wa / Math.max(wg, wa)) + '></i>' +
+      '<i class="wsl' + (wa > wg * FLIM.wa ? ' over' : wa > wg ? ' hi' : '') + '" style="--n:' + Math.max(1, Math.round(Math.max(wg, wa) / 250)) + '" data-rel="1" data-max="' + wg + '" data-v="' + wa + '" role="slider" aria-label="Wasser, ziehen" data-noswipe="1"><i' + pv('fwa', wa / Math.max(wg, wa)) + '></i>' +
       '<em style="--x:' + (wg / Math.max(wg, wa)).toFixed(4) + '"' + (wa > wg ? '' : ' hidden') + '></em></i>' +
       '<button class="fwv" data-fwao="1" aria-label="Wasser genau eintragen"><b><span data-wav="1">' + fN2(wa / 1000) + '</span><small>/' + fN(wg / 1000) + ' l</small></b></button>' +
       '</div></section>';

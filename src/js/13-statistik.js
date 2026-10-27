@@ -153,7 +153,7 @@
   }
   function setHtml() {
     var h = '<div class="grab"></div><div class="sh-h"><span class="gi">' + ic('gear') + '</span><div class="nm"><b>Einstellungen</b><small>Timer und Daten</small></div><button class="x" data-sheet-close aria-label="Schließen">' + ic('close') + '</button></div>';
-    h += '<section class="sec"><h2 class="sec-h">' + ic('clock') + 'Einstellungen</h2><button class="sw" data-act="resttoggle" aria-pressed="' + restOn + '"><span>Pausen-Timer</span><i></i></button><button class="sw" data-act="designtoggle" aria-pressed="' + (design === 'labor') + '"><span>Design Labor (Demo)</span><i></i></button></section>';
+    h += '<section class="sec"><h2 class="sec-h">' + ic('clock') + 'Einstellungen</h2><button class="sw" data-act="resttoggle" aria-pressed="' + restOn + '"><span>Pausen-Timer</span><i></i></button></section>';
     h += '<section class="sec"><h2 class="sec-h">' + ic('data') + 'Daten<small>' + (store === 'cloud' ? 'im Artifact gespeichert' : 'nur in diesem Browser') + '</small></h2>';
     if (sync) h += '<p class="hint">' + esc(sync) + '</p>';
     if (!window.claude && !DEMO) { var lb = 0; try { lb = +localStorage.getItem('zenit.lastBackup') || 0; } catch (e) { /* egal */ } h += '<p class="hint">' + (lb ? 'Letztes Backup: ' + (daysSince(lb) === 0 ? 'heute' : 'vor ' + daysSince(lb) + ' Tagen') : 'Noch kein Backup. Sichere die Datei in „Dateien“ oder iCloud.') + '</p>'; }

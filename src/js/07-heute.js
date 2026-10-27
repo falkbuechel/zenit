@@ -32,14 +32,14 @@
     return '<section class="hm' + (rest ? ' rest' : '') + '">' +
       '<div class="hm-top"><div class="hm-lv" data-zoom="1" role="button" tabindex="0" aria-label="Level ' + lv + ', Bergpfad"><i>' + lv + '</i><span><b>' + TIERS[tr] + '</b><i class="hm-xp"><i style="--p:' + ((d.xp - c0) / (c1 - c0)).toFixed(3) + '"></i></i></span></div>' +
       '<div class="hm-st go ' + ss.mode + '" data-go="cal" role="button" tabindex="0" aria-label="Serie ' + ss.n + ' Tage">' + FL + '<b>' + ss.n + '</b>' + (mu > 1 ? '<em>×' + fx(mu) + '</em>' : '') + cd + '</div></div>' +
-      '<div class="hm-bg" aria-hidden="true"><i class="hm-glow"></i><svg viewBox="0 0 360 120" preserveAspectRatio="none"><path class="m1" d="M0 120 0 70 60 38 110 64 175 18 240 58 300 34 360 62 360 120z"/><path class="m2" d="M0 120 0 92 80 72 150 90 230 70 300 88 360 76 360 120z"/></svg></div>' +
+      '<div class="hm-bg" aria-hidden="true" data-tag="' + (rest ? 'Ruht' : all ? 'Erledigt' : nd ? 'Läuft' : 'Bereit') + '"><i class="hm-glow"></i><svg viewBox="0 0 360 120" preserveAspectRatio="none"><path class="m1" d="M0 120 0 70 60 38 110 64 175 18 240 58 300 34 360 62 360 120z"/><path class="m2" d="M0 120 0 92 80 72 150 90 230 70 300 88 360 76 360 120z"/></svg></div>' +
       '<div class="hm-side l"><div class="hm-b' + (reached ? ' got' : '') + '"><i class="dg-r" style="--p:' + Math.min(n / DAILY, 1).toFixed(3) + '"><b>' + Math.min(n, DAILY) + '/' + DAILY + '</b></i><small>Ziel</small></div>' +
       '<div class="hm-b' + (d.warm[today] ? ' got' : '') + '" data-warm="1" role="button" tabindex="0" aria-label="Aufwärmen"><i>' + ic(d.warm[today] ? 'check' : 'sun') + '</i><small>Warm</small></div></div>' +
       '<div class="hm-side r"><div class="hm-b" data-zoom="1" role="button" tabindex="0" aria-label="Bergpfad"><i>' + ic('peak') + '</i><small>Pfad</small></div>' +
       '<button class="hm-b" data-swap="1" aria-label="Heute ändern"><i>' + ic('swap') + '</i><small>Ändern</small></button></div>' +
       '<div class="hm-hero"' + (cur ? ' data-arena="1" role="button" tabindex="0" aria-label="Training öffnen"' : '') + '>' + mascot(mood, tr) + '</div>' +
       '<div class="hm-plan"><b>' + esc(rest ? 'Heute frei' : tname) + '</b><small>' + (cur ? L.length + ' Übungen' + (mins ? ' · ~' + mins + ' Min' : '') : rest ? (nx ? 'Weiter: ' + esc(nx) : 'Erholung zählt') : 'Heute keine Übungen') + '</small>' +
-      (cur ? '<i class="hm-pb"><i style="--p:' + (nd / L.length).toFixed(3) + '"></i></i>' : '') + '</div>' +
+      (cur ? '<i class="hm-pb" style="--n:' + L.length + '"><i style="--p:' + (nd / L.length).toFixed(3) + '"></i></i>' : '') + '</div>' +
       (cur ? '<button class="btn primary big hm-go" data-arena="1">' + ic(all ? 'check' : 'play') + (all ? 'Erledigt · ansehen' : nd ? 'Weiter trainieren · ' + nd + '/' + L.length : 'Training starten') + '</button>'
         : '<button class="btn big hm-go" data-swap="1">' + ic('swap') + (rest ? 'Trotzdem trainieren' : 'Training wählen') + '</button>') + '</section>';
   }

@@ -103,8 +103,7 @@
       if (ui.del === 'all') { state.logs = []; state.food = null; ui.del = null; persist(); toast('Alles gelöscht', 'close'); } else ui.del = 'all';
       render();
     } else if (act === 'designtoggle') {
-      design = design ? '' : 'kante'; try { localStorage.setItem('zenit.design', design); } catch (err) { /* egal */ }
-      if (design) document.documentElement.dataset.design = design; else delete document.documentElement.dataset.design;
+      designSet(design ? '' : 'labor'); try { localStorage.setItem('zenit.design', design); } catch (err) { /* egal */ }
       render();
     } else if (act === 'resttoggle') {
       restOn = !restOn; try { localStorage.setItem('zenit.rest', restOn ? '1' : '0'); } catch (err) { /* egal */ }

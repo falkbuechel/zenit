@@ -1,69 +1,121 @@
-/* Design-Variante „Kante“ (Zahnrad > Design, html[data-design="kante"]): immer dunkel, hoher Kontrast, kantige Ecken, flache Flächen statt Verläufen.
-   Ein Fokus je Bildschirm (Bilanz, Held, Hauptknopf, aktiver Tab) trägt eine dünne leuchtende Kante; alles andere bleibt Haarlinie. Bewegung bleibt, nur knapper. */
-:root[data-design="kante"] {
+/* Design-Variante „Labor“ (Zahnrad > Design, html[data-design="labor"]): Zenit als Versuchslabor, das Maskottchen ist die Probe, die hochgelevelt wird.
+   Roh und brutal: Beton-Schwarz mit Körnung und Rasterpapier, Stencil-Schrift, harte schwarze Versatz-Schatten statt weicher, Gefahrenstreifen für Warnungen,
+   Balken als Segment-Skala. Ein Fokus je Bildschirm (Bilanz, Versuchskammer) trägt eine dünne leuchtende Kante mit Eckmarken. Feste Farben (Nährwerte, Stufen, Mahlzeiten) bleiben.
+   Bewegung: Knöpfe sinken beim Drücken in ihren Schatten, Fokus fährt beim Einstieg flackernd hoch, Kammer wird laufend gescannt, Hauptknopf mit laufenden Streifen. */
+:root[data-design="labor"] {
   color-scheme: dark;
-  --bg: #060808; --s1: #0d1110; --s2: #131817; --s3: #1c2321; --line: #26302d;
-  --ink: #f6faf8; --ink2: #b3c0ba; --ink3: #75847d; --on: #031009; --mx: #ffffff;
-  --ac: #8fd9b4;
+  --bg: #0b0c0b; --s1: #141614; --s2: #1b1e1b; --s3: #282c28; --line: #363c37;
+  --ink: #f3f5ee; --ink2: #b7beb3; --ink3: #7f877c; --on: #06140c; --mx: #ffffff;
+  --ac: #79d9a7;
   --t0: #b6c3bd; --t1: #52f08a; --t2: #4aa8ff; --t3: #c46bff; --t4: #ffb21e; --t5a: #38f2ff; --t5b: #ff4fd8;
-  --gold: #ffc94a; --danger: #ff5f4f; --flame: #ff8a1f;
+  --gold: #ffc94a; --danger: #ff4d3d; --flame: #ff8a1f;
   --g-pull: #2dd4bf; --g-push: #fb923c; --g-core: #f472b6; --g-kh: #a78bfa; --g-skill: #a3e635; --g-cardio: #38bdf8; --g-mob: #facc15;
-  --r8: 2px; --r9: 2px; --r10: 2px; --r12: 3px; --r14: 3px; --r16: 4px; --r18: 4px; --r20: 4px; --r22: 4px; --r28: 4px; --r99: 2px; --r999: 2px; --rmid: 4px;
-  /* Leuchtkante: Haarlinie in Akzent + weicher Schein nach außen + Lichtkante oben innen */
-  --edge: color-mix(in srgb, var(--ac) 62%, transparent);
-  --glow: 0 0 0 1px var(--edge), 0 0 22px -8px color-mix(in srgb, var(--ac) 70%, transparent), inset 0 1px 0 color-mix(in srgb, var(--ac) 22%, transparent);
+  --f-display: 'Big Shoulders Stencil Display', 'Big Shoulders Display', 'Arial Narrow', Impact, sans-serif;
+  --r8: 2px; --r9: 2px; --r10: 2px; --r12: 2px; --r14: 2px; --r16: 3px; --r18: 3px; --r20: 3px; --r22: 3px; --r28: 3px; --r99: 2px; --r999: 2px; --rmid: 0;
+  --hs: 3px 3px 0 #000;
+  --edge: color-mix(in srgb, var(--ac) 75%, transparent);
+  --glow: 0 0 0 1px var(--edge), 0 0 26px -6px color-mix(in srgb, var(--ac) 65%, transparent);
+  --cut: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+  --oct: polygon(28% 0, 72% 0, 100% 28%, 100% 72%, 72% 100%, 28% 100%, 0 72%, 0 28%);
+  --haz: repeating-linear-gradient(-45deg, var(--gold) 0 6px, #111 6px 12px);
+  /* Eckmarken in Akzent (je Ecke zwei Striche) für den Fokus */
+  --marks: linear-gradient(var(--ac), var(--ac)) left top / 12px 2px no-repeat, linear-gradient(var(--ac), var(--ac)) left top / 2px 12px no-repeat,
+    linear-gradient(var(--ac), var(--ac)) right top / 12px 2px no-repeat, linear-gradient(var(--ac), var(--ac)) right top / 2px 12px no-repeat,
+    linear-gradient(var(--ac), var(--ac)) left bottom / 12px 2px no-repeat, linear-gradient(var(--ac), var(--ac)) left bottom / 2px 12px no-repeat,
+    linear-gradient(var(--ac), var(--ac)) right bottom / 12px 2px no-repeat, linear-gradient(var(--ac), var(--ac)) right bottom / 2px 12px no-repeat;
   --ease: cubic-bezier(0.2, 0.9, 0.1, 1);
 }
-:root[data-design="kante"] body { background: var(--bg); }
-:root[data-design="kante"] .tabs::before { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
-:root[data-design="kante"] .tabs { border-top-color: var(--line); }
-:root[data-design="kante"] .hud-w { background: linear-gradient(var(--bg) 80%, transparent); }
 
-/* Flächen: flach, Haarlinie */
-:root[data-design="kante"] :is(.wcard, .gc, .rv, .ex, .rest-c, .bp, .hm-lv, .hm-st, .sess) { background: var(--s1); box-shadow: none; }
-:root[data-design="kante"] .ex { border-left-width: 2px; }
-:root[data-design="kante"] .ex.complete { background: color-mix(in srgb, var(--tc) 8%, var(--s1)); }
-:root[data-design="kante"] .focus { background: var(--s1); }
-:root[data-design="kante"] :is(.btn, .fchip, .seg2 button, .swl button, .swg button, .eqs button, .ptg button, .fq button, .sb) { background: var(--s1); }
+/* Grund: Beton mit Rasterpapier, darüber feine Körnung über allem */
+:root[data-design="labor"] body { background: linear-gradient(rgba(255, 255, 255, .028) 1px, transparent 1px) 0 0 / 22px 22px, linear-gradient(90deg, rgba(255, 255, 255, .028) 1px, transparent 1px) 0 0 / 22px 22px, var(--bg); }
+:root[data-design="labor"] body::after {
+  content: ""; position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: .07;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+:root[data-design="labor"] .hud-w { background: linear-gradient(var(--bg) 80%, transparent); }
+:root[data-design="labor"] .brand { letter-spacing: .3em; }
 
-/* Fokus: Bilanz (Essen), Hauptknopf; der Held (Heute) bleibt Haarlinie, dort ist der Startknopf der Fokus */
-:root[data-design="kante"] :is(.fbal, .focus) { position: relative; border-color: transparent; box-shadow: var(--glow); }
-:root[data-design="kante"] .hm-bg { background: radial-gradient(110% 70% at 50% 0%, color-mix(in srgb, var(--ac) 10%, var(--s1)), var(--s1) 70%); }
-/* Umschalter: gewählt = hellere Fläche mit Akzentkante unten statt grüner Füllung */
-:root[data-design="kante"] :is(.seg, .seg.fvs, .rng) button[aria-pressed="true"] { background: var(--s3); color: var(--ink); box-shadow: inset 0 -2px 0 var(--ac); }
-:root[data-design="kante"] .fbal { background: var(--s1); }
-/* Beim Einstieg läuft einmal Licht über die obere Kante */
-:root[data-design="kante"] .fbal::after { content: ""; position: absolute; top: -1px; left: 0; z-index: 1; width: 40%; height: 1px; background: linear-gradient(90deg, transparent, var(--ac), transparent); opacity: 0; pointer-events: none; animation: kscan 1.4s .15s var(--ease) both; }
-@keyframes kscan { 0% { opacity: 0; transform: translateX(-60%); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateX(260%); } }
-:root[data-design="kante"] .btn.primary { background: var(--ac); color: var(--on); border-color: var(--ac); box-shadow: 0 0 24px -8px color-mix(in srgb, var(--ac) 80%, transparent); text-transform: uppercase; letter-spacing: .1em; font-size: 14px; }
-:root[data-design="kante"] .btn.big { font-size: 15px; }
-:root[data-design="kante"] .sess { border-color: var(--edge); }
-:root[data-design="kante"] .sess button { text-transform: uppercase; letter-spacing: .08em; font-size: 12px; }
+/* Überschriften: Stencil, durchnummeriert wie Protokoll-Abschnitte, Linie bis zum Rand */
+:root[data-design="labor"] #app { counter-reset: lsec; }
+:root[data-design="labor"] .sec-h { font-size: 19px; letter-spacing: .1em; }
+:root[data-design="labor"] .sec-h::before { counter-increment: lsec; content: counter(lsec, decimal-leading-zero); padding: 1px 4px; background: var(--ink); color: var(--bg); font: 700 10px/1.3 var(--f-mono); letter-spacing: 0; }
+:root[data-design="labor"] .sec-h:not(:has(small))::after { content: ""; flex: 1; height: 1px; margin-left: 4px; background: var(--line); }
+:root[data-design="labor"] :is(.gc span, .rv-h small, .finp label, .dg3 label, .hm-b small, .fdd small) { font-family: var(--f-mono); font-weight: 600; letter-spacing: .08em; }
 
-/* Schrift: Überschriften enger und heller, kleine Labels als Mono-Codes */
-:root[data-design="kante"] .sec-h { font-size: 15px; letter-spacing: .16em; color: var(--ink2); }
-:root[data-design="kante"] .sec-h small { color: var(--ink3); }
-:root[data-design="kante"] :is(.gc span, .rv-h small, .finp label, .dg3 label, .hm-b small) { font-family: var(--f-mono); font-weight: 600; letter-spacing: .06em; }
+/* Flächen: flach, kräftige Linie, harter Versatz-Schatten */
+:root[data-design="labor"] :is(.wcard, .gc, .rv, .ex, .rest-c, .bp, .focus, .hm-lv, .hm-st, .sess, .fcpi, .fmc, .fti, .sw, .mrow) { background: var(--s1); box-shadow: var(--hs); }
+:root[data-design="labor"] .ex.complete { background: color-mix(in srgb, var(--tc) 10%, var(--s1)); }
+:root[data-design="labor"] .fti { border: 1px solid var(--line); border-top: 3px solid var(--ink3); }
 
-/* Balken: eckig, Spur als Haarlinie */
-:root[data-design="kante"] :is(.bar, .fbt) { background: var(--s3); box-shadow: none; }
-:root[data-design="kante"] .fbt > i::after { background: linear-gradient(90deg, rgba(255, 255, 255, .35), rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, .25)); }
+/* Knöpfe: Klötze, die beim Drücken in ihren Schatten sinken */
+:root[data-design="labor"] :is(.btn, .seg2 button, .swl button, .swg button, .sb) { background: var(--s2); border-color: var(--line); box-shadow: var(--hs); text-transform: uppercase; letter-spacing: .06em; font-size: 13px; transition: transform .08s, box-shadow .08s; }
+:root[data-design="labor"] :is(.btn, .seg2 button, .swl button, .swg button, .sb, .fcpi, .fmc, .fti):active:not(:disabled) { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; }
+:root[data-design="labor"] .btn.primary {
+  border: 1px solid #000; color: var(--on); font-family: var(--f-display); font-weight: 900; font-size: 20px; letter-spacing: .12em; box-shadow: 4px 4px 0 #000, 0 0 30px -10px var(--ac);
+  background: repeating-linear-gradient(-45deg, transparent 0 12px, rgba(0, 0, 0, .09) 12px 24px) 0 0 / 34px 34px, var(--ac); animation: lstripe 1.2s linear infinite;
+}
+:root[data-design="labor"] .btn.primary:active:not(:disabled) { box-shadow: 0 0 0 #000, 0 0 30px -6px var(--ac); }
+:root[data-design="labor"] .btn.danger { background: var(--haz); color: #000; text-shadow: 0 0 4px var(--gold); border-color: #000; }
+@keyframes lstripe { to { background-position: 34px 0, 0 0; } }
 
-/* Navigation: aktiver Tab = Kante unten statt Fläche; Mitte = leuchtendes Quadrat */
-:root[data-design="kante"] .tabs .ind { background: linear-gradient(to top, color-mix(in srgb, var(--tc) 16%, transparent), transparent 70%); box-shadow: inset 0 -2px 0 var(--tc); }
-:root[data-design="kante"] .tabs .ind.mid { background: var(--s2); box-shadow: inset 0 0 0 1px var(--edge), 0 0 22px -8px var(--tc); }
-:root[data-design="kante"] .tabs button.mid[aria-current="page"] { color: var(--tc); }
+/* Marken und Umschalter: abgeschnittene Ecken, gewählt = weiß auf schwarz */
+:root[data-design="labor"] :is(.fchip, .tchip, .ptg button, .ptg span, .eqs button, .demo-b, .hm-st em) { clip-path: var(--cut); }
+:root[data-design="labor"] :is(.seg, .seg.fvs, .rng) button[aria-pressed="true"] { background: var(--ink); color: var(--bg); box-shadow: none; }
+:root[data-design="labor"] :is(.fchip, .eqs button, .seg2 button)[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+:root[data-design="labor"] .sw i { background: var(--s3); }
+:root[data-design="labor"] .sw i::after { border-radius: 1px; }
+:root[data-design="labor"] .sw[aria-pressed="true"] i { background: var(--ac); box-shadow: 0 0 14px -2px var(--ac); }
 
-/* Fenster: Lichtkante oben, Schatten ohne Weichzeichner */
-:root[data-design="kante"] .sheet { background: var(--s1); border-color: var(--line); border-top-color: var(--edge); box-shadow: 0 -12px 30px -22px var(--ac); }
-:root[data-design="kante"] .grab { width: 28px; height: 2px; background: var(--ink3); }
-:root[data-design="kante"] .shade { background: rgba(0, 0, 0, .72); }
-:root[data-design="kante"] .toast { background: var(--s2); color: var(--ink); border: 1px solid var(--edge); box-shadow: 0 0 20px -8px var(--ac); }
+/* Skalen: Balken in Segmente zerlegt, Zuviel als Warnstreifen */
+:root[data-design="labor"] :is(.bar, .fbt, .hm-xp, .hm-pb) { -webkit-mask: repeating-linear-gradient(90deg, #000 0 5px, transparent 5px 7px); mask: repeating-linear-gradient(90deg, #000 0 5px, transparent 5px 7px); box-shadow: none; }
+:root[data-design="labor"] .fbk > .fbt { height: 14px; }
+:root[data-design="labor"] .fbt > i.ov { background: repeating-linear-gradient(-45deg, var(--danger) 0 5px, #3a0a06 5px 10px); }
+:root[data-design="labor"] :is(.status.last, .hm-st.last) { background: var(--haz) left / 8px 100% no-repeat, color-mix(in srgb, var(--danger) 14%, var(--s1)); padding-left: 18px; }
 
-/* Essen: Vorschläge zurückhaltend (Haarlinie statt Akzentbalken), gewählte Elemente mit Kante */
-:root[data-design="kante"] .fti { border-style: solid; border-top: 1px solid var(--line); background: var(--s1); }
-:root[data-design="kante"] .fti.arm { box-shadow: var(--glow); }
-:root[data-design="kante"] .fdl .drop { outline: 1px solid var(--ac); outline-offset: 2px; box-shadow: 0 0 18px -4px var(--ac); }
-:root[data-design="kante"] .jump { box-shadow: 0 0 24px -6px var(--ac); text-transform: uppercase; letter-spacing: .06em; font-size: 13px; }
-:root[data-design="kante"] .fgrp { box-shadow: 0 0 0 2px color-mix(in srgb, var(--mc) 40%, transparent); background: color-mix(in srgb, var(--mc) 14%, transparent); }
-:root[data-design="kante"] :is(.fchip, .seg2 button, .eqs button, .ptg button)[aria-pressed="true"] { box-shadow: 0 0 14px -6px var(--gc, var(--ac)); }
+/* Fokus Essen: Bilanz als Messgerät mit Leuchtkante, Eckmarken, Kennung oben und Hochfahren beim Einstieg */
+:root[data-design="labor"] .fbal { position: relative; border-color: transparent; background: var(--marks), var(--s1); box-shadow: var(--glow); }
+:root[data-design="labor"] .fbal::before { content: "MESSUNG // NAHRUNG"; position: absolute; top: -7px; right: 14px; padding: 0 6px; background: var(--bg); color: var(--ac); font: 600 10px/14px var(--f-mono); letter-spacing: .14em; }
+:root[data-design="labor"] .fbk > b { font-size: 52px; text-shadow: 0 0 22px color-mix(in srgb, var(--ink) 25%, transparent); }
+:root[data-design="labor"] .fresh .fbal { animation: lboot .7s steps(1, end) both, lpow .5s var(--ease) both; }
+@keyframes lboot { 0% { opacity: 0; } 20% { opacity: 1; } 30% { opacity: .3; } 45% { opacity: 1; } 55% { opacity: .6; } 65%, 100% { opacity: 1; } }
+@keyframes lpow { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(-40px -40px -40px -40px); } }
+
+/* Fokus Heute: die Versuchskammer. Raster, Glasrohr-Glanz, Eckmarken, laufender Scan, Kennung */
+:root[data-design="labor"] .hm-bg {
+  border-color: transparent; box-shadow: var(--glow);
+  background: var(--marks), linear-gradient(90deg, transparent 18%, rgba(255, 255, 255, .05) 24%, transparent 30%, transparent 70%, rgba(255, 255, 255, .03) 76%, transparent 82%),
+    linear-gradient(color-mix(in srgb, var(--ac) 9%, transparent) 1px, transparent 1px) 0 0 / 100% 26px, linear-gradient(90deg, color-mix(in srgb, var(--ac) 9%, transparent) 1px, transparent 1px) 0 0 / 26px 100%,
+    radial-gradient(90% 60% at 50% 100%, color-mix(in srgb, var(--ac) 16%, var(--s1)), var(--s1) 70%);
+}
+:root[data-design="labor"] .hm-bg .m1 { fill: #1d211d; }
+:root[data-design="labor"] .hm-bg .m2 { fill: #262b26; }
+:root[data-design="labor"] .hm-bg::before { content: "KAMMER 01 · PROBE ZENIT"; position: absolute; top: 12px; left: 0; right: 0; z-index: 1; text-align: center; color: var(--ac); font: 600 10px/1 var(--f-mono); letter-spacing: .16em; opacity: .8; }
+:root[data-design="labor"] .hm-bg::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 40px; z-index: 1; pointer-events: none; background: linear-gradient(transparent, color-mix(in srgb, var(--ac) 18%, transparent) 90%, var(--ac) 96%, transparent); opacity: .5; animation: lscan 4.5s linear infinite; }
+@keyframes lscan { from { transform: translateY(-40px); } to { transform: translateY(560px); } }
+:root[data-design="labor"] .fresh .hm-bg { animation: lboot .7s steps(1, end) both; }
+:root[data-design="labor"] .hm-glow { background: radial-gradient(circle, color-mix(in srgb, var(--ac) 30%, transparent), transparent 62%); }
+:root[data-design="labor"] .hm-b > i { border-radius: 2px; background: var(--s1); border-color: var(--line); box-shadow: var(--hs); }
+:root[data-design="labor"] .hm-lv > i { clip-path: var(--oct); border-radius: 0; background: var(--gold); box-shadow: none; }
+:root[data-design="labor"] .hm-plan b { font-size: 40px; letter-spacing: .08em; }
+:root[data-design="labor"] .hm-go { font-size: 24px; }
+
+/* Navigation: schwarze Leiste, aktiver Tab = Markierung oben, Mitte = Achteck */
+:root[data-design="labor"] .tabs::before { background: #000; -webkit-backdrop-filter: none; backdrop-filter: none; }
+:root[data-design="labor"] .tabs { border-top: 2px solid var(--line); }
+:root[data-design="labor"] .tabs .ind { background: color-mix(in srgb, var(--tc) 10%, transparent); box-shadow: inset 0 3px 0 var(--tc); }
+:root[data-design="labor"] .tabs .ind.mid { clip-path: var(--oct); background: var(--tc); box-shadow: none; }
+/* Fenster: Gefahrenstreifen als Griff, Lichtkante oben; Hinweis als Terminal-Zeile */
+:root[data-design="labor"] .sheet { background: var(--s1); border: 0; border-top: 2px solid var(--ac); box-shadow: 0 -14px 40px -24px var(--ac); }
+:root[data-design="labor"] .grab { width: 56px; height: 6px; border-radius: 0; background: var(--haz); }
+:root[data-design="labor"] .shade { background: rgba(0, 0, 0, .78); }
+:root[data-design="labor"] .toast { clip-path: var(--cut); background: #000; color: var(--ac); border: 1px solid var(--ac); font-family: var(--f-mono); text-transform: uppercase; letter-spacing: .06em; font-size: 12px; }
+
+/* Essen: Tagesleiste, Ziehen, Sprungknopf */
+:root[data-design="labor"] .fdd.today b, :root[data-design="labor"] .fdd.sel.today b { border-radius: 2px; }
+:root[data-design="labor"] .fdd.sel { background: var(--s3); box-shadow: inset 0 -2px 0 var(--ink); }
+:root[data-design="labor"] .fti.arm { box-shadow: var(--glow); }
+:root[data-design="labor"] .fdl .drop { outline: 2px dashed var(--ac); outline-offset: 3px; }
+:root[data-design="labor"] .jump { clip-path: var(--cut); text-transform: uppercase; letter-spacing: .06em; font-size: 13px; }
+:root[data-design="labor"] .fgrp { box-shadow: 0 0 0 2px var(--mc); background: color-mix(in srgb, var(--mc) 14%, transparent); }
+
+@media (prefers-reduced-motion: reduce) { :root[data-design="labor"] :is(.btn.primary, .fresh .fbal, .fresh .hm-bg) { animation: none; } :root[data-design="labor"] .hm-bg::after { display: none; } }

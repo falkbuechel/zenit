@@ -2,10 +2,15 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
-## 2026-10-26 Design-Demo „Kante“
-- Zahnrad > „Design Kante (Demo)“ setzt `html[data-design="kante"]` (localStorage `zenit.design`), Regeln nur in `src/css/85-design.css`: immer dunkel, hoher Kontrast, Ecken 2–4 px, flache Flächen statt Verläufen, Haarlinien; ein Fokus je Screen mit leuchtender Kante (Essen: Bilanz mit einmaligem Licht-Lauf über die Oberkante; Heute/Plan: Startknopf). Umschalter gewählt = Fläche + Akzentlinie unten statt Grünfüllung; Tab-Anzeige als Kante unten, Mitte als umrandetes Quadrat.
+## 2026-10-27 Design-Demo „Labor“ (ersetzt „Kante“)
+- Falk zu „Kante“: nur anderer Look, gleicher Stil und gleiche Farben, wirkt wie Standard-AI-Schwarz. Wunsch: Anordnung und feste Farben (Nährwerte, Stufen, Mahlzeiten) bleiben, Rest im Ideen-Theme „System-Labor, das das Maskottchen hochlevelt“, brutal, rough, dopamingeladen. Klappt es nicht, Einzelteile übernehmen; Falk gestaltet später UI-Elemente selbst, die nachgebaut werden.
+- Zahnrad > „Design Labor (Demo)“ (`designSet`, localStorage `zenit.design`, `html[data-design="labor"]`, lädt Big Shoulders Stencil Display nach, setzt `theme-color`). Regeln nur in `src/css/85-design.css`: Beton-Schwarz mit Rasterpapier und Körnung (fixes `body::after`), Stencil für alle Display-Texte, harte schwarze Versatz-Schatten, Knöpfe sinken beim Drücken in den Schatten, Hauptknopf mit laufenden Streifen, Abschnitte nummeriert (01, 02 …), Marken mit abgeschnittenen Ecken, gewählt = weiß auf schwarz, Balken als Segment-Skala, Zuviel und Warnungen als Gefahrenstreifen, Griff im Fenster als Warnband, Toast als Terminal-Zeile.
+- Fokus: Essen = Bilanz als Messgerät (Leuchtkante, Eckmarken, Kennung „MESSUNG // NAHRUNG“, flackerndes Hochfahren beim Einstieg); Heute = Versuchskammer (Raster, Glasglanz, Kennung „KAMMER 01 · PROBE ZENIT“, laufender Scan), Mitte der Leiste als Achteck, Level als goldenes Achteck.
+
+## 2026-10-26 Design-Demo „Kante“ (verworfen)
+- Erst „Kante“: dunkel, Ecken 2–4 px, flach, eine leuchtende Kante je Screen.
 - Dafür alle Radien in `src/css` als Tokens (`--r8` … `--r999`, Name = Standardwert, in `:root`); Tab-Anzeige nutzt `var(--rmid, 50%)` / `var(--r16)`. Standard-Design pixelgleich (`compare.js`: Alles gleich).
-- Wenn Kante übernommen wird: Tokens in `:root` ersetzen, `85-design.css` auflösen, Schalter entfernen; `theme-color` im Head (build.py) auf `#060808`.
+- Wenn ein Design übernommen wird: Tokens in `:root` ersetzen, `85-design.css` in die Bereichsdateien auflösen, Schalter und `designSet` entfernen, Schrift in `src/index.html`, `theme-color` in build.py.
 
 ## Stand 2026-10-26
 - Zuletzt: Essen-Tab in 7 Runden umgebaut (alles live, Commit 436f160): Tagesleiste wischbar, Gegessen als Mahlzeit-Karten mit Stapeln, Nährwert-Icons/-Farben, Nährwert-Fenster mit Ring, Mengen-Fenster, Suche (Zuletzt/Kategorien/Schnell), Gerichte-Menü, Rechner im Profil.

@@ -2,9 +2,9 @@
 /* Concept: ein Spiel, dessen Spielfeld die Türstange ist. Grundton Grau und Grün (Kreide, Moos, Mint), das ist die Marke. Die Dopamin-Farben der Seltenheitsstufen sind sekundär: sie leuchten nur dort, wo du etwas erreicht hast (Stufe, Level, Übung). Bewegung nach Emil Kowalski: starke Ease-out-Kurve, Druck-Feedback scale(.97), nur transform und opacity, Stagger nur beim Einstieg. */
 :root {
   color-scheme: dark;
-  --bg: #0e0f0c; --s1: #171913; --s2: #1f2219; --s3: #2b2f23; --line: #373c2d;
-  --ink: #eff1e6; --ink2: #bfc3ae; --ink3: #8b917a; --on: #12170a; --mx: #ffffff;
-  --ac: #9db36a;
+  --bg: #0d0f0c; --s1: #161914; --s2: #1d211b; --s3: #282e25; --line: #343b30;
+  --ink: #eef1e9; --ink2: #bcc3b2; --ink3: #89917f; --on: #0f170b; --mx: #ffffff;
+  --ac: #86b06e;
   --t0: #b6c3bd; --t1: #52f08a; --t2: #4aa8ff; --t3: #c46bff; --t4: #ffb21e; --t5a: #38f2ff; --t5b: #ff4fd8;
   --tf0: linear-gradient(90deg, #6f8178, #a3b6ad);
   --tf1: linear-gradient(90deg, #22c25f, #8cf26a);
@@ -14,6 +14,7 @@
   --tf5: linear-gradient(90deg, #38f2ff, #8a6bff, #ff4fd8, #ffd23f, #38f2ff);
   --gold: #f2c14e; --danger: #ef5a48; --flame: #f0822b;
   --g-pull: #45b39f; --g-push: #e8843c; --g-core: #d9628f; --g-kh: #9a86dd; --g-skill: #b7c94b; --g-cardio: #4aa2d6; --g-mob: #e3b83d;
+  --m-fr: #e0a447; --m-mi: var(--ac); --m-sn: #5e9bd0; --m-ab: #8f7ad6;
   --tc: var(--ac); --tf: var(--ac); --pt: var(--t0); --pf: var(--tf0);
   --f-display: 'Big Shoulders Display', 'Arial Narrow', Impact, sans-serif;
   /* Stencil nur als Akzent: Seitentitel und die eine große Zahl je Screen */
@@ -29,33 +30,36 @@
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
     color-scheme: light;
-    --bg: #ebebe3; --s1: #fbfaf5; --s2: #e3e3d8; --s3: #d3d4c5; --line: #c1c3b0;
-    --ink: #191c12; --ink2: #3b402e; --ink3: #626852; --on: #ffffff; --mx: #000000;
-    --ac: #556b26;
+    --bg: #e8ebe4; --s1: #fafbf6; --s2: #e1e5da; --s3: #d0d6c7; --line: #bec5b2;
+    --ink: #171c13; --ink2: #3a4230; --ink3: #606a55; --on: #ffffff; --mx: #000000;
+    --ac: #456b31;
     --t0: #5d6c65; --t1: #1b8a3a; --t2: #1a5fd0; --t3: #8a2fd0; --t4: #b45f00; --t5a: #007f93; --t5b: #b0147e;
     --gold: #95650a; --danger: #b8321f; --flame: #c45f12;
     --g-pull: #1a7f6e; --g-push: #b65a16; --g-core: #a83a63; --g-kh: #6650b8; --g-skill: #6b7d14; --g-cardio: #22699a; --g-mob: #8f6a0e;
+  --m-fr: #a8701a; --m-mi: var(--ac); --m-sn: #2f6aa3; --m-ab: #5d47a8;
     --hs: 0 2px 0 color-mix(in srgb, var(--ink) 22%, transparent);
   }
 }
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #ebebe3; --s1: #fbfaf5; --s2: #e3e3d8; --s3: #d3d4c5; --line: #c1c3b0;
-  --ink: #191c12; --ink2: #3b402e; --ink3: #626852; --on: #ffffff; --mx: #000000;
-  --ac: #556b26;
+  --bg: #e8ebe4; --s1: #fafbf6; --s2: #e1e5da; --s3: #d0d6c7; --line: #bec5b2;
+  --ink: #171c13; --ink2: #3a4230; --ink3: #606a55; --on: #ffffff; --mx: #000000;
+  --ac: #456b31;
   --t0: #5d6c65; --t1: #1b8a3a; --t2: #1a5fd0; --t3: #8a2fd0; --t4: #b45f00; --t5a: #007f93; --t5b: #b0147e;
   --gold: #95650a; --danger: #b8321f; --flame: #c45f12;
   --g-pull: #1a7f6e; --g-push: #b65a16; --g-core: #a83a63; --g-kh: #6650b8; --g-skill: #6b7d14; --g-cardio: #22699a; --g-mob: #8f6a0e;
+  --m-fr: #a8701a; --m-mi: var(--ac); --m-sn: #2f6aa3; --m-ab: #5d47a8;
   --hs: 0 2px 0 color-mix(in srgb, var(--ink) 22%, transparent);
 }
 :root[data-theme="dark"] {
   color-scheme: dark; --hs: 0 2px 0 rgba(0, 0, 0, .55);
-  --bg: #0e0f0c; --s1: #171913; --s2: #1f2219; --s3: #2b2f23; --line: #373c2d;
-  --ink: #eff1e6; --ink2: #bfc3ae; --ink3: #8b917a; --on: #12170a; --mx: #ffffff;
-  --ac: #9db36a;
+  --bg: #0d0f0c; --s1: #161914; --s2: #1d211b; --s3: #282e25; --line: #343b30;
+  --ink: #eef1e9; --ink2: #bcc3b2; --ink3: #89917f; --on: #0f170b; --mx: #ffffff;
+  --ac: #86b06e;
   --t0: #b6c3bd; --t1: #52f08a; --t2: #4aa8ff; --t3: #c46bff; --t4: #ffb21e; --t5a: #38f2ff; --t5b: #ff4fd8;
   --gold: #f2c14e; --danger: #ef5a48; --flame: #f0822b;
   --g-pull: #45b39f; --g-push: #e8843c; --g-core: #d9628f; --g-kh: #9a86dd; --g-skill: #b7c94b; --g-cardio: #4aa2d6; --g-mob: #e3b83d;
+  --m-fr: #e0a447; --m-mi: var(--ac); --m-sn: #5e9bd0; --m-ab: #8f7ad6;
 }
 :root[data-tier="0"] { --pt: var(--t0); --pf: var(--tf0); }
 :root[data-tier="1"] { --pt: var(--t1); --pf: var(--tf1); }

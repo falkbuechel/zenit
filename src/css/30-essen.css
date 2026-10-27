@@ -71,13 +71,13 @@
 .fbk > span { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
 .fbk > em { display: grid; justify-items: end; font-style: normal; font-size: 11px; font-weight: 700; line-height: 1.1; color: var(--ink3); }
 .fbk > em b { font-family: var(--f-display); font-size: 26px; font-weight: 900; color: var(--ink); }
-.fbk > .fbt { grid-column: 1 / -1; height: 8px; }
+.fbk > .fbt { grid-column: 1 / -1; height: 12px; }
 .fbk.hit > em, .fbk.hit > em b { color: var(--ac); }
 .fbk.over > em, .fbk.over > em b { color: var(--danger); }
-.fbt { position: relative; display: block; height: 6px; border-radius: var(--r99); background: var(--s3); overflow: hidden; }
+.fbt { position: relative; display: block; height: 8px; border-radius: var(--r99); background: var(--s3); overflow: hidden; }
 .fbt > i { position: relative; display: block; overflow: hidden; width: calc(var(--p, 0) * 100%); height: 100%; border-radius: inherit; background: var(--fc, var(--g-push)); transition: width .6s var(--ease); }
 /* Verlauf: blass am Anfang, volle Farbe in der Mitte, dunkel und satt an der Spitze */
-.fbt > i::after, .wsl > i::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, .32)); }
+.fbt > i::after, .wsl > i::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, rgba(255, 255, 255, .3), rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, .28)); }
 .fbt > i::before, .wsl > i::before { content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 40%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .3), transparent); animation: fshim 4s ease-in-out infinite; }
 @keyframes fshim { 0%, 30% { left: -40%; } 100% { left: 110%; } }
 @media (prefers-reduced-motion: reduce) { .fbt > i::before, .wsl > i::before { animation: none; display: none; } }
@@ -95,8 +95,7 @@
 .fmb.fb { --fc: var(--g-pull); }
 .fmb.su { --fc: var(--g-core); }
 /* Zu viel: roter Balken füllt sich über der eigenen Farbe neu (gleicher Verlauf und Glanz), leuchtende Spitze; beim Überschreiten füllt er sich sichtbar nach */
-.fbt > i.ov, .wsl > i.ov { position: absolute; top: 0; left: 0; z-index: 1; width: calc(var(--o) * 100%); background: var(--danger); box-shadow: 0 0 8px 1px color-mix(in srgb, var(--danger) 70%, transparent); }
-.wsl > i.ov { top: 11px; }
+.fbt > i.ov { position: absolute; top: 0; left: 0; z-index: 1; width: calc(var(--o) * 100%); background: var(--danger); box-shadow: 0 0 8px 1px color-mix(in srgb, var(--danger) 70%, transparent); }
 .fa-bad i.ov { animation: ovfill .8s var(--ease) both; }
 @keyframes ovfill { from { width: 0; } }
 .fmb.over b, .fmb.over span { color: var(--danger); }
@@ -105,9 +104,9 @@
 .fmb.fa-bad span b { animation: fred 1.2s ease-out both; }
 .fmb.low b, .fmb.low span, .fbk.low > em { color: var(--flame); }
 /* Ziel erreicht: Balken leuchtet in seiner Farbe auf, Zahl springt. Zu viel (schlechte Werte): Balken ruckelt, roter Blitz */
-.fa-hit .fbt, .fwa.fa-hit .wsl > i { animation: fgot .9s var(--ease) both; }
+.fa-hit .fbt { animation: fgot .9s var(--ease) both; }
 .fa-hit > b, .fwa.fa-hit .fwv b { animation: fpop .5s cubic-bezier(.2, 1.6, .4, 1) both; }
-.fa-bad .fbt, .fwa.fa-bad .wsl { animation: fbad .5s ease-in-out both; }
+.fa-bad .fbt { animation: fbad .5s ease-in-out both; }
 .fa-bad > b, .fa-bad > em, .fwa.fa-bad .fwv b { animation: fred 1.2s ease-out both; }
 .fwa.hit .fwv b { color: var(--fc); }
 .fwa.over .fwv b { color: var(--danger); }
@@ -115,12 +114,13 @@
 @keyframes fpop { 0% { transform: scale(1); } 50% { transform: scale(1.25); } 100% { transform: scale(1); } }
 @keyframes fbad { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
 @keyframes fred { 0%, 30% { color: var(--danger); text-shadow: 0 0 10px var(--danger); } 100% { text-shadow: none; } }
-@media (prefers-reduced-motion: reduce) { .fa-hit .fbt, .fa-hit > b, .fa-bad .fbt, .fa-bad > b, .fa-bad > em, .fwa.fa-hit .wsl > i, .fwa.fa-hit .fwv b, .fwa.fa-bad .wsl, .fwa.fa-bad .fwv b, .fa-bad i.ov, .fmb.fa-hit span b, .fmb.fa-bad span b { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .fa-hit .fbt, .fa-hit > b, .fa-bad .fbt, .fa-bad > b, .fa-bad > em, .fwa.fa-hit .fwv b, .fwa.fa-bad .fwv b, .fa-bad i.ov, .fmb.fa-hit span b, .fmb.fa-bad span b { animation: none; } }
 .ftl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 2px; padding-top: 10px; touch-action: none; }
-/* Vorschläge im Stil der Gegessen-Karten: Akzent oben, kcal groß */
-.fti { display: grid; align-content: space-between; gap: 3px; min-width: 0; min-height: 86px; padding: 9px 9px 8px; border: 1px dashed var(--line); border-top: 3px solid color-mix(in srgb, var(--ac) 55%, var(--line)); border-radius: var(--r14); background: color-mix(in srgb, var(--s1) 60%, transparent); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
+/* Vorschläge: offene, leicht getönte Karte mit Plus oben rechts (Gegessen = volle Fläche mit Farbkante oben, gestrichelt = leerer Platzhalter) */
+.fti { position: relative; display: grid; align-content: space-between; gap: 3px; min-width: 0; min-height: 86px; padding: 9px 9px 8px; border: 1px solid color-mix(in srgb, var(--ac) 30%, var(--line)); border-radius: var(--r14); background: linear-gradient(160deg, color-mix(in srgb, var(--ac) 10%, transparent), transparent 70%); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); }
+.fti::after { content: "+"; position: absolute; top: 5px; right: 8px; font: 600 14px/1 var(--f-mono); color: var(--ac); }
 .fti:active { transform: scale(.95); }
-.fti b { display: -webkit-box; overflow: hidden; font-size: 13px; line-height: 1.15; -webkit-hyphens: auto; hyphens: auto; overflow-wrap: anywhere; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.fti b { display: -webkit-box; padding-right: 10px; overflow: hidden; font-size: 13px; line-height: 1.15; -webkit-hyphens: auto; hyphens: auto; overflow-wrap: anywhere; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 .fti small { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--ink3); }
 .fti small .ic { width: 13px; height: 13px; color: var(--nc); }
 .fti span { font-family: var(--f-display); font-size: 20px; font-weight: 900; line-height: 1; }
@@ -139,15 +139,13 @@
 .fdg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 /* Gericht-Karte: Farbe (--dc) und Icon der Hauptzutat-Kategorie, dazu Mahlzeit-Symbol; kcal groß, Makro-Leiste */
 .fdc { position: relative; min-width: 0; border: 1px solid var(--line); border-top: 3px solid var(--dc); border-radius: var(--r14); background: color-mix(in srgb, var(--dc) 7%, var(--s1)); }
-.fdcb { display: grid; gap: 6px; width: 100%; padding: 10px 12px 12px; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; }
-.fdcb b { overflow: hidden; padding-right: 26px; font-size: 14px; white-space: nowrap; text-overflow: ellipsis; }
+.fdcb { display: grid; gap: 6px; width: 100%; padding: 10px 12px 12px; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; transition: transform .2s var(--ease); }
+.fdcb b { overflow: hidden; font-size: 14px; white-space: nowrap; text-overflow: ellipsis; }
 .fdci { display: flex; gap: 4px; font-style: normal; }
 .fdci .ic { width: 18px; height: 18px; color: var(--dc); }
 .fdci .ic + .ic { color: var(--ink3); }
 .fdck { font-family: var(--f-display); font-size: 22px; font-style: normal; font-weight: 900; line-height: 1; }
 .fdck small { margin-left: 3px; font-family: var(--f-mono); font-size: 10px; font-weight: 600; color: var(--ink3); }
-.fdce { position: absolute; top: 4px; right: 4px; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: var(--r10); background: transparent; color: var(--ink3); }
-.fdce .ic { width: 16px; height: 16px; }
 /* Werte je 100 g (Suche) bzw. je Portion (Gericht): klein in festen Spalten mit Nährwert-Icons */
 .f100 { display: flex; align-items: center; gap: 0; margin-top: 2px; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
 .f100 i { display: inline-flex; align-items: center; gap: 2px; width: 46px; font-style: normal; color: var(--nc); }
@@ -168,13 +166,20 @@
 .seg.fdm { grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr)); margin: 0; }
 .seg.fdm button { min-height: 38px; padding: 0; font-size: 13px; }
 .seg.fdm .ic { width: 17px; height: 17px; }
-.fdcq { position: absolute; right: 6px; bottom: 6px; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 50%; background: var(--dc); color: #fff; }
-.fdcq .ic { width: 18px; height: 18px; }
+/* Gericht-Editor: Mahlzeiten (mehrere wählbar) */
+.seg.fdm.ddm { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 10px; }
+/* Schnell: Name und Stern (als eigenes Lebensmittel merken) in einer Zeile */
+.fqn { display: flex; gap: 6px; }
+.fqn .fnm { flex: 1; min-width: 0; }
+.fqn .x { flex: none; width: 46px; height: 46px; border: 1px solid var(--line); background: var(--s2); }
+.fqn .x[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); background: color-mix(in srgb, var(--gold) 14%, var(--s2)); }
+/* Gericht nach rechts gewischt: bereit zum Eintragen */
+.fdcb.arm { box-shadow: inset 3px 0 0 var(--ac); }
 .btn.fpdup { flex: none; width: 58px; padding: 0; }
 .fdc .f100 i { width: 36px; }
 .fact2 .btn { min-height: 44px; padding: 0 8px; font-size: 14px; }
 /* Gegessen leer: Platzhalter je Mahlzeit (blass, gestrichelt), davor „Wie gestern“ – die Zeile bleibt gleich hoch */
-.fmc.fme { place-items: center; border-style: dashed; border-top-width: 3px; border-top-style: solid; border-top-color: color-mix(in srgb, var(--mc) 35%, transparent); background: transparent; color: color-mix(in srgb, var(--mc) 55%, var(--ink3)); opacity: .7; }
+.fmc.fme { place-items: center; border-style: dashed; border-top-width: 3px; border-top-style: solid; border-top-color: color-mix(in srgb, var(--mc) 35%, transparent); background: transparent; color: color-mix(in srgb, var(--mc) 55%, var(--ink3)); opacity: .7; box-shadow: none; }
 .fmc.fme .ic { width: 20px; height: 20px; }
 .fmc.fcp { place-items: center; align-content: center; gap: 6px; border-top-color: var(--ac); color: var(--ac); }
 .fmc.fcp .ic { width: 20px; height: 20px; }
@@ -268,7 +273,8 @@
 .wsl { position: relative; display: block; height: 30px; cursor: pointer; touch-action: none; }
 .wsl::before { content: ""; position: absolute; top: 11px; right: 0; left: 0; height: 8px; border-radius: 4px; background: var(--s3); }
 .wsl > i { position: absolute; top: 11px; left: 0; overflow: hidden; width: calc(var(--p) * 100%); height: 8px; border-radius: 4px; background: var(--fc); }
-.wsl.hi > i { background: color-mix(in srgb, var(--fc) 30%, #041a2e); }
+/* Wasser über dem Ziel: Balken bleibt voll und wird dunkler */
+.fbt.hi > i { background: color-mix(in srgb, var(--fc) 45%, #041a2e); }
 .wsl.over > i { background: var(--danger); }
 /* Ziel-Strich, sobald mehr als das Ziel getrunken ist (Balken skaliert mit) */
 .wsl > em { position: absolute; top: 7px; bottom: 7px; left: calc(var(--x) * 100%); z-index: 1; width: 2px; margin-left: -1px; border-radius: 1px; background: var(--ink); }
@@ -448,10 +454,10 @@ button.cday:active { transform: scale(.97); }
 .ftm b { font-family: var(--f-mono); font-size: 16px; color: var(--ink); }
 .ftm input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; -webkit-appearance: none; appearance: none; }
 .ftm input::-webkit-calendar-picker-indicator { position: absolute; inset: 0; width: auto; height: auto; }
-.fcpi.m-fr, .fgrp.m-fr, .fmc.m-fr, .fmz.m-fr { --mc: #e0a24a; }
-.fcpi.m-mi, .fgrp.m-mi, .fmc.m-mi, .fmz.m-mi { --mc: var(--ac); }
-.fcpi.m-sn, .fgrp.m-sn, .fmc.m-sn, .fmz.m-sn { --mc: #5b8fd6; }
-.fcpi.m-ab, .fgrp.m-ab, .fmc.m-ab, .fmz.m-ab { --mc: #8a6fd1; }
+.fcpi.m-fr, .fgrp.m-fr, .fmc.m-fr, .fmz.m-fr { --mc: var(--m-fr); }
+.fcpi.m-mi, .fgrp.m-mi, .fmc.m-mi, .fmz.m-mi { --mc: var(--m-mi); }
+.fcpi.m-sn, .fgrp.m-sn, .fmc.m-sn, .fmz.m-sn { --mc: var(--m-sn); }
+.fcpi.m-ab, .fgrp.m-ab, .fmc.m-ab, .fmz.m-ab { --mc: var(--m-ab); }
 /* Stapel: zwei angedeutete Karten dahinter; aufgeklappt eine getönte Klammer um die Gruppe */
 /* Gruppe deutlich anders als Einzel-Eintrag: getönt in der Mahlzeitfarbe, Karten dahinter ebenfalls getönt */
 .fcpi.fstk {

@@ -66,7 +66,7 @@
     if ((el = t.closest('[data-tab]')) && el.dataset.tab === ui.tab && !ui.sel && !ui.pe && !ui.pman) { if (ui.sheet) closeSheet(); else $('app').scrollTo({ top: 0, behavior: 'smooth' }); return; }
     if (el) { ui.sw = TABS.indexOf(el.dataset.tab) - TABS.indexOf(ui.tab); ui.fdrawn = false; ui.tab = el.dataset.tab; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0); return; }
     if ((el = t.closest('[data-pill]'))) { var pr = el.dataset.pill.split(':'); openSheet(pr[0], +pr[1]); return; }
-    if (t.closest('[data-sheet-close]') || t.id === 'shade') { closeSheet(); return; }
+    if (t.closest('[data-sheet-close]') || t.id === 'shade') { if (t.id !== 'shade' && fSheetBack()) return; closeSheet(); return; }
     if ((el = t.closest('[data-step]'))) { var inp = $('sv'), nv = Math.max(0, sheetVal() + (+el.dataset.step) * ui.sheet.step); inp.value = nv; updSheetXp(); buzz(6); return; }
     if ((el = t.closest('[data-preset]'))) { $('sv').value = el.dataset.preset; updSheetXp(); return; }
     if (t.closest('[data-sheet-save]')) { saveSheet(); return; }
@@ -120,7 +120,7 @@
     if (t.id === 'wa-v') { var wl = parseFloat(t.value.replace(',', '.')) || 0, wv = waSet(wl > 20 ? wl : wl * 1000); $('wa-r').dataset.v = wv; waShow(wv); }
     if (t.id === 'ftm' && /^\d\d:\d\d/.test(t.value)) $('ftmv').textContent = t.value.slice(0, 5);
     if (t.id === 'ftm' && $('fmk') && !$('fmk').dataset.man && /^\d\d:\d\d$/.test(t.value)) { var qd = new Date(); qd.setHours(+t.value.slice(0, 2), +t.value.slice(3), 0, 0); fmkSet(mealOf(qd.getTime())[1]); }
-    if (t.id === 'fq') { ui.fq = t.value; $('fres').innerHTML = fresHtml(); clearTimeout(fonT); fonT = setTimeout(fonSearch, 600); }
+    if (t.id === 'fq') { ui.fq = t.value; $('fres').innerHTML = fresHtml(); clearTimeout(fonT); fonT = setTimeout(fonSearch, 450); }
     if (t.id === 'fa' && ui.fpick) { var fa = parseFloat(t.value); if (fa > 0) { ui.fpick.a = fa; fpickUpd(); } }
     if (ui.dd && /^(dd|di)-/.test(t.id)) { readDraft(); var tt = $('dd-tot'); if (tt) tt.innerHTML = dishTotHtml(dishTot(ui.dd)); }
   });

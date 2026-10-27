@@ -162,7 +162,9 @@ body.arm #rest-x { display: block; margin-top: 4px; font-family: var(--f-mono); 
 body.arm .rest-m { display: inline-flex; }
 body.arm .rest-in .btn { width: 100%; min-height: 48px; }
 .toast.act { pointer-events: auto; }
-.tundo { margin-left: 4px; border: 0; background: rgba(127, 127, 127, .25); color: inherit; border-radius: var(--r99); min-height: 28px; padding: 0 12px; font-size: 12px; font-weight: 800; }
+/* Rückgängig: kleiner Pfeil im Hinweis, nur solange er steht */
+.tundo { display: grid; place-items: center; width: 30px; height: 30px; margin-left: 4px; padding: 0; border: 0; border-radius: 50%; background: rgba(127, 127, 127, .25); color: inherit; }
+.tundo .ic { width: 16px; height: 16px; }
 .sw { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--s2); border: 1px solid var(--line); border-radius: var(--r12); padding: 10px 12px; margin-bottom: 10px; width: 100%; text-align: left; font-weight: 700; }
 .sw small { display: block; font-weight: 500; color: var(--ink2); font-size: 12px; }
 .sw i { width: 46px; height: 28px; border-radius: var(--r99); background: var(--s3); position: relative; flex: none; transition: background-color .2s; }
@@ -286,7 +288,7 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 .masc .sh { fill: rgba(0, 0, 0, .22); }
 .masc .ey { fill: #161b0c; }
 .masc .ln { fill: none; stroke: #161b0c; stroke-width: 3; stroke-linecap: round; }
-.masc .ar { fill: none; stroke: #5f7236; stroke-width: 9; stroke-linecap: round; }
+.masc .ar { fill: none; stroke: #4f7338; stroke-width: 9; stroke-linecap: round; }
 .masc .zz { font-family: var(--f-display); font-size: 14px; font-weight: 900; fill: var(--ink3); }
 @keyframes mbob { 50% { transform: scale(var(--ms, 1)) translateY(-3px) scaleY(1.02); } }
 @keyframes mjump { 0%, 100% { transform: scale(var(--ms, 1)); } 40% { transform: scale(var(--ms, 1)) translateY(-10px); } }

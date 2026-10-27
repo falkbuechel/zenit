@@ -27,7 +27,9 @@
       return r;
     });
     var d = (Array.isArray(f.d) ? f.d : []).filter(function (x) { return x && typeof x.id === 'string' && typeof x.n === 'string' && Array.isArray(x.ing); }).slice(0, 60).map(function (x) {
-      return { id: x.id, n: x.n.slice(0, 30), por: Math.max(1, Math.min(50, +x.por || 1)), ing: x.ing.slice(0, 40).map(function (q) { var r = { n: String(q.n || '').slice(0, 30), a: Math.max(0, +q.a || 0), k: Math.max(0, +q.k || 0), p: Math.max(0, +q.p || 0) }; NX.forEach(function (k) { if (q[k] != null && isFinite(q[k])) r[k] = nv(q[k], 1000); }); if (typeof q.i === 'string') r.i = q.i.slice(0, 24); return r; }) };
+      return { id: x.id, n: x.n.slice(0, 30), por: Math.max(1, Math.min(50, +x.por || 1)), ing: x.ing.slice(0, 40).map(function (q) { var r = { n: String(q.n || '').slice(0, 30), a: Math.max(0, +q.a || 0), k: Math.max(0, +q.k || 0), p: Math.max(0, +q.p || 0) }; NX.forEach(function (k) { if (q[k] != null && isFinite(q[k])) r[k] = nv(q[k], 1000); }); if (typeof q.i === 'string') r.i = q.i.slice(0, 24); return r; }),
+        // m: fest gewählte Mahlzeiten (fehlt = automatisch)
+        m: Array.isArray(x.m) ? x.m.filter(function (k) { return /^(fr|mi|sn|ab)$/.test(k); }).slice(0, 4) : undefined };
     });
     var w = (Array.isArray(f.w) ? f.w : []).filter(function (x) { return x && isFinite(x.t) && isFinite(x.kg) && x.kg >= 20 && x.kg <= 400; }).slice(-1500).map(function (x) { return { t: x.t, kg: Math.round(x.kg * 10) / 10 }; }).sort(function (a, b) { return a.t - b.t; });
     var EQK = EQUIP.map(function (x) { return x[0]; });

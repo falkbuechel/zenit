@@ -2,6 +2,21 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-27 Essen: Platzhalter, Wasser, Rückgängig, Suche, Gerichte, Schnell, Open Food Facts, CSS aufgeräumt
+- Farben: Oliv grüner (dunkel `--ac #86b06e`, hell `#456b31`), Grautöne entsprechend; Mahlzeitfarben als Tokens `--m-fr/mi/sn/ab` (hell/dunkel), `.m-*` setzt `--mc`.
+- Balken als Fokus kräftiger: Bilanz-kcal 12 px, übrige 8 px, weniger Weißschleier im Verlauf; Glanz bleibt.
+- Wasser in der Bilanz = normaler Balken (`.fbt`, Antippen öffnet das Wasser-Fenster), über dem Ziel voll und dunkler (`.fbt.hi`), über 150 % rot wie die anderen. Ziehen am Bilanz-Balken entfernt (`waBar`, `data-rel`); der Regler im Fenster bleibt.
+- Gegessen: Mahlzeiten immer in fester Reihenfolge, fehlende als gestrichelter Platzhalter (antippen = Suche, Vorschlag hineinziehen). Uhrzeit beim Hineinziehen in eine andere Mahlzeit: deren übliche Zeit (`MEALS[i][3]`: 8:00, 12:30, 16:00, 19:00), wenn schon vorbei, sonst jetzt mit `mk`.
+- Vorschläge: offene, leicht getönte Karte mit „+“ oben rechts; gestrichelt nur noch für Platzhalter.
+- Rückgängig: `fUndo()` merkt den Essen-Stand vor Eintragen, Ändern, Löschen (auch Gruppe per Wischen), „Wie gestern“; Toast zeigt einen kleinen Pfeil (`.tundo`, gilt auch fürs Training), 5,5 s.
+- Suche: startet auf Kategorien; Treffer zeigen je Kategorie die drei passenden Nährwerte (`NREL`, z. B. Süßes: Zucker, Fett, KH). Kreuz geht eine Ebene zurück (`fSheetBack` im zentralen Schließen-Handler): Mengenfenster → Suche/Gerichte, Kategorie → Liste, Gericht-Editor → Gerichte.
+- Gerichte: Stift und Plus weg; antippen = Mengenfenster mit „Gericht bearbeiten“, nach rechts wischen = 1 Portion sofort (`fdsw`). Im Editor Mahlzeiten wählbar (mehrere, keine = automatisch), Filter und Karten-Symbole nutzen `dishMeals`; `cleanFood` übernimmt `m`.
+- Schnell: Stern neben dem Namen = als eigenes Lebensmittel merken (Portion 100 g = eingetragene Werte, danach in Eigene und Vorschlägen); Knopf „Lebensmittel je 100 g anlegen“.
+- Open Food Facts: Zwischenspeicher je Suchwort (`zenit.offc`, nur Treffer), laufende Anfragen werden beim Weitertippen abgebrochen, 12 statt 20 Treffer, Suche 450 ms nach dem Tippen.
+- CSS aufgeräumt (`30-essen.css`): tote Regel `.fsn`, überschriebene Übergänge/Drücken bei `.fti`/`.fcpi`/`.fmc`, Mahlzeitfarben-Regeln gekürzt, lange Zeilen umbrochen; `compare.js`: Alles gleich.
+- Geprüft mit Chromium-Ablauf (Platzhalter, Kreuz zurück, Gericht wischen, Rückgängig, Schnell merken, Ziehen auf Frühstück = 08:00) und Rauchtest.
+- Nächster Schritt: Planen überarbeiten, Falk hat neue Ideen; Essen gibt Struktur, Design und Handhabung vor.
+
 ## 2026-10-27 Farben: Zenit-Oliv statt Mint, Grautöne mit Oliv-Stich
 - Falk: Grautöne zu Standard, Grün soll kräftiges entsättigtes Military-Grün sein, andere Farben kräftig, nicht bunt.
 - Dunkel: Grund/Flächen oliv-anthrazit (`--bg #0e0f0c` … `--line #373c2d`), Tinte warmweiß, `--ac #9db36a`. Hell: Sand-Grau (`--bg #ebebe3`), `--ac #556b26`. Gruppenfarben (`--g-*`) von Tailwind-Tönen auf eine abgestimmte, etwas entsättigte Reihe; gold/danger/flame angepasst. Stufenfarben (`--t*`) unverändert (Dopamin).
@@ -36,17 +51,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 ## Stand 2026-10-26
 - Zuletzt: Essen-Tab in 7 Runden umgebaut (alles live, Commit 436f160): Tagesleiste wischbar, Gegessen als Mahlzeit-Karten mit Stapeln, Nährwert-Icons/-Farben, Nährwert-Fenster mit Ring, Mengen-Fenster, Suche (Zuletzt/Kategorien/Schnell), Gerichte-Menü, Rechner im Profil.
 - Falk testet am iPhone: letzte Runde (Bilanz-Kopf „offen“, Vorschlag auf Mahlzeit ziehen, leere Zeile, Suche mit Werten je 100 g, Gerichte-Menü mit Filter/„+“, Rechner im Profil, Wasser dunkler über 100 %).
-- Offene Entscheidung: Gruppe per Wischen löschen hat kein Rückgängig – Rückgängig oder Rückfrage gewünscht?
 - Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
 - Nächster Schritt: Falks Rückmeldung zu Essen abarbeiten; danach Heute weiter umbauen (erst fragen, was am meisten stört, dann Varianten).
 - Nicht committet: nichts.
 
 ## Offen / Ideen
-- Falks Essen-Rückmeldung (2026-10-26): Wasser in Logik/Animation wie die anderen Balken; Gegessen: leere Platzhalter je fehlender Mahlzeit als Ziehziel (Frage: welche Uhrzeit beim Reinziehen?); Suche: je Kategorie die relevanten Nährwerte (z. B. Zucker bei Süßem), Kategorien standardmäßig offen, Kreuz geht eine Ebene zurück statt ganz zu schließen (auch Gerichte); Gerichte: Stift und Plus weg, Hinzufügen beim Öffnen oder per Wischen, Mahlzeit-Zeit entfernen oder mehrere hinzufügen
 - iPhone-Test offen: Pause-Vollbild in der Arena, Skilltree (Linien, Leuchten, Info-Leiste)
 - iPhone-Test offen Essen: Barcode-Scan quer, Marken-/Online-Suche (Open Food Facts de+world parallel), Wischen/Ziehen auf echtem Touch
-- Essen: Open Food Facts schneller (Bedingungen im Verlauf „Open Food Facts besser einbinden“); Rückgängig beim Gruppen-Löschen
-- Essen: eigenes Lebensmittel nur noch über „Marke fehlt“ oder unbekannten Barcode anlegbar – prüfen, ob ein Weg in der Suche fehlt
 - Heute: weiterer Umbau der Startseite; Bergpfad-Belohnungen / Tages-Drops, Tagesaufgaben, Saison; Vorwoche-Vergleich ist aus Heute raus (neuen Platz finden)
 - Serie: zu langweilig, beim Redesign aufwerten
 - Maskottchen: echte Illustration mit Stufen (ComfyUI), ersetzt den SVG-Platzhalter `mascot()`

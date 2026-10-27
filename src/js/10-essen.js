@@ -429,7 +429,7 @@
   }
   function sheetOpen(html, tall) { $('sheet').className = 'sheet' + (tall ? ' tall' : ''); $('sheet').innerHTML = html; $('shade').classList.add('open'); $('sheet').classList.add('open'); }
   function openFsearch(keep) {
-    ui.sheet = { fsearch: true }; ui.fq = ''; ui.fcat = keep ? ui.fcat : ''; if (!keep) ui.ftab = 'c'; ui.fpick = null; ui.fday = dayIdx(Date.now()) - fSd();
+    ui.sheet = { fsearch: true }; ui.fq = ''; ui.fcat = keep ? ui.fcat : ''; if (!keep) ui.ftab = 'c'; ui.fqm = false; ui.fpick = null; ui.fday = dayIdx(Date.now()) - fSd();
     sheetOpen(shHead('search', ui.ingm ? 'Zutat' : 'Eintragen', ui.ingm ? 'Für das Gericht' : 'Lebensmittel oder Gericht suchen', !!ui.ingm) + '<div class="fqw"><input id="fq" class="fnm fq" type="search" placeholder="Suchen, z. B. Skyr" autocomplete="off" aria-label="Suchen"><button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button></div><div id="fres" class="fsr">' + fresHtml() + '</div>', true);
     $('sheet').classList.add('fs');
     setTimeout(function () { var i = $('fq'); if (i && !('ontouchstart' in window)) i.focus(); }, 350);
@@ -699,7 +699,7 @@
       (x ? '' : '<div class="fsb fpx"><button class="btn ghost small" data-fown="new">' + ic('plus') + 'Lebensmittel je 100 g anlegen</button></div>');
   }
   function openQuick(idx) {
-    ui.sheet = { food: true, idx: idx }; ui.fday = dayIdx(Date.now()) - fSd();
+    ui.sheet = { food: true, idx: idx }; ui.fday = dayIdx(Date.now()) - fSd(); ui.fqm = false;
     sheetOpen(shHead('bolt', idx != null ? 'Eintrag ändern' : 'Schnell eintragen', 'Ohne Lebensmittel, z. B. Restaurant') + quickHtml(idx), true);
   }
   function openOwn(id, bc, dr) {
@@ -973,7 +973,7 @@
   document.addEventListener('pointermove', function (ev) {
     if (!fdsw) return; var dx = ev.clientX - fdsw.x, dy = ev.clientY - fdsw.y;
     if (!fdswMoved && Math.abs(dy) > 8 && Math.abs(dy) > Math.abs(dx)) { fdsw = null; return; }
-    if (dx > 6) fdswMoved = true; if (!fdswMoved) return;
+    if (dx > 14) fdswMoved = true; if (!fdswMoved) return;
     var v = Math.max(0, Math.min(90, dx)); fdsw.dx = v; fdsw.el.style.transform = 'translateX(' + v + 'px)'; fdsw.el.classList.toggle('arm', v > 60);
   });
   document.addEventListener('pointerup', function () {
@@ -1129,8 +1129,9 @@
       if (ui.fqm && qi == null) {
         // Merken: eigenes Lebensmittel, dessen Portion (100 g) genau die eingetragenen Werte hat; erscheint danach in Eigene und den Vorschlägen
         if (!xq.n) { toast('Name zum Merken eintragen', 'bolt'); return true; }
+        // Der Eintrag behält seine Werte (nicht eingetragene bleiben unbekannt) und verweist auf das neue Lebensmittel
         var qo = { id: 'u' + Date.now().toString(36), n: xq.n, u: [['Portion', 100]] }; NK.forEach(function (k) { qo[k] = xq[k] || 0; }); st.o.push(qo); ui.fqm = false;
-        foodRef(qo.id, 100); return true;
+        xq.r = { i: qo.id, g: 100 }; foodPush(xq, null); return true;
       }
       foodPush(xq, qi); return true;
     }

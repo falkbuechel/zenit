@@ -68,11 +68,22 @@
 /* Fokus des Tabs: dünne leuchtende Kante, die beim Einstieg einmal weich aufglimmt */
 /* Bilanz als dunkle Fokus-Karte (.dkc in 00-basis) */
 .fbal {
-  display: grid; gap: 12px; margin-top: 10px; padding: 14px; border: 1px solid transparent; border-radius: var(--r16); background: var(--s1); color: var(--ink);
+  position: relative; display: grid; gap: 12px; margin-top: 10px; padding: 14px; border: 1px solid transparent; border-radius: var(--r16); background: var(--s1); color: var(--ink);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 60%, transparent), 0 0 24px -8px color-mix(in srgb, var(--ac) 55%, transparent), 0 10px 22px -14px rgba(0, 0, 0, .6);
 }
 .fresh .fbal.rise { animation: rise .42s var(--ease) both, fglow 1.1s ease-out both; animation-delay: calc(var(--i, 0) * 40ms), .3s; }
 @keyframes fglow { from { box-shadow: 0 0 0 1px var(--line), 0 0 0 0 transparent; } }
+/* Lichtschein: ein weicher heller Bogen wandert langsam gegen den Uhrzeigersinn um die Kante (Ring = Maske aus Rand minus Inhalt; Winkel als @property animiert, ohne Unterstützung steht er still) */
+@property --fsa { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.fbal::before {
+  content: ""; position: absolute; inset: -1px; padding: 1.5px; border-radius: inherit; pointer-events: none;
+  /* hellster Punkt vorn (in Laufrichtung), Schweif blendet im Uhrzeigersinn aus */
+  background: conic-gradient(from var(--fsa), transparent 0deg, color-mix(in srgb, var(--ac) 30%, #fff) 8deg, color-mix(in srgb, var(--ac) 45%, transparent) 40deg, transparent 85deg 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: fshine 7s linear infinite;
+}
+@keyframes fshine { from { --fsa: 360deg; } to { --fsa: 0deg; } }
+@media (prefers-reduced-motion: reduce) { .fbal::before { animation: none; opacity: 0; } }
 /* Kopf: gegessen groß, Ziel klein, rechts im Fokus was noch offen ist (bzw. drüber) */
 .fbk { --fc: var(--g-push); cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 8px 6px; }
 .fbk > b { font-family: var(--f-stencil); font-weight: 900; font-size: 40px; line-height: .9; }
@@ -149,19 +160,24 @@
 .fti.done { animation: ftok .6s var(--ease); }
 .fti, .fcpi { transition: transform .2s var(--ease), box-shadow .15s, opacity .16s; }
 .fti.arm { position: relative; z-index: 5; box-shadow: 0 0 0 2px var(--ac), 0 12px 24px -10px rgba(0, 0, 0, .45); }
+/* Beim Ziehen gläsern: durchscheinend mit Weichzeichner, was darunter liegt, bleibt erkennbar */
+.fti.glass { z-index: 5; background: color-mix(in srgb, var(--s1) 40%, transparent); -webkit-backdrop-filter: blur(10px) saturate(1.6); backdrop-filter: blur(10px) saturate(1.6); }
+/* Vorschau in einer offenen Mahlzeit: gestrichelter Eintrag, blendet weich ein */
+.fcpi.fprev { border-style: dashed; opacity: .85; animation: fprin .18s var(--ease); }
+@keyframes fprin { from { opacity: 0; transform: scale(.92); } }
 /* Ziel beim Hochziehen eines Vorschlags: die Mahlzeit unter dem Finger leuchtet */
 .fdl .drop { outline: 3px solid var(--ac); outline-offset: 2px; }
 .fcpi.arm { box-shadow: 0 0 0 2px var(--danger); }
 .fcpi.gone { opacity: 0; transform: translateY(60px) !important; }
 @keyframes ftok { 0% { background: color-mix(in srgb, var(--ac) 30%, var(--s1)); transform: scale(.96); } }
-/* Suchen als Eingabefeld-Optik (vertieft, blasser Text), Gerichte als quadratischer Icon-Knopf */
+/* Suchen als Eingabefeld-Optik (vertieft, blasser Text, Scanner im Feld ohne Trennung), Gerichte als runder Icon-Knopf daneben */
 .fact2 { display: grid; grid-template-columns: minmax(0, 1fr) 44px; gap: 8px; margin-top: 4px; }
 .fsrb { display: flex; align-items: stretch; min-height: 44px; border: 1px solid var(--line); border-radius: var(--r99); background: var(--bg); box-shadow: inset 0 2px 3px color-mix(in srgb, #000 18%, transparent); overflow: hidden; }
 .fsrb button { display: flex; align-items: center; gap: 10px; border: 0; background: transparent; color: var(--ink3); font: 600 15px/1 var(--f-body); text-align: left; }
 .fsrq { flex: 1; min-width: 0; padding: 0 8px 0 14px; }
-.fsrb .fsrs { flex: none; padding: 0 14px 0 10px; border-left: 1px solid var(--line); }
+.fsrb .fsrs { flex: none; padding: 0 14px 0 8px; }
 .fsrb .ic { width: 18px; height: 18px; color: var(--ink2); }
-.fdsb { display: grid; place-items: center; height: 44px; border: 1px solid var(--line); border-radius: var(--r14); background: var(--s2); box-shadow: var(--hs); color: var(--ink); }
+.fdsb { display: grid; place-items: center; height: 44px; border: 1px solid var(--line); border-radius: 50%; background: var(--s1); box-shadow: var(--hs); color: var(--ink); }
 .fdsb .ic { width: 22px; height: 22px; }
 .fdsb:active { transform: translateY(2px); box-shadow: none; }
 /* Gerichte-Fenster: Karten in zwei Spalten, Stift oben rechts, gestrichelte Karte für ein neues Gericht */
@@ -215,10 +231,13 @@
 .fmc.fpm .fmt .ic + .ic { color: var(--ink3); }
 .fcpi.fpm b .ic { color: var(--mc); }
 .fmt small i { font-style: normal; color: var(--mc); }
-/* Tagesleiste: künftige Tage nur Anzeige, Umriss; Balken = geplant */
-.fdd.fut b { color: var(--ink3); box-shadow: inset 0 0 0 1px var(--line); }
-.fdd.fut.pl b { color: var(--ink2); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ac) 55%, transparent); }
-.fdd.fut i { opacity: .5; }
+/* Tagesleiste: künftige Tage kühl (Blau aus --g-cardio) statt Grün/Grau, als Kontrast zu heute und vergangen: leicht getönte Fläche, Zahl im gestrichelten Kreis;
+   geplant = kräftiger Kreis und Balken gestreift (wie Geplantes in der Bilanz) */
+.fdd.fut { --cool: color-mix(in srgb, var(--g-cardio) 70%, var(--ink3)); background: color-mix(in srgb, var(--g-cardio) 6%, transparent); }
+.fdd.fut small { color: var(--cool); }
+.fdd.fut b { color: var(--cool); box-shadow: none; outline: 1px dashed color-mix(in srgb, var(--cool) 45%, transparent); outline-offset: -1px; }
+.fdd.fut.pl b { color: var(--ink); outline: 1.5px solid var(--cool); background: color-mix(in srgb, var(--g-cardio) 14%, transparent); }
+.fdd.fut i { background: repeating-linear-gradient(-45deg, var(--cool) 0 2px, transparent 2px 4px) 0 0 / calc(var(--p) * 100%) 100% no-repeat, var(--s3); }
 /* Mahlzeit planen (Fenster): Geplantes als Zeilen mit Entfernen, darunter Kacheln */
 .fpl { display: grid; gap: 6px; }
 .fplr { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 8px; padding: 6px 6px 6px 12px; border: 1.5px dashed color-mix(in srgb, var(--mc) 60%, transparent); border-radius: var(--r12); }

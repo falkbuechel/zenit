@@ -28,6 +28,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-28 – Essen-Feinschliff 3
+- Vorschläge: Raster oben 3 zuletzt, unten 3 häufig, rechts oben/unten die 2 zur Uhrzeit (`fTiles` ordnet, fehlende aus dem Rest). Beim Ziehen gläsern (`.fti.glass`, `backdrop-filter`).
+- Ziehen in eine offene Mahlzeit: statt den Zurück-Knopf zu markieren erscheint ein gestrichelter Vorschau-Eintrag dahinter (`fPrev`, `.fprev`), sobald der Vorschlag scharf ist.
+- Suchfeld: Scanner ohne Trennstrich im Feld; Gerichte-Knopf rund.
+- Bilanz: heller Bogen läuft in 7 s gegen den Uhrzeigersinn um die Kante (`.fbal::before`, Ring-Maske, `@property --fsa`; ohne Unterstützung bzw. bei reduzierter Bewegung aus).
+- Tagesleiste: künftige Tage kühl blau (`--cool` aus `--g-cardio`), gestrichelte Zahl, geplant = Kreis + gestreifter Balken.
+
 ### 2026-10-28 – Essen-Feinschliff 2, Planen neu im Essen-Stil
 - Rückgängig als runder Knopf in der Essen-Kopfzeile (`.fcpy.fund`, `data-undo`), solange `ui.undo` ein Essen-Stand ist; `toast()` zeigt in Essen keine Hinweise mit Rückgängig mehr (nur Erfolge wie Proteinziel, ohne Pfeil). `goTab` vergisst den Essen-Stand.
 - Vorschlag ziehen ohne Ziel: die Mahlzeit zur Uhrzeit leuchtet (`.drop`), dort landet er.

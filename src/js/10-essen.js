@@ -280,7 +280,11 @@
     arr.sort(function (a, b) { return b.c - a.c || b.t - a.t; }).forEach(function (x) { add(x, 'f', 6); });
     ml.sort(function (a, b) { return b.c - a.c || b.t - a.t; }).forEach(function (x) { add(x, 'm', 8); });
     TILEDEF.forEach(function (d) { add({ i: d[0], g: d[1] }, '', 8); });
-    return out;
+    // Raster 4×2: oben 3 zuletzt, unten 3 häufig, rechts oben und unten die beiden zur Uhrzeit; fehlende Plätze aus dem Rest
+    var rest = out.filter(function (x) { return !x.q; });
+    function grp(q, n) { var l = out.filter(function (x) { return x.q === q; }); while (l.length < n && rest.length) l.push(rest.shift()); return l; }
+    var R = grp('r', 3), F = grp('f', 3), M = grp('m', 2);
+    return R.concat(M.slice(0, 1), F, M.slice(1)).filter(Boolean);
   }
   function fbar(k, v, g, ex, pw) {
     // Mini-Balken: hit = im Ziel, over = über der Grenze (FLIM: Fett/Kohlenhydrate 110 %, Zucker 100 %, Protein 140 %, Ballaststoffe 160 % als gesundes Maximum)
@@ -983,15 +987,29 @@
     var v = fsw.add ? Math.min(0, dy) : Math.max(0, Math.min(70, dy)); fsw.dy = v;
     fsw.el.style.transform = fsw.add ? 'translate(' + dx + 'px,' + v + 'px)' : 'translateY(' + v + 'px)'; fsw.el.classList.toggle('arm', Math.abs(v) > 44);
     if (fsw.add) {
-      fsw.el.style.pointerEvents = 'none';
-      // Kein Ziel unter dem Finger: die Mahlzeit zur Uhrzeit leuchtet (dort landet der Vorschlag)
-      var hit = document.elementFromPoint(ev.clientX, ev.clientY), tg = hit && hit.closest && hit.closest('.fdl .fmc, .fdl .fmz, .fdl .fgrp, .fdl .fcpi');
-      if (!tg) tg = document.querySelector('.fdl .fmc.m-' + mealOf(Date.now())[1] + ', .fdl .fmz.m-' + mealOf(Date.now())[1]);
+      fsw.el.style.pointerEvents = 'none'; fsw.el.classList.add('glass');
+      var open = document.querySelector('.fdl .fmz'), tg;
+      if (open) {
+        // Eine Mahlzeit ist offen: sie ist das Ziel; sobald scharf, zeigt ein Vorschau-Eintrag hinter dem Zurück-Knopf, was dazukommt
+        if (Math.abs(v) > 44) { if (!fsw.pv) fsw.pv = fPrev(fsw.el, open); tg = fsw.pv; } else { if (fsw.pv) fsw.pv.remove(); fsw.pv = null; tg = null; }
+      } else {
+        // Kein Ziel unter dem Finger: die Mahlzeit zur Uhrzeit leuchtet (dort landet der Vorschlag)
+        var hit = document.elementFromPoint(ev.clientX, ev.clientY); tg = hit && hit.closest && hit.closest('.fdl .fmc, .fdl .fgrp, .fdl .fcpi');
+        if (!tg) tg = document.querySelector('.fdl .fmc.m-' + mealOf(Date.now())[1]);
+      }
       if (tg !== fsw.tg) { if (fsw.tg) fsw.tg.classList.remove('drop'); if (tg) tg.classList.add('drop'); fsw.tg = tg; }
     }
   });
+  function fPrev(tile, open) {
+    // Vorschau-Eintrag (wie ein Chip der Mahlzeit, gestrichelt) direkt hinter dem Zurück-Knopf
+    var tl = (ui.ftiles || [])[+tile.dataset.ftile], it = tl && fItem(tl.i); if (!it) return null;
+    var el = document.createElement('div'), mm = /\bm-(fr|mi|sn|ab)\b/.exec(open.className);
+    el.className = 'fcpi fprev m-' + (mm ? mm[1] : 'fr');
+    el.innerHTML = '<b>' + esc(fEn(it)) + '</b><small>' + esc(fAmt(it, tl.g)) + '</small><em>' + Math.round(fNut(it, tl.g).k) + '<i>kcal</i></em>';
+    open.parentNode.insertBefore(el, open.nextSibling); buzz(4); return el;
+  }
   function fswEnd() {
-    if (!fsw) return; var f = fsw; fsw = null; f.el.style.pointerEvents = ''; if (f.tg) f.tg.classList.remove('drop');
+    if (!fsw) return; var f = fsw; fsw = null; f.el.style.pointerEvents = ''; f.el.classList.remove('glass'); if (f.tg) f.tg.classList.remove('drop'); if (f.pv) f.pv.remove();
     if (Math.abs(f.dy) > 44) {
       if (f.add) {
         // Eintragen: abgelegt auf einer Mahlzeit = diese Mahlzeit, sonst nach der aktuellen Uhrzeit

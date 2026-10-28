@@ -62,7 +62,10 @@ async function scenario(b, sc, errs) {
       await ed(); await click('[data-pmode="repl"]'); await click('[data-preplx]'); await ed(); await click('[data-pmode="repl"]');
       await ed(); await click('[data-pmode="skip"]'); await ed(); await click('[data-pmode="skip"]'); await ed(); await click('[data-pmode="add"]'); await click('[data-paddx]');
       await ed(); await click('[data-pmode="vac"]'); await click('[data-poff="3"]'); await shot('tage-urlaub');
-      await ed(); await click('[data-pmode="vac"]'); await click('[data-pft="e"]'); await click('[data-pft="t"]');
+      await ed(); await click('[data-pmode="vac"]'); await closeSheet(); await click('[data-pft="e"]');
+      // Essen planen (Kachel einplanen), Einkaufsliste: Zeitraum, abhaken
+      await click('[data-pml]'); await click('[data-pla]'); await closeSheet();
+      await click('[data-pshop]'); await click('[data-shn="3"]'); await click('[data-shk]'); await shot('tage-einkauf'); await closeSheet(); await click('[data-pft="t"]');
       if (await click('[data-pnts]')) await closeSheet();
       await click('[data-pdays]'); await shot('tage-tage'); await click('[data-sheet-close]');
     }

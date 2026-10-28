@@ -49,7 +49,9 @@
     var m = (Array.isArray(f.m) ? f.m : []).filter(function (x) { return x && isFinite(x.t); }).slice(-400).map(function (x) { return { t: x.t, w: mv(x.w), c: mv(x.c), a: mv(x.a), th: mv(x.th), sh: mv(x.sh) }; });
     // Wasser: {Tagesindex: ml}
     var wa = {}; if (f.wa && typeof f.wa === 'object') Object.keys(f.wa).forEach(function (k) { var v = +f.wa[k]; if (/^\d+$/.test(k) && v > 0) wa[k] = Math.min(8000, Math.round(v)); });
-    return { g: g, e: e, d: d, w: w, pr: q, m: m, o: o, wa: wa, pl: pl };
+    // Einkauf abgehakt: {Schlüssel: Tagesindex}, nach 14 Tagen vergessen
+    var sh = {}; if (f.sh && typeof f.sh === 'object') Object.keys(f.sh).slice(0, 300).forEach(function (k) { var v = +f.sh[k]; if (k.length <= 40 && isFinite(v) && v >= dayIdx(Date.now()) - 14) sh[k] = Math.round(v); });
+    return { g: g, e: e, d: d, w: w, pr: q, m: m, o: o, wa: wa, pl: pl, sh: sh };
   }
   function cleanPlan(p) {
     if (!p || !Array.isArray(p.days)) return null;

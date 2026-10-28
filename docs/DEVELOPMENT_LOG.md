@@ -2,27 +2,18 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
-## Stand 2026-10-28
-- Zuletzt (alles live, Commit 1bdd691): neues Design (Stencil-Akzent, mittlere Ecken, Tastenkante, Zenit-Oliv), Essen-Feinschliff (Platzhalter, Rückgängig, Suche, Gerichte, Schnell merken, Open Food Facts), Planen Schritt 1 (Kalender, Fokus Training/Essen, Trainingstage/Wochenplan, Planer/Editor als Fenster) und Schritt 2 (Essen planen, `food.pl`).
-- Falk testet am iPhone: Essen planen (Planen › Essen, Geplantes in Essen essen), Planer/Editor als Fenster inkl. Karten-Ziehen, Wochenleiste wischen, Gerichte wischen, Ziehen in Platzhalter.
-- Nächster Schritt: Falks Essen-Rückmeldung vom 28.10. (unter „Offen“, darin ein Fehler bei „Wie gestern“), danach Planen Schritt 3 Einkaufsliste.
+## Stand 2026-10-28 (2)
+- Zuletzt: Essen-Rückmeldung vom 28.10. komplett, Planen Schritt 3 Einkaufsliste, Planer/Editor im Essen-Stil, App-Icon oliv (Einzelheiten unter Verlauf).
+- Falk testet am iPhone: Wie gestern (Mahlzeiten bleiben), Vorschläge 4×2, Suchfeld + Gerichte-Knopf, dunkle Bilanz (hell und dunkel), Einkauf (Planen › Essen), Editor-Kacheln, Planer-Stil.
+- App-Icon: iOS übernimmt es erst beim neuen Hinzufügen zum Homescreen. NICHT die App löschen (Daten weg) – höchstens vorher Backup.
+- Nächster Schritt: Planen Schritt 4 (Vorschläge „fehlt noch“).
 - Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
-- Nicht committet: nichts.
 
 ## Offen / Ideen
-- Fehler Essen: „Wie gestern“ packt alle Einträge in dieselbe Mahlzeit (Uhrzeit/Mahlzeit von gestern nicht übernommen).
-- Fehler Essen: „Wie gestern“-Knopf zu groß, Kopfzeile springt.
-- Essen: Vorschläge 4×2, aufgeteilt in zuletzt / häufig / typisch für die Uhrzeit, Gruppen optisch minimal unterschieden.
-- Essen: Knöpfe „Suchen, scannen …“ und „Gerichte“ passen nicht zum Stil, sollen klare Knöpfe bleiben und sich anders abheben.
-- Essen: Vorschlag ziehen ohne Ziel = nächste passende Mahlzeit nach Uhrzeit (nicht immer Frühstück).
-- Essen: ganze Mahlzeit nicht mehr per Wischen löschbar, nur Einträge innerhalb einer Mahlzeit.
-- Essen: Fokus (Bilanz) braucht neben dem Glow mehr Fokus im Design, clean bleiben.
-- Planen: Inhalt von Wochenplaner und Tag-Editor (im Fenster) optisch noch im alten Stil, an Essen angleichen.
-- Planen Schritt 3: Einkaufsliste aus dem Plan (Zeitraum, gerundet auf Stück/Packung, nach Kategorie, abhaken; Preis eventuell geschätzt).
+- Einkauf: Preis eventuell geschätzt.
 - Planen Schritt 4: Vorschläge „fehlt noch“ (reine Logik: Protein je kcal, passt in den Rest, oft gegessen, vermutlich da).
 - Planen Schritt 5: Event (kcal reservieren) ordentlich umsetzen; Cheatday ohne Sonderregel, Urlaub/Krank bleiben.
 - Planen Schritt 6: „Was habe ich“ nur abgeleitet (abgehakt = könnte da sein), keine Pflege.
-- App-Icon (public/, `tools/make-icons.js`) noch mintgrün, an Oliv anpassen.
 - iPhone-Test offen: Pause-Vollbild in der Arena, Skilltree (Linien, Leuchten, Info-Leiste)
 - iPhone-Test offen Essen: Barcode-Scan quer, Marken-/Online-Suche (Open Food Facts mit Zwischenspeicher), Wischen/Ziehen auf echtem Touch
 - Heute: weiterer Umbau der Startseite; Bergpfad-Belohnungen / Tages-Drops, Tagesaufgaben, Saison; Vorwoche-Vergleich ist aus Heute raus (neuen Platz finden)
@@ -36,6 +27,19 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-28 – Essen-Rückmeldung, Einkaufsliste, Planer/Editor im Essen-Stil, Icon oliv
+- Fehler „Wie gestern“: alle Einträge landeten in der aktuellen Mahlzeit (Zeit = jetzt). Jetzt Datum +1 Tag per `setDate` (sicher bei Zeitumstellung), Uhrzeit bleibt, `mk` wird mitkopiert.
+- „Wie gestern“-Knopf 22 px hoch mit negativem Rand (Kopfzeile springt nicht mehr), größere Tippfläche über `::before`.
+- `mealOf`: vor 5 Uhr = Abend (vorher landete nächtliches Ziehen ohne Ziel im Frühstück).
+- Ganze Mahlzeit-Karte nicht mehr per Wischen löschbar (`data-fdelg` an `.fmc` entfernt); Einträge und Stapel in der Mahlzeit schon.
+- Vorschläge 4×2 (`fTiles`): 3 zuletzt (`q: 'r'`), 3 häufig (`'f'`), 2 typisch für die aktuelle Mahlzeit (`'m'`, 6 Wochen), Rest aus `TILEDEF` ohne Gruppe. Je Gruppe getönte Oberkante (`--tq`) und kleines Symbol (Uhr/Stern/Mahlzeit).
+- Suchen als Feld-Optik (`.fsrb`, vertieft), Gerichte bzw. Schnell (in „Mahlzeit planen“) als Icon-Knopf `.fdsb`.
+- Bilanz als einzige dunkle Karte in beiden Themen: `.fbal` setzt die dunklen Tokens (`--ink`, `--s1`, `--g-*` …) lokal, Kinder passen sich an.
+- Einkaufsliste (`shopList`, `shopHtml`, `openShop`): Knopf „Einkauf“ in Planen › Essen; 3/7 Tage; Abhaken in `food.sh` (neu, `cleanFood` behält 14 Tage). Rauchtest öffnet sie.
+- Tag-Editor: Übungen als 2-spaltige Kacheln (drin = getönt, Farbkante, Haken; nicht drin = gestrichelt), gesperrte als blasse Kacheln, aufgeklappt über die volle Breite.
+- Wochenplaner: Tage als Karten, leere gestrichelt, Wochentag in Mono, heute als dunkle Pille; gelegte Karten mit Farbkante oben; aktiver Plan mit Akzentkante oben.
+- App-Icon in Zenit-Oliv (`tools/make-icons.js`).
 
 ### 2026-10-28 – Planen Schritt 1 fertig (Planer/Editor als Fenster) und Schritt 2: Essen planen
 - Wochenplaner und Tag-Editor öffnen als Fenster über Planen (`planSheet`, von `render()` mitgezeichnet, Scroll bleibt; `ui.sheet.plan = 'pm' | 'pe'`). `closeSheet` setzt `ui.pman`/`ui.pe` zurück. Schließen (✕/Hintergrund, `pSheetBack`): Editor aus dem Planer → zurück in den Planer; ungespeicherte Woche → erst Hinweis „Nicht gespeichert“.

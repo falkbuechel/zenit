@@ -18,7 +18,7 @@
       if (!list.length) return;
       var on = list.filter(function (e) { return day.ex.indexOf(e.id) >= 0; }).length;
       h += '<section class="exg g' + g + '"><h3 class="xg">' + ic(gOf(g).i) + gOf(g).n + '<small>' + on + ' von ' + list.length + '</small></h3><div class="exl">' + list.map(function (e) {
-        return '<button class="exr" data-ptog="' + e.id + '" aria-pressed="' + (day.ex.indexOf(e.id) >= 0) + '"><span><b>' + esc(e.n) + '</b><small>' + esc(e.mu) + '</small></span><i></i></button>';
+        return '<button class="exr" data-ptog="' + e.id + '" aria-pressed="' + (day.ex.indexOf(e.id) >= 0) + '"><span><b>' + esc(e.n) + '</b><small>' + esc(e.mu) + '</small></span><i>' + ic('check') + '</i></button>';
       }).join('') + '</div></section>';
     });
     if (locked.length) {
@@ -183,7 +183,7 @@
         return '<button class="fmc m-' + m[1] + cls + '"' + (canP ? ' data-pml="' + m[1] + '"' : ' disabled') + ' aria-label="' + m[2] + (canP ? ' planen' : '') + '">' +
           (ei.length || pi.length ? '<span class="fmt">' + ic(MEALI[m[1]]) + '<small>' + (ei.length ? '×' + ei.length : '') + (pi.length ? ' <i>+' + pi.length + '</i>' : '') + '</small></span><b>' + kc + '<em>kcal</em></b>' : ic(canP ? 'plus' : MEALI[m[1]])) + '</button>';
       }).join('') + '</div>';
-      if (sd <= today) c += '<button class="btn small pfo" data-pfo="' + sd + '">' + ic('food') + 'In Essen öffnen</button>';
+      c += '<div class="pfa">' + (sd <= today ? '<button class="btn small pfo" data-pfo="' + sd + '">' + ic('food') + 'In Essen öffnen</button>' : '') + '<button class="btn small" data-pshop="1">' + ic('cart') + 'Einkauf</button></div>';
     }
     h += '<section class="pday rise' + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
     ui.pfl = null; ui.pdx = false;

@@ -86,6 +86,9 @@
   P.skip = '<circle cx="12" cy="12" r="8.500"/><path d="M6 18 18 6"/>';
   P.repl = '<path d="M5 12a7 7 0 0 1 12.200-4.700M19 12a7 7 0 0 1-12.200 4.700"/><path d="M17.500 3.500v4h-4M6.500 20.500v-4h4"/>';
   P.sick = '<path d="M10 14.200V5a2 2 0 0 1 4 0v9.200a4 4 0 1 1-4 0z"/><path d="M12 10.500v6"/>';
+  // Urlaub: Sonnenschirm im Sand; Pause: zwei Balken (Knopf im Kalender für Urlaub/Krank)
+  P.beach = '<path d="M4 11a8 8 0 0 1 16 0z"/><path d="M12 3v1M12 11l-2.500 9"/><path d="M5 20.500c2-1 4-1 6.500 0s5 1 7.500 0"/>';
+  P.pause = '<path d="M9 6v12M15 6v12"/>';
   P.search = '<circle cx="10.500" cy="10.500" r="6.500"/><path d="m15.500 15.500 5 5"/>';
   P.cards = '<rect x="7.500" y="3.500" width="12" height="16" rx="2.500"/><path d="M5 6.500 4.500 7a2 2 0 0 0-.200 2.800l6.500 10.400a2 2 0 0 0 2.700.700"/><path d="M13.500 9.500v4M11.500 11.500h4"/>';
   // Nährwerte: kcal Flamme, Protein Keule, Fett zwei Tropfen, Kohlenhydrate drei Körner, Ballaststoffe Spross, Zucker drei Würfel

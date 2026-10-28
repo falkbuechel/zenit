@@ -28,6 +28,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-28 – Planen im Essen-Stil mit Ziehen
+- Kalender: Pfeile weg (Blättern per Wischen), Kopf = Monat links, rechts „Heute“ (nur wenn weggewischt) und Pause (`data-pdedit="pause"`, Fenster nur Urlaub/Krank, neue Symbole `beach`/`sick`). Zellen mit festen Zeilen (`grid-template-rows`), springen nicht mehr.
+- Stift (`data-pdedit="1"`) = nur noch „Training ändern“ (Tauschen, Aussetzen, Ersetzen, Zusätzlich), ab heute und nicht im Urlaub.
+- Umschalter Training/Essen gilt für die ganze Seite. Training: „Trainingsplan“ (Woche Mo–So → Planer, darunter alle Trainingstage als Kacheln: antippen = bearbeiten, hochziehen auf Kalendertag/Tageskarte = zusätzlich, `planExtra`; gestrichelte Kachel = neuer Tag). Essen: Einkauf als Symbol im Kartenkopf; „Gerichte“ (Gerichte + häufige Lebensmittel, `fTile` mit `data-pfd`): hochziehen auf eine Mahlzeit = einplanen (`planFood`), antippen = übliche Mahlzeit (`mealFor`).
+- Ziehen in Planen (`pdg`): gläsern, Ziel = nächstes im Umkreis 40 px, auch schräg. Essen-Ziehen (`fsw`) nur noch für `.fti[data-ftile]`, Vorschläge auch schräg. iOS-Scrollsperre (`fsT`) für alle Kacheln.
+- „Trainingstage“ heißt „Trainingsplan“.
+
 ### 2026-10-28 – Essen-Feinschliff 4
 - Vorschläge: oben 3 häufig, unten 3 zur Uhrzeit, rechts 2 zuletzt; aufgefüllte Plätze übernehmen die Gruppe. Glas beim Ziehen fast durchsichtig (Lichtrand, 1,5 px Weichzeichner). Ziel = nächste Mahlzeit im Umkreis von 40 px. Vorschau in offener Mahlzeit blass ohne Fläche.
 - Bilanz-Kontur: Grundlinie (`::before`) und Lichtschein (`::after`) liegen deckungsgleich auf dem 1-px-Rand; 9 s; Phase `--fsd` aus der Uhr (kein Neustart beim Neuzeichnen), Einblenden beim Einstieg.

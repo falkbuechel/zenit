@@ -978,11 +978,12 @@
   // Wischen: Vorschlag nach oben ziehen = sofort eintragen (Menge wie angezeigt), Eintrag nach unten ziehen = löschen (mit Rückgängig).
   // Waagerecht bleibt Scrollen der Reihe; ein Wischen löst kein Antippen aus
   var fsw = null, fswMoved = false;
-  document.addEventListener('pointerdown', function (ev) { var el = ev.target.closest && ev.target.closest('.fti, .fcpi:not(.fpm)'); fswMoved = false; fsw = el ? { el: el, x: ev.clientX, y: ev.clientY, dy: 0, add: el.classList.contains('fti') } : null; });
+  document.addEventListener('pointerdown', function (ev) { var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm)'); fswMoved = false; fsw = el ? { el: el, x: ev.clientX, y: ev.clientY, dy: 0, add: el.classList.contains('fti') } : null; });
   document.addEventListener('pointermove', function (ev) {
     if (!fsw) return; var dx = ev.clientX - fsw.x, dy = ev.clientY - fsw.y;
-    if (!fswMoved && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) { fsw = null; return; }
-    if (Math.abs(dy) > 6) fswMoved = true; if (!fswMoved) return;
+    // Einträge: waagerecht = Reihe scrollen (Abbruch); Vorschläge dürfen auch schräg gezogen werden
+    if (!fswMoved && !fsw.add && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) { fsw = null; return; }
+    if (Math.abs(dy) > 6 || (fsw.add && Math.abs(dx) > 8)) fswMoved = true; if (!fswMoved) return;
     // Vorschlag folgt dem Finger frei nach oben; liegt der Finger über einer Mahlzeit (Karte, Platzhalter, Gruppe), wird sie markiert und ist das Ziel
     var v = fsw.add ? Math.min(0, dy) : Math.max(0, Math.min(70, dy)); fsw.dy = v;
     fsw.el.style.transform = fsw.add ? 'translate(' + dx + 'px,' + v + 'px)' : 'translateY(' + v + 'px)'; fsw.el.classList.toggle('arm', Math.abs(v) > 44);
@@ -1038,11 +1039,15 @@
   });
   document.addEventListener('pointercancel', function () { if (fdsw) { fdsw.el.style.transform = ''; fdsw.el.classList.remove('arm'); fdsw = null; } });
   var fsT = null;
-  document.addEventListener('touchstart', function (ev) { fsT = ev.target.closest && ev.target.closest('.fti, .fcpi:not(.fpm)') ? { x: ev.touches[0].clientX, y: ev.touches[0].clientY, v: null } : null; }, { passive: true });
+  // iOS: beim Ziehen nicht scrollen. Kacheln (Essen-Vorschläge, Planen-Kacheln) in jede Richtung, Einträge nur senkrecht
+  document.addEventListener('touchstart', function (ev) {
+    var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm)' + (ui.sheet ? '' : ', .ptv[data-ptd], .fti[data-pfd]'));
+    fsT = el ? { x: ev.touches[0].clientX, y: ev.touches[0].clientY, v: null, tile: !el.classList.contains('fcpi') } : null;
+  }, { passive: true });
   document.addEventListener('touchmove', function (ev) {
     if (!fsT) return; var dx = ev.touches[0].clientX - fsT.x, dy = ev.touches[0].clientY - fsT.y;
     if (fsT.v === null && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) fsT.v = Math.abs(dy) > Math.abs(dx);
-    if (fsT.v) ev.preventDefault();
+    if (fsT.v || (fsT.tile && fsT.v !== null)) ev.preventDefault();
   }, { passive: false });
   document.addEventListener('pointerup', fswEnd);
   // Abgebrochene Geste (iOS-Systemgeste, Anruf): nur zurücksetzen, nie löschen oder eintragen

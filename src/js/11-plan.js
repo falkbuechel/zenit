@@ -503,7 +503,7 @@
     var it = fItem(id); if (!it || !(g > 0)) return;
     var v = fNut(it, g), x = { d: di, mk: mk, n: fEn(it).slice(0, 30) };
     NK.forEach(function (k) { if (v[k] != null) x[k] = k === 'k' ? Math.round(v.k) : Math.round(v[k] * 10) / 10; });
-    x.r = { i: id, g: Math.round(g * 10) / 10 }; fUndo(); foodState().pl.push(x);
+    x.r = { i: id, g: Math.round(g * 100) / 100 }; fUndo(); foodState().pl.push(x);
     persist(); ui.fresh = false; render(); buzz([10, 30, 10]); toast('Geplant · ' + MEALS.filter(function (m) { return m[1] === mk; })[0][2], 'cal', true);
   }
   function mealFor(id) {

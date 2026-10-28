@@ -68,7 +68,10 @@
 /* Fokus des Tabs: dünne leuchtende Kante, die beim Einstieg einmal weich aufglimmt */
 /* Bilanz als dunkle Fokus-Karte (.dkc in 00-basis) */
 .fbal {
-  position: relative; display: grid; gap: 12px; margin-top: 10px; padding: 14px; border: 1px solid transparent; border-radius: var(--r16); background: var(--s1); color: var(--ink);
+  position: relative; display: grid; gap: 12px; margin-top: 10px; padding: 14px; border: 1px solid transparent; border-radius: var(--r16); color: var(--ink);
+  /* Licht von unten: flache Ellipse mit einem Hauch Akzent, oben ein feiner heller Streif */
+  background: radial-gradient(ellipse 90% 55% at 50% 112%, color-mix(in srgb, var(--ac) 16%, transparent), transparent 72%),
+    linear-gradient(180deg, color-mix(in srgb, #fff 5%, transparent), transparent 22%), var(--s1);
   box-shadow: 0 0 24px -8px color-mix(in srgb, var(--ac) 55%, transparent), 0 10px 22px -14px rgba(0, 0, 0, .6);
 }
 .fresh .fbal.rise { animation: rise .42s var(--ease) both, fglow 1.1s ease-out both; animation-delay: calc(var(--i, 0) * 40ms), .3s; }
@@ -83,8 +86,9 @@
 }
 .fbal::before { background: color-mix(in srgb, var(--ac) 60%, transparent); }
 .fbal::after {
-  /* hellster Punkt vorn (in Laufrichtung), Schweif blendet im Uhrzeigersinn aus */
-  background: conic-gradient(from var(--fsa), transparent 0deg, color-mix(in srgb, var(--ac) 25%, #fff) 10deg, color-mix(in srgb, var(--ac) 50%, transparent) 45deg, transparent 95deg 360deg);
+  /* hellster Punkt vorn (in Laufrichtung), Schweif blendet im Uhrzeigersinn aus; 1,5 px, damit er etwas kräftiger ist als die Grundlinie */
+  inset: -1.5px; padding: 1.5px;
+  background: conic-gradient(from var(--fsa), transparent 0deg, color-mix(in srgb, var(--ac) 12%, #fff) 10deg, color-mix(in srgb, var(--ac) 70%, transparent) 40deg, color-mix(in srgb, var(--ac) 25%, transparent) 80deg, transparent 110deg 360deg);
   animation: fshine 9s linear var(--fsd, 0s) infinite;
 }
 .fresh .fbal::after { animation: fshine 9s linear var(--fsd, 0s) infinite, fshin 1.6s ease-out .5s both; }
@@ -154,7 +158,7 @@
 }
 .fti.q-r { --tq: var(--ink2); }
 .fti.q-f { --tq: var(--gold); }
-.fti.q-m { --tq: var(--ac); }
+.fti.q-m { --tq: var(--mc, var(--ac)); }
 .ftq { position: absolute; top: 6px; right: 6px; display: flex; color: var(--tq); }
 .ftq .ic { width: 12px; height: 12px; }
 .fti.q-f .ftq .ic { fill: currentColor; }
@@ -167,13 +171,13 @@
 .fti.done { animation: ftok .6s var(--ease); }
 .fti, .fcpi { transition: transform .2s var(--ease), box-shadow .15s, opacity .16s; }
 .fti.arm { position: relative; z-index: 5; box-shadow: 0 0 0 2px var(--ac), 0 12px 24px -10px rgba(0, 0, 0, .45); }
-/* Beim Ziehen klares Glas: fast durchsichtig (nur ein Hauch Tönung und ein heller Lichtrand oben links), was darunter liegt, bleibt scharf sichtbar */
+/* Beim Ziehen klares Glas in der Farbe der Kachel (--tq): durchsichtig getönt, Lichtrand oben links in derselben Farbe, was darunter liegt, bleibt scharf sichtbar */
 .fti.glass {
-  z-index: 5; border-color: color-mix(in srgb, #fff 45%, transparent); border-top-color: var(--tq);
-  background: linear-gradient(150deg, color-mix(in srgb, #fff 22%, transparent), color-mix(in srgb, #fff 4%, transparent) 60%, color-mix(in srgb, var(--tq) 10%, transparent));
-  -webkit-backdrop-filter: blur(1.5px) saturate(1.3); backdrop-filter: blur(1.5px) saturate(1.3); box-shadow: inset 1px 1px 0 color-mix(in srgb, #fff 50%, transparent);
+  z-index: 5; border-color: color-mix(in srgb, var(--tq) 55%, transparent); border-top-color: var(--tq);
+  background: linear-gradient(150deg, color-mix(in srgb, var(--tq) 26%, transparent), color-mix(in srgb, var(--tq) 6%, transparent) 65%);
+  -webkit-backdrop-filter: blur(1.5px) saturate(1.3); backdrop-filter: blur(1.5px) saturate(1.3); box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--tq) 40%, #fff);
 }
-.fti.glass.arm { box-shadow: inset 1px 1px 0 color-mix(in srgb, #fff 50%, transparent), 0 0 0 2px var(--ac); }
+.fti.glass.arm { box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--tq) 40%, #fff), 0 0 0 2px var(--tq); }
 /* Vorschau in einer offenen Mahlzeit: nur angedeutet (blass, gestrichelt, ohne Fläche und Schatten) */
 .fcpi.fprev { border-style: dashed; background: transparent; box-shadow: none; opacity: .5; animation: fprin .18s var(--ease); }
 @keyframes fprin { from { opacity: 0; transform: scale(.92); } }
@@ -234,9 +238,12 @@
 .fdcb.arm { box-shadow: inset 3px 0 0 var(--ac); }
 .btn.fpdup { flex: none; width: 58px; padding: 0; }
 .fdc .f100 i { width: 36px; }
-/* Gegessen leer: Platzhalter je Mahlzeit (blass, gestrichelt), davor „Wie gestern“ – die Zeile bleibt gleich hoch */
-.fmc.fme { place-items: center; border-style: dashed; border-color: color-mix(in srgb, var(--mc) 30%, var(--line)); background: transparent; color: color-mix(in srgb, var(--mc) 55%, var(--ink3)); opacity: .75; box-shadow: none; }
-.fmc.fme .ic { width: 20px; height: 20px; }
+/* Gegessen leer: Platzhalter je Mahlzeit als leicht vertieftes Fach (gefüllte Karten sind erhaben) – gleiche Form, Hauch der Mahlzeitfarbe, Symbol mittig; die Zeile bleibt gleich hoch */
+.fmc.fme {
+  place-items: center; border-color: color-mix(in srgb, var(--mc) 22%, var(--line)); color: color-mix(in srgb, var(--mc) 70%, var(--ink3));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--mc) 9%, transparent), color-mix(in srgb, var(--mc) 3%, transparent)); box-shadow: inset 0 2px 4px color-mix(in srgb, #000 10%, transparent);
+}
+.fmc.fme .ic { width: 20px; height: 20px; opacity: .8; }
 /* Geplant (Umriss in der Mahlzeitfarbe, ohne Fläche): in Essen heute antippen = gegessen, in Planen = planen */
 .fmc.fpm, .fcpi.fpm { border: 1.5px dashed color-mix(in srgb, var(--mc) 70%, transparent); background: color-mix(in srgb, var(--mc) 6%, transparent); box-shadow: none; }
 .fmc.fpm small { font-family: var(--f-mono); font-size: 10px; color: var(--ink3); }
@@ -321,10 +328,10 @@
 .fdd { display: grid; justify-items: center; gap: 1px; padding: 4px 0 5px; border: 0; border-radius: var(--r10); background: transparent; color: var(--ink3); font: inherit; transition: background-color .16s var(--ease); }
 .fdd small { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .fdd b { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; font-family: var(--f-mono); font-size: 13px; font-weight: 600; color: var(--ink2); }
-/* Heute bleibt der stärkste Tag: dunkle Zahl mit Akzentring, Wochentag fett, eigene leichte Fläche (stärker als die kühle Tönung der künftigen Tage) */
-.fdd.today b, .fdd.sel.today b { background: var(--ink); color: var(--bg); font-weight: 700; box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--ac); }
-.fdd.today small { color: var(--ink); font-weight: 800; }
-.fdd.today:not(.sel) { background: color-mix(in srgb, var(--ac) 10%, transparent); }
+/* Heute bleibt der stärkste Tag: dunkle Zahl, Wochentag fett im Akzent, getönte Fläche in Grün (wie die künftigen in Blau, nur etwas kräftiger und mit feinem Rand) */
+.fdd.today b, .fdd.sel.today b { background: var(--ink); color: var(--bg); font-weight: 700; }
+.fdd.today small { color: var(--ac); font-weight: 800; }
+.fdd.today { background: color-mix(in srgb, var(--ac) 12%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ac) 30%, transparent); }
 .fdd i { width: 20px; height: 3px; margin-top: 2px; border-radius: 2px; background: linear-gradient(90deg, var(--fc, var(--ink3)) calc(var(--p) * 100%), var(--s3) 0); }
 .fdd.ok { --fc: var(--ac); }
 .fdd.over { --fc: var(--danger); }
@@ -429,6 +436,7 @@
 .ftot em.over i i { background: var(--danger); }
 .fpgo { position: sticky; bottom: 0; z-index: 2; display: flex; gap: 8px; margin-top: 4px; background: var(--s1); box-shadow: 0 -8px 16px var(--s1); }
 .fpgo .btn.primary { flex: 1; min-width: 0; }
+.btn.fped { flex: none; width: 58px; padding: 0; }
 .btn.fpdel { flex: none; width: 58px; padding: 0; border-color: color-mix(in srgb, var(--danger) 40%, var(--line)); background: color-mix(in srgb, var(--danger) 12%, var(--s1)); color: var(--danger); }
 /* Marke fehlt: Anlegen über die ganze Breite, kräftiger */
 .btn.fanl { width: 100%; border-color: var(--ac); background: color-mix(in srgb, var(--ac) 14%, var(--s1)); color: var(--ac); font-weight: 800; }

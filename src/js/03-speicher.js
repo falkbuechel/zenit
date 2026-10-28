@@ -9,12 +9,14 @@
   function cleanFood(f) {
     if (!f || !Array.isArray(f.e)) return null;
     function nv(v, mx) { return Math.max(0, Math.min(mx, Math.round((+v || 0) * 10) / 10)); }
+    // Menge der Quelle: zwei Nachkommastellen (Gerichte in Viertel-Portionen)
+    function rg(v) { return Math.max(0, Math.min(5000, Math.round((+v || 0) * 100) / 100)); }
     var NX = ['f', 'c', 'fb', 'su'], g = f.g && f.g.a ? { a: 1 } : f.g && isFinite(f.g.k) && isFinite(f.g.p) && f.g.k > 0 && f.g.p > 0 ? { k: Math.round(f.g.k), p: Math.round(f.g.p) } : null;
     if (g && !g.a) NX.forEach(function (k) { if (+f.g[k] > 0) g[k] = Math.round(f.g[k]); });
     var e = f.e.filter(function (x) { return x && isFinite(x.t) && isFinite(x.k) && isFinite(x.p) && x.k >= 0 && x.p >= 0 && x.k <= 20000 && x.p <= 1000; }).map(function (x) {
       var o = { t: x.t, n: String(x.n || '').slice(0, 30), k: Math.round(x.k), p: nv(x.p, 1000) };
       NX.forEach(function (k) { if (x[k] != null && isFinite(x[k])) o[k] = nv(x[k], 2000); });
-      if (x.r && typeof x.r.i === 'string' && isFinite(x.r.g) && x.r.g > 0) o.r = { i: x.r.i.slice(0, 24), g: nv(x.r.g, 5000) };
+      if (x.r && typeof x.r.i === 'string' && isFinite(x.r.g) && x.r.g > 0) o.r = { i: x.r.i.slice(0, 24), g: rg(x.r.g) };
       if (/^(fr|mi|sn|ab)$/.test(x.mk)) o.mk = x.mk;
       return o;
     });
@@ -22,7 +24,7 @@
     var pl = (Array.isArray(f.pl) ? f.pl : []).filter(function (x) { return x && isFinite(x.d) && x.d >= dayIdx(Date.now()) - 30 && /^(fr|mi|sn|ab)$/.test(x.mk) && isFinite(x.k) && x.k >= 0 && x.k <= 20000; }).slice(0, 400).map(function (x) {
       var o = { d: Math.round(x.d), mk: x.mk, n: String(x.n || '').slice(0, 30), k: Math.round(x.k), p: nv(x.p, 1000) };
       NX.forEach(function (k) { if (x[k] != null && isFinite(x[k])) o[k] = nv(x[k], 2000); });
-      if (x.r && typeof x.r.i === 'string' && isFinite(x.r.g) && x.r.g > 0) o.r = { i: x.r.i.slice(0, 24), g: nv(x.r.g, 5000) };
+      if (x.r && typeof x.r.i === 'string' && isFinite(x.r.g) && x.r.g > 0) o.r = { i: x.r.i.slice(0, 24), g: rg(x.r.g) };
       return o;
     });
     var o = (Array.isArray(f.o) ? f.o : []).filter(function (x) { return x && typeof x.id === 'string' && /^u/.test(x.id) && typeof x.n === 'string'; }).slice(0, 600).map(function (x) {

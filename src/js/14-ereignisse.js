@@ -142,7 +142,7 @@
     else if (nsw.wa) {
       var v = Math.max(0, Math.min(8000, nsw.v0 + n * 50)); if (v === nsw.v) return; nsw.v = v; buzz(3); waShow(v);
     } else if (ui.fpick) {
-      var it = fItem(ui.fpick.i), stp = it.dish ? 0.5 : it.pc ? it.u[0][1] : 5, a = Math.max(stp, Math.round((nsw.v0 + n * stp) * 10) / 10);
+      var it = fItem(ui.fpick.i), stp = it.dish ? 0.25 : it.pc ? it.u[0][1] : 5, a = Math.max(stp, Math.round((nsw.v0 + n * stp) * 100) / 100);
       if (a !== ui.fpick.a) { ui.fpick.a = a; if ($('fa')) $('fa').value = a; fpickUpd(); buzz(3); }
     }
   }, { passive: false });

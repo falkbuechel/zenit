@@ -264,8 +264,8 @@
     return { ok: 1, n: n, wn: pts.length, est: Math.round(est), maint: Math.round(maint), adj: Math.round((est - maint) / 50) * 50, wk: slope * 7 };
   }
 
-  // Kacheln (8): 3 zuletzt gegessen (q: 'r'), 3 am häufigsten in den letzten 3 Wochen ('f'), 2 typisch für die aktuelle Mahlzeit ('m', 6 Wochen),
-  // je gleiche Quelle und Menge; aufgefüllt mit Vorschlägen; jedes Lebensmittel nur einmal
+  // Kacheln (8): 2 zuletzt gegessen (q: 'r'), 3 am häufigsten in den letzten 3 Wochen ('f'), 3 typisch für die aktuelle Mahlzeit ('m', 6 Wochen),
+  // je gleiche Quelle und Menge; aufgefüllt mit Vorschlägen (übernehmen die Gruppe des Platzes); jedes Lebensmittel nur einmal
   function fTiles() {
     var m = {}, mm = {}, arr = [], ml = [], out = [], now = Date.now(), since = now - 21 * 864e5, cur = mealOf(now)[1];
     foodState().e.forEach(function (x) {
@@ -276,15 +276,15 @@
       if (!m[key]) { m[key] = { i: x.r.i, g: x.r.g, c: 0, t: 0 }; arr.push(m[key]); } m[key].c++; m[key].t = Math.max(m[key].t, x.t);
     });
     function add(x, q, n) { if (out.length < n && !out.some(function (y) { return y.i === x.i; })) out.push({ i: x.i, g: x.g, q: q }); }
-    arr.slice().sort(function (a, b) { return b.t - a.t; }).forEach(function (x) { add(x, 'r', 3); });
-    arr.sort(function (a, b) { return b.c - a.c || b.t - a.t; }).forEach(function (x) { add(x, 'f', 6); });
+    arr.slice().sort(function (a, b) { return b.t - a.t; }).forEach(function (x) { add(x, 'r', 2); });
+    arr.sort(function (a, b) { return b.c - a.c || b.t - a.t; }).forEach(function (x) { add(x, 'f', 5); });
     ml.sort(function (a, b) { return b.c - a.c || b.t - a.t; }).forEach(function (x) { add(x, 'm', 8); });
     TILEDEF.forEach(function (d) { add({ i: d[0], g: d[1] }, '', 8); });
-    // Raster 4×2: oben 3 zuletzt, unten 3 häufig, rechts oben und unten die beiden zur Uhrzeit; fehlende Plätze aus dem Rest
+    // Raster 4×2: oben 3 häufig, unten 3 zur Uhrzeit, rechts oben und unten die 2 zuletzt; fehlende Plätze aus dem Rest
     var rest = out.filter(function (x) { return !x.q; });
-    function grp(q, n) { var l = out.filter(function (x) { return x.q === q; }); while (l.length < n && rest.length) l.push(rest.shift()); return l; }
-    var R = grp('r', 3), F = grp('f', 3), M = grp('m', 2);
-    return R.concat(M.slice(0, 1), F, M.slice(1)).filter(Boolean);
+    function grp(q, n) { var l = out.filter(function (x) { return x.q === q; }); while (l.length < n && rest.length) l.push(Object.assign({}, rest.shift(), { q: q })); return l; }
+    var R = grp('r', 2), F = grp('f', 3), M = grp('m', 3);
+    return F.concat(R.slice(0, 1), M, R.slice(1)).filter(Boolean);
   }
   function fbar(k, v, g, ex, pw) {
     // Mini-Balken: hit = im Ziel, over = über der Grenze (FLIM: Fett/Kohlenhydrate 110 %, Zucker 100 %, Protein 140 %, Ballaststoffe 160 % als gesundes Maximum)
@@ -390,7 +390,7 @@
     h += '<div class="fdw rise" style="--i:0">' + (ui.fmon ? '<b class="fmo">' + esc(ui.fmon) + '</b>' : '') + '<nav class="fds' + (ui.fdir ? (ui.fdir > 0 ? ' in-r' : ' in-l') : '') + '">' + ds + '</nav></div>';
     ui.fmon = ''; ui.fdir = 0;
     // Bilanz: kcal groß mit Balken, darunter Protein, Fett, Kohlenhydrate, Ballaststoffe, Zucker
-    h += '<section class="fbal dkc rise" style="--i:1"><div class="fbk' + (kp > FLIM.k ? ' over' : kp >= 0.9 ? ' hit' : ex >= 0.3 && kp < ex * 0.6 ? ' low' : '') + fAnim('k', kp > FLIM.k ? 'over' : kp >= 0.9 ? 'hit' : '', s.k) + '" data-fnut="k" role="button" tabindex="0"><b data-n="' + s.k + '" data-nk="fkv">' + s.k + '</b><span>/ ' + g.k + ' kcal</span>' +
+    h += '<section class="fbal dkc rise" style="--i:1;--fsd:-' + (Date.now() % 9000) + 'ms"><div class="fbk' + (kp > FLIM.k ? ' over' : kp >= 0.9 ? ' hit' : ex >= 0.3 && kp < ex * 0.6 ? ' low' : '') + fAnim('k', kp > FLIM.k ? 'over' : kp >= 0.9 ? 'hit' : '', s.k) + '" data-fnut="k" role="button" tabindex="0"><b data-n="' + s.k + '" data-nk="fkv">' + s.k + '</b><span>/ ' + g.k + ' kcal</span>' +
       '<em><b>' + Math.abs(g.k - s.k) + '</b>' + (g.k - s.k >= 0 ? 'offen' : 'drüber') + '</em><i class="fbt"><i' + pv('fkb', Math.min(1, kp)) + '></i>' + fGh(kp, pq.k / g.k) + fOv(kp, FLIM.k) + '</i></div>' +
       '<div class="fbm">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return fbar(k, s[k], g[k], ex, pq[k]); }).join('') + '</div>' +
       '<div class="fwa' + (wa > wg * FLIM.wa ? ' over' : wa >= wg ? ' hit' : '') + fAnim('wa', wa > wg * FLIM.wa ? 'over' : wa >= wg ? 'hit' : '', wa) + '">' + ic('drop') +
@@ -993,8 +993,12 @@
         // Eine Mahlzeit ist offen: sie ist das Ziel; sobald scharf, zeigt ein Vorschau-Eintrag hinter dem Zurück-Knopf, was dazukommt
         if (Math.abs(v) > 44) { if (!fsw.pv) fsw.pv = fPrev(fsw.el, open); tg = fsw.pv; } else { if (fsw.pv) fsw.pv.remove(); fsw.pv = null; tg = null; }
       } else {
-        // Kein Ziel unter dem Finger: die Mahlzeit zur Uhrzeit leuchtet (dort landet der Vorschlag)
-        var hit = document.elementFromPoint(ev.clientX, ev.clientY); tg = hit && hit.closest && hit.closest('.fdl .fmc, .fdl .fgrp, .fdl .fcpi');
+        // Ziel = nächste Mahlzeit im Umkreis von 40 px um den Finger (leichter zu treffen); sonst leuchtet die Mahlzeit zur Uhrzeit (dort landet der Vorschlag)
+        var best = 40; tg = null;
+        document.querySelectorAll('.fdl .fmc, .fdl .fgrp, .fdl .fcpi').forEach(function (e) {
+          var r = e.getBoundingClientRect(), ddx = Math.max(r.left - ev.clientX, 0, ev.clientX - r.right), ddy = Math.max(r.top - ev.clientY, 0, ev.clientY - r.bottom), dd = Math.sqrt(ddx * ddx + ddy * ddy);
+          if (dd < best) { best = dd; tg = e; }
+        });
         if (!tg) tg = document.querySelector('.fdl .fmc.m-' + mealOf(Date.now())[1]);
       }
       if (tg !== fsw.tg) { if (fsw.tg) fsw.tg.classList.remove('drop'); if (tg) tg.classList.add('drop'); fsw.tg = tg; }

@@ -28,6 +28,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-28 – Essen-Feinschliff 4
+- Vorschläge: oben 3 häufig, unten 3 zur Uhrzeit, rechts 2 zuletzt; aufgefüllte Plätze übernehmen die Gruppe. Glas beim Ziehen fast durchsichtig (Lichtrand, 1,5 px Weichzeichner). Ziel = nächste Mahlzeit im Umkreis von 40 px. Vorschau in offener Mahlzeit blass ohne Fläche.
+- Bilanz-Kontur: Grundlinie (`::before`) und Lichtschein (`::after`) liegen deckungsgleich auf dem 1-px-Rand; 9 s; Phase `--fsd` aus der Uhr (kein Neustart beim Neuzeichnen), Einblenden beim Einstieg.
+- Tagesleiste: heute mit Akzentring, fettem Wochentag und leichter Fläche; künftige Tage schwächer getönt.
+- Gerichte-Knopf als Pille wie das Suchfeld.
+- Kamera: iOS merkt sich die Erlaubnis in Homescreen-Apps nicht dauerhaft (WebKit), daher Abfrage je Sitzung; offen, ob der Strom kurz offen bleiben soll.
+
 ### 2026-10-28 – Essen-Feinschliff 3
 - Vorschläge: Raster oben 3 zuletzt, unten 3 häufig, rechts oben/unten die 2 zur Uhrzeit (`fTiles` ordnet, fehlende aus dem Rest). Beim Ziehen gläsern (`.fti.glass`, `backdrop-filter`).
 - Ziehen in eine offene Mahlzeit: statt den Zurück-Knopf zu markieren erscheint ein gestrichelter Vorschau-Eintrag dahinter (`fPrev`, `.fprev`), sobald der Vorschlag scharf ist.

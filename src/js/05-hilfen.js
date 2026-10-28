@@ -1,6 +1,14 @@
   // ---------- Hilfen
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  // Langer Text in engen Kacheln: erst kleiner (tf1/tf2 setzen --tf), dann Umbruch an Wortgrenzen; Silbentrennung nur als letzter Ausweg
+  // n = Zeichen, die bei voller Größe in eine Zeile passen (je nach Kachelbreite). Wort etwas zu lang: kleiner, bis es passt;
+  // viel zu lang: nur leicht kleiner und mit Silbentrennung auf zwei Zeilen (lesbarer als winzige Schrift)
+  function fitCls(s, n) {
+    s = String(s); n = n || 10; var w = s.split(/[\s\-\/]+/).reduce(function (a, x) { return Math.max(a, x.length); }, 0);
+    if (s.length > n * 2.6) return 'tf3';
+    return w > n * 1.3 ? 'tf1' : w > n * 1.12 || s.length > n * 2.2 ? 'tf2' : w > n || s.length > n * 1.8 ? 'tf1' : '';
+  }
   function fmtDate(ms) { return new Date(ms).toLocaleDateString('de-DE', { day: 'numeric', month: 'short' }); }
   function fmtDay(di) { return new Date(di * 864e5).toLocaleDateString('de-DE', { day: 'numeric', month: 'short', timeZone: 'UTC' }); }
   function fmtShort(di) { var q = new Date(di * 864e5); return q.getUTCDate() + '.' + (q.getUTCMonth() + 1) + '.'; }

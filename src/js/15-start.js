@@ -9,7 +9,7 @@
     var j = ui.harr.indexOf(ui.hcur) + (dx < 0 ? 1 : -1); if (j < 0 || j >= ui.harr.length) return;
     ui.hsel = ui.harr[j]; ui.hdir = dx < 0 ? 1 : -1; ui.fresh = false; render(); buzz(4);
   });
-  function goTab(k, dir) { if (k === ui.tab || TABS.indexOf(k) < 0) return; ui.sw = dir || (TABS.indexOf(k) - TABS.indexOf(ui.tab)); ui.fdrawn = false; ui.tab = k; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0); }
+  function goTab(k, dir) { if (k === ui.tab || TABS.indexOf(k) < 0) return; ui.sw = dir || (TABS.indexOf(k) - TABS.indexOf(ui.tab)); ui.fdrawn = false; ui.fpg = null; if (ui.undo && ui.undo.charAt(0) === '#') ui.undo = null; ui.tab = k; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0); }
   var sx = 0, sy = 0, st0 = 0, sEl = null, sMode = '', sheetDy = 0, calLock = '';
   document.addEventListener('touchstart', function (e) {
     sMode = ''; if (e.touches.length !== 1) return;

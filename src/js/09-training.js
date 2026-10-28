@@ -224,6 +224,8 @@
   var toastT;
   function toast(msg, icon, withUndo) {
     var t = $('toast');
+    // Essen: Rückgängig steht als Knopf in der Kopfzeile, daher keine Einblendung (außer Erfolgen wie dem Proteinziel); bei offenem Fenster ist der Knopf verdeckt, dann bleibt sie
+    if (withUndo && ui.tab === 'food' && !ui.sheet && ui.undo && ui.undo.charAt(0) === '#') { if (icon !== 'trophy') return; withUndo = false; }
     t.innerHTML = ic(icon || 'bolt') + '<span>' + esc(msg) + '</span>' + (withUndo ? '<button class="tundo" data-undo aria-label="Rückgängig">' + ic('undo') + '</button>' : '');
     t.className = 'toast on' + (withUndo ? ' act' : '');
     clearTimeout(toastT);

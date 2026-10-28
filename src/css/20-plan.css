@@ -40,12 +40,15 @@
 .wvb span .ic { color: var(--gc); }
 .pgc span.z { background: transparent; box-shadow: inset 0 0 0 1px var(--line); color: var(--ink3); }
 /* Kalender */
-.pcal2 { overflow: hidden; margin-top: 10px; padding: 8px 8px 10px; border: 1px solid var(--line); border-radius: var(--r16); background: var(--s1); }
-.pc2-h { display: flex; align-items: center; gap: 4px; }
-.pc2-t { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 0; min-height: 40px; border: 0; background: transparent; color: var(--ink); font: inherit; }
+/* Kalender als eigene Fokus-Fläche: Karte mit Tastenkante, Monat links groß, Pfeile rechts kompakt */
+.pcal2 { overflow: hidden; margin-top: 4px; padding: 4px 6px 8px; border: 1px solid var(--line); border-radius: var(--r16); background: var(--s1); box-shadow: var(--hs); }
+.pc2-h { display: flex; align-items: center; gap: 2px; }
+.pc2-h > .x { order: 3; width: 36px; height: 36px; }
+.pc2-h > .x[data-cnav="-1"] { order: 2; }
+.pc2-t { order: 0; flex: 1; display: inline-flex; align-items: center; justify-content: flex-start; padding-left: 8px; gap: 5px; min-width: 0; min-height: 40px; border: 0; background: transparent; color: var(--ink); font: inherit; }
 .pc2-t b { font-family: var(--f-display); font-weight: 800; font-size: 19px; white-space: nowrap; letter-spacing: .04em; text-transform: uppercase; }
 .pc2-t small { align-self: center; font-family: var(--f-mono); font-size: 12px; font-weight: 600; color: var(--ink3); }
-.pc2-now { width: 36px; height: 36px; padding: 0; border: 0; background: transparent; color: var(--ink2); }
+.pc2-h > .pc2-now { order: 1; width: 36px; height: 36px; padding: 0; border: 0; background: transparent; color: var(--ink2); }
 .pc2-now .ic { width: 19px; height: 19px; }
 .pc2-now[hidden] { display: grid !important; visibility: hidden; }
 .pc2-t .ic { width: 16px; height: 16px; color: var(--ink3); transform: rotate(90deg); transition: transform .2s var(--ease); }
@@ -90,9 +93,11 @@
 /* Fokus des Tabs (wie die Bilanz in Essen): dünne leuchtende Kante */
 .pday { display: grid; margin-top: 10px; padding: 12px; border: 1px solid transparent; border-radius: var(--r16); background: var(--s1); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 60%, transparent), 0 0 24px -8px color-mix(in srgb, var(--ac) 55%, transparent); }
 /* Umschalter Training / Essen / Tag, Punkt = im Reiter Tag steht etwas an */
-.seg.pft { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 0; }
-.seg.pft button { position: relative; min-height: 38px; font-size: 13px; }
-.seg.pft .ic { width: 16px; height: 16px; }
+/* Umschalter Training / Essen als zwei Symbole im Kopf der Fokus-Karte (gewählt = hell gefüllt) */
+.pft { display: inline-flex; gap: 2px; padding: 2px; border-radius: var(--r99); background: var(--s2); }
+.pft button { display: grid; place-items: center; width: 38px; height: 32px; border: 0; border-radius: var(--r99); background: transparent; color: var(--ink3); }
+.pft button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.pft .ic { width: 17px; height: 17px; }
 .pfd { position: absolute; top: 6px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--danger); }
 .pfn { display: flex; align-items: center; gap: 8px; margin: 0; padding: 14px 4px; font-size: 13px; color: var(--ink3); }
 .pfn .ic { width: 18px; height: 18px; }
@@ -105,13 +110,18 @@
 .pfr2.over b { color: var(--danger); }
 .pfa { display: flex; flex-wrap: wrap; gap: 8px; }
 /* Vorlagen unter dem Fokus (wie die Vorschläge in Essen): antippen = zusätzlich an diesem Tag */
-.pvl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
-.ptv { position: relative; display: grid; align-content: space-between; justify-items: start; gap: 4px; min-width: 0; min-height: 80px; padding: 9px; border: 1px solid color-mix(in srgb, var(--pc) 35%, var(--line)); border-radius: var(--r14); background: linear-gradient(160deg, color-mix(in srgb, var(--pc) 12%, transparent), transparent 70%); box-shadow: var(--hs); color: var(--ink); font: inherit; text-align: left; }
+/* Trainingstage zum Hinzufügen: wie die Vorschläge in Essen (Farbkante oben, Symbol links, Plus oben rechts, Name, Dauer) */
+.pvl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 10px; }
+.ptv {
+  position: relative; display: grid; align-content: space-between; justify-items: start; gap: 3px; min-width: 0; min-height: 64px; padding: 7px 7px 6px 8px; border: 1px solid var(--line); border-top: 3px solid var(--pc);
+  border-radius: var(--r12); background: linear-gradient(170deg, color-mix(in srgb, var(--pc) 14%, var(--s1)), var(--s1) 70%); box-shadow: var(--hs); color: var(--ink); font: inherit; text-align: left;
+}
 .ptv:active { transform: translateY(2px); box-shadow: none; }
-.ptv::after { content: "+"; position: absolute; top: 5px; right: 8px; font: 600 14px/1 var(--f-mono); color: var(--pc); }
-.ptv > .ic { width: 20px; height: 20px; color: var(--pc); }
-.ptv b { overflow: hidden; max-width: 100%; font-size: 13px; white-space: nowrap; text-overflow: ellipsis; }
-.ptv small { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink3); }
+.ptvi { display: flex; color: var(--pc); }
+.ptvi .ic { width: 18px; height: 18px; }
+.ptv .ptvp { position: absolute; top: 6px; right: 6px; width: 13px; height: 13px; color: var(--pc); }
+.ptv b { overflow: hidden; max-width: 100%; font-size: calc(13px * var(--tf, 1)); white-space: nowrap; text-overflow: ellipsis; }
+.ptv small { overflow: hidden; max-width: 100%; font-family: var(--f-mono); font-size: 10px; color: var(--ink3); white-space: nowrap; text-overflow: ellipsis; }
 /* Trainingstage-Fenster: Karten in zwei Spalten */
 .pdg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .pdc2 { display: grid; justify-items: start; gap: 4px; min-width: 0; padding: 10px 12px; border: 1px solid var(--line); border-left: 3px solid var(--pc); border-radius: var(--r12); background: var(--s1); box-shadow: var(--hs); color: var(--ink); font: inherit; text-align: left; }
@@ -239,7 +249,7 @@ button.pdb-h:active { background: var(--s2); }
 .pe-st { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 2px; font-family: var(--f-mono); font-size: 13px; color: var(--ink2); }
 .exr:active { transform: translateY(2px); box-shadow: none; }
 .exr > span:first-child { flex: 1; min-width: 0; }
-.exr b { display: -webkit-box; overflow: hidden; font-size: 13px; line-height: 1.2; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+.exr b { display: -webkit-box; overflow: hidden; font-size: calc(13px * var(--tf, 1)); line-height: 1.2; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
 .exr.lk b { display: flex; align-items: center; gap: 5px; }
 .exr b .ic { color: var(--ink3); width: 13px; height: 13px; flex: none; }
 .exr small { display: block; overflow: hidden; margin-top: 2px; font-size: 11px; color: var(--ink3); white-space: nowrap; text-overflow: ellipsis; }
@@ -312,16 +322,23 @@ button.pdb-h:active { background: var(--s2); }
 .pdh { display: flex; align-items: center; gap: 8px; margin: 0; padding: 8px 10px; border-radius: var(--r10); background: var(--s2); font-size: 13px; font-weight: 700; color: var(--ink2); }
 .pdh .ic { width: 16px; height: 16px; }
 .pdh .x { width: 30px; height: 30px; margin-left: auto; }
-/* Trainingstage (Fächer der Karten = Bausteine) und Wochenplan (Mo–So = Anordnung): der Knopf zeigt, was drin ist */
-.pfx { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
-.pfx .btn { display: grid; justify-items: center; gap: 6px; min-height: 84px; padding: 10px 8px; font-size: 13px; }
+/* Woche: eine Karte, links Mo–So (Wochentag + Symbol in der Farbe des Trainingstags, heute als dunkle Pille), rechts durch eine Linie getrennt der Fächer der Trainingstage */
+.pwks { margin-top: 16px; }
+.pwk { display: grid; grid-template-columns: minmax(0, 1fr) auto; border: 1px solid var(--line); border-radius: var(--r14); background: var(--s1); box-shadow: var(--hs); overflow: hidden; }
+.pwk button { border: 0; background: transparent; color: var(--ink); font: inherit; }
+.pwk button:active { background: var(--s2); }
+.pwk-w { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; padding: 8px 6px 9px 8px; }
+.pwk-w span { display: grid; justify-items: center; gap: 5px; }
+.pwk-w small { display: grid; place-items: center; width: 20px; height: 18px; border-radius: var(--r8); font: 700 11px/1 var(--f-mono); color: var(--ink3); }
+.pwk-w .t small { background: var(--ink); color: var(--bg); }
+.pwk-w i { display: grid; place-items: center; width: 100%; max-width: 34px; height: 32px; border-top: 3px solid var(--pc); border-radius: var(--r8); background: color-mix(in srgb, var(--pc) 18%, var(--s1)); color: var(--pc); }
+.pwk-w i:not([style]) { border: 1px dashed var(--line); background: transparent; }
+.pwk-w .ic { width: 16px; height: 16px; }
+.pwk .pwk-d { display: grid; justify-items: center; align-content: center; gap: 4px; padding: 8px 14px; border-left: 1px solid var(--line); }
+.pwk-d small { font: 700 11px/1 var(--f-mono); color: var(--ink3); }
 .pfan { display: flex; justify-content: center; height: 36px; }
 .pfan i { display: grid; place-items: center; width: 26px; height: 34px; margin: 0 -5px; border: 1px solid color-mix(in srgb, var(--pc) 55%, var(--line)); border-radius: 4px; background: color-mix(in srgb, var(--pc) 22%, var(--s1)); color: var(--pc); transform: rotate(calc(var(--j) * 8deg)) translateY(calc(var(--j) * var(--j) * 1.5px)); box-shadow: -2px 0 4px -2px rgba(0, 0, 0, .5); }
 .pfan .ic { width: 14px; height: 14px; }
-.pmw { display: grid; grid-template-columns: repeat(7, 12px); gap: 3px; align-content: center; height: 36px; }
-.pmw i { height: 22px; border-radius: 3px; background: color-mix(in srgb, var(--pc, var(--line)) 75%, transparent); }
-.pmw i:not([style]) { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
-.pmw i.t { outline: 1.5px solid var(--ink); outline-offset: 1px; }
 .pdur { display: grid; gap: 6px; grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .pdur button { display: grid; align-items: center; justify-content: space-between; gap: 2px; min-height: 44px; padding: 6px 2px; border-radius: var(--r12); border: 1px solid var(--line); background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: transform .14s var(--ease); justify-items: center; }
 .pdur b { font-size: 17px; }

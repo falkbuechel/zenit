@@ -28,6 +28,16 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-28 – Essen-Feinschliff 2, Planen neu im Essen-Stil
+- Rückgängig als runder Knopf in der Essen-Kopfzeile (`.fcpy.fund`, `data-undo`), solange `ui.undo` ein Essen-Stand ist; `toast()` zeigt in Essen keine Hinweise mit Rückgängig mehr (nur Erfolge wie Proteinziel, ohne Pfeil). `goTab` vergisst den Essen-Stand.
+- Vorschlag ziehen ohne Ziel: die Mahlzeit zur Uhrzeit leuchtet (`.drop`), dort landet er.
+- Vorschläge kompakter (`fTile`, auch in „Mahlzeit planen“): Name oben, kcal + Protein (ganze Zahl) unten in einer Zeile, Farbkante 3 px (zuletzt Tinte, häufig Gold mit gefülltem Stern, Uhrzeit Akzent), Symbol oben rechts.
+- Text-Einpassung `fitCls(text, Zeichen)` (05-hilfen): Klassen `tf1–3` setzen `--tf`, die Schriftgröße rechnet `calc(… * var(--tf, 1))`. Etwas zu lang = kleiner, viel zu lang = leicht kleiner + Silbentrennung (`lang="de"`, `hyphens: auto`, Rest `overflow-wrap: anywhere`). Genutzt in Vorschlägen, Editor-Kacheln, Trainingstag-Kacheln.
+- Suchfeld: Barcode rechts im Feld startet direkt den Scanner (`data-fscan="go"` öffnet erst die Suche, damit Zurück passt).
+- Dunkle Fokus-Karte als gemeinsame Klasse `.dkc` (00-basis): fast schwarz, neutral, weiße Schrift, kräftige Farben; Essen-Bilanz und Planen-Tag.
+- Tagesleiste Essen: bis 8 Wochen in die Zukunft wischbar (`ui.fpg` = Seite, `fPg`); der gewählte Tag bleibt ≤ heute, künftige Tage nur Vorschau. `goTab` setzt die Seite zurück.
+- Planen: Titel weg; Kalender als eigene Karte (Monat links, Pfeile rechts); Fokus-Karte dunkel mit Training/Essen als zwei Symbole im Kopf; Trainingstage + Wochenplan zu EINER Karte „Woche“ (`.pwk`: Mo–So mit Symbol/Farbe → Planer, Fächer → Trainingstage); Trainingstage zum Hinzufügen als kompakte Kacheln.
+
 ### 2026-10-28 – Essen-Rückmeldung, Einkaufsliste, Planer/Editor im Essen-Stil, Icon oliv
 - Fehler „Wie gestern“: alle Einträge landeten in der aktuellen Mahlzeit (Zeit = jetzt). Jetzt Datum +1 Tag per `setDate` (sicher bei Zeitumstellung), Uhrzeit bleibt, `mk` wird mitkopiert.
 - „Wie gestern“-Knopf 22 px hoch mit negativem Rand (Kopfzeile springt nicht mehr), größere Tippfläche über `::before`.

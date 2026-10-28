@@ -152,6 +152,14 @@ button:active:not(:disabled) { transform: scale(.97); }
 .status.safe { background: color-mix(in srgb, var(--ac) 20%, var(--s3)); }
 
 .sec { margin-top: 12px; }
+/* Dunkle Fokus-Karte je Bereich (Essen: Bilanz, Planen: Tag), in beiden Themen fast schwarz und neutral: Farben innen auf eine kontrastreiche dunkle Palette gesetzt, damit alle Kinder passen */
+.dkc {
+  --ink: #ffffff; --ink2: #e2e5df; --ink3: #b3b8af; --s1: #121314; --s2: #1c1e20; --s3: #34383b; --line: #3a3e41; --ac: #93c27a; --danger: #ff5f4c; --bg: #0b0c0d; --on: #0f170b;
+  --g-pull: #45b39f; --g-push: #e8843c; --g-core: #d9628f; --g-kh: #9a86dd; --g-skill: #b7c94b; --g-cardio: #4aa2d6; --g-mob: #e3b83d; --gold: #f2c14e; --flame: #f0822b;
+  --hs: 0 2px 0 rgba(0, 0, 0, .55); color: var(--ink);
+}
+/* Text-Einpassung (fitCls): Faktor für die Schriftgröße, die Regel des Elements rechnet mit var(--tf, 1) */
+.tf1 { --tf: .88; } .tf2 { --tf: .78; } .tf3 { --tf: .7; }
 .sec-h { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-family: var(--f-display); font-weight: 800; font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); margin-bottom: 6px; }
 .sec-h .ic { width: 20px; height: 20px; color: var(--gc, var(--ink2)); }
 .sec-h:not(:has(small))::after { content: ""; flex: 1; height: 1px; margin-left: 4px; background: var(--line); }

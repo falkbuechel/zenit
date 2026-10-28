@@ -18,14 +18,14 @@
       if (!list.length) return;
       var on = list.filter(function (e) { return day.ex.indexOf(e.id) >= 0; }).length;
       h += '<section class="exg g' + g + '"><h3 class="xg">' + ic(gOf(g).i) + gOf(g).n + '<small>' + on + ' von ' + list.length + '</small></h3><div class="exl">' + list.map(function (e) {
-        return '<button class="exr" data-ptog="' + e.id + '" aria-pressed="' + (day.ex.indexOf(e.id) >= 0) + '"><span><b>' + esc(e.n) + '</b><small>' + esc(e.mu) + '</small></span><i>' + ic('check') + '</i></button>';
+        return '<button class="exr" data-ptog="' + e.id + '" aria-pressed="' + (day.ex.indexOf(e.id) >= 0) + '"><span><b class="' + fitCls(e.n, 16) + '">' + esc(e.n) + '</b><small>' + esc(e.mu) + '</small></span><i>' + ic('check') + '</i></button>';
       }).join('') + '</div></section>';
     });
     if (locked.length) {
       locked.sort(function (x, y) { return lockPct(y, d) - lockPct(x, d); });
       h += '<section class="exg"><h3 class="xg lkh">' + ic('lock') + 'Gesperrt<small>' + locked.length + '</small></h3><div class="exl">' + locked.map(function (e) {
         var open = ui.plk === e.id;
-        return '<div class="exk g' + e.g + (open ? ' open' : '') + '"><button class="exr lk" data-plk="' + e.id + '" aria-expanded="' + open + '"><span><b>' + ic(gOf(e.g).i) + esc(e.n) + '</b><small>' + esc(e.mu) + '</small></span>' + ring(lockPct(e, d)) + '</button>' +
+        return '<div class="exk g' + e.g + (open ? ' open' : '') + '"><button class="exr lk" data-plk="' + e.id + '" aria-expanded="' + open + '"><span><b class="' + fitCls(e.n, 12) + '">' + ic(gOf(e.g).i) + esc(e.n) + '</b><small>' + esc(e.mu) + '</small></span>' + ring(lockPct(e, d)) + '</button>' +
           '<div class="agx"><div><div class="lkd">' + e.req.map(function (r) {
             var x = reqLine(r, d);
             return '<div class="lkr' + (x.ok ? ' ok' : '') + '"><span>' + ic(x.ok ? 'check' : 'target') + esc(x.name) + '</span><small>' + Math.min(x.cur, x.need) + ' / ' + x.need + ' ' + esc(x.u) + '</small><i class="pdp"><i style="width:' + x.pct + '%"></i></i></div>';
@@ -109,7 +109,8 @@
     var NT = ui.nts || [], dur = durEst(), sd = ui.pd == null ? today : ui.pd, a = ui.ca == null ? today : ui.ca, k, ft = ui.pft || 't';
     function nt(x) { return NT.filter(function (n) { return n.k === x; })[0]; }
     var todo = ['st', 'tr', 'wg', 'f0', 'fp'].map(nt).filter(Boolean), wk = nt('wk'), ux = nt('ux');
-    var h = '<div class="pt-h rise" style="--i:0"><h2>Plan</h2></div>';
+    // Kein Titel (wie Essen): der Bereich ergibt sich aus der unteren Leiste
+    var h = '';
 
     // Kalender: Wochenleiste mit dem gewählten Tag in der Mitte (wischen = 7 Tage), Monatsname klappt den Monat aus.
     // Zellen: Icon des Trainingstags, Haken = trainiert, Ring um die Zahl = Essen (Anteil vom kcal-Ziel; grün im Rahmen, rot drüber), Glocke/Waage = Meldungen
@@ -142,9 +143,9 @@
     var sc = schedFor(sd), st = d.byDay[sd], off = offAt(sd), fd = ovF(sd), kd = fd.s ? 'skip' : fd.w !== undefined ? 'swap' : fd.r ? 'repl' : '', c = '';
     var nts = (sd === today ? todo.length : 0) + (sd === wdue && sd > today ? 1 : 0), edt = sd >= today - 14;
     if (ft === 'd') ft = 't';
-    c += '<div class="pd-h"><b>' + dayHead(sd) + '</b>' + (nts ? '<button class="x pd-n" data-pnts="1" aria-label="' + nts + ' Hinweise">' + ic('bell') + '<i>' + nts + '</i></button>' : '') +
-      (edt ? '<button class="x pd-e' + (kd || off || fd.a ? ' on' : '') + '" data-pdedit="1" aria-label="Tag ändern">' + ic('edit') + '</button>' : '') + '</div>' +
-      '<div class="seg pft">' + [['t', 'dumb', 'Training'], ['e', 'food', 'Essen']].map(function (x) { return '<button data-pft="' + x[0] + '" aria-pressed="' + (ft === x[0]) + '">' + ic(x[1]) + x[2] + '</button>'; }).join('') + '</div>';
+    // Kopf: Tag, Umschalter Training / Essen als Symbole, Glocke, Stift
+    c += '<div class="pd-h"><b>' + dayHead(sd) + '</b><span class="pft" role="group" aria-label="Ansicht">' + [['t', 'dumb', 'Training'], ['e', 'food', 'Essen']].map(function (x) { return '<button data-pft="' + x[0] + '" aria-pressed="' + (ft === x[0]) + '" aria-label="' + x[2] + '">' + ic(x[1]) + '</button>'; }).join('') + '</span>' + (nts ?'<button class="x pd-n" data-pnts="1" aria-label="' + nts + ' Hinweise">' + ic('bell') + '<i>' + nts + '</i></button>' : '') +
+      (edt ? '<button class="x pd-e' + (kd || off || fd.a ? ' on' : '') + '" data-pdedit="1" aria-label="Tag ändern">' + ic('edit') + '</button>' : '') + '</div>';
     if (swp) c += '<p class="pdh">' + ic('swap') + 'Tag im Kalender wählen<button class="x" data-pmode="swap" aria-label="Tauschen abbrechen">' + ic('close') + '</button></p>';
     if (ft === 't') {
       var shown = {};
@@ -185,19 +186,25 @@
       }).join('') + '</div>';
       c += '<div class="pfa">' + (sd <= today ? '<button class="btn small pfo" data-pfo="' + sd + '">' + ic('food') + 'In Essen öffnen</button>' : '') + '<button class="btn small" data-pshop="1">' + ic('cart') + 'Einkauf</button></div>';
     }
-    h += '<section class="pday rise' + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
+    h += '<section class="pday dkc rise' + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
     ui.pfl = null; ui.pdx = false;
 
-    // Darunter wie in Essen: zwei Knöpfe (Vorlagen als Fenster, Wochenplan), dann Vorlagen, die heute/künftig noch nicht dran sind (antippen = zusätzlich an diesem Tag)
-    // Trainingstage = Bausteine (Fächer der farbigen Karten), Wochenplan = Anordnung (Mo–So mit den Farben des aktiven Plans)
+    // Woche: EINE Karte – links Mo–So mit den Farben des aktiven Plans (antippen = Wochenplaner), rechts der Fächer der Trainingstage (antippen = Trainingstage)
     var fan = P.days.slice(0, 5).map(function (x, j, l) { return '<i style="--pc:var(' + PCOL[x.c] + ');--j:' + (j - (l.length - 1) / 2).toFixed(1) + '">' + ic(dIcon(x)) + '</i>'; }).join('');
-    var mw = WDN.map(function (n, w) { var x = P.days.filter(function (y) { return wdAt(y, today + w - wdOf(today)).indexOf(w) >= 0; })[0]; return '<i' + (x ? ' style="--pc:var(' + PCOL[x.c] + ')"' : '') + (w === wdOf(today) ? ' class="t"' : '') + '></i>'; }).join('');
-    h += '<div class="pfx rise" style="--i:3"><button class="btn pfx-d" data-pdays="1" aria-label="Trainingstage"><span class="pfan">' + fan + '</span><b>Trainingstage</b></button>' +
-      '<button class="btn pfx-w" data-pman="1" aria-label="Wochenplan"><span class="pmw">' + mw + '</span><b>Wochenplan</b></button></div>';
+    var mw = WDN.map(function (n, w) {
+      var x = P.days.filter(function (y) { return wdAt(y, today + w - wdOf(today)).indexOf(w) >= 0; })[0];
+      return '<span' + (w === wdOf(today) ? ' class="t"' : '') + '><small>' + n.charAt(0) + '</small><i' + (x ? ' style="--pc:var(' + PCOL[x.c] + ')"' : '') + '>' + (x ? ic(dIcon(x)) : '') + '</i></span>';
+    }).join('');
+    var ra0 = actAt(today), wpn = ra0 && wpOf(ra0.p) ? wpOf(ra0.p).n : '';
+    h += '<section class="pwks rise" style="--i:3"><h2 class="sec-h">Woche' + (wpn ? '<small>' + esc(wpn) + '</small>' : '') + '</h2><div class="pwk">' +
+      '<button class="pwk-w" data-pman="1" aria-label="Wochenplan bearbeiten">' + mw + '</button>' +
+      '<button class="pwk-d" data-pdays="1" aria-label="Trainingstage"><span class="pfan">' + fan + '</span><small>' + P.days.length + ' Tage</small></button></div></section>';
+    // Trainingstage, die an diesem Tag noch nicht dran sind: 4er-Reihe wie die Vorschläge in Essen (antippen = zusätzlich an diesem Tag)
     var cur0 = sc.map(function (x) { return x.id; }), add = sd >= today && !off ? P.days.filter(function (x) { return cur0.indexOf(x.id) < 0; }).slice(0, 4) : [];
     if (add.length) h += '<section class="pvl rise" style="--i:4">' + add.map(function (x) {
       var n = x.ex.filter(function (id) { return d.unlocked[id]; }).length;
-      return '<button class="ptv" data-paddx="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')" aria-label="' + esc(x.n) + ' zusätzlich am ' + fmtDayL(sd) + '">' + ic(dIcon(x)) + '<b>' + esc(x.n) + '</b><small>' + n + ' Üb.' + (dur[x.id] ? ' · ~' + dur[x.id] + '′' : '') + '</small></button>';
+      return '<button class="ptv" data-paddx="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')" aria-label="' + esc(x.n) + ' zusätzlich am ' + fmtDayL(sd) + '"><i class="ptvi">' + ic(dIcon(x)) + '</i>' + ic('plus', 'ptvp') +
+        '<b class="' + fitCls(x.n, 8) + '">' + esc(x.n) + '</b><small>' + n + (dur[x.id] ? ' · ' + dur[x.id] + '′' : ' Üb.') + '</small></button>';
     }).join('') + '</section>';
 
     if (ux) h += '<button class="agn gold pux rise" style="--i:5" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>';

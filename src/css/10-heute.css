@@ -113,7 +113,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: var(--r
 .pg[aria-pressed="true"] { background: color-mix(in srgb, var(--gc, var(--ac)) 20%, var(--s2)); border-color: var(--gc, var(--ac)); color: var(--gc, var(--ink)); }
 .pg:first-child[aria-pressed="true"] { color: var(--ink); }
 
-.pt-h h2 { margin: 4px 0 0; font-family: var(--f-stencil); font-weight: 900; font-size: 36px; text-transform: uppercase; line-height: 1; }
 .pgc { display: flex; gap: 8px; flex-wrap: wrap; }
 .pgc span { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: var(--r99); background: color-mix(in srgb, var(--gc) 16%, var(--s3)); color: var(--gc); font-size: 12px; font-weight: 800; }
 .pgc .ic { width: 14px; height: 14px; }

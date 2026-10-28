@@ -170,6 +170,14 @@ button:active:not(:disabled) { transform: scale(.97); }
 .shade.open { opacity: 1; visibility: visible; transition: opacity .25s var(--ease), visibility 0s; }
 .sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; max-width: 680px; margin: 0 auto; background: var(--s1); border: 1px solid var(--line); border-bottom: 0; border-radius: var(--r20) var(--r20) 0 0; padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; transform: translateY(104%); visibility: hidden; transition: transform .34s var(--drawer), visibility 0s .34s; }
 .sheet.open { transform: none; visibility: visible; transition: transform .34s var(--drawer), visibility 0s; }
+/* Fenster weicht beim Ziehen aus (Gerichte → Mahlzeit): gleitet bis auf eine Kante nach unten, der Schatten wird fast durchsichtig */
+.sheet.open.peek { transform: translateY(calc(100% - 84px)); }
+.shade.open.peek { opacity: .12; }
+/* Gericht-Karte halten: keine Textauswahl und kein Kontextmenü von iOS */
+[data-fdsw] { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+.fdgh { position: fixed; z-index: 40; margin: 0; pointer-events: none; border: 1px solid color-mix(in srgb, var(--dc) 60%, transparent); border-radius: var(--r14);
+  background: linear-gradient(150deg, color-mix(in srgb, var(--dc) 30%, transparent), color-mix(in srgb, var(--dc) 8%, transparent) 65%); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--dc) 40%, #fff), 0 14px 28px -12px rgba(0, 0, 0, .5); color: var(--ink); transition: none; }
 .grab { width: 40px; height: 4px; border-radius: 4px; background: var(--s3); margin: 0 auto; }
 .sh-h { display: flex; align-items: center; gap: 10px; }
 .x { width: 40px; height: 40px; border: 0; border-radius: var(--r10); background: transparent; color: var(--ink2); display: grid; place-items: center; }
@@ -197,19 +205,16 @@ button:active:not(:disabled) { transform: scale(.97); }
 .sh-note { font-size: 12px; color: var(--ink3); text-align: center; margin: 0; }
 .sh-note a { color: var(--ink2); }
 
-/* Navigation */
-.tabs::before { content: ""; position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--s1) 94%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 8; border-top: 1px solid var(--line); overflow-x: clip; }
-.tabs-in { max-width: 680px; margin: 0 auto; display: flex; gap: 4px; padding: 6px max(16px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); position: relative; align-items: center; }
-.tabs .ind { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; background: color-mix(in srgb, var(--tc) 12%, transparent); box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
-.tabs .ind.on { transition: transform .42s cubic-bezier(.3, .9, .3, 1), width .4s var(--ease), height .4s var(--ease), border-radius .4s var(--ease), background .35s, box-shadow .35s; }
-.tabs .ind.mid { background: var(--tc); box-shadow: 0 10px 24px -12px var(--tc); }
-.tabs button { position: relative; z-index: 1; flex: 1 1 0; min-width: 0; height: 52px; display: grid; place-items: center; border: 0; border-radius: var(--r16); background: transparent; color: var(--ink3); transition: color .3s; -webkit-tap-highlight-color: transparent; }
-.tabs .ic { width: 26px; height: 26px; transition: transform .45s cubic-bezier(.34, 1.4, .5, 1); }
+/* Navigation: hell und flach, feine Linie oben; aktives Symbol in Akzent, darunter ein gleitender Punkt (placeInd), sonst keine Flächen */
+.tabs::before { content: ""; position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--bg) 92%, transparent); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); }
+.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 8; border-top: 1px solid color-mix(in srgb, var(--line) 70%, transparent); overflow-x: clip; }
+.tabs-in { max-width: 680px; margin: 0 auto; display: flex; gap: 4px; padding: 4px max(16px, env(safe-area-inset-right, 0px)) calc(2px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); position: relative; align-items: center; }
+.tabs .ind { position: absolute; left: 0; top: 0; z-index: 0; width: 5px; height: 5px; border-radius: 50%; pointer-events: none; background: var(--tc); }
+.tabs .ind.on { transition: transform .42s cubic-bezier(.3, .9, .3, 1), background .35s; }
+.tabs button { position: relative; z-index: 1; flex: 1 1 0; min-width: 0; height: 52px; display: grid; place-items: center; border: 0; background: transparent; color: var(--ink3); transition: color .3s; -webkit-tap-highlight-color: transparent; }
+.tabs .ic { width: 24px; height: 24px; margin-top: -6px; stroke-width: 1.8; transition: transform .45s cubic-bezier(.34, 1.4, .5, 1); }
 .tabs button[aria-current="page"] { color: var(--tc); }
-.tabs button[aria-current="page"] .ic { transform: scale(1.08); }
-.tabs button.mid[aria-current="page"] { color: var(--on); }
-.tabs button.mid[aria-current="page"] .ic { transform: translateY(-10px) scale(1.3); }
+.tabs button[aria-current="page"] .ic { stroke-width: 2.2; }
 .tabs button:active .ic { transform: scale(.9); }
 .hud-w.nohud { padding-top: 0; padding-bottom: 0; background: none; }
 .hud-w.nohud:has(#sess[hidden]) { display: none; }

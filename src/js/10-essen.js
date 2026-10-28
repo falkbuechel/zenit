@@ -1043,11 +1043,47 @@
     if (f.dx > 60) { ui.fday = dayIdx(Date.now()) - fSd(); buzz([10, 30, 10]); closeSheet(true); foodRef(f.el.dataset.fdsw, 1); }
   });
   document.addEventListener('pointercancel', function () { if (fdsw) { fdsw.el.style.transform = ''; fdsw.el.classList.remove('arm'); fdsw = null; } });
+  // Gerichte-Fenster: Karte kurz halten (0,3 s), dann ziehen. Das Fenster gleitet nach unten weg (Kante bleibt), die Mahlzeiten oben leuchten;
+  // ablegen = 1 Portion in diese Mahlzeit, danach gleitet das Fenster wieder hoch. Vorher bewegt = normales Scrollen/Wischen
+  var fdg = null;
+  document.addEventListener('pointerdown', function (ev) {
+    var el = ui.tab === 'food' && ui.sheet && ui.sheet.fdishes && ev.target.closest && ev.target.closest('[data-fdsw]'); if (!el) { fdg = null; return; }
+    var g0 = fdg = { el: el, x: ev.clientX, y: ev.clientY, on: false, tg: null };
+    g0.t = setTimeout(function () {
+      if (fdg !== g0) return; g0.on = true; fdsw = null; buzz(8);
+      var r = el.getBoundingClientRect(), gh = el.cloneNode(true); gh.className = 'fdcb fdgh'; gh.removeAttribute('data-fpick'); gh.removeAttribute('data-fdsw');
+      gh.style.cssText = 'left:' + r.left + 'px;top:' + r.top + 'px;width:' + r.width + 'px;height:' + r.height + 'px;--dc:' + getComputedStyle(el.parentNode).getPropertyValue('--dc');
+      document.body.appendChild(gh); g0.gh = gh; $('sheet').classList.add('peek'); $('shade').classList.add('peek');
+    }, 300);
+  });
+  document.addEventListener('pointermove', function (ev) {
+    if (!fdg) return; var dx = ev.clientX - fdg.x, dy = ev.clientY - fdg.y;
+    if (!fdg.on) { if (Math.abs(dx) > 8 || Math.abs(dy) > 8) { clearTimeout(fdg.t); fdg = null; } return; }
+    fdg.gh.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(1.04)';
+    var best = 56, tg = null;
+    document.querySelectorAll('.fdl .fmc').forEach(function (e) {
+      var r = e.getBoundingClientRect(), ax = Math.max(r.left - ev.clientX, 0, ev.clientX - r.right), ay = Math.max(r.top - ev.clientY, 0, ev.clientY - r.bottom), dd = Math.sqrt(ax * ax + ay * ay);
+      if (dd < best) { best = dd; tg = e; }
+    });
+    if (tg !== fdg.tg) { if (fdg.tg) fdg.tg.classList.remove('drop'); if (tg) { tg.classList.add('drop'); buzz(4); } fdg.tg = tg; }
+  });
+  function fdgEnd(ev) {
+    if (!fdg) return; var g = fdg; fdg = null; clearTimeout(g.t); if (!g.on) return;
+    ui.fdgno = Date.now(); if (g.gh) g.gh.remove(); if (g.tg) g.tg.classList.remove('drop');
+    $('sheet').classList.remove('peek'); $('shade').classList.remove('peek');
+    var mm = g.tg && ev.type !== 'pointercancel' && /\bm-(fr|mi|sn|ab)\b/.exec(g.tg.className); if (!mm) return;
+    ui.fday = dayIdx(Date.now()) - fSd(); ui.fdmk = mm[1]; buzz([10, 30, 10]); foodRef(g.el.dataset.fdsw, 1);
+    setTimeout(function () { if (!ui.sheet && ui.tab === 'food') openDishes(); }, 260);
+  }
+  document.addEventListener('pointerup', fdgEnd);
+  document.addEventListener('pointercancel', fdgEnd);
+  document.addEventListener('touchmove', function (ev) { if (fdg && fdg.on) ev.preventDefault(); }, { passive: false });
   var fsT = null;
   // iOS: beim Ziehen nicht scrollen. Kacheln (Essen-Vorschläge, Planen-Kacheln) in jede Richtung, Einträge nur senkrecht
   document.addEventListener('touchstart', function (ev) {
-    var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm)' + (ui.sheet ? '' : ', .ptv[data-ptd], .fti[data-pfd]'));
+    var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm)' + (ui.sheet ? '' : ', .ptv[data-ptd], .fti[data-pfd], .pwsc'));
     fsT = el ? { x: ev.touches[0].clientX, y: ev.touches[0].clientY, v: null, tile: !el.classList.contains('fcpi') } : null;
+    // Workouts in der Woche (.pwsc) zählen als Kachel: in jede Richtung ziehbar
   }, { passive: true });
   document.addEventListener('touchmove', function (ev) {
     if (!fsT) return; var dx = ev.touches[0].clientX - fsT.x, dy = ev.touches[0].clientY - fsT.y;
@@ -1188,7 +1224,7 @@
     if (t.closest('[data-fsearch]')) { openFsearch(); return true; }
     if (t.closest('[data-fdishes]')) { openDishes(); return true; }
     if (t.closest('[data-fquick]')) { openQuick(null); return true; }
-    if ((el = t.closest('[data-fpick]'))) { var from = ui.sheet && (ui.sheet.fsearch || ui.sheet.fdishes) ? (ui.sheet.fsearch ? 's' : 'd') : null; openPick(el.dataset.fpick); ui.sheet.from = from; $('sheet').innerHTML = fpickHtml(); return true; }
+    if ((el = t.closest('[data-fpick]'))) { if (ui.fdgno && Date.now() - ui.fdgno < 400) return true; var from =ui.sheet && (ui.sheet.fsearch || ui.sheet.fdishes) ? (ui.sheet.fsearch ? 's' : 'd') : null; openPick(el.dataset.fpick); ui.sheet.from = from; $('sheet').innerHTML = fpickHtml(); return true; }
     if (t.closest('[data-fback]')) { if (ui.sheet && ui.sheet.fsearch && ui.ingm) ingBack(); else if (ui.sheet && ui.sheet.from === 'o') openOwn(ui.odraft.id, null, ui.odraft); else if (ui.sheet && ui.sheet.from === 'd') openDishes(); else { var q0 = ui.fq; openFsearch(true); ui.fq = q0 || ''; $('fq').value = ui.fq; $('fres').innerHTML = fresHtml(); } return true; }
     if ((el = t.closest('[data-fvar]'))) { ui.fpick.i = el.dataset.fvar; $('sheet').innerHTML = fpickHtml(); return true; }
     if ((el = t.closest('[data-foff]'))) { var ox = ui.fon && ui.fon.r[+el.dataset.foff]; if (ox) pickFrom(offSave(ox)); return true; }

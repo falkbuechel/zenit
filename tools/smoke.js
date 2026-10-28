@@ -57,14 +57,14 @@ async function scenario(b, sc, errs) {
     // Plan: Training ändern (Tauschen über den Kalender, Ersetzen, Aussetzen, Zusätzlich; jede Aktion schaltet sich beim zweiten Tippen aus), Pause (Urlaub) im Kalender
     if (tab === 'tage') {
       await click('[data-cnow]');
-      const ed = () => click('[data-pdedit="1"]'), pz = () => click('[data-pdedit="pause"]');
+      const ed = () => click('[data-pdedit]'), pz = ed;
       await ed(); await click('[data-pmode="swap"]'); await click('.pc2.pick'); await ed(); await click('[data-pmode="swap"]');
       await ed(); await click('[data-pmode="repl"]'); await click('[data-preplx]'); await ed(); await click('[data-pmode="repl"]');
       await ed(); await click('[data-pmode="skip"]'); await ed(); await click('[data-pmode="skip"]'); await ed(); await click('[data-pmode="add"]'); await click('[data-paddx]');
       await pz(); await click('[data-pmode="vac"]'); await click('[data-poff="3"]'); await shot('tage-urlaub');
       await pz(); await click('[data-pmode="vac"]'); await closeSheet(); await click('[data-pft="e"]');
       // Essen planen (Kachel einplanen, Gericht antippen = übliche Mahlzeit), Einkaufsliste: Zeitraum, abhaken
-      await click('[data-pml]'); await click('[data-pla]'); await closeSheet(); await click('[data-pfd]'); await shot('tage-essen');
+      await click('[data-pml]'); await click('[data-pla]'); await closeSheet(); await click('[data-pfd]'); await shot('tage-essen'); await click('[data-pws="4"]');
       await click('[data-pshop]'); await click('[data-shn="3"]'); await click('[data-shk]'); await shot('tage-einkauf'); await closeSheet(); await click('[data-pft="t"]');
       if (await click('[data-pnts]')) await closeSheet();
       await click('[data-pdays]'); await shot('tage-tage'); await click('[data-sheet-close]');

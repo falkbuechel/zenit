@@ -74,8 +74,18 @@
 .pcal2:not(.mon) .pc2 :is(.nd, .nf) { top: 17px; right: calc(50% - 25px); }
 .pcal2.mon .pc2 { grid-template-rows: 30px 17px 13px; }
 /* Pause (Urlaub/Krank) im Kalenderkopf; aktiv = Symbol des Zeitraums in Gold */
-.pc2-h > .pc2-pz { order: 2; color: var(--ink2); }
-.pc2-pz.on { color: var(--gold); }
+/* Kopf rechts: Glocke, Heute, Tag ändern (aktiv = der gewählte Tag hat ein Ereignis, Akzent) */
+.pc2-h > .pd-n { order: 1; }
+.pc2-h > .pc2-ev { order: 2; color: var(--ink2); }
+.pc2-ev.on { color: var(--ac); }
+/* Ereignisse in der Zelle: Urlaub gold, Krank rot, Tausch neutral; mehrere Tage Urlaub/Krank als durchgehender Balken unten (abgerundet an Anfang/Ende) */
+.pc2 .ics em.ev.vac { color: var(--gold); }
+.pc2 .ics em.ev.sick { color: var(--danger); }
+.pc2 .ics em.ev.sw { color: var(--ink2); }
+.pbar { position: absolute; left: -2px; right: -2px; bottom: 1px; height: 4px; background: color-mix(in srgb, var(--gold) 75%, transparent); }
+.pbar.sick { background: color-mix(in srgb, var(--danger) 70%, transparent); }
+.pbar.s { left: 4px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
+.pbar.e { right: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
 .pc2.past b { color: var(--ink3); }
 .pc2.today b { background: var(--ink); color: var(--bg); font-weight: 700; }
 .pc2.sel { background: var(--s2); box-shadow: inset 0 0 0 1px var(--line); }
@@ -98,10 +108,10 @@
 .pday { display: grid; margin-top: 10px; padding: 12px; border: 1px solid transparent; border-radius: var(--r16); background: var(--s1); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 60%, transparent), 0 0 24px -8px color-mix(in srgb, var(--ac) 55%, transparent); }
 /* Umschalter Training / Essen / Tag, Punkt = im Reiter Tag steht etwas an */
 /* Umschalter Training / Essen als zwei Symbole im Kopf der Fokus-Karte (gewählt = hell gefüllt) */
-.pft { display: inline-flex; gap: 2px; padding: 2px; border-radius: var(--r99); background: var(--s2); }
-.pft button { display: grid; place-items: center; width: 38px; height: 32px; border: 0; border-radius: var(--r99); background: transparent; color: var(--ink3); }
+.pft { display: inline-flex; flex: none; gap: 3px; padding: 3px; border-radius: var(--r99); background: var(--s2); }
+.pft button { display: grid; place-items: center; width: 54px; height: 40px; border: 0; border-radius: var(--r99); background: transparent; color: var(--ink3); transition: background-color .2s var(--ease), color .2s; }
 .pft button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
-.pft .ic { width: 17px; height: 17px; }
+.pft .ic { width: 21px; height: 21px; }
 .pfd { position: absolute; top: 6px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--danger); }
 .pfn { display: flex; align-items: center; gap: 8px; margin: 0; padding: 14px 4px; font-size: 13px; color: var(--ink3); }
 .pfn .ic { width: 18px; height: 18px; }
@@ -112,6 +122,9 @@
 .pfr2 small { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
 .pfr2.hit b { color: var(--fc); }
 .pfr2.over b { color: var(--danger); }
+/* Protein rechts in derselben Zeile */
+.pfr2 em { display: inline-flex; align-items: baseline; gap: 3px; margin-left: auto; font-family: var(--f-display); font-size: 18px; font-style: normal; font-weight: 900; }
+.pfr2 em .ic { align-self: center; width: 14px; height: 14px; color: var(--nc); }
 /* Trainingstag-Kachel wie die Vorschläge in Essen (Farbkante oben, Symbol, Name, Übungen · Dauer); antippen = bearbeiten, hochziehen = an einem Tag zusätzlich */
 .ptv {
   position: relative; display: grid; align-content: space-between; justify-items: start; gap: 3px; min-width: 0; min-height: 64px; padding: 7px 7px 6px 8px; border: 1px solid var(--line); border-top: 3px solid var(--pc);
@@ -139,12 +152,10 @@
 .pday.fl { animation: agfl .7s var(--ease); }
 .pd-h { display: flex; align-items: center; gap: 4px; }
 .pd-h b { flex: 1; font-family: var(--f-display); font-weight: 800; font-size: 19px; letter-spacing: .04em; text-transform: uppercase; }
-/* Kopf der Fokus-Karte: Glocke mit Zahl (Zu tun), Stift = Tag ändern (hervorgehoben, wenn der Tag eine Ausnahme hat) */
-.pd-n, .pd-e { position: relative; width: 38px; height: 38px; }
-.pd-n { color: var(--danger); }
+/* Glocke mit Zahl (Zu tun) im Kalenderkopf */
+.pd-n { position: relative; width: 38px; height: 38px; color: var(--danger); }
 .pd-n i { position: absolute; top: 3px; right: 2px; min-width: 15px; height: 15px; padding: 0 3px; border-radius: var(--r99); background: var(--danger); color: #fff; font: 700 9.5px/15px var(--f-mono); font-style: normal; }
-.pd-e.on { color: var(--ac); }
-.pd-n .ic, .pd-e .ic { width: 19px; height: 19px; }
+.pd-n .ic { width: 19px; height: 19px; }
 .ptg button .ic { width: 16px; height: 16px; color: var(--pc, var(--ink3)); }
 .pday > .pd-x > div { padding: 0; }
 .pday.open > .pd-x > div { padding: 10px 0 2px; }
@@ -314,9 +325,10 @@ button.pdb-h:active { background: var(--s2); }
 .pc2-g.swp .pc2.nop { opacity: .3; }
 .pc2.pick { box-shadow: inset 0 0 0 1.5px var(--ink); animation: pick 1.4s ease-in-out infinite; }
 @keyframes pick { 50% { background: var(--s2); } }
-.pc2 .ics em.sk { opacity: .3; }
-.pc2.skp .ics { position: relative; }
-.pc2.skp .ics::after { content: ""; position: absolute; left: -2px; right: -2px; top: 50%; height: 1.5px; background: var(--ink2); transform: rotate(-20deg); }
+/* Training, das an dem Tag nicht stattfindet (Urlaub/Krank: blass; ausgesetzt: blass und durchgestrichen) */
+.pc2 .ics em.sk { opacity: .35; }
+.pc2 .ics em.st { position: relative; }
+.pc2 .ics em.st::after { content: ""; position: absolute; left: -2px; right: -2px; top: 50%; height: 1.5px; background: var(--ink2); transform: rotate(-20deg); }
 /* Tag ändern */
 .pda button.act { border-color: var(--ac); background: color-mix(in srgb, var(--ac) 18%, var(--s2)); color: var(--ink); }
 .pdh { display: flex; align-items: center; gap: 8px; margin: 0; padding: 8px 10px; border-radius: var(--r10); background: var(--s2); font-size: 13px; font-weight: 700; color: var(--ink2); }
@@ -324,15 +336,18 @@ button.pdb-h:active { background: var(--s2); }
 .pdh .x { width: 30px; height: 30px; margin-left: auto; }
 /* Trainingsplan: Woche Mo–So als eine Karte (Wochentag + Symbol in der Farbe des Trainingstags, heute als dunkle Pille), darunter die Trainingstage als Kacheln */
 .pwks { margin-top: 16px; }
-.pwk { width: 100%; border: 1px solid var(--line); border-radius: var(--r14); background: var(--s1); box-shadow: var(--hs); color: var(--ink); font: inherit; }
-.pwk:active { transform: translateY(2px); box-shadow: none; }
-.pwk-w { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; padding: 8px 8px 9px; }
-.pwk-w span { display: grid; justify-items: center; gap: 5px; }
-.pwk-w small { display: grid; place-items: center; width: 20px; height: 18px; border-radius: var(--r8); font: 700 11px/1 var(--f-mono); color: var(--ink3); }
-.pwk-w .t small { background: var(--ink); color: var(--bg); }
-.pwk-w i { display: grid; place-items: center; width: 100%; max-width: 34px; height: 32px; border-top: 3px solid var(--pc); border-radius: var(--r8); background: color-mix(in srgb, var(--pc) 18%, var(--s1)); color: var(--pc); }
-.pwk-w i:not([style]) { border: 1px dashed var(--line); background: transparent; }
-.pwk-w .ic { width: 16px; height: 16px; }
+/* Woche: 7 Fächer wie die Mahlzeiten in Essen; belegt = erhabene Karte mit dem Workout (Farbkante, Symbol), leer = leicht vertieftes Fach; heute = Wochentag als dunkle Pille */
+.pwg { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+.pws { display: grid; justify-items: center; align-content: start; gap: 4px; min-width: 0; height: 74px; padding: 5px 2px; border: 1px solid var(--line); border-radius: var(--r12); background: var(--s1); box-shadow: var(--hs); cursor: pointer; }
+.pws.em { background: color-mix(in srgb, var(--ink) 3%, transparent); box-shadow: inset 0 2px 4px color-mix(in srgb, #000 8%, transparent); }
+.pws.sel { border-color: var(--ink2); }
+.pws.drop { border-color: var(--ac); box-shadow: 0 0 0 2px var(--ac); }
+.pws small { display: grid; place-items: center; width: 24px; height: 17px; border-radius: var(--r8); font: 700 10.5px/1 var(--f-mono); color: var(--ink3); }
+.pws.t small { background: var(--ink); color: var(--bg); }
+.pwsc { display: grid; place-items: center; width: 100%; max-width: 36px; height: 22px; border-top: 3px solid var(--pc); border-radius: var(--r8); background: color-mix(in srgb, var(--pc) 20%, var(--s1)); color: var(--pc); touch-action: none; }
+.pwsc .ic { width: 15px; height: 15px; }
+.pwsc.glass { position: relative; z-index: 5; box-shadow: 0 0 0 2px var(--pc), 0 8px 18px -8px rgba(0, 0, 0, .5); }
+.ptl2.drop { outline: 2px dashed var(--danger); outline-offset: 4px; border-radius: var(--r12); }
 .ptl2 { margin-top: 2px; }
 .ptv.pnew { place-items: center; border: 1px dashed var(--line); background: transparent; box-shadow: none; color: var(--ink3); }
 .ptv.pnew .ic { width: 20px; height: 20px; }

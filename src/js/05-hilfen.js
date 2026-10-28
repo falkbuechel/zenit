@@ -88,7 +88,9 @@
   P.sick = '<path d="M10 14.200V5a2 2 0 0 1 4 0v9.200a4 4 0 1 1-4 0z"/><path d="M12 10.500v6"/>';
   // Urlaub: Sonnenschirm im Sand; Pause: zwei Balken (Knopf im Kalender für Urlaub/Krank)
   P.beach = '<path d="M4 11a8 8 0 0 1 16 0z"/><path d="M12 3v1M12 11l-2.500 9"/><path d="M5 20.500c2-1 4-1 6.500 0s5 1 7.500 0"/>';
-  P.pause = '<path d="M9 6v12M15 6v12"/>';
+  // Tag ändern (Ereignisse): Kalenderblatt mit Plus; In Essen öffnen: Pfeil aus dem Kasten
+  P.calev = '<rect x="4" y="5.500" width="16" height="14.500" rx="2.500"/><path d="M8 3.500v4M16 3.500v4M4 10h16M12 12.500v5M9.500 15h5"/>';
+  P.open = '<path d="M13.500 5.500H18.500V10.500M18.500 5.500l-7.500 7.500"/><path d="M17 14v4a1.500 1.500 0 0 1-1.500 1.500h-9A1.500 1.500 0 0 1 5 18V9a1.500 1.500 0 0 1 1.500-1.500h4"/>';
   P.search = '<circle cx="10.500" cy="10.500" r="6.500"/><path d="m15.500 15.500 5 5"/>';
   P.cards = '<rect x="7.500" y="3.500" width="12" height="16" rx="2.500"/><path d="M5 6.500 4.500 7a2 2 0 0 0-.200 2.800l6.500 10.400a2 2 0 0 0 2.700.700"/><path d="M13.500 9.500v4M11.500 11.500h4"/>';
   // Nährwerte: kcal Flamme, Protein Keule, Fett zwei Tropfen, Kohlenhydrate drei Körner, Ballaststoffe Spross, Zucker drei Würfel

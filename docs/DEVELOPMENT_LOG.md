@@ -28,6 +28,15 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-29 – Planen: Woche zum Ziehen, Kalender-Ereignisse; Menüleiste; Gerichte ziehen
+- Menüleiste hell und flach: aktives Symbol in Akzent, gleitender Punkt darunter (`placeInd`), keine erhöhte Mitte mehr.
+- Kalender: aufgeklappt = 5 Wochen, Woche des gewählten Tags in der Mitte (`calMove` ±4 Wochen). Je Tag bis zu 3 farbige Symbole (Urlaub gold, Krank rot, Tausch, Training; ausgefallenes Training blass, ausgesetzt durchgestrichen). Urlaub/Krank als durchgehender Balken (`.pbar`, s/e = Anfang/Ende). Kopf: Glocke (Zu tun), Heute, „Tag ändern“ (`calev`, ein Fenster für Tauschen, Aussetzen, Ersetzen, Zusätzlich, Urlaub, Krank).
+- Tageskarte: Kurzname (Heute/Morgen/„Fr 31.10.“), großer Umschalter; Essen: Einkauf und „In Essen öffnen“ als Symbole im Kopf, eine Zeile kcal + Protein mit einem Balken; planbar nur kommende Tage und heute nur Mahlzeiten, deren Zeit noch nicht vorbei ist.
+- Training: „Woche“ = 7 Fächer des aktiven Plans (`weekM`, Änderungen direkt am aktiven Plan wie früher Speichern im Planer). Workout-Kachel ins Fach = jeden Wochentag; Workout im Fach auf anderes Fach = verschieben/tauschen; aus der Woche auf die Kacheln = entfernen; Fach antippen = Tag zeigen. Kacheln weiter auf Kalendertag/Tageskarte = zusätzlich.
+- Essen: Gerichte in Viertel-Portionen (Schritt 0,25, Anzeige ¼ ½ ¾, `r.g` mit 2 Stellen, `cleanFood` rundet `r.g` nicht mehr auf 0,1). „Gericht bearbeiten“ nur aus dem Gerichte-Menü, als Stift neben Eintragen. Gerichte-Fenster: Karte halten (0,3 s) und ziehen, Fenster gleitet weg (`.peek`), ablegen auf Mahlzeit = 1 Portion, danach geht es wieder auf.
+- Essen: Bilanz mit Licht von unten (Ellipse) und kräftigerem Schein (1,5 px); Vorschläge zur Mahlzeit in der Mahlzeitfarbe (Lückenfüller zählen als Vorschlag), Glas in der Kachelfarbe; leere Mahlzeiten als vertiefte Fächer; Fangbereich 56 px; Heute in der Tagesleiste als grüne Fläche ohne Ring.
+- Offen: Wochenplaner-Fenster (`viewPlanner`, `data-pman`) und Pläne-Liste haben keinen Einstieg mehr → beim nächsten Aufräumen entfernen oder als „Pläne“ wieder anbinden.
+
 ### 2026-10-28 – Planen im Essen-Stil mit Ziehen
 - Kalender: Pfeile weg (Blättern per Wischen), Kopf = Monat links, rechts „Heute“ (nur wenn weggewischt) und Pause (`data-pdedit="pause"`, Fenster nur Urlaub/Krank, neue Symbole `beach`/`sick`). Zellen mit festen Zeilen (`grid-template-rows`), springen nicht mehr.
 - Stift (`data-pdedit="1"`) = nur noch „Training ändern“ (Tauschen, Aussetzen, Ersetzen, Zusätzlich), ab heute und nicht im Urlaub.

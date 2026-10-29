@@ -11,7 +11,7 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Nicht committet: nichts.
 
 ## Offen / Ideen
-- iPhone-Test offen (29.10. spät): Schritte-Fade + Gleiten (Tippen/Wischen), Rezept einfügen mit echtem Text, Schnell (Gegessen/je, Merken über die Rückmeldung), Unterarten + Icons in der Suche, Hell-Schalter.
+- iPhone-Test offen (29.10. spät): weiche Fenster überall (gleitende Höhe; auf ruckeln achten), Gericht gleiche Höhe + Schritte auf/zu, Kalender wischen auf/zu, Ereignis-Kacheln, Vorlagen mit Namen, Mahlzeit-Kacheln im Tag; dazu Rezept einfügen, Schnell, Hell-Schalter.
 - Bekannt: aus Schnell gemerktes Stück-Lebensmittel zeigt in „Lebensmittel bearbeiten“ die Stück-Werte als „je 100 g“ (Rechengröße 100 = 1 Stück) – bei Bedarf eigene Stück-Ansicht.
 - Entscheidung offen: Link-Import für Rezepte über einen fremden CORS-Dienst (genauer, aber Abhängigkeit)?
 - Training in Planen: Tageskarte (Woche, Kacheln) evtl. noch kompakter; Trainingsplan-Fenster (`openDays`) noch im alten Kachelstil.
@@ -34,6 +34,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-29 – Weiche Fenster, Gericht/Suche kompakter, Planen: Kalender, Ereignis-Kacheln, Vorlagen mit Namen
+- Alle Fenster (`shMorph` in 10b): ändert sich die Höhe eines offenen Fensters, gleitet sie (ResizeObserver, Höhe px → px, danach frei); anderes Fenster (anderer Titel) blendet ein (`.sheet.sw`). `sheetOpen`/`closeSheet` setzen den Startwert zurück, damit frisch geöffnete nur hochgleiten.
+- Gericht: Zutaten-Ansicht so hoch wie die normale (`fpPaint` misst und setzt `min-height`; alle Neuzeichnungen des Mengen-Fensters laufen über `fpPaint`). Schritte auf/zu im Takt (Liste `max-height` + Fenster 480 ms), zu auch per Wischen nach unten. Zutaten-Namen bis zwei Zeilen, lange kleiner. Gerichte-Menü zu dritt je Zeile.
+- Suche: Kategorien zu zweit mit den Unterart-Icons in ihren Tönen; Zuletzt bis 8, nur so viele wie ohne Scrollen passen (`fresSet`/`fresFit`); Zeilen und Unterart-Leiste kompakter.
+- Planen-Kalender: senkrecht wischen klappt Monat auf/zu (15-start), Höhe gleitet (`calMon`); Monat bleibt beim Wählen offen. Urlaub/Krank als Zeichen oben links (`.nl`, Gegenstück zur Waage), Hauptplatz für bis zu 3 Trainings. Gewählter Tag in einer Reihe: kräftigerer Ton der Reihenfarbe statt Rahmen.
+- Tag ändern: Kacheln mit Farbkante (Training vier schmal: Tauschen, Aussetzen, Ersetzen, Dazu; Urlaub/Krank breit), aktiv = Ton + Haken.
+- Mahlzeit planen: Summe oben (kcal, Protein, Teile), Geplantes mit Icon im Ton, „Als Mahlzeit-Vorlage speichern“ als eigene Zeile → Name + Speichern → Bestätigung (`tplRowHtml`, `data-ptpm`/`data-ptpok`, `tplSave(k, di, mk, nm)`). Tag als Vorlage im eigenen Fenster (`openTplDay`). Vorlagen-Kacheln als Stapel; leere Kacheln „Mahlzeit speichern“/„Tag speichern“. Mahlzeit-Kacheln im Tag mit Namen und ersten Einträgen.
 
 ### 2026-10-29 – Lokale Vorschau in VS Code
 - `tools/serve.py`: baut, liefert `dist/` auf http://127.0.0.1:8000 (ohne Cache), baut bei Änderungen in `src/`, `public/`, `build.py` neu. `.vscode/tasks.json` startet es beim Öffnen des Ordners (Strg+Umschalt+B von Hand); Edge-Tools-Tab öffnet die Adresse direkt (`vscode-edge-devtools.defaultUrl`). `localhost` aus Claudes Sitzung war für den Edge-Tab nicht erreichbar → Server immer in VS Code starten.

@@ -270,11 +270,42 @@
   // Ein anderes Fenster macht die offene Mahlzeit überflüssig (außer Menge eines ihrer Einträge ändern): sie klappt beim nächsten Zeichnen zu
   function sheetOpen(html, tall) {
     // Offene Mahlzeit sofort zuklappen (auch unter dem Fenster sichtbar), außer beim Ändern eines ihrer Einträge
-    if (ui.fmeal && !(ui.sheet && (ui.sheet.fpick || (ui.sheet.food && ui.sheet.idx != null)))) { ui.fmeal = null; if (ui.tab === 'food') { ui.fresh = false; render(); } } $('sheet').className = 'sheet' + (tall ? ' tall' : ''); $('sheet').style.height = ''; $('sheet').innerHTML = html; $('shade').classList.add('open'); $('sheet').classList.add('open'); }
+    if (ui.fmeal && !(ui.sheet && (ui.sheet.fpick || (ui.sheet.food && ui.sheet.idx != null)))) { ui.fmeal = null; if (ui.tab === 'food') { ui.fresh = false; render(); } } if (!$('sheet').classList.contains('open')) shMorph.h = 0; $('sheet').className = 'sheet' + (tall ? ' tall' : ''); $('sheet').style.height = ''; $('sheet').style.minHeight = ''; $('sheet').innerHTML = html; $('shade').classList.add('open'); $('sheet').classList.add('open'); }
+  // Alle Fenster: ändert sich die Höhe eines offenen Fensters (anderer Inhalt, auf-/zuklappen), gleitet sie von der alten zur neuen (ResizeObserver misst vor dem Zeichnen);
+  // wechselt das Fenster selbst (anderer Titel), blendet der neue Inhalt ein. Frisch geöffnete Fenster gleiten nur hoch (shMorph.h = 0)
+  var shMorph = { h: 0, busy: 0, ms: 340, tm: null };
+  // Laufendes Gleiten sofort beenden (Schließen, Fenster ziehen): Inline-Höhe und -Übergang weg, damit die CSS-Übergänge wieder gelten
+  function shMorphStop() { var s = $('sheet'); clearTimeout(shMorph.tm); if (shMorph.busy) { s.style.height = ''; s.style.transition = ''; } shMorph.busy = 0; shMorph.ms = 340; s.style.minHeight = ''; }
+  (function () {
+    var s = $('sheet'); if (!s || !window.ResizeObserver) return;
+    new ResizeObserver(function () {
+      var n = s.offsetHeight, open = s.classList.contains('open');
+      if (shMorph.busy) return;
+      if (!open || !shMorph.h || Math.abs(n - shMorph.h) < 4 || matchMedia('(prefers-reduced-motion: reduce)').matches) { shMorph.h = open ? n : 0; shMorph.ms = 340; return; }
+      shMorph.busy = 1; s.style.height = shMorph.h + 'px'; void s.offsetHeight;
+      s.style.transition = 'height ' + shMorph.ms + 'ms var(--drawer), transform .34s var(--drawer)'; s.style.height = n + 'px';
+      shMorph.tm = setTimeout(function () { s.style.height = ''; s.style.transition = ''; shMorph.h = s.offsetHeight; shMorph.busy = 0; shMorph.ms = 340; }, shMorph.ms + 20);
+    }).observe(s);
+    new MutationObserver(function (ms) {
+      if (!s.classList.contains('open')) return;
+      var old = null; ms.forEach(function (m) { [].forEach.call(m.removedNodes, function (x) { if (x.classList && x.classList.contains('sh-h')) old = x.textContent; }); });
+      var cur = s.querySelector('.sh-h'); if (old == null || !cur || cur.textContent === old) return;
+      s.classList.remove('sw'); void s.offsetWidth; s.classList.add('sw'); clearTimeout(shMorph.t); shMorph.t = setTimeout(function () { s.classList.remove('sw'); }, 300);
+    }).observe(s, { childList: true });
+  })();
+  function fresSet() { $('fres').innerHTML = fresHtml(); fresFit(); }
+  // Zuletzt: bis zu 8, aber nur so viele, wie ohne Scrollen ins Fenster passen
+  function fresFit() {
+    var s = $('sheet'), r = $('fres'); if (!r || ui.fq.trim() || (ui.ftab || 'r') !== 'r') return;
+    // Gerade gleitende Höhe (shMorph) kurz lösen, damit die Endhöhe zählt
+    var hs = s.style.height, l = r.querySelectorAll('.fsi'), n = l.length; s.style.height = '';
+    while (n > 1 && s.scrollHeight > s.clientHeight + 1) l[--n].remove();
+    s.style.height = hs;
+  }
   function openFsearch(keep) {
     ui.sheet = { fsearch: true }; ui.fq = ''; ui.fcat = keep ? ui.fcat : ''; if (!keep) ui.ftab = 'c'; ui.fpick = null; if (!ui.fplan) ui.fday = dayIdx(Date.now()) - fSd();
     sheetOpen(shHead('search', ui.ingm ? 'Zutat' : 'Eintragen', ui.ingm ? 'Für das Gericht' : 'Lebensmittel oder Gericht suchen', !!ui.ingm) + '<div class="fqw"><input id="fq" class="fnm fq" type="search" placeholder="Suchen, z. B. Skyr" autocomplete="off" aria-label="Suchen"><button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button></div><div id="fres" class="fsr">' + fresHtml() + '</div>', true);
-    $('sheet').classList.add('fs');
+    $('sheet').classList.add('fs'); fresFit();
     setTimeout(function () { var i = $('fq'); if (i && !('ontouchstart' in window)) i.focus(); }, 350);
   }
   function fRow(id) {
@@ -323,7 +354,7 @@
       // Schnell gibt es nur noch als Zeile unter den Treffern (Suchtext = Name)
       if (tab === 'q') tab = 'r';
       h = '<div class="seg fst">' + [['r', 'Zuletzt'], ['c', 'Kategorien']].map(function (x) { return '<button data-ftab="' + x[0] + '" aria-pressed="' + (tab === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>';
-      if (tab === 'r') st.e.slice().sort(function (a, b) { return b.t - a.t; }).forEach(function (x) { if (list.length < 6 && x.r && fItem(x.r.i) && list.indexOf(x.r.i) < 0 && !(ui.ingm && /^d/.test(x.r.i))) list.push(x.r.i); });
+      if (tab === 'r') st.e.slice().sort(function (a, b) { return b.t - a.t; }).forEach(function (x) { if (list.length < 8 && x.r && fItem(x.r.i) && list.indexOf(x.r.i) < 0 && !(ui.ingm && /^d/.test(x.r.i))) list.push(x.r.i); });
       else if (ui.fcat) {
         h += '<button class="fcb" data-fcat="">' + ic('back') + ic(CATI[ui.fcat][0]) + '<b>' + (ui.fcat === 'u' ? 'Eigene' : FCATS.filter(function (c) { return c[0] === ui.fcat; })[0][1]) + '</b></button>';
         // Eigene mit Kategorie (gemerkt) stehen in ihrer Kategorie: mit Unterart in deren Abschnitt, sonst vorn unter „Eigene“.
@@ -346,7 +377,8 @@
         // Nach Farbe sortiert (warm → kühl), damit das Raster ruhig wirkt
         var CORD = 'e o f g h n r v s m d x';
         h += '<div class="fcl">' + cl.sort(function (a, b) { return CORD.indexOf(a[0]) - CORD.indexOf(b[0]); }).map(function (c) {
-          return '<button data-fcat="' + c[0] + '" style="--cc:' + (CCOL[c[0]] || CCOL.x) + '"><i class="fsc">' + ic(CATI[c[0]][0]) + '</i><b>' + c[1] + '</b><small>' + c[2] + '</small></button>';
+          return '<button data-fcat="' + c[0] + '" style="--cc:' + (CCOL[c[0]] || CCOL.x) + '"><i class="fsc">' + ic(CATI[c[0]][0]) + '</i><b>' + c[1] + '</b><small>' + c[2] + '</small>' +
+            '<span class="fcsb">' + FSUB.filter(function (s) { return s[0] === c[0]; }).map(function (s) { return '<i style="color:' + sbTone(s) + '">' + ic(s[3]) + '</i>'; }).join('') + '</span></button>';
         }).join('') + '</div>';
       }
       h += list.map(fRow).join('') + (tab === 'r' && !list.length ? '<p class="muted">Noch nichts eingetragen.</p>' : '');

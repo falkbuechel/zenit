@@ -97,7 +97,7 @@
       }, function () { var m = $('fsm'); if (m) m.textContent = 'Scanner nicht geladen (offline?)'; });
     }).catch(function () { var m = $('fsm'); if (m) m.textContent = 'Kamera nicht erlaubt'; });
   }
-  function pickFrom(id) { openPick(id); ui.sheet.from = 's'; $('sheet').innerHTML = fpickHtml(); }
+  function pickFrom(id) { openPick(id); ui.sheet.from = 's'; fpPaint(); }
   function scanHit(code) {
     if (ui.sheet && ui.sheet.mode === 'own') { buzz(20); openOwn(ui.odraft.id, code, ui.odraft); toast('Barcode erkannt', 'check'); return; }
     buzz(20); var ex = foodState().o.filter(function (o) { return o.bc === code; })[0];
@@ -117,7 +117,13 @@
   function openPick(id, a, edit) {
     var it = fItem(id); if (!it) return;
     ui.sheet = { fpick: true }; ui.fstpo = false; ui.fpick = { i: id, a: a != null ? a : it.dish ? 1 : it.d || (it.u.length ? it.u[it.ub && it.u[1] ? 1 : 0][1] : 100), edit: edit };
-    sheetOpen(fpickHtml(), true); $('sheet').classList.add('fp');
+    sheetOpen(fpickHtml(), true); $('sheet').classList.add('fp'); if (it.dish && ui.fingo) fpPaint();
+  }
+  function fpPaint() {
+    // Mengen-Fenster neu zeichnen; Zutaten-Ansicht eines Gerichts ist mindestens so hoch wie die normale (kein Springen beim Umschalten)
+    var s = $('sheet'), pk = ui.fpick, it = pk && fItem(pk.i), hs = s.style.height; s.style.minHeight = '';
+    if (it && it.dish && ui.fingo && !ui.fstpo) { s.style.height = ''; ui.fingo = false; s.innerHTML = fpickHtml(); var mh = s.offsetHeight; ui.fingo = true; s.innerHTML = fpickHtml(); s.style.minHeight = mh + 'px'; s.style.height = hs; }
+    else s.innerHTML = fpickHtml();
   }
   function fpickHtml() {
     var pk = ui.fpick, it = fItem(pk.i), back = !!(ui.sheet && ui.sheet.from), un = it.ml ? 'ml' : 'g', b0 = it.u[0];
@@ -212,7 +218,7 @@
     return dd.ing.filter(function (q) { return q.n || +q.a > 0; }).map(function (q) {
       // Ohne Menge (Gewürze, „nach Belieben“): n. B. statt Gramm
       var g = (+q.a || 0) * f, src = q.i && (FOODB[q.i] || fOwn(q.i)), ck = src && src.cat ? src.cat : q.i && /^u/.test(q.i) ? 'u' : 'x';
-      return '<span style="--cc:' + fTone(q.i, ck) + '">' + ic(fIco(q.i, ck)) + '<b>' + esc(q.n || 'Zutat') + '</b>' + (g > 0 ? '<em>' + (g < 20 ? Math.round(g) : Math.round(g / 5) * 5) + '</em>' : '<em class="nb">n. B.</em>') + '</span>';
+      return '<span style="--cc:' + fTone(q.i, ck) + '">' + ic(fIco(q.i, ck)) + '<b' + (String(q.n || '').length > 13 ? ' class="l"' : '') + '>' + esc(q.n || 'Zutat') + '</b>' + (g > 0 ? '<em>' + (g < 20 ? Math.round(g) : Math.round(g / 5) * 5) + '</em>' : '<em class="nb">n. B.</em>') + '</span>';
     }).join('') + '<div class="dgp">' + ['k', 'p', 'f', 'c'].map(function (k) { return '<span style="--nc:var(' + NCOL[k] + ')">' + ic(NIC[k]) + '<b>' + Math.round(v[k] || 0) + '</b></span>'; }).join('') + '</div>';
   }
   function fstpHtml(id, ed) {
@@ -437,4 +443,4 @@
     persist(); ui.fresh = false; render(); toast('Gericht gespeichert', 'check'); dishBack(o.id);
   }
   // Aus dem Editor zurück in die Übersicht des Gerichts (wie aus dem Gerichte-Menü geöffnet); neues, nicht gespeichertes Gericht → Gerichte-Menü
-  function dishBack(id) { if (!id || !fDish(id)) { openDishes(); return; } openPick(id); ui.sheet.from = 'd'; $('sheet').innerHTML = fpickHtml(); }
+  function dishBack(id) { if (!id || !fDish(id)) { openDishes(); return; } openPick(id); ui.sheet.from = 'd'; fpPaint(); }

@@ -15,7 +15,7 @@
     sMode = ''; if (e.touches.length !== 1) return;
     var t = e.touches[0], tg = e.target; sx = t.clientX; sy = t.clientY; st0 = Date.now(); sEl = tg; sheetDy = 0;
     if (tg.closest('#tabs')) sMode = 'bar';
-    else if (tg.closest('#sheet .grab, #sheet .sh-h')) sMode = 'sheet';
+    else if (tg.closest('#sheet .grab, #sheet .sh-h')) { sMode = 'sheet'; if (shMorph.busy) { var mh = $('sheet').style.minHeight; shMorphStop(); $('sheet').style.minHeight = mh; } }
     else if (!ui.sheet && tg.closest('.pcal2')) { sMode = 'cal'; calLock = ''; }
     else if (!ui.sheet && tg.closest('.fds')) { sMode = 'fds'; calLock = ''; }
     else if (!ui.sheet && tg.closest('#view') && !tg.closest('input,textarea,select,.wsp,[data-noswipe]')) sMode = 'page';
@@ -35,6 +35,9 @@
     var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy, m = sMode; sMode = '';
     if (m === 'sheet') { var sh = $('sheet'); sh.style.transition = ''; sh.style.transform = ''; if (sheetDy > 90) closeSheet(); return; }
     if (m === 'cal' || m === 'fds') {
+      // Kalender senkrecht: nach unten = Monat aufklappen, nach oben = wieder Woche
+      // Aufklappen nur, wenn die Seite oben steht (sonst war es ein Scrollen)
+      if (m === 'cal' && calLock === 'y' && Math.abs(dy) > 40 && (dy > 0) !== !!ui.cm && (dy < 0 || $('app').scrollTop <= 0)) { calMon(dy > 0); return; }
       if (calLock !== 'x') return;
       var fast = Math.abs(dx) / Math.max(1, Date.now() - st0) > 0.35, cg = document.querySelector(m === 'cal' ? '.pc2-g' : '.fds');
       if ((Math.abs(dx) > 50 || fast) && (m === 'cal' ? calMove : fdsMove)(dx < 0 ? 1 : -1)) return;

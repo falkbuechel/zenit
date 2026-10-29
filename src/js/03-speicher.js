@@ -11,6 +11,8 @@
     function nv(v, mx) { return Math.max(0, Math.min(mx, Math.round((+v || 0) * 10) / 10)); }
     // Menge der Quelle: zwei Nachkommastellen (Gerichte in Viertel-Portionen)
     function rg(v) { return Math.max(0, Math.min(5000, Math.round((+v || 0) * 100) / 100)); }
+    // Schnell: Menge + Einheit (qa), nur zum Anzeigen
+    function qa(x, o) { if (Array.isArray(x.qa) && +x.qa[0] > 0 && /^(g|ml|st|po)$/.test(x.qa[1])) o.qa = [rg(x.qa[0]), x.qa[1]]; return o; }
     var NX = ['f', 'c', 'fb', 'su'], g = f.g && f.g.a ? { a: 1 } : f.g && isFinite(f.g.k) && isFinite(f.g.p) && f.g.k > 0 && f.g.p > 0 ? { k: Math.round(f.g.k), p: Math.round(f.g.p) } : null;
     if (g && !g.a) NX.forEach(function (k) { if (+f.g[k] > 0) g[k] = Math.round(f.g[k]); });
     var e = f.e.filter(function (x) { return x && isFinite(x.t) && isFinite(x.k) && isFinite(x.p) && x.k >= 0 && x.p >= 0 && x.k <= 20000 && x.p <= 1000; }).map(function (x) {
@@ -18,27 +20,32 @@
       NX.forEach(function (k) { if (x[k] != null && isFinite(x[k])) o[k] = nv(x[k], 2000); });
       if (x.r && typeof x.r.i === 'string' && isFinite(x.r.g) && x.r.g > 0) o.r = { i: x.r.i.slice(0, 24), g: rg(x.r.g) };
       if (/^(fr|mi|sn|ab)$/.test(x.mk)) o.mk = x.mk;
-      return o;
+      return qa(x, o);
     });
     // pl: geplante Einträge (Tag d, Mahlzeit mk, Werte und Quelle wie e), höchstens 30 Tage zurück
     var pl = (Array.isArray(f.pl) ? f.pl : []).filter(function (x) { return x && isFinite(x.d) && x.d >= dayIdx(Date.now()) - 30 && /^(fr|mi|sn|ab)$/.test(x.mk) && isFinite(x.k) && x.k >= 0 && x.k <= 20000; }).slice(0, 400).map(function (x) {
       var o = { d: Math.round(x.d), mk: x.mk, n: String(x.n || '').slice(0, 30), k: Math.round(x.k), p: nv(x.p, 1000) };
       NX.forEach(function (k) { if (x[k] != null && isFinite(x[k])) o[k] = nv(x[k], 2000); });
       if (x.r && typeof x.r.i === 'string' && isFinite(x.r.g) && x.r.g > 0) o.r = { i: x.r.i.slice(0, 24), g: rg(x.r.g) };
-      return o;
+      return qa(x, o);
     });
-    var o = (Array.isArray(f.o) ? f.o : []).filter(function (x) { return x && typeof x.id === 'string' && /^u/.test(x.id) && typeof x.n === 'string'; }).slice(0, 600).map(function (x) {
-      var r = { id: x.id.slice(0, 24), n: x.n.slice(0, 30), k: nv(x.k, 1000), p: nv(x.p, 100), f: nv(x.f, 100), c: nv(x.c, 100), fb: nv(x.fb, 100), su: nv(x.su, 100), u: [] };
+    var o =(Array.isArray(f.o) ? f.o : []).filter(function (x) { return x && typeof x.id === 'string' && /^u/.test(x.id) && typeof x.n === 'string'; }).slice(0, 600).map(function (x) {
+      // k bis 3000: aus Schnell gemerkte Stück-Werte (Rechengröße 100 = 1 Stück, z. B. Pizza)
+      var r = { id: x.id.slice(0, 24), n: x.n.slice(0, 30), k: nv(x.k, 3000), p: nv(x.p, 100), f: nv(x.f, 100), c: nv(x.c, 100), fb: nv(x.fb, 100), su: nv(x.su, 100), u: [] };
       if (Array.isArray(x.u)) x.u.slice(0, 4).forEach(function (q) { if (Array.isArray(q) && typeof q[0] === 'string' && +q[1] > 0) r.u.push([q[0].slice(0, 12), nv(q[1], 5000)]); });
       if (typeof x.b === 'string' && x.b) r.b = x.b.slice(0, 24);
       if (typeof x.bc === 'string' && /^\d{6,14}$/.test(x.bc)) r.bc = x.bc;
       if (x.ml) r.ml = 1;
+      // cat: Such-Kategorie (beim Merken aus Schnell gewählt)
+      if (typeof x.cat === 'string' && FCATS.some(function (c) { return c[0] === x.cat; })) r.cat = x.cat;
       return r;
     });
     var d = (Array.isArray(f.d) ? f.d : []).filter(function (x) { return x && typeof x.id === 'string' && typeof x.n === 'string' && Array.isArray(x.ing); }).slice(0, 60).map(function (x) {
       return { id: x.id, n: x.n.slice(0, 30), por: Math.max(1, Math.min(50, +x.por || 1)), ing: x.ing.slice(0, 40).map(function (q) { var r = { n: String(q.n || '').slice(0, 30), a: Math.max(0, +q.a || 0), k: Math.max(0, +q.k || 0), p: Math.max(0, +q.p || 0) }; NX.forEach(function (k) { if (q[k] != null && isFinite(q[k])) r[k] = nv(q[k], 1000); }); if (typeof q.i === 'string') r.i = q.i.slice(0, 24); return r; }),
         // m: fest gewählte Mahlzeiten (fehlt = automatisch)
-        m: Array.isArray(x.m) ? x.m.filter(function (k) { return /^(fr|mi|sn|ab)$/.test(k); }).slice(0, 4) : undefined };
+        m: Array.isArray(x.m) ? x.m.filter(function (k) { return /^(fr|mi|sn|ab)$/.test(k); }).slice(0, 4) : undefined,
+        // st: Zubereitungsschritte (Text)
+        st: Array.isArray(x.st) ? x.st.filter(function (s) { return typeof s === 'string' && s.trim(); }).slice(0, 30).map(function (s) { return s.slice(0, 400); }) : undefined };
     });
     var w = (Array.isArray(f.w) ? f.w : []).filter(function (x) { return x && isFinite(x.t) && isFinite(x.kg) && x.kg >= 20 && x.kg <= 400; }).slice(-1500).map(function (x) { return { t: x.t, kg: Math.round(x.kg * 10) / 10 }; }).sort(function (a, b) { return a.t - b.t; });
     var EQK = EQUIP.map(function (x) { return x[0]; });

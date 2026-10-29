@@ -274,6 +274,20 @@
 .fqn .fnm { flex: 1; min-width: 0; }
 .fqn .x { flex: none; width: 46px; height: 46px; border: 1px solid var(--line); background: var(--s2); }
 .fqn .x[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); background: color-mix(in srgb, var(--gold) 14%, var(--s2)); }
+.fqn .x[aria-pressed="true"] .ic { fill: currentColor; }
+/* Schnell: Menge + Einheit in einer Zeile; Kategorie zum Merken als Icon-Reihe in der Kategoriefarbe */
+.fqa { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 6px; margin-bottom: 4px; }
+.fqa .fnm { margin: 0; font-family: var(--f-mono); font-weight: 600; text-align: center; }
+.fqa .seg { margin: 0; grid-template-columns: .8fr .8fr 1.2fr 1.3fr; }
+.fqa .seg button { min-height: 36px; padding: 0 2px; font-size: 13px; }
+.fqc { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 4px; }
+.fqc:empty { display: none; }
+.fqc button { display: grid; place-items: center; height: 40px; border: 1px solid var(--line); border-radius: var(--r10); background: var(--s1); color: var(--ink3); cursor: pointer; }
+.fqc button .ic { width: 18px; height: 18px; }
+.fqc button[aria-pressed="true"] { border-color: var(--cc); background: color-mix(in srgb, var(--cc) 16%, var(--s1)); color: var(--cc); }
+/* Schnell-Zeile unter den Treffern: Suchtext als Name, gestrichelt wie „neu“ */
+.fsi.fqk { --cc: var(--gold); border-style: dashed; }
+.fsi.fqk .fsc { color: var(--gold); }
 /* Gericht nach rechts gewischt: bereit zum Eintragen */
 .fdcb.arm { box-shadow: inset 3px 0 0 var(--ac); }
 .btn.fpdup { flex: none; width: 58px; padding: 0; }
@@ -337,7 +351,7 @@
 .fsi > em::after { content: " kcal"; font-size: 10px; color: var(--ink3); }
 .fsb { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
 /* Suche: Reiter, darunter immer gleiche Zeilen mit Kategorie-Icon */
-.seg.fst { grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 4px; }
+.seg.fst { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 0 4px; }
 /* Kategorie-Symbol schlicht grau (Farbe steckt nur in der Kante) */
 .fsc { display: grid; place-items: center; flex: none; width: 26px; height: 26px; color: var(--ink2); }
 .fsc .ic { width: 19px; height: 19px; }
@@ -488,12 +502,35 @@
 .fpgo { position: sticky; bottom: 0; z-index: 2; display: flex; gap: 8px; margin-top: 4px; background: var(--s1); box-shadow: 0 -8px 16px var(--s1); }
 .fpgo .btn.primary { flex: 1; min-width: 0; }
 .btn.fped { flex: none; width: 58px; padding: 0; }
-/* Zutaten eines Gerichts im Mengen-Fenster: kleine Pillen (Name + Menge), passen sich der Portionenzahl an */
-/* Zutaten (über den Topf im Kopf) statt der Nährwert-Kacheln: zwei Spalten Name … Menge, ruhig, passt sich der Portion an */
-.fing { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; padding: 4px 14px; border: 1px solid var(--line); border-top: 2px solid var(--ac); border-radius: var(--r12); background: var(--s1); animation: fade .18s var(--ease); }
-.fing span { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; min-width: 0; padding: 10px 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 50%, transparent); font-size: 15px; }
-.fing span:last-child { border-bottom: 0; }
-.fing em { font: 600 14px/1 var(--f-mono); font-style: normal; color: var(--ink2); }
+/* Pflichtfelder fehlen: Eintragen grau (Tippen sagt, was fehlt) */
+.fpgo .btn.off { opacity: .4; box-shadow: none; }
+/* Zutaten (über den Listen-Knopf im Kopf) statt der Nährwert-Kacheln: Chips zu zweit je Zeile in der Farbe ihrer Kategorie (Kante links), passen sich der Portion an */
+.fing { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; animation: fade .18s var(--ease); }
+.fing > span { display: flex; align-items: center; gap: 6px; min-width: 0; min-height: 38px; padding: 0 8px; border: 1px solid var(--line); border-radius: var(--r10);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--cc) 12%, var(--s1)), var(--s1) 60%); box-shadow: inset 2px 0 0 var(--cc); font-size: 13px; }
+.fing > span .ic { flex: none; width: 15px; height: 15px; color: var(--cc); }
+.fing b { flex: 1; min-width: 0; overflow: hidden; font-weight: 600; white-space: nowrap; text-overflow: ellipsis; }
+.fing em { flex: none; font: 600 12px/1 var(--f-mono); font-style: normal; color: var(--ink2); }
+.fing em::after { content: " g"; color: var(--ink3); }
+.fing .dgp { grid-column: 1 / -1; justify-content: center; gap: 16px; margin-top: 4px; }
+/* Griff zu den Schritten: nur angedeutet (Strich + Anzahl), antippen = Fenster ganz auf */
+.fstp { display: grid; justify-items: center; gap: 5px; width: 100%; padding: 6px 0 2px; border: 0; background: transparent; color: var(--ink3); font: inherit; cursor: pointer; }
+.fstp i { width: 44px; height: 4px; border-radius: 2px; background: var(--line); transition: transform .2s var(--ease); }
+.fstp[aria-expanded="true"] i { transform: scaleX(.6); }
+.fstp span { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; }
+.fstp .ic { width: 14px; height: 14px; }
+.fsts { display: grid; gap: 0; margin: 0; padding: 4px 14px; border: 1px solid var(--line); border-radius: var(--r12); background: var(--s1); list-style: none; counter-reset: st; animation: fade .18s var(--ease); }
+.fsts li { position: relative; padding: 11px 0 11px 30px; border-bottom: 1px solid color-mix(in srgb, var(--line) 50%, transparent); font-size: 14.5px; line-height: 1.4; counter-increment: st; }
+.fsts li:last-child { border-bottom: 0; }
+.fsts li::before { content: counter(st); position: absolute; top: 11px; left: 0; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--s3); font: 700 11px/1 var(--f-mono); color: var(--ink2); }
+.fsts:empty { display: none; }
+.fstn { margin: 0; text-align: center; }
+.sheet.tall.full { height: 90dvh; align-content: start; }
+/* Gericht-Editor: Schritte als nummerierte Textfelder; Rezept einfügen = großes Textfeld */
+.dst { display: grid; grid-template-columns: 22px minmax(0, 1fr) 42px; align-items: start; gap: 6px; margin-bottom: 6px; }
+.dst b { padding-top: 12px; font: 700 12px/1 var(--f-mono); color: var(--ink3); text-align: center; }
+.dst .fnm { height: auto; min-height: 46px; margin: 0; padding: 10px 12px; resize: vertical; line-height: 1.35; }
+.fnm.dimp { height: auto; min-height: 46dvh; padding: 12px; resize: none; line-height: 1.4; }
 .btn.fpdel { flex: none; width: 58px; padding: 0; border-color: color-mix(in srgb, var(--danger) 40%, var(--line)); background: color-mix(in srgb, var(--danger) 12%, var(--s1)); color: var(--danger); }
 /* Marke fehlt: Anlegen über die ganze Breite, kräftiger */
 .btn.fanl { width: 100%; border-color: var(--ac); background: color-mix(in srgb, var(--ac) 14%, var(--s1)); color: var(--ac); font-weight: 800; }

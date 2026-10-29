@@ -219,12 +219,17 @@
       '<b class="' + fitCls(nm, 8) + '">' + esc(nm) + '</b><span class="ftv"><span>' + Math.round(v.k) + '</span><small style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + Math.round(v.p) + '</small></span></button>';
   }
   // Kategorien: Icon und kurzer Name (Suche, Gegessen); Schlüssel wie FCATS, dazu Eigene, Gerichte, Schnell, Sonstiges
-  var CATI = { g: ['bread', 'Brot'], m: ['milk', 'Milch'], e: ['egg', 'Fleisch'], h: ['bean', 'Bohnen'], v: ['carrot', 'Gemüse'], o: ['snack', 'Obst'], n: ['nut', 'Nüsse'], s: ['candy', 'Süßes'], d: ['glass', 'Getränke'],
+  var CATI = { g: ['bread', 'Brot'], m: ['milk', 'Milch'], e: ['steak', 'Fleisch'], h: ['bean', 'Bohnen'], v: ['carrot', 'Gemüse'], o: ['snack', 'Obst'], n: ['nut', 'Nüsse'], s: ['candy', 'Süßes'], d: ['glass', 'Getränke'],
     f: ['burger', 'Fast Food'], r: ['food', 'Restaurant'], u: ['user', 'Eigene'], dish: ['pot', 'Gerichte'], q: ['bolt', 'Schnell'], x: ['food', 'Sonstiges'] };
+  // Icon je Lebensmittel, wo das Kategorie-Icon nicht passt (Fisch ist kein Ei); sonst das der Kategorie
+  var FICO = {}; [['fish', 'lachs thun garnel seela sushi'], ['steak', 'rhack rhack5 steak schwf kschin salami salamil schnitz steakb'], ['np', 'haehn pute'], ['egg', 'ei eiklar'],
+    ['cheese', 'gouda goudal mozz mozzl feta fetal parm huette frisch frischl'], ['cup', 'skyr mquark quark40 quark20 joghurt35 joghurt joghurt01 grjog grjog2 ppudd'], ['bottle', 'whey'],
+    ['drop', 'olivoel rapsoel butter halbf honig'], ['bowl', 'hafer muesli cornfl reis_r reis_g nud_r nud_g vknud quinoa cous ramen bowl'], ['burger', 'rburg burger']].forEach(function (g) { g[1].split(' ').forEach(function (id) { FICO[id] = g[0]; }); });
+  function fIco(id, ck) { return FICO[id] || (CATI[ck] || CATI.x)[0]; }
   // Kategorie eines Eintrags: Schlüssel aus FCATS, sonst Eigene, Gerichte oder Schnell
   function fCat(x) {
     var id = x.r && x.r.i, it = id && FOODB[id];
-    if (!id) return 'q'; if (/^d/.test(id)) return 'dish'; if (/^u/.test(id)) return 'u';
+    if (!id) return 'q'; if (/^d/.test(id)) return 'dish'; if (/^u/.test(id)) { var o = fOwn(id); return o && o.cat ? o.cat : 'u'; }
     return it && CATI[it.cat] ? it.cat : 'x';
   }
   function fCats(g) {
@@ -269,10 +274,10 @@
   }
   function fRow(id) {
     // Treffer-Zeile: Kategorie-Icon, Name, übliche Menge (Stück/Portion statt 100 g, Getränke 250 ml) mit allen nennenswerten Nährwerten (≥ 0,5 g), kcal dieser Menge
-    var it = fItem(id), uu = !it.dish && !it.pc && it.u.length ? it.u[it.ub && it.u[1] ? 1 : 0] : null, pa = it.dish ? 1 : it.pc ? it.d || it.u[it.ub ? 1 : 0][1] : uu ? uu[1] : it.ml ? 250 : 100, v = fNut(it, pa), ck = it.dish ? 'dish' : /^u/.test(id) ? 'u' : CATI[it.cat] ? it.cat : 'x';
+    var it = fItem(id), uu = !it.dish && !it.pc && it.u.length ? it.u[it.ub && it.u[1] ? 1 : 0] : null, pa = it.dish ? 1 : it.pc ? it.d || it.u[it.ub ? 1 : 0][1] : uu ? uu[1] : it.ml ? 250 : 100, v = fNut(it, pa), ck = it.dish ? 'dish' : CATI[it.cat] ? it.cat : /^u/.test(id) ? 'u' : 'x';
     // Darunter klein die Werte je 100 g (bei Gerichten je Portion) in festen Spalten: die drei, die für die Kategorie zählen (NREL, z. B. Zucker bei Süßem)
     var h100 = it.dish ? v : it, nr = NREL[ck] || NREL.x;
-    return '<button class="fsi" data-fpick="' + id + '" style="--cc:' + (CCOL[ck] || (ck === 'dish' ? 'var(--ac)' : CCOL.x)) + '"><i class="fsc">' + ic(CATI[ck][0]) + '</i><span><b>' + esc(fName(it)) + (it.b ? ' <small>' + esc(it.b) + '</small>' : '') + '</b>' +
+    return '<button class="fsi" data-fpick="' + id + '" style="--cc:' + (CCOL[ck] || (ck === 'dish' ? 'var(--ac)' : CCOL.x)) + '"><i class="fsc">' + ic(fIco(id, ck)) + '</i><span><b>' + esc(fName(it)) + (it.b ? ' <small>' + esc(it.b) + '</small>' : '') + '</b>' +
       '<small class="f100">' + nr.map(function (k) { return '<i style="--nc:var(' + NCOL[k] + ')" aria-label="' + NSH[k] + '">' + ic(NIC[k]) + fN(h100[k] || 0) + '</i>'; }).join('') + '<em>' + (it.dish ? '/Port.' : it.ml ? '/100 ml' : '/100 g') + '</em></small></span>' +
       '<i class="fsk"><b>' + Math.round(v.k) + '<small>kcal</small></b><small>' + (uu ? '1 ' + esc(uu[0]) : fAmt(it, pa)) + '</small></i></button>';
   }
@@ -306,19 +311,21 @@
       });
       sc.sort(function (a, b) { return a[1] - b[1]; });
       h = sc.length ? sc.slice(0, 30).map(function (x) { return fRow(x[0]); }).join('') : '<p class="muted">Hier nichts gefunden.</p>';
+      // Immer möglich: unter den Treffern den Suchtext als Schnell-Eintrag (nicht beim Zutat fürs Gericht)
+      if (!ui.ingm) h += '<button class="fsi fqk" data-fquick="1"><i class="fsc">' + ic('bolt') + '</i><span><b>„' + esc(ui.fq.trim().slice(0, 30)) + '“</b><small>Schnell ' + (ui.fplan ? 'einplanen' : 'eintragen') + ' · Menge und kcal selbst</small></span>' + ic('chev') + '</button>';
       h += '<div id="fon">' + fonHtml() + '</div>';
     } else {
-      // Zutat fürs Gericht: kein Schnell-Reiter
-      if (ui.ingm && tab === 'q') tab = 'r';
-      h = '<div class="seg fst">' + [['r', 'Zuletzt'], ['c', 'Kategorien']].concat(ui.ingm ? [] : [['q', 'Schnell']]).map(function (x) { return '<button data-ftab="' + x[0] + '" aria-pressed="' + (tab === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>';
+      // Schnell gibt es nur noch als Zeile unter den Treffern (Suchtext = Name)
+      if (tab === 'q') tab = 'r';
+      h = '<div class="seg fst">' + [['r', 'Zuletzt'], ['c', 'Kategorien']].map(function (x) { return '<button data-ftab="' + x[0] + '" aria-pressed="' + (tab === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>';
       if (tab === 'r') st.e.slice().sort(function (a, b) { return b.t - a.t; }).forEach(function (x) { if (list.length < 6 && x.r && fItem(x.r.i) && list.indexOf(x.r.i) < 0 && !(ui.ingm && /^d/.test(x.r.i))) list.push(x.r.i); });
-      else if (tab === 'q') h += quickHtml(null);
       else if (ui.fcat) {
         h += '<button class="fcb" data-fcat="">' + ic('back') + ic(CATI[ui.fcat][0]) + '<b>' + (ui.fcat === 'u' ? 'Eigene' : FCATS.filter(function (c) { return c[0] === ui.fcat; })[0][1]) + '</b></button>';
-        list = ui.fcat === 'u' ? st.o.map(function (x) { return x.id; }) : FOODS.filter(function (x) { return x.cat === ui.fcat && !x.vh; }).map(function (x) { return x.id; });
+        // Eigene mit Kategorie (aus Schnell gemerkt) stehen vorn in ihrer Kategorie
+        list = ui.fcat === 'u' ? st.o.map(function (x) { return x.id; }) : st.o.concat(FOODS).filter(function (x) { return x.cat === ui.fcat && !x.vh; }).map(function (x) { return x.id; });
       } else {
         // Kategorien alphabetisch in zwei Spalten, eigene Lebensmittel als eigene Kategorie
-        var cl = FCATS.map(function (c) { return [c[0], c[1], FOODS.filter(function (x) { return x.cat === c[0] && !x.vh; }).length]; }).concat(st.o.length ? [['u', 'Eigene', st.o.length]] : []);
+        var cl = FCATS.map(function (c) { return [c[0], c[1], st.o.concat(FOODS).filter(function (x) { return x.cat === c[0] && !x.vh; }).length]; }).concat(st.o.length ? [['u', 'Eigene', st.o.length]] : []);
         // Nach Farbe sortiert (warm → kühl), damit das Raster ruhig wirkt
         var CORD = 'e o f g h n r v s m d x';
         h += '<div class="fcl">' + cl.sort(function (a, b) { return CORD.indexOf(a[0]) - CORD.indexOf(b[0]); }).map(function (c) {

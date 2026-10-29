@@ -116,7 +116,7 @@
   }
   function openPick(id, a, edit) {
     var it = fItem(id); if (!it) return;
-    ui.sheet = { fpick: true }; ui.fpick = { i: id, a: a != null ? a : it.dish ? 1 : it.d || (it.u.length ? it.u[it.ub && it.u[1] ? 1 : 0][1] : 100), edit: edit };
+    ui.sheet = { fpick: true }; ui.fstpo = false; ui.fpick = { i: id, a: a != null ? a : it.dish ? 1 : it.d || (it.u.length ? it.u[it.ub && it.u[1] ? 1 : 0][1] : 100), edit: edit };
     sheetOpen(fpickHtml(), true); $('sheet').classList.add('fp');
   }
   function fpickHtml() {
@@ -140,19 +140,20 @@
     // Kopf: Marke wählen (eingebaute Lebensmittel) und Barcode direkt neben dem Schließen
     // Gericht: statt Barcode (hat keinen) der Zutaten-Knopf; an = Zutaten für die gewählte Portion statt der Nährwert-Kacheln
     var hasIng = it.dish && fDish(pk.i) && fDish(pk.i).ing.length, ingOn = hasIng && ui.fingo;
+    // Gericht bearbeiten nur aus dem Gerichte-Menü (nicht beim Ändern eines Eintrags): Stift in der Zeile von Eintragen, in der Zutaten-Ansicht oben im Kopf
+    var dEd = /^d/.test(pk.i) && !ui.ingm && pk.edit == null && ui.sheet && ui.sheet.from === 'd';
     var hd = shHead('food', fName(it), sub, back), hb = (FOODB[pk.i] && !it.pc && it.cat !== 'r' ? '<button class="x' + (ui.fbr && ui.fbr.i === pk.i ? ' on' : '') + '" data-fbr="1" aria-label="Marke wählen">' + ic('tag') + '</button>' : '') +
+      (ingOn && dEd ? '<button class="x" data-fde="' + pk.i + '" aria-label="Gericht bearbeiten">' + ic('edit') + '</button>' : '') +
       (it.dish ? (hasIng ? '<button class="x' + (ingOn ? ' on' : '') + '" data-fingo="1" aria-pressed="' + !!ingOn + '" aria-label="Zutaten">' + ic('ing') + '</button>' : '') : '<button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button>');
     hd = hd.replace('<button class="x" data-sheet-close', hb + '<button class="x" data-sheet-close');
     // Kompakt, ohne Scrollen: Menge (± und wischbar), 4 Schnellmengen, Nährwert-Icons mit Tagesbalken, Tag/Mahlzeit/Uhrzeit in einer Zeile, Eintragen mit „danach frei“
-    // Gericht bearbeiten nur aus dem Gerichte-Menü (nicht beim Ändern eines Eintrags): Stift in der Zeile von Eintragen
     var ex = /^u/.test(pk.i) ? '<button class="btn ghost small" data-fown="' + pk.i + '">' + ic('edit') + 'Lebensmittel bearbeiten</button>' : '';
-    var dEd = /^d/.test(pk.i) && !ui.ingm && pk.edit == null && ui.sheet && ui.sheet.from === 'd';
     return hd + '<div id="fbr">' + fbrHtml() + '</div>' + fvarHtml(it, pk.i) +
       '<div class="fstep"><button class="sb" data-fstep="-1" aria-label="Weniger">' + ic('minus') + '</button>' + amt + '<button class="sb" data-fstep="1" aria-label="Mehr">' + ic('plus') + '</button></div>' +
       // Gericht: keine Schnellmengen (Portion über ± bzw. Wischen in Vierteln), dafür die Zutaten als aufklappbare Zeile (zu: Vorschau der Namen, auf: Liste mit Mengen)
       (it.dish ? '' : '<div class="fpc">' + ch.map(function (c) { return '<button data-famt="' + c[0] + '" aria-pressed="' + (c[0] === pk.a) + '"' + (c[2] ? ' aria-label="Zuletzt: ' + fAmt(it, c[0]) + '">' + ic('clock') : '>') + fAmt(it, c[0], c[1]) + '</button>'; }).join('') + '</div>') +
-      // Zutaten an: nur die Kochliste (ganze Breite), kein Tag/Mahlzeit/Uhrzeit und kein Eintragen; Gericht bearbeiten bleibt als Stift darunter
-      (ingOn ? '<div class="fing" id="fing">' + fingHtml(pk.i, pk.a) + '</div>' + (dEd ? '<div class="fsb fpx"><button class="btn ghost small" data-fde="' + pk.i + '">' + ic('edit') + 'Gericht bearbeiten</button></div>' : '') :
+      // Zutaten an: Zutaten als Chips (zwei je Zeile), Nährwerte der Portionen in einer Zeile, darunter der Griff zu den Schritten; kein Tag/Mahlzeit/Uhrzeit und kein Eintragen
+      (ingOn ? '<div class="fing" id="fing">' + fingHtml(pk.i, pk.a) + '</div>' + fstpHtml(pk.i, dEd) :
       '<div class="ftot" id="ftot">' + ftotHtml(fNut(it, pk.a)) + '</div>' + (ui.ingm || ui.fplan ? '' : whenFor(pk.edit)) +
       // Eintragen und (beim Ändern) Löschen teilen sich die Zeile: Löschen klein, rot, nur Mülleimer
       '<div class="fpgo"><button class="btn primary big" data-fpadd="1">' + ic('check') + '<span>' + (ui.ingm ? 'Hinzufügen' : ui.fplan ? (ui.plEdit != null ? 'Ändern' : 'Einplanen') : pk.edit != null ? 'Ändern' : 'Eintragen') + (ui.ingm ? '' : '<small id="ffit">' + ffitHtml() + '</small>') + '</span></button>' +
@@ -205,30 +206,60 @@
     if ($('fing')) $('fing').innerHTML = fingHtml(pk.i, pk.a);
   }
   function fingHtml(id, por) {
-    // Zutaten eines Gerichts für die gewählte Portionenzahl (zum Kochen): Name links, Menge rechts (gerundet auf 5 g)
+    // Zutaten eines Gerichts für die gewählte Portionenzahl (zum Kochen) als Chips in der Farbe ihrer Kategorie: Icon, Name, Menge (gerundet auf 5 g); darunter die Nährwerte
     var dd = fDish(id); if (!dd || !dd.ing.length) return '';
-    var f = por / Math.max(1, +dd.por || 1);
+    var f = por / Math.max(1, +dd.por || 1), v = fNut(fItem(id), por);
     return dd.ing.filter(function (q) { return +q.a > 0; }).map(function (q) {
-      var g = (+q.a || 0) * f; return '<span>' + esc(q.n || 'Zutat') + '<em>' + (g < 20 ? Math.round(g) : Math.round(g / 5) * 5) + ' g</em></span>';
-    }).join('');
+      var g = (+q.a || 0) * f, src = q.i && (FOODB[q.i] || fOwn(q.i)), ck = src && src.cat ? src.cat : q.i && /^u/.test(q.i) ? 'u' : 'x';
+      return '<span style="--cc:' + (CCOL[ck] || CCOL.x) + '">' + ic(fIco(q.i, ck)) + '<b>' + esc(q.n || 'Zutat') + '</b><em>' + (g < 20 ? Math.round(g) : Math.round(g / 5) * 5) + '</em></span>';
+    }).join('') + '<div class="dgp">' + ['k', 'p', 'f', 'c'].map(function (k) { return '<span style="--nc:var(' + NCOL[k] + ')">' + ic(NIC[k]) + '<b>' + Math.round(v[k] || 0) + '</b></span>'; }).join('') + '</div>';
+  }
+  function fstpHtml(id, ed) {
+    // Griff zu den Schritten: zu = nur angedeutet (Griff, Anzahl); auf = Fenster ganz hoch, nummerierte Schritte; ohne Schritte der Weg zum Hinzufügen (nur aus dem Gerichte-Menü)
+    var dd = fDish(id), st = dd && dd.st || [], on = !!ui.fstpo;
+    return '<button class="fstp" data-fstp="1" aria-expanded="' + on + '"><i></i><span>' + ic('ing') + (st.length ? st.length + (st.length === 1 ? ' Schritt' : ' Schritte') : 'Schritte') + '</span></button>' +
+      (on ? '<ol class="fsts">' + st.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ol>' +
+        (!st.length ? '<p class="muted fstn">Noch keine Schritte.</p>' : '') + (ed ? '<div class="fsb fpx"><button class="btn ghost small" data-fde="' + id + '">' + ic('plus') + (st.length ? 'Schritte ändern' : 'Schritte hinzufügen') + '</button></div>' : '') : '');
   }
   function nTile(id, k, v, big, u) {
     // Nährwert-Eingabe als Kachel wie im Mengen-Fenster (Farbkante oben, Icon + Einheit, Zahl groß); in .ntg: big = halbe Breite, sonst Viertel
     return '<label class="ntl' + (big ? ' big' : '') + '" style="--nc:var(' + NCOL[k] + ')"><i>' + ic(NIC[k]) + '<small>' + (u || (k === 'k' ? 'kcal' : 'g')) + '</small></i>' +
       '<input id="' + id + '" type="number" inputmode="decimal" min="0" value="' + (v == null ? '' : v) + '" placeholder="0" aria-label="' + (k === 'k' ? 'Kalorien' : NSH[k]) + '"></label>';
   }
+  // Schnell: Einheiten der Menge (Werte gelten für die ganze Menge)
+  var QU = [['g', 'g'], ['ml', 'ml'], ['st', 'Stück'], ['po', 'Portion']];
   function quickHtml(idx) {
-    // Schnell eintragen ohne Lebensmittel (z. B. Restaurant): kcal und Nährwerte, Name, Tag/Mahlzeit/Uhrzeit; auch als Reiter in der Suche
-    var x = idx != null ? foodState().e[idx] : null;
-    return '<div class="ntg">' + NK.map(function (k) { return nTile('f-' + k, k, x ? x[k] : null, k === 'k' || k === 'p'); }).join('') + '</div>' +
-      '<div class="fqn"><input id="f-n" class="fnm" type="text" maxlength="30" placeholder="Name (optional)" value="' + (x ? esc(x.n) : '') + '" aria-label="Name">' +
-      (x ? '' : '<button class="x" data-fqm="1" aria-pressed="' + !!ui.fqm + '" aria-label="Als eigenes Lebensmittel merken">' + ic('star') + '</button>') + '</div>' + (ui.fplan ? '' : whenFor(idx)) +
+    // Schnell eintragen, ob es das Lebensmittel gibt oder nicht: Name (aus der Suche), Menge + Einheit, Nährwerte dieser Menge, Tag/Mahlzeit/Uhrzeit.
+    // Stern = als eigenes Lebensmittel merken, dann Kategorie wählen. Eintragen bleibt grau, bis kcal da sind (beim Merken auch Name, Menge, Kategorie)
+    var x = idx != null ? foodState().e[idx] : null, q = ui.fqd;
+    return '<div class="fqn"><input id="f-n" class="fnm" type="text" maxlength="30" placeholder="Name, z. B. Döner" value="' + esc(q.n) + '" aria-label="Name">' +
+      (x ? '' : '<button class="x" data-fqm="1" aria-pressed="' + !!ui.fqm + '" aria-label="Als eigenes Lebensmittel merken">' + ic('star') + '</button>') + '</div>' +
+      '<div class="fqa"><input id="f-a" class="fnm" type="number" inputmode="decimal" min="0" placeholder="Menge" value="' + (q.a || '') + '" aria-label="Menge">' +
+      '<div class="seg">' + QU.map(function (u) { return '<button data-fqu="' + u[0] + '" aria-pressed="' + (q.u === u[0]) + '">' + u[1] + '</button>'; }).join('') + '</div></div>' +
+      '<div id="fqc" class="fqc">' + fqcHtml() + '</div>' +
+      '<div class="ntg">' + NK.map(function (k) { return nTile('f-' + k, k, x ? x[k] : null, k === 'k' || k === 'p'); }).join('') + '</div>' + (ui.fplan ? '' : whenFor(idx)) +
       '<div class="fpgo"><button class="btn primary big" data-fsave="1">' + ic('check') + (x ? 'Ändern' : ui.fplan ? 'Einplanen' : 'Eintragen') + '</button>' + (x ? '<button class="btn big fpdel" data-fdel="' + idx + '" aria-label="Eintrag löschen">' + ic('trash') + '</button>' : '') + '</div>' +
       (x ? '' : '<div class="fsb fpx"><button class="btn ghost small" data-fown="new">' + ic('plus') + 'Lebensmittel je 100 g anlegen</button></div>');
   }
-  function openQuick(idx) {
+  function fqcHtml() {
+    // Kategorie zum Merken (nur mit Stern): Icons der Such-Kategorien
+    return ui.fqm ? FCATS.map(function (c) { return '<button data-fqc="' + c[0] + '" style="--cc:' + (CCOL[c[0]] || CCOL.x) + '" aria-pressed="' + (ui.fqd.cat === c[0]) + '" aria-label="' + c[1] + '">' + ic(CATI[c[0]][0]) + '</button>'; }).join('') : '';
+  }
+  function quickRead() {
+    // Felder lesen; fehlt Pflichtiges, ist Eintragen gesperrt (grau)
+    var q = ui.fqd, v = function (k) { var e = $('f-' + k), f = e ? parseFloat(e.value) : NaN; return isFinite(f) && f >= 0 ? f : null; };
+    if (!$('f-n')) return null;
+    q.n = $('f-n').value; q.a = (v('a') || 0) >= 0.1 ? v('a') : 0; q.v = {}; NK.forEach(function (k) { q.v[k] = v(k); });
+    q.ok = (q.v.k || 0) > 0 && q.v.k <= 20000 && (q.v.p || 0) <= 1000 && (!ui.fqm || (q.n.trim() && q.a > 0 && q.cat));
+    var b = document.querySelector('[data-fsave]'); if (b) b.classList.toggle('off', !q.ok);
+    return q;
+  }
+  function openQuick(idx, name) {
+    var x = idx != null ? foodState().e[idx] : null;
+    ui.fqd = { n: x ? x.n : name || '', a: x && x.qa ? x.qa[0] : '', u: x && x.qa ? x.qa[1] : 'g', cat: '' };
     ui.sheet = { food: true, idx: idx }; if (!ui.fplan) ui.fday = dayIdx(Date.now()) - fSd(); ui.fqm = false;
-    sheetOpen(shHead('bolt', idx != null ? 'Eintrag ändern' : ui.fplan ? 'Schnell einplanen' : 'Schnell eintragen', 'Ohne Lebensmittel, z. B. Restaurant') + quickHtml(idx), true);
+    sheetOpen(shHead('bolt', idx != null ? 'Eintrag ändern' : ui.fplan ? 'Schnell einplanen' : 'Schnell eintragen', 'Werte für die ganze Menge') + quickHtml(idx), true);
+    quickRead();
   }
   function openOwn(id, bc, dr) {
     // dr: Entwurf aus dem Formular (zurück vom Barcode-Scan)
@@ -294,6 +325,11 @@
             '<div class="ntg two">' + nTile('di-k-' + i, 'k', q.k, false, 'kcal / 100 g') + nTile('di-p-' + i, 'p', q.p, false, 'g / 100 g') + '</div>') + '</div>';
       }).join('') +
       '<div class="fsb dga"><button class="btn small" data-dgs="1">' + ic('search') + 'Zutat suchen</button><button class="btn small" data-dga="1">' + ic('plus') + 'Von Hand</button></div>' +
+      // Schritte: nummeriert, frei als Text; Rezept einfügen füllt Zutaten und Schritte aus kopiertem Text
+      '<h3 class="xg">' + ic('ing') + 'Schritte</h3>' + (dd.st || []).map(function (s, i) {
+        return '<div class="dst"><b>' + (i + 1) + '</b><textarea id="ds-' + i + '" class="fnm" rows="2" maxlength="400" placeholder="Was ist zu tun?" aria-label="Schritt ' + (i + 1) + '">' + esc(s) + '</textarea><button class="xs2" data-dsx="' + i + '" aria-label="Schritt entfernen">' + ic('close') + '</button></div>';
+      }).join('') +
+      '<div class="fsb dga"><button class="btn small" data-dsa="1">' + ic('plus') + 'Schritt</button><button class="btn small" data-dimp="1">' + ic('paste') + 'Rezept einfügen</button></div>' +
       '<div class="fpgo"><button class="btn primary big" data-dsave="1">' + ic('check') + 'Speichern</button>' + (dd.id ? '<button class="btn big fpdup" data-ddup="1" aria-label="Als Kopie anlegen">' + ic('cards') + '</button><button class="btn big fpdel" data-ddel="1" aria-label="Gericht löschen">' + ic('trash') + '</button>' : '') + '</div>';
   }
   function dishTotHtml(t) {
@@ -313,6 +349,65 @@
       function v(k) { var e = $('di-' + k + '-' + i); if (!e) return q[k]; var f = parseFloat(e.value); return isFinite(f) ? f : ''; }
       q.n = $('di-n-' + i).value; q.a = v('a'); q.k = v('k'); q.p = v('p');
     });
+    dd.st = (dd.st || []).map(function (s, i) { var e = $('ds-' + i); return e ? e.value : s; });
+  }
+  function openDishImp() {
+    readDraft(); ui.sheet = { dishImp: true };
+    sheetOpen(shHead('paste', 'Rezept einfügen', 'Auf der Rezeptseite markieren, kopieren, hier einfügen', true) +
+      '<textarea id="dimp-t" class="fnm dimp" rows="12" placeholder="Zutaten&#10;500 g Rinderhack&#10;1 Dose Kidneybohnen&#10;2 Zwiebeln&#10;&#10;Zubereitung&#10;Zwiebeln würfeln und anbraten …" aria-label="Rezepttext"></textarea>' +
+      '<button class="btn primary big" data-dimpok="1">' + ic('check') + 'Übernehmen</button>', true);
+  }
+  // Rezepttext lesen: Abschnitte „Zutaten“ / „Zubereitung“, Zeilen mit Menge vorn („200 g …“, „1 EL …“, „½ Dose …“) oder hinten („… 200 g“) sind Zutaten,
+  // lange Zeilen und alles nach „Zubereitung“ sind Schritte, „für 4 Portionen“ setzt die Portionen. Gramm aus der Einheit, Stück aus der Portion des passenden Lebensmittels
+  var RU = { g: 1, gr: 1, gramm: 1, kg: 1000, ml: 1, l: 1000, liter: 1000, cl: 10, el: 15, essloffel: 15, tl: 5, teeloffel: 5, prise: 1, prisen: 1, msp: 1, becher: 200, dose: 400, dosen: 400, glas: 300,
+    pck: 10, pack: 10, packung: 200, paeckchen: 10, packchen: 10, bund: 30, zehe: 4, zehen: 4, scheibe: 25, scheiben: 25, tasse: 150, tassen: 150, handvoll: 30, stuck: 0, stk: 0, st: 0 };
+  function rNum(s) { s = s.replace(',', '.'); var fr = { '½': 0.5, '¼': 0.25, '¾': 0.75, '⅓': 0.33, '⅔': 0.67 }; if (fr[s]) return fr[s]; var m = /^(\d+)\s*\/\s*(\d+)$/.exec(s); return m ? +m[1] / +m[2] : parseFloat(s); }
+  function ingMatch(name) {
+    // Passendes Lebensmittel: ganzer Name im Text, sonst gleicher Wortanfang (ab 4 Buchstaben, z. B. „Zwiebeln“ → Zwiebel); längster Treffer gewinnt
+    var q = fnorm(name), ws = q.split(/[^a-z0-9]+/).filter(function (w) { return w.length >= 4; }), best = null, bs = 0;
+    foodState().o.concat(FOODS.filter(function (x) { return !x.vh; })).forEach(function (x) {
+      var fn = fnorm(fName(x)), t0 = fn.split(/[^a-z0-9]+/)[0], s = q.indexOf(fn) >= 0 ? fn.length * 2 : t0.length >= 4 && ws.some(function (w) { return w.indexOf(t0) === 0 || t0.indexOf(w) === 0; }) ? t0.length : 0;
+      if (s > bs) { bs = s; best = x; }
+    });
+    return best;
+  }
+  function ingLine(l) {
+    var m = /^(\d+(?:[.,]\d+)?(?:\s*\/\s*\d+)?|[½¼¾⅓⅔])(?:\s*(?:-|–|bis)\s*\d+(?:[.,]\d+)?)?\s*([A-Za-zÄÖÜäöüß.]+)?\s*(.*)$/.exec(l), a, u = null, n;
+    if (m) { a = rNum(m[1]); var uw = fnorm((m[2] || '').replace(/\.$/, '')); if (m[2] && RU[uw] != null) { u = uw; n = m[3]; } else n = ((m[2] || '') + ' ' + m[3]).trim(); }
+    else { m = /^(.+?)\s+(\d+(?:[.,]\d+)?)\s*(g|kg|ml|l)\.?$/i.exec(l); if (!m) return null; n = m[1]; a = rNum(m[2]); u = m[3].toLowerCase(); }
+    n = n.replace(/\(.*?\)/g, '').split(/,|\boder\b/)[0].replace(/\s+/g, ' ').trim(); if (!n || !(a > 0)) return null;
+    // Ohne bekannte Einheit nur mit passendem Lebensmittel („10 Minuten backen“ ist keine Zutat)
+    var it = ingMatch(n); if (!u && !it) return null;
+    var g =u && RU[u] ? a * RU[u] : a * (it && it.u[0] ? it.u[0][1] : 100);
+    var r = { n: n.slice(0, 30), a: Math.round(g), k: '', p: '' };
+    if (it) { r.k = it.k; r.p = it.p; r.i = it.id; ['f', 'c', 'fb', 'su'].forEach(function (k) { if (it[k] != null) r[k] = it[k]; }); }
+    return r;
+  }
+  function rcpParse(txt) {
+    var mode = '', o = { n: '', por: 0, ing: [], st: [] };
+    txt.split(/\r?\n/).map(function (s) { return s.replace(/^[\s•·*▢□☐✓-]+/, '').replace(/\s+/g, ' ').trim(); }).filter(Boolean).forEach(function (l) {
+      var lw = fnorm(l), pm = /(\d+)\s*(portion|person)/.exec(lw);
+      if (/^(zutaten|einkaufsliste)\b/.test(lw)) { mode = 'i'; if (pm) o.por = +pm[1]; return; }
+      if (/^(zubereitung|anleitung|schritte|so geht|arbeitsschritte|zubereitungsschritte)\b/.test(lw)) { mode = 's'; return; }
+      if (/^schritt \d+$/.test(lw)) return;
+      if (/^\d+[.)]\s+\S/.test(l)) { o.st.push(l.replace(/^\d+[.)]\s*/, '').slice(0, 400)); return; }
+      if (pm && l.length < 40 && /\b(fur|zutaten|ergibt|reicht)\b|^\d+ (portionen|personen)$/.test(lw)) { o.por = +pm[1]; return; }
+      var ig = mode !== 's' && l.length <= 70 ? ingLine(l) : null;
+      if (ig) { o.ing.push(ig); return; }
+      if (mode === 'i' && l.length <= 40) { o.ing.push({ n: l.slice(0, 30), a: '', k: '', p: '' }); return; }
+      if (mode === 's' || l.length > 45) { o.st.push(l.replace(/^(schritt\s*)?\d+[.):]\s*/i, '').slice(0, 400)); return; }
+      if (!o.n && !mode && !/\d/.test(l)) o.n = l.slice(0, 30);
+    });
+    return o;
+  }
+  function dishImp() {
+    var r = rcpParse($('dimp-t').value), dd = ui.dd;
+    if (!r.ing.length && !r.st.length) { toast('Keine Zutaten erkannt', 'bolt'); return; }
+    dd.ing = dd.ing.filter(function (q) { return q.n || q.a !== ''; }).concat(r.ing); if (!dd.ing.length) dd.ing.push({ n: '', a: '', k: '', p: '' });
+    dd.st = (dd.st || []).concat(r.st); if (!dd.n && r.n) dd.n = r.n; if (r.por) dd.por = Math.min(50, r.por);
+    var miss = r.ing.filter(function (q) { return !q.i; }).length;
+    ui.sheet = { dishEdit: true }; sheetOpen(dishEditHtml(), true);
+    toast(r.ing.length + ' Zutaten, ' + r.st.length + ' Schritte' + (miss ? ' · ' + miss + ' ohne Werte' : ''), miss ? 'bolt' : 'check', true);
   }
   function saveDish() {
     readDraft(); var dd = ui.dd, ing = dd.ing.filter(function (q) { return (+q.a || 0) > 0 && ((+q.k || 0) > 0 || (+q.p || 0) > 0); });
@@ -322,6 +417,7 @@
       var r = { n: (q.n || '').trim().slice(0, 30), a: +q.a || 0, k: +q.k || 0, p: +q.p || 0 }; ['f', 'c', 'fb', 'su'].forEach(function (k) { if (q[k] != null) r[k] = +q[k] || 0; }); if (q.i) r.i = q.i; return r;
     }) };
     if (dd.m && dd.m.length) o.m = dd.m.slice();
+    var sts = (dd.st || []).map(function (s) { return s.trim(); }).filter(Boolean); if (sts.length) o.st = sts;
     var ix = st.d.map(function (y) { return y.id; }).indexOf(o.id); if (ix >= 0) st.d[ix] = o; else st.d.push(o);
     persist(); ui.fresh = false; render(); toast('Gericht gespeichert', 'check'); openDishes();
   }

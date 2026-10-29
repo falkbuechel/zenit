@@ -11,7 +11,9 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Nicht committet: nichts.
 
 ## Offen / Ideen
-- iPhone-Test offen (29.10. Runde): Zutatenliste im Gericht, gestrichelte geplante Tage, ruhigere Suche, Nährwert-Kacheln in den Fenstern, Editor als Liste. Schnell öffnete in Chromium aus Suche-Reiter und „Mahlzeit planen“ – falls es am iPhone weiter hakt: wo genau getippt?
+- iPhone-Test offen (29.10. spät): Gericht-Chips + Schritte-Griff, Rezept einfügen (mit echtem Rezepttext, z. B. Chefkoch), Schnell aus der Suche (Menge/Einheit, Merken + Kategorie), Icons in der Suche, helles Design der Fokus-Karte.
+- Bekannt: aus Schnell gemerktes Stück-Lebensmittel zeigt in „Lebensmittel bearbeiten“ die Stück-Werte als „je 100 g“ (Rechengröße 100 = 1 Stück) – bei Bedarf eigene Stück-Ansicht.
+- Entscheidung offen: Link-Import für Rezepte über einen fremden CORS-Dienst (genauer, aber Abhängigkeit)?
 - Training in Planen: Tageskarte (Woche, Kacheln) evtl. noch kompakter; Trainingsplan-Fenster (`openDays`) noch im alten Kachelstil.
 - Menüleiste: ernst und modern, aber mit etwas mehr Charakter – weiter abstimmen.
 - Woche ziehen ändert den aktiven Plan auch rückwirkend (vergangene Kalendersymbole/Serie können sich verschieben) – ggf. Änderung ab heute als neuer Planstand.
@@ -32,6 +34,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-29 – Gericht-Schritte und Rezept einfügen, Schnell aus der Suche, Icons je Lebensmittel, Fokus-Karte hell
+- Gericht (Zutaten-Knopf): Zutaten als Chips zu zweit in Kategoriefarbe mit Icon, Nährwerte der Portion in einer Zeile, darunter Griff „Schritte“ (`data-fstp`, `ui.fstpo`): Fenster ganz auf (`.sheet.tall.full`), nummerierte Schritte. Stift zum Bearbeiten im Kopf (nur aus dem Gerichte-Menü).
+- Gericht-Editor: Schritte (`d[].st`, Textfelder `ds-i`, `data-dsa`/`data-dsx`), „Rezept einfügen“ (`openDishImp`, `rcpParse`, `ingLine`, `ingMatch`): Text von der Rezeptseite kopieren; Zutaten mit Menge vorn/hinten, Einheiten EL/TL/Dose/Stück … in Gramm, Abgleich mit der Datenbank, Rest als Schritte, „für 4 Portionen“. Zutaten ohne Werte bleiben von Hand (fallen ohne Werte beim Speichern weg).
+- Link-Import (schema.org über fremden CORS-Dienst) bewusst noch nicht: genauer, aber Abhängigkeit → erst nach Falks Okay.
+- Schnell: Reiter in der Suche entfernt; stattdessen immer Zeile „„Suchtext“ schnell eintragen“ unter den Treffern (`data-fquick`). Fenster neu: Name, Menge + Einheit (g/ml/Stück/Portion, `qa`), Nährwerte der Menge; Stern füllt sich, zeigt Kategorie-Icons (`data-fqc`), Merken legt eigenes Lebensmittel mit `cat` an. Eintragen grau (`.btn.off`), bis kcal da sind (beim Merken auch Name, Menge, Kategorie); Tippen sagt, was fehlt.
+- Suche: Icons je Lebensmittel (`FICO`: Fisch, Fleisch, Käse, Becher, Schale, Öl …), Kategorie „Eier, Fleisch & Fisch“ mit Steak-Icon. Eigene mit Kategorie erscheinen in ihrer Kategorie.
+- Hell: Fokus-Karte (`.dkc`) nicht mehr schwarz, sondern fast weiß mit Salbeikante (eigene helle Token in `.dkc` für hell).
 
 ### 2026-10-29 – Gericht-Zutaten, geplante Tage gestrichelt, Suche ruhiger, Nährwert-Kacheln, Editor als Liste
 - Gericht-Fenster: Zutaten-Knopf mit neuem Listen-Icon (`P.ing`); Zutaten an = einspaltige Kochliste, ohne Tag/Mahlzeit/Uhrzeit und Eintragen, darunter nur „Gericht bearbeiten“ (aus dem Gerichte-Menü).

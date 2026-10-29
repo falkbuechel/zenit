@@ -154,6 +154,19 @@ button:active:not(:disabled) { transform: scale(.97); }
   --g-pull: #45b39f; --g-push: #e8843c; --g-core: #d9628f; --g-kh: #9a86dd; --g-skill: #b7c94b; --g-cardio: #4aa2d6; --g-mob: #e3b83d; --gold: #f2c14e; --flame: #f0822b;
   --hs: 0 2px 0 rgba(0, 0, 0, .55); color: var(--ink);
 }
+/* Hell: kein schwarzer Block, sondern wie im Dunklen nur leicht abgesetzt – fast weiß, Salbeikante und Schein kommen aus der Karte selbst (z. B. .fbal) */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .dkc {
+    --ink: #171c13; --ink2: #3a4230; --ink3: #606a55; --s1: #fbfcf8; --s2: #eef1ea; --s3: #dfe4d8; --line: #c9d0bf; --ac: #456b31; --danger: #b8321f; --bg: #eef1ea; --on: #ffffff;
+    --g-pull: #1a7f6e; --g-push: #b65a16; --g-core: #a83a63; --g-kh: #6650b8; --g-skill: #6b7d14; --g-cardio: #22699a; --g-mob: #8f6a0e; --gold: #95650a; --flame: #c45f12;
+    --hs: 0 2px 0 color-mix(in srgb, #171c13 22%, transparent);
+  }
+}
+:root[data-theme="light"] .dkc {
+  --ink: #171c13; --ink2: #3a4230; --ink3: #606a55; --s1: #fbfcf8; --s2: #eef1ea; --s3: #dfe4d8; --line: #c9d0bf; --ac: #456b31; --danger: #b8321f; --bg: #eef1ea; --on: #ffffff;
+  --g-pull: #1a7f6e; --g-push: #b65a16; --g-core: #a83a63; --g-kh: #6650b8; --g-skill: #6b7d14; --g-cardio: #22699a; --g-mob: #8f6a0e; --gold: #95650a; --flame: #c45f12;
+  --hs: 0 2px 0 color-mix(in srgb, #171c13 22%, transparent);
+}
 /* Tageskreis (dayRing) um eine Zahl, in Essen-Tagesleiste und Planen-Kalender gleich: dünner Ring = Anteil vom kcal-Ziel auf einer feinen Spur;
    geplant kühl und blasser. Farbe: ok grün, over rot, low orange, sonst neutral */
 .dr { --fc: var(--ink3); position: absolute; inset: -3px; z-index: -1; border-radius: 50%; pointer-events: none;

@@ -187,6 +187,7 @@
     ['d', 'w', 'm', 'o', 'pl'].forEach(function (k) { if (!state.food[k]) state.food[k] = []; });
     if (!state.food.wa) state.food.wa = {};
     if (!state.food.sh) state.food.sh = {};
+    if (!state.food.tp) state.food.tp = [];
     return state.food;
   }
   function fDish(id) { return foodState().d.filter(function (x) { return x.id === id; })[0]; }
@@ -479,7 +480,7 @@
     var it = fItem(id), uu = !it.dish && !it.pc && it.u.length ? it.u[it.ub && it.u[1] ? 1 : 0] : null, pa = it.dish ? 1 : it.pc ? it.d || it.u[it.ub ? 1 : 0][1] : uu ? uu[1] : it.ml ? 250 : 100, v = fNut(it, pa), ck = it.dish ? 'dish' : /^u/.test(id) ? 'u' : CATI[it.cat] ? it.cat : 'x';
     // Darunter klein die Werte je 100 g (bei Gerichten je Portion) in festen Spalten: die drei, die für die Kategorie zählen (NREL, z. B. Zucker bei Süßem)
     var h100 = it.dish ? v : it, nr = NREL[ck] || NREL.x;
-    return '<button class="fsi" data-fpick="' + id + '"><i class="fsc">' + ic(CATI[ck][0]) + '</i><span><b>' + esc(fName(it)) + (it.b ? ' <small>' + esc(it.b) + '</small>' : '') + '</b>' +
+    return '<button class="fsi" data-fpick="' + id + '" style="--cc:' + (CCOL[ck] || (ck === 'dish' ? 'var(--ac)' : CCOL.x)) + '"><i class="fsc">' + ic(CATI[ck][0]) + '</i><span><b>' + esc(fName(it)) + (it.b ? ' <small>' + esc(it.b) + '</small>' : '') + '</b>' +
       '<small class="f100">' + nr.map(function (k) { return '<i style="--nc:var(' + NCOL[k] + ')" aria-label="' + NSH[k] + '">' + ic(NIC[k]) + fN(h100[k] || 0) + '</i>'; }).join('') + '<em>' + (it.dish ? '/Port.' : it.ml ? '/100 ml' : '/100 g') + '</em></small></span>' +
       '<i class="fsk"><b>' + Math.round(v.k) + '<small>kcal</small></b><small>' + (uu ? '1 ' + esc(uu[0]) : fAmt(it, pa)) + '</small></i></button>';
   }
@@ -776,16 +777,15 @@
     ui.sheet = { fdishes: true }; if (!ui.fplan) ui.fday = dayIdx(Date.now()) - fSd(); sheetOpen(dishesHtml(), true);
   }
   function dishesHtml() {
-    // Gerichte-Menü: Filter nach Mahlzeit (fest gewählt oder meist gegessen, dishMeals); Karten (antippen = Menge wählen und bearbeiten, nach rechts wischen = 1 Portion sofort),
-    // zuletzt gegessene zuerst; unten „Neues Gericht“
+    // Gerichte-Menü: Filter nach Mahlzeit (fest gewählt oder meist gegessen, dishMeals); Karten (antippen = Menge wählen und bearbeiten, nach rechts wischen = 1 Portion sofort,
+    // halten und ziehen = auf eine Mahlzeit), zuletzt gegessene zuerst; als letzte Kachel gestrichelt „Neues Gericht“
     var st = foodState(), lt = {}, f = ui.dmf || '';
     st.e.forEach(function (x) { if (x.r && /^d/.test(x.r.i)) lt[x.r.i] = Math.max(lt[x.r.i] || 0, x.t); });
     var l = st.d.filter(function (x) { return !f || dishMeals(x).indexOf(f) >= 0; }).sort(function (a, b) { return (lt[b.id] || 0) - (lt[a.id] || 0); });
     return shHead('pot', 'Gerichte', st.d.length + (st.d.length === 1 ? ' Gericht' : ' Gerichte') + ' · je Portion') +
       (st.d.length ? '<div class="seg fdm">' + [['', 'Alle']].concat(MEALS.map(function (m) { return [m[1], m[2]]; })).map(function (m) {
         return '<button data-dmf="' + m[0] + '" aria-pressed="' + (f === m[0]) + '" aria-label="' + m[1] + '">' + (m[0] ? ic(MEALI[m[0]]) : 'Alle') + '</button>'; }).join('') + '</div>' : '') +
-      (l.length ? '<div class="fdg" data-noswipe="1">' + l.map(fDishCard).join('') + '</div><p class="sh-note">Nach rechts wischen = 1 Portion eintragen</p>' : '<p class="muted">' + (st.d.length ? 'Zu dieser Mahlzeit noch kein Gericht gegessen.' : 'Noch kein Gericht. Einmal anlegen, dann mit einem Tipp eintragen.') + '</p>') +
-      '<div class="fpgo"><button class="btn primary big" data-fde="new">' + ic('plus') + 'Neues Gericht</button></div>';
+      '<div class="fdg" data-noswipe="1">' + l.map(fDishCard).join('') + '<button class="fdnew" data-fde="new" aria-label="Neues Gericht">' + ic('plus') + '<small>Neu</small></button></div>';
   }
   // Gericht bearbeiten: Zutaten aus der Datenbank füllen alle Nährwerte, sonst kcal und Protein von Hand
   function libFind(name) {
@@ -1096,7 +1096,7 @@
   var fsT = null;
   // iOS: beim Ziehen nicht scrollen. Kacheln (Essen-Vorschläge, Planen-Kacheln) in jede Richtung, Einträge nur senkrecht
   document.addEventListener('touchstart', function (ev) {
-    var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm)' + (ui.sheet ? '' : ', .ptv[data-ptd], .fti[data-pfd], .pwsc'));
+    var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm)' + (ui.sheet ? '' : ', .ptv[data-ptd], .fti[data-pfd], .pwsc, .fti[data-ptp]'));
     fsT = el ? { x: ev.touches[0].clientX, y: ev.touches[0].clientY, v: null, tile: !el.classList.contains('fcpi') } : null;
     // Workouts in der Woche (.pwsc) zählen als Kachel: in jede Richtung ziehbar
   }, { passive: true });
@@ -1147,7 +1147,7 @@
         var it = o.x.r && fItem(o.x.r.i);
         // Antippen = Menge ändern (nur mit Quelle), Kreuz = entfernen
         return '<div class="fplr m-' + mk + '"><span' + (it ? ' data-ple="' + o.i + '" role="button"' : '') + '><b>' + esc(o.x.n || 'Mahlzeit') + '</b><small>' + (it ? fAmt(it, o.x.r.g) : 'Schnell') + '</small></span><em>' + Math.round(o.x.k) + '<i>kcal</i></em><button class="x" data-plx="' + o.i + '" aria-label="Entfernen">' + ic('close') + '</button></div>';
-      }).join('') + '</div>' : '') +
+      }).join('') + (ps.some(function (o) { return o.x.r; }) ? '<button class="btn ghost small fptp" data-ptpm="1">' + ic('cards') + 'Als Vorlage</button>' : '') + '</div>' : '') +
       '<div class="ftl fplt">' + tl.map(function (x) { return fTile({ i: x.i, g: x.g }, 'data-pla="' + x.i + '|' + x.g + '"'); }).join('') + '</div>' +
       '<div class="fact2"><div class="fsrb"><button class="fsrq" data-plsr="1">' + ic('search') + '<span>Suchen …</span></button></div><button class="fdsb" data-plq="1" aria-label="Schnell">' + ic('bolt') + '</button></div>', true);
   }
@@ -1220,6 +1220,8 @@
     if (t.closest('[data-pshop]')) { openShop(); return true; }
     if ((el = t.closest('[data-shn]'))) { ui.shn = +el.dataset.shn; $('sheet').innerHTML = shopHtml(); buzz(4); return true; }
     if ((el = t.closest('[data-shk]'))) { var shk = el.dataset.shk; if (st.sh[shk] != null) delete st.sh[shk]; else st.sh[shk] = dayIdx(Date.now()); persist(); $('sheet').innerHTML = shopHtml(); buzz(6); return true; }
+    // Nach dem Speichern verschwindet der Knopf (kein zweites, gleiches Speichern)
+    if ((el = t.closest('[data-ptpm]'))) { if (tplSave('m', ui.fplan.d, ui.fplan.mk)) el.remove(); return true; }
     if ((el = t.closest('[data-ple]'))) { var po = foodState().pl[+el.dataset.ple]; if (po && po.r && fItem(po.r.i)) { var pfp = ui.fplan; openPick(po.r.i, po.r.g); ui.fplan = pfp; ui.plEdit = +el.dataset.ple; $('sheet').innerHTML = fpickHtml(); } return true; }
     if (t.closest('[data-plsr]')) { openFsearch(); return true; }
     if (t.closest('[data-plq]')) { openQuick(null); return true; }

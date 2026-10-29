@@ -182,6 +182,7 @@
       var extra = st ? Object.keys(st.ex).filter(function (id) { return !shown[id]; }) : [];
       if (extra.length) c += '<p class="agp">Außerdem: ' + extra.map(function (id) { return esc(EXB[id].n); }).join(' · ') + '</p>';
       if (sd === today && sc.length) c += '<button class="btn primary pd-go" data-gotab="heute">' + ic('play') + 'Training starten</button>';
+      c += pWeekHtml(P, today, sd);
     } else if (ft === 'e') {
       // Essen des Tages kompakt: eine Zeile kcal + Protein, darunter EIN Balken (gegessen voll + geplant schraffiert), dann die vier Mahlzeiten.
       // Planbar nur, was noch kommt: künftige Tage ganz, heute nur Mahlzeiten, deren Zeit noch nicht vorbei ist (antippen = planen, Kachel hineinziehen)
@@ -200,29 +201,67 @@
     ui.pfl = null; ui.pdx = false;
 
     if (ft === 't') {
-      // Woche: 7 Fächer Mo–So des aktiven Plans (wie Gegessen in Essen). Workout-Kachel ins Fach ziehen = an diesem Wochentag, Workout im Fach auf ein anderes Fach = verschieben
-      // (liegt dort eins, wird getauscht), aus der Woche hinaus auf die Kacheln = entfernen; Fach antippen = diesen Tag der Woche zeigen.
-      // Darunter die Workouts: antippen = bearbeiten, hochziehen auf Fach, Kalendertag oder Tageskarte; gestrichelte Kachel = neues Workout
-      var wm = weekM() || {}, slots = WDN.map(function (n, w) {
-        var here = P.days.filter(function (y) { return (wm[y.id] || []).indexOf(w) >= 0; }), di = today + w - wdOf(today);
-        return '<div class="pws' + (w === wdOf(today) ? ' t' : '') + (di === sd ? ' sel' : '') + (here.length ? '' : ' em') + '" data-pws="' + w + '" role="button" aria-label="' + WDN[w] + '"><small>' + n.slice(0, 2) + '</small>' +
-          here.slice(0, 2).map(function (x) { return '<span class="pwsc" data-pwsc="' + x.id + ':' + w + '" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</span>'; }).join('') + '</div>';
-      }).join('');
-      h += '<section class="pwks rise" style="--i:3"><h2 class="sec-h">Woche</h2><div class="pwg" data-noswipe="1">' + slots + '</div>' +
+      // Workouts unter der Tageskarte (die Woche steckt in der Karte, pWeekHtml): antippen = bearbeiten, hochziehen auf Fach, Kalendertag oder Tageskarte; gestrichelte Kachel = neues Workout
+      h += '<section class="pwks rise" style="--i:3">' +
         '<div class="ftl ptl2" data-noswipe="1">' + P.days.map(function (x) {
           var n = x.ex.filter(function (id) { return d.unlocked[id]; }).length;
           return '<button class="ptv" data-pedit="' + x.id + '" data-ptd="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')" aria-label="' + esc(x.n) + ' bearbeiten, hochziehen auf einen Tag = zusätzlich"><i class="ptvi">' + ic(dIcon(x)) + '</i>' +
             '<b class="' + fitCls(x.n, 8) + '">' + esc(x.n) + '</b><small>' + n + (dur[x.id] ? ' · ' + dur[x.id] + '′' : ' Üb.') + '</small></button>';
         }).join('') + (P.days.length < 8 ? '<button class="ptv pnew" data-pdays="1" aria-label="Neuer Trainingstag">' + ic('plus') + '</button>' : '') + '</div></section>';
     } else if (sd >= today) {
-      // Essen: Gerichte und häufige Lebensmittel als Kacheln; hochziehen auf eine Mahlzeit der Tageskarte = dort einplanen, antippen = in die übliche Mahlzeit
-      var seen = {}, gl = foodState().d.slice(0, 4).map(function (x) { return { i: x.id, g: 1, q: '' }; }).concat(fTiles())
-        .filter(function (x) { if (seen[x.i] || !fItem(x.i)) return false; seen[x.i] = 1; return true; }).slice(0, 8);
-      h += '<section class="pwks rise" style="--i:3"><h2 class="sec-h">Gerichte</h2><div class="ftl" data-noswipe="1">' + gl.map(function (x) { return fTile({ i: x.i, g: x.g }, 'data-pfd="' + x.i + '|' + x.g + '"'); }).join('') + '</div></section>';
+      // Essen: Schalter Gerichte | Vorlagen. Gerichte = Gerichte und häufige Lebensmittel (hochziehen auf eine Mahlzeit = dort einplanen, antippen = übliche Mahlzeit).
+      // Vorlagen = gespeicherte Mahlzeiten (auf eine Mahlzeit ziehen) und Tage (auf die Tageskarte ziehen); antippen = wie gespeichert einplanen
+      var pv = ui.pgt === 'v', tg0 = '<div class="seg pgt">' + [['g', 'Gerichte'], ['v', 'Vorlagen']].map(function (x) { return '<button data-pgt="' + x[0] + '" aria-pressed="' + ((x[0] === 'v') === pv) + '">' + x[1] + '</button>'; }).join('') + '</div>';
+      if (!pv) {
+        var seen = {}, gl = foodState().d.slice(0, 4).map(function (x) { return { i: x.id, g: 1, q: '' }; }).concat(fTiles())
+          .filter(function (x) { if (seen[x.i] || !fItem(x.i)) return false; seen[x.i] = 1; return true; }).slice(0, 8);
+        h += '<section class="pwks rise" style="--i:3">' + tg0 + '<div class="ftl" data-noswipe="1">' + gl.map(function (x) { return fTile({ i: x.i, g: x.g }, 'data-pfd="' + x.i + '|' + x.g + '"'); }).join('') + '</div></section>';
+      } else h += '<section class="pwks rise" style="--i:3">' + tg0 + '<div class="ftl" data-noswipe="1">' + tplTiles(sd) + '</div></section>';
     }
 
     if (ux) h += '<button class="agn gold pux rise" style="--i:5" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>';
     return h;
+  }
+  // ---------- Essen-Vorlagen (food.tp): [{id, n, k: 'm' (Mahlzeit, mk) | 'd' (Tag), it: [{i, g, mk?}]}]
+  function tplKcal(t) { return Math.round(t.it.reduce(function (a, q) { var it = fItem(q.i); return a + (it ? fNut(it, q.g).k || 0 : 0); }, 0)); }
+  function tplTiles(sd) {
+    // Kacheln: Mahlzeit-Vorlagen in der Farbe ihrer Mahlzeit, Tages-Vorlagen neutral mit Kalender-Symbol; dazu gestrichelt „Tag als Vorlage“ (wenn der Tag geplant ist).
+    // Im Löschmodus (Mülleimer-Kachel) löscht Antippen eine Vorlage
+    var tp = foodState().tp, del = ui.tpdel, dayHas = planSum(sd).items.some(function (o) { return o.x.r; });
+    return tp.map(function (t) {
+      return '<button class="fti q-m tpl' + (t.k === 'm' ? ' m-' + t.mk : ' tpd') + (del ? ' tdel' : '') + '" data-ptp="' + t.id + '" aria-label="Vorlage ' + esc(t.n) + (del ? ' löschen' : '') + '"><i class="ftq">' + ic(del ? 'close' : t.k === 'm' ? MEALI[t.mk] : 'cal') + '</i>' +
+        '<b class="' + fitCls(t.n, 8) + '">' + esc(t.n) + '</b><span class="ftv"><span>' + tplKcal(t) + '</span><small>' + t.it.length + '×</small></span></button>';
+    }).join('') + (dayHas && !del ? '<button class="fti tplnew" data-ptpd="1" aria-label="Diesen Tag als Vorlage speichern">' + ic('plus') + '<small>Tag</small></button>' : '') +
+      (tp.length ? '<button class="fti tplnew" data-ptpx="1" aria-label="' + (del ? 'Fertig' : 'Vorlagen löschen') + '">' + ic(del ? 'check' : 'trash') + '</button>' : '') +
+      (!tp.length && !dayHas ? '<p class="muted tplh">Plane eine Mahlzeit und speichere sie im Fenster als Vorlage, oder plane einen Tag.</p>' : '');
+  }
+  function tplAdd(t, di, mk) {
+    // Vorlage einplanen: Mahlzeit-Vorlage in Mahlzeit mk (sonst ihre eigene), Tages-Vorlage mit den gespeicherten Mahlzeiten
+    var pl = foodState().pl; fUndo();
+    t.it.forEach(function (q) {
+      var it = fItem(q.i); if (!it) return; var v = fNut(it, q.g), x = { d: di, mk: t.k === 'm' ? (mk || t.mk) : q.mk, n: fEn(it).slice(0, 30) };
+      NK.forEach(function (k) { if (v[k] != null) x[k] = k === 'k' ? Math.round(v.k) : Math.round(v[k] * 10) / 10; }); x.r = { i: q.i, g: q.g }; pl.push(x);
+    });
+    persist(); ui.fresh = false; render(); buzz([10, 30, 10]); toast('Vorlage geplant · ' + tplKcal(t) + ' kcal', 'cal', true);
+  }
+  function tplSave(k, di, mk) {
+    // Geplantes eines Tags (k = 'd') oder einer Mahlzeit (k = 'm') als Vorlage speichern; Name aus den ersten Einträgen
+    // Grenzen wie in cleanFood (40 Vorlagen, 30 Einträge), sonst ginge Überzähliges beim nächsten Laden still verloren
+    var l = planSum(di).items.filter(function (o) { return o.x.r && (k === 'd' || o.x.mk === mk); }).slice(0, 30); if (!l.length) return false;
+    if (foodState().tp.length >= 40) { toast('Höchstens 40 Vorlagen', 'bolt'); return false; }
+    var n = k === 'd' ? 'Tag ' + WDN[wdOf(di)] : l[0].x.n.split(' ')[0] + (l.length > 1 ? ' +' + (l.length - 1) : '');
+    foodState().tp.push({ id: 't' + Date.now().toString(36), n: n.slice(0, 24), k: k, mk: k === 'm' ? mk : undefined, it: l.map(function (o) { var q = { i: o.x.r.i, g: o.x.r.g }; if (k === 'd') q.mk = o.x.mk; return q; }) });
+    persist(); toast('Als Vorlage gespeichert', 'check'); return true;
+  }
+  function pWeekHtml(P, today, sd) {
+    // Woche in der Tageskarte: 7 Fächer Mo–So des aktiven Plans. Workout-Kachel ins Fach ziehen = an diesem Wochentag, Workout im Fach auf ein anderes Fach = verschieben
+    // (liegt dort eins, wird getauscht), aus der Woche hinaus auf die Kacheln = entfernen; Fach antippen = diesen Tag der Woche zeigen
+    var wm = weekM() || {};
+    return '<div class="pwg" data-noswipe="1">' + WDN.map(function (n, w) {
+      var here = P.days.filter(function (y) { return (wm[y.id] || []).indexOf(w) >= 0; }), di = today + w - wdOf(today);
+      return '<div class="pws' + (w === wdOf(today) ? ' t' : '') + (di === sd ? ' sel' : '') + (here.length ? '' : ' em') + '" data-pws="' + w + '" role="button" aria-label="' + WDN[w] + '"><small>' + n.slice(0, 2) + '</small>' +
+        here.slice(0, 2).map(function (x) { return '<span class="pwsc" data-pwsc="' + x.id + ':' + w + '" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</span>'; }).join('') + '</div>';
+    }).join('') + '</div>';
   }
   function planSheet(d, now) {
     // Wochenplaner und Tag-Editor als Fenster über Planen (wie Gerichte); render() zeichnet es mit, Scroll bleibt; ohne beides zu
@@ -471,8 +510,10 @@
   // Gericht/Lebensmittel → Mahlzeit der Tageskarte = dort einplanen. Ziel = nächstes im Umkreis von 40 px, es leuchtet
   var pdg = null;
   document.addEventListener('pointerdown', function (ev) {
-    var el = ui.tab === 'tage' && !ui.sheet && ev.target.closest && ev.target.closest('.ptv[data-ptd], .fti[data-pfd], .pwsc');
-    pdg = el ? { el: el, x: ev.clientX, y: ev.clientY, on: false, tg: null, food: !!el.dataset.pfd, chip: !!el.dataset.pwsc } : null;
+    var el = ui.tab === 'tage' && !ui.sheet && !ui.tpdel && ev.target.closest && ev.target.closest('.ptv[data-ptd], .fti[data-pfd], .pwsc, .fti[data-ptp]');
+    // Vorlage: Mahlzeit-Vorlage zielt wie ein Gericht auf Mahlzeiten (food), Tages-Vorlage auf die Tageskarte (dtp)
+    var tpo = el && el.dataset.ptp ? foodState().tp.filter(function (x) { return x.id === el.dataset.ptp; })[0] : null;
+    pdg = el ? { el: el, x: ev.clientX, y: ev.clientY, on: false, tg: null, food: !!el.dataset.pfd || !!(tpo && tpo.k === 'm'), dtp: !!(tpo && tpo.k === 'd'), tpo: tpo, chip: !!el.dataset.pwsc } : null;
   });
   document.addEventListener('pointermove', function (ev) {
     if (!pdg) return; var dx = ev.clientX - pdg.x, dy = ev.clientY - pdg.y;
@@ -480,7 +521,8 @@
     if (!pdg.on) { if (Math.sqrt(dx * dx + dy * dy) < 8) return; if (dy > 4 && !pdg.chip) { pdg = null; return; } pdg.on = true; pdg.el.classList.add('glass'); pdg.el.style.pointerEvents = 'none'; }
     pdg.el.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
     var today = dayIdx(Date.now()), best = 48, tg = null;
-    document.querySelectorAll(pdg.food ? '.pday .pml .fmc[data-pml]' : pdg.chip ? '.pws[data-pws]' : '.pws[data-pws], .pc2[data-cday]').forEach(function (e) {
+    // Tages-Vorlage hat nur die Tageskarte als Ziel (Rückfall unten), daher hier keine Kandidaten
+    (pdg.dtp ? [] : document.querySelectorAll(pdg.food ? '.pday .pml .fmc[data-pml]' : pdg.chip ? '.pws[data-pws]' : '.pws[data-pws], .pc2[data-cday]')).forEach(function (e) {
       if (e.dataset.cday && (+e.dataset.cday < today || offAt(+e.dataset.cday))) return;
       var r = e.getBoundingClientRect(), ax = Math.max(r.left - ev.clientX, 0, ev.clientX - r.right), ay = Math.max(r.top - ev.clientY, 0, ev.clientY - r.bottom), dd = Math.sqrt(ax * ax + ay * ay);
       if (dd < best) { best = dd; tg = e; }
@@ -496,6 +538,7 @@
     ui.pnoclick = Date.now(); p.el.style.pointerEvents = ''; p.el.classList.remove('glass', 'arm'); if (p.tg) p.tg.classList.remove('drop');
     // Abgebrochene Geste (iOS-Systemgeste, Anruf): nur zurück, nie eintragen
     if (ev && ev.type === 'pointercancel') p.tg = null;
+    if (p.tg && p.tpo) { tplAdd(p.tpo, pDaySel(), p.tg.dataset.pml); return; }
     if (p.tg && p.food) { var q = p.el.dataset.pfd.split('|'); planFood(q[0], +q[1], pDaySel(), p.tg.dataset.pml); return; }
     if (p.tg && p.chip) {
       var cw = p.el.dataset.pwsc.split(':'), cid = cw[0], w1 = +cw[1];
@@ -543,6 +586,14 @@
     if (ui.pnoclick && Date.now() - ui.pnoclick < 350 && t.closest('.ptv, .fti, .pws')) return true;
     if ((el = t.closest('[data-pws]'))) { var pw = dayIdx(Date.now()) + (+el.dataset.pws) - wdOf(dayIdx(Date.now())); if (pw !== pDaySel()) { ui.pd = pw; ui.ca = pw; ui.pdx = true; } ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-pfd]'))) { var pq = el.dataset.pfd.split('|'); planFood(pq[0], +pq[1], pDaySel(), mealFor(pq[0])); return true; }
+    if ((el = t.closest('[data-pgt]'))) { ui.pgt = el.dataset.pgt; ui.tpdel = false; ui.fresh = false; render(); buzz(4); return true; }
+    if ((el = t.closest('[data-ptp]'))) {
+      var tp0 = foodState().tp, tpi = tp0.map(function (x) { return x.id; }).indexOf(el.dataset.ptp); if (tpi < 0) return true;
+      if (ui.tpdel) { tp0.splice(tpi, 1); if (!tp0.length) ui.tpdel = false; persist(); ui.fresh = false; render(); buzz(8); return true; }
+      tplAdd(tp0[tpi], pDaySel()); return true;
+    }
+    if (t.closest('[data-ptpd]')) { tplSave('d', pDaySel()); ui.fresh = false; render(); return true; }
+    if (t.closest('[data-ptpx]')) { ui.tpdel = !ui.tpdel; ui.fresh = false; render(); buzz(4); return true; }
     if ((el = t.closest('[data-cday]'))) {
       var cd = +el.dataset.cday, s0 = ui.pd == null ? today : ui.pd;
       if (ui.pmode === 'swap') {

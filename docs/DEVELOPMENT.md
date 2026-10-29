@@ -47,7 +47,8 @@ docs/                 DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 ## 3. Daten
 - localStorage `stufenbuch.v1`: `{u, logs, plan, food}`. Demo-Modus nutzt `stufenbuch.demo` (Profil > Zahnrad > Testdaten, 5 Szenarien, `demoData(kind)`).
 - logs: `{t, e, s:[…], k?}`; `e` = Übungs-id, `'warm'` oder `'sess'`.
-- food: `{g, e, d, o, w, pr, m, wa, pl, sh}` (`wa`: Wasser je Tag `{Tagesindex: ml}`; `sh`: Einkauf abgehakt `{Schlüssel: Tagesindex}`, Schlüssel = Lebensmittel-id oder `n:`Name, `cleanFood` vergisst nach 14 Tagen)
+- food: `{g, e, d, o, w, pr, m, wa, pl, sh, tp}`
+  - `tp: [{id: 't…', n, k: 'm'|'d', mk?, it: [{i, g, mk?}]}]` – Vorlagen zum Essen planen: Mahlzeit (`k 'm'`, Mahlzeit `mk`) oder Tag (`k 'd'`, je Eintrag `mk`); Einträge = Quelle `i` + Menge `g`. Speichern im Fenster „Mahlzeit planen“ bzw. Kachel „Tag“ in Planen › Essen › Vorlagen (`tplSave`), einplanen per Antippen/Ziehen (`tplAdd`). (`wa`: Wasser je Tag `{Tagesindex: ml}`; `sh`: Einkauf abgehakt `{Schlüssel: Tagesindex}`, Schlüssel = Lebensmittel-id oder `n:`Name, `cleanFood` vergisst nach 14 Tagen)
   - Einkaufsliste (`shopList(n)`, Planen › Essen › Einkauf): Geplantes ab heute für 3/7 Tage, Gerichte in Zutaten zerlegt, auf Packung/Stück aus den Portionen gerundet, sonst 50 g.
   - `pl: [{d, mk, n, k, p, f?, c?, fb?, su?, r?}]` – geplante Einträge (Tagesindex `d`, Mahlzeit `mk`, Werte wie `e`), getrennt vom Gegessenen, zählen nicht in Bilanz/Verlauf (`planSum`). Heute Geplantes wird in Essen per Antippen gegessen (`planEat` → `e`); `cleanFood` behält 30 Tage zurück.
   - `e: [{t, n, k, p, f?, c?, fb?, su?, r?: {i, g}}]` – Einträge: kcal, Protein, Fett, Kohlenhydrate, Ballaststoffe, Zucker (fehlende = unbekannt, alte Einträge haben nur k/p). `r` = Quelle (`FOODS`-id, eigenes `u…`, Gericht `d…`) und Menge (Gramm, beim Gericht Portionen); daraus entstehen die Schnell-Kacheln (`fTiles`).

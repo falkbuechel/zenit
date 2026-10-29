@@ -11,7 +11,6 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Offen / Ideen
 - Einkaufsliste: braucht ein sauberes Aufräumen in Funktion, Design und UX (erst wenn Planen fertig ist); Preis eventuell geschätzt.
-- Fenster (Gerichte, Suche, Nährwertinfo) optisch an Essen angleichen; Training in Planen kompakter; Menüleiste mit mehr Charakter; Tages-/Mahlzeit-Vorlagen beim Essen planen (Varianten vom 29.10.).
 - Planen Schritt 4: Vorschläge „fehlt noch“ (reine Logik: Protein je kcal, passt in den Rest, oft gegessen, vermutlich da).
 - Planen Schritt 5: Event (kcal reservieren) ordentlich umsetzen; Cheatday ohne Sonderregel, Urlaub/Krank bleiben.
 - Planen Schritt 6: „Was habe ich“ nur abgeleitet (abgehakt = könnte da sein), keine Pflege.
@@ -28,6 +27,12 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-29 – Menüleiste, Woche in der Tageskarte, Essen-Vorlagen, Fenster im Essen-Stil
+- Menüleiste: jeder Bereich hat eine Farbe (`--bc`: Plan blau, Essen orange, Heute grün, Sammlung gold, Profil lila); aktives Symbol mit Schein und kurzem Federn, Punkt in der Farbe mit Schein, gleitet mit Überschwingen.
+- Planen › Training: Woche (7 Fächer) steckt unten in der dunklen Tageskarte (`pWeekHtml`), darunter nur noch die Workout-Kacheln.
+- Planen › Essen: Schalter „Gerichte | Vorlagen“ (`ui.pgt`). Vorlagen (`food.tp`, neu, `cleanFood`): Mahlzeit-Vorlage im Fenster „Mahlzeit planen“ speichern („Als Vorlage“), Tages-Vorlage über die Kachel „Tag“; antippen = wie gespeichert einplanen, ziehen = Mahlzeit-Vorlage auf eine Mahlzeit, Tages-Vorlage auf die Tageskarte; Mülleimer-Kachel = Löschmodus.
+- Fenster hell, Bausteine wie Essen: Suchtreffer und Nährwert-Zeilen mit Farbkante links (Kategorie bzw. Nährwert), leichter Verlauf, Tastenkante, Zahlen in der Kachel-Schrift; Fokus im Suchfeld als feiner Ring mit Schein; Gerichte ohne Hinweistext, „Neu“ als gestrichelte Kachel im Raster.
 
 ### 2026-10-29 – Feinschliff Essen/Planen 2
 - Bilanz: Licht unten kühl blau (`--g-cardio`), oben fein warm (`--gold`).

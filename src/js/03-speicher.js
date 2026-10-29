@@ -53,7 +53,14 @@
     var wa = {}; if (f.wa && typeof f.wa === 'object') Object.keys(f.wa).forEach(function (k) { var v = +f.wa[k]; if (/^\d+$/.test(k) && v > 0) wa[k] = Math.min(8000, Math.round(v)); });
     // Einkauf abgehakt: {Schlüssel: Tagesindex}, nach 14 Tagen vergessen
     var sh = {}; if (f.sh && typeof f.sh === 'object') Object.keys(f.sh).slice(0, 300).forEach(function (k) { var v = +f.sh[k]; if (k.length <= 40 && isFinite(v) && v >= dayIdx(Date.now()) - 14) sh[k] = Math.round(v); });
-    return { g: g, e: e, d: d, w: w, pr: q, m: m, o: o, wa: wa, pl: pl, sh: sh };
+    // Vorlagen: Mahlzeit (k 'm', mk) oder Tag (k 'd', je Eintrag mk); Einträge = Quelle + Menge
+    var tp = (Array.isArray(f.tp) ? f.tp : []).filter(function (t) { return t && typeof t.id === 'string' && (t.k === 'm' || t.k === 'd') && Array.isArray(t.it); }).slice(0, 40).map(function (t) {
+      var r = { id: t.id.slice(0, 24), n: String(t.n || 'Vorlage').slice(0, 24), k: t.k, it: [] };
+      if (t.k === 'm') r.mk = /^(fr|mi|sn|ab)$/.test(t.mk) ? t.mk : 'mi';
+      t.it.slice(0, 30).forEach(function (q) { if (q && typeof q.i === 'string' && +q.g > 0) { var o = { i: q.i.slice(0, 24), g: rg(q.g) }; if (t.k === 'd') o.mk = /^(fr|mi|sn|ab)$/.test(q.mk) ? q.mk : 'mi'; r.it.push(o); } });
+      return r;
+    }).filter(function (t) { return t.it.length; });
+    return { g: g, e: e, d: d, w: w, pr: q, m: m, o: o, wa: wa, pl: pl, sh: sh, tp: tp };
   }
   function cleanPlan(p) {
     if (!p || !Array.isArray(p.days)) return null;

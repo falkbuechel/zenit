@@ -61,7 +61,7 @@
     var tb = $('tabs'), ind = tb.querySelector('.ind'), a = tb.querySelector('[aria-current]'); if (!ind || !a) return;
     // Anzeige = kleiner Punkt unter dem aktiven Symbol, gleitet beim Wechsel mit
     var r = a.getBoundingClientRect(), r0 = tb.getBoundingClientRect(), x = r.left - r0.left + r.width / 2 - 2.5, y = r.top - r0.top + r.height - 9;
-    ind.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+    ind.style.transform = 'translate(' + x + 'px,' + y + 'px)'; ind.style.setProperty('--bc', a.style.getPropertyValue('--bc'));
     if (!ind.classList.contains('on')) requestAnimationFrame(function () { requestAnimationFrame(function () { ind.classList.add('on'); }); });
   }
   window.addEventListener('resize', placeInd);
@@ -75,9 +75,10 @@
     var tr = tierOfLevel(level(d.xp));
     document.documentElement.setAttribute('data-tier', tr);
     $('hudw').classList.add('nohud');
-    var T = [['tage', 'Plan', 'cal'], ['food', 'Essen', 'food'], ['heute', 'Heute', 'dumb'], ['fort', 'Sammlung', 'gem'], ['profil', 'Profil', 'user']];
+    // Jeder Bereich hat seine Farbe (--bc): aktives Symbol und Punkt leuchten darin
+    var T = [['tage', 'Plan', 'cal', '--g-cardio'], ['food', 'Essen', 'food', '--g-push'], ['heute', 'Heute', 'dumb', '--ac'], ['fort', 'Sammlung', 'gem', '--gold'], ['profil', 'Profil', 'user', '--g-kh']];
     var tb = $('tabs');
-    if (!tb.querySelector('.ind')) tb.innerHTML = '<i class="ind" aria-hidden="true"></i>' + T.map(function (t) { return '<button data-tab="' + t[0] + '" aria-label="' + t[1] + '">' + ic(t[2]) + '</button>'; }).join('');
+    if (!tb.querySelector('.ind')) tb.innerHTML = '<i class="ind" aria-hidden="true"></i>' + T.map(function (t) { return '<button data-tab="' + t[0] + '" aria-label="' + t[1] + '" style="--bc:var(' + t[3] + ')">' + ic(t[2]) + '</button>'; }).join('');
     Array.prototype.forEach.call(tb.querySelectorAll('button'), function (bt) { if (bt.dataset.tab === ui.tab) bt.setAttribute('aria-current', 'page'); else bt.removeAttribute('aria-current'); });
     placeInd();
     var NT = notices(d, now); ui.nts = NT; badges(NT);

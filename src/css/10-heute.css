@@ -113,9 +113,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: var(--r
 .pg[aria-pressed="true"] { background: color-mix(in srgb, var(--gc, var(--ac)) 20%, var(--s2)); border-color: var(--gc, var(--ac)); color: var(--gc, var(--ink)); }
 .pg:first-child[aria-pressed="true"] { color: var(--ink); }
 
-.ppre { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
-.ppre button { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border-radius: var(--r12); border: 1px solid var(--line); background: var(--s1); color: var(--ink); font-weight: 800; transition: transform .16s var(--ease); }
-.ppre button:active { transform: scale(.97); }
 .pe-top { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
 .pe-n { flex: 1; min-width: 0; height: 46px; padding: 0 12px; border-radius: var(--r12); border: 1px solid var(--line); background: var(--s1); color: var(--ink); font-family: var(--f-display); font-weight: 900; font-size: 24px; text-transform: uppercase; }
 .pe-n:focus { outline: 2px solid var(--ac); }

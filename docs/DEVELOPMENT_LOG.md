@@ -6,11 +6,11 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Falk arbeitet mit „Bypass permissions“ (keine Rückfragen). Schutz über PreToolUse-Hook `tools/hook-guard.py` (greift auch im Bypass) + deny-Regeln (zusätzlich: Zugangsdaten ~/.ssh, gh, .git-credentials, .npmrc nicht lesen). `settings.local.json` von Einmal-Freigaben geleert.
 - Gesperrtes braucht Falk selbst im Terminal. Regeln sind Textmuster: neue Fälle in `RULES` ergänzen und mit Beispielbefehlen testen.
 
-## Stand 2026-10-29 (spät)
-- Zuletzt: vier Runden Essen/Planen gepusht (35839b6, 3e8a599, d3ab367) + lokale Vorschau in VS Code (d035d84, 070a181). Arbeitsweise: nummerierte Punkte je Bereich, Varianten gebündelt früh fragen, nach jeder gepushten Runde /handoff + /clear.
-- Falk testet am iPhone: weiche Fenster (Ruckeln?), Gericht (gleiche Höhe, Schritte auf/zu, Rezept einfügen), Suche (Unterarten, Kategorien zu zweit, Zuletzt), Schnell (Gegessen/je, Merken über die Rückmeldung), Planen (Kalender wischen, Auswahl in Reihe, Tag-ändern-Kacheln, Vorlagen mit Namen, Mahlzeit-Kacheln), Hell-Schalter.
+## Stand 2026-10-30
+- Zuletzt: Planen-Runde (Kalender 3 Stufen, Essen-Reiter, Einkauf neu, Training-Woche als Kacheln) + Sicherheitsnetz `tools/hook-guard.py` (3c42d66).
+- Falk testet am iPhone: Kalender (Wischen durch 3 Stufen, Bänder Urlaub/Krank), Essen | Vorlagen | Gerichte, Einkauf (Zeitraum, wofür, Preis, Teilen), Woche als Kacheln (Ziehen verschieben/tauschen/entfernen), Workouts | Vorlagen. Dazu noch offen aus der Runde davor: weiche Fenster, Gericht, Suche, Schnell, Hell-Schalter.
 - Vorschau: VS Code startet `tools/serve.py` beim Öffnen (Port 8000, baut bei Änderung neu); Edge-Tools-Tab headless → http://127.0.0.1:8000. Server nie aus Claudes Sitzung starten (für den Tab nicht erreichbar).
-- Nächster Schritt: iPhone-Rückmeldung einarbeiten; danach Trainingsplan-Fenster/Tageskarte im neuen Stil, Menüleiste oder Planen Schritt 4.
+- Nächste Runde (Falk hat gewählt): Tag/Woche Essen kopieren („wie letzte Woche“), Fehlt-noch-Vorschläge (Rest kcal/Protein → passende Kacheln zuerst), Ereignis-Tage (kcal vorher einsparen).
 - Offene Entscheidungen: Link-Import für Rezepte (fremder CORS-Dienst)? Skilltree Dead Hang/Hollow nach außen?
 - App-Icon (oliv) übernimmt iOS erst beim neuen Hinzufügen zum Homescreen. NICHT die App löschen (Daten weg).
 - Nicht committet: nichts.
@@ -41,6 +41,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-30 – Planen: Kalender in 3 Stufen, Essen-Reiter, Einkauf neu, Training im Essen-Stil
+- Kalender: `ui.cm` 0/1/2 = 7 Tage / 3 Wochen / 5 Wochen (Woche des Tags in der Mitte); senkrecht wischen = Stufe ±1, Monatsname schaltet reihum; seitlich 7/21/28 Tage.
+- Urlaub/Krank-Bänder: Anfang/Ende nach den Nachbartagen (gleicher Typ verschmilzt, anderer Typ = eigene Pille, 2 px Fuge); heute/gewählt im Band als runde Fläche (`::before`, `isolation`).
+- Essen planen: Reiter Essen (häufige Lebensmittel) | Vorlagen | Gerichte (alle, zuletzt gegessene zuerst, „Neues Gericht“), Essen vorgewählt (`ui.pgt`).
+- Einkauf: Tagesleiste bis einschließlich (Heute … So, 2 Wo; Standard bis zum letzten geplanten Tag – vorher fehlte z. B. So bei „3 Tage“), Kopf offen + Preis-Richtwert + Teilen, Zeilen mit Farbkante/Icon im Ton, antippen = wofür. Neues Icon `share`.
+- Training: Woche als Kacheln wie die Mahlzeiten (4er-Raster + Summe Trainings/frei/Minuten), darunter Reiter Workouts | Vorlagen (`ui.ptt`); Trainingsplan-Fenster (`openDays`) entfällt, Rauchtest angepasst.
 
 ### 2026-10-29 – Weiche Fenster, Gericht/Suche kompakter, Planen: Kalender, Ereignis-Kacheln, Vorlagen mit Namen
 - Alle Fenster (`shMorph` in 10b): ändert sich die Höhe eines offenen Fensters, gleitet sie (ResizeObserver, Höhe px → px, danach frei); anderes Fenster (anderer Titel) blendet ein (`.sheet.sw`). `sheetOpen`/`closeSheet` setzen den Startwert zurück, damit frisch geöffnete nur hochgleiten.

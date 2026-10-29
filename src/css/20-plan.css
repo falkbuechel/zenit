@@ -82,11 +82,11 @@
 .pc2 .ics em.ev.tsw { color: var(--sc); }
 /* Tauschpaar: Symbol in der Paarfarbe und die Zahl darin eingefärbt (kein zweiter Ring neben dem kcal-Ring) */
 .pc2.swd b { color: var(--sc); }
-/* Urlaub/Krank über mehrere Tage: Tage eingerahmt wie eine Gruppe (Fläche + feine Kontur oben/unten, an Anfang und Ende seitlich und abgerundet) */
-.pc2.off { --oc: var(--gold); border-radius: 0; background: color-mix(in srgb, var(--oc) 9%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--oc) 55%, transparent); }
+/* Urlaub/Krank über mehrere Tage: Tage eingerahmt wie eine Gruppe (Fläche + feine Kontur oben/unten, an Anfang und Ende seitlich, abgerundet und 2 px eingerückt = Fuge zum Nachbar-Band) */
+.pc2.off { --oc: var(--gold); isolation: isolate; border-radius: 0; background: color-mix(in srgb, var(--oc) 9%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--oc) 55%, transparent); }
 .pc2.off.sick { --oc: var(--danger); }
-.pc2.off.os { border-top-left-radius: var(--r12); border-bottom-left-radius: var(--r12); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset 1px 0 0 color-mix(in srgb, var(--oc) 55%, transparent); }
-.pc2.off.oe { border-top-right-radius: var(--r12); border-bottom-right-radius: var(--r12); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset -1px 0 0 color-mix(in srgb, var(--oc) 55%, transparent); }
+.pc2.off.os { margin-left: 2px; border-top-left-radius: var(--r12); border-bottom-left-radius: var(--r12); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset 1px 0 0 color-mix(in srgb, var(--oc) 55%, transparent); }
+.pc2.off.oe { margin-right: 2px; border-top-right-radius: var(--r12); border-bottom-right-radius: var(--r12); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset -1px 0 0 color-mix(in srgb, var(--oc) 55%, transparent); }
 .pc2.off.os.oe { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--oc) 55%, transparent); }
 .pc2 .ics .ic { width: 15px; height: 15px; }
 .pc2.past b { color: var(--ink3); }
@@ -94,9 +94,11 @@
 .pc2.today { background: color-mix(in srgb, var(--gold) 13%, transparent); }
 .pc2.today b { color: var(--ink); font-weight: 800; }
 .pc2.sel { background: var(--s2); box-shadow: inset 0 0 0 1px var(--line); }
-/* Gewählter Tag in einer Urlaubs-/Krank-Reihe: kein eigener Rahmen (die Reihe bleibt ein Band), nur ein kräftigerer Ton der Reihenfarbe */
-.pc2.off.sel { background: color-mix(in srgb, var(--oc) 26%, transparent); }
-.pc2.off.sel:not(.os):not(.oe) { box-shadow: inset 0 1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--oc) 55%, transparent); }
+/* Heute/gewählt in einer Urlaubs-/Krank-Reihe: das Band bleibt durchgehend, darin eine runde Fläche (gewählt im kräftigeren Ton der Reihenfarbe) */
+.pc2.off.sel, .pc2.off.today { background: color-mix(in srgb, var(--oc) 9%, transparent); }
+.pc2.off:is(.sel, .today)::before { content: ""; position: absolute; inset: 3px; z-index: -1; border-radius: 10px; background: color-mix(in srgb, var(--gold) 13%, transparent); }
+.pc2.off.sel::before { background: color-mix(in srgb, var(--oc) 26%, transparent); }
+.pc2.off:is(.sel, .today):not(.os):not(.oe) { box-shadow: inset 0 1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--oc) 55%, transparent); }
 .pc2.off.sel b { font-weight: 800; }
 .pc2 .dn { width: 13px; height: 13px; margin-top: -2px; color: var(--ac); }
 .pc2-g.in-r { animation: pcin-r .2s var(--ease); } .pc2-g.in-l { animation: pcin-l .2s var(--ease); } .pc2-g.in-m { animation: pcin-m .2s var(--ease); }
@@ -141,14 +143,6 @@
 .ptvi .ic { width: 18px; height: 18px; }
 .ptv b { overflow: hidden; max-width: 100%; font-size: calc(13px * var(--tf, 1)); white-space: nowrap; text-overflow: ellipsis; }
 .ptv small { overflow: hidden; max-width: 100%; font-family: var(--f-mono); font-size: 10px; color: var(--ink3); white-space: nowrap; text-overflow: ellipsis; }
-/* Trainingstage-Fenster: Karten in zwei Spalten */
-.pdg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.pdc2 { display: grid; justify-items: start; gap: 4px; min-width: 0; padding: 10px 12px; border: 1px solid var(--line); border-left: 3px solid var(--pc); border-radius: var(--r12); background: var(--s1); box-shadow: var(--hs); color: var(--ink); font: inherit; text-align: left; }
-.pdc2:active { transform: translateY(2px); box-shadow: none; }
-.pdc2 i { display: grid; color: var(--pc); }
-.pdc2 i .ic { width: 22px; height: 22px; }
-.pdc2 b { overflow: hidden; max-width: 100%; font-size: 14px; white-space: nowrap; text-overflow: ellipsis; }
-.pdc2 small { font-size: 11px; color: var(--ink3); }
 /* Abstände über Ränder statt gap: so nimmt der zugeklappte Bereich (0fr) keinen Platz ein */
 .pday > * + * { margin-top: 10px; }
 .pday > .agx { margin-top: 0; }
@@ -293,22 +287,27 @@ button.pdb-h:active { background: var(--s2); }
 .pdh .x { width: 30px; height: 30px; margin-left: auto; }
 /* Trainingsplan: Woche Mo–So als eine Karte (Wochentag + Symbol in der Farbe des Trainingstags, heute als dunkle Pille), darunter die Trainingstage als Kacheln */
 .pwks { margin-top: 16px; }
-/* Woche: 7 Fächer wie die Mahlzeiten in Essen; belegt = erhabene Karte mit dem Workout (Farbkante, Symbol), leer = leicht vertieftes Fach; heute = Wochentag als dunkle Pille */
-/* In der dunklen Tageskarte: schmale Leiste unten, durch eine feine Linie abgesetzt */
-.pwg { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; padding-top: 10px; border-top: 1px solid var(--line); }
-.pws { display: grid; justify-items: center; align-content: start; gap: 3px; min-width: 0; height: 58px; padding: 4px 2px; border: 1px solid var(--line); border-radius: var(--r12); background: var(--s1); box-shadow: var(--hs); cursor: pointer; }
-.pws.em { background: color-mix(in srgb, var(--ink) 3%, transparent); box-shadow: inset 0 2px 4px color-mix(in srgb, #000 8%, transparent); }
-.pws.sel { border-color: var(--ink2); }
-.pws.drop { border-color: var(--ac); box-shadow: 0 0 0 2px var(--ac); }
-.pws small { display: grid; place-items: center; width: 24px; height: 17px; border-radius: var(--r8); font: 700 10.5px/1 var(--f-mono); color: var(--ink3); }
-.pws.t small { background: var(--ink); color: var(--bg); }
-.pwsc { display: grid; place-items: center; width: 100%; max-width: 36px; height: 22px; border-top: 3px solid var(--pc); border-radius: var(--r8); background: color-mix(in srgb, var(--pc) 20%, var(--s1)); color: var(--pc); touch-action: none; }
-.pwsc .ic { width: 15px; height: 15px; }
-.pwsc.glass { position: relative; z-index: 5; box-shadow: 0 0 0 2px var(--pc), 0 8px 18px -8px rgba(0, 0, 0, .5); }
+/* Woche wie die Mahlzeiten in Essen planen: 4er-Raster (Mo–Do, Fr–So + Summe), belegt = Kachel in der Farbe des Workouts (Name, Minuten unten), leer = vertieftes Fach mit Schneeflocke;
+   heute = Wochentag als dunkle Pille, gewählter Tag mit Kontur; Workout im Fach ist ziehbar (verschieben, tauschen, entfernen) */
+.pwg { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 4px; padding-top: 12px; border-top: 1px solid var(--line); }
+.pwg .fmc { width: auto; height: 84px; gap: 3px; padding: 7px 7px 6px; cursor: pointer; }
+.pws { display: flex; flex-direction: column; align-items: stretch; }
+.pws.fme { align-items: center; }
+.pws.fme > .ic { margin: auto 0; }
+.pws .fmt small { display: grid; place-items: center; min-width: 22px; height: 16px; padding: 0 4px; border-radius: var(--r8); font: 700 10.5px/1 var(--f-mono); color: var(--ink2); }
+.pws.t .fmt small { background: var(--ink); color: var(--bg); }
+.pws.sel { outline: 2px solid var(--ink2); outline-offset: 1px; }
+.pws.drop { outline: 3px solid var(--ac); outline-offset: 2px; }
+.pws > b, .pwsum > b { margin-top: auto; font-size: 17px; }
+.pwsc { display: flex; align-items: center; gap: 3px; min-width: 0; color: var(--pc); touch-action: none; }
+.pwsc .ic { flex: none; width: 14px; height: 14px; }
+.pwsc i { overflow: hidden; font: 700 11px/1.15 var(--f-body); font-style: normal; white-space: nowrap; text-overflow: ellipsis; color: var(--ink); }
+.pwsc.glass { position: relative; z-index: 5; padding: 2px 4px; border-radius: var(--r8); background: var(--s1); box-shadow: 0 0 0 2px var(--pc), 0 8px 18px -8px rgba(0, 0, 0, .5); }
+.pwsum { display: flex; flex-direction: column; border-style: dashed; background: transparent; box-shadow: none; }
 .ptl2.drop { outline: 2px dashed var(--danger); outline-offset: 4px; border-radius: var(--r12); }
 .ptl2 { margin-top: 2px; }
 /* Essen planen: kleiner Schalter Gerichte | Vorlagen über den Kacheln */
-.seg.pgt { width: max-content; margin: 0 0 4px; }
+.seg.pgt { grid-template-columns: none; grid-auto-flow: column; width: max-content; margin: 0 0 4px; }
 .seg.pgt button { min-height: 32px; padding: 0 14px; font-size: 13px; }
 /* Vorlagen-Kacheln: Mahlzeit in ihrer Farbe (wie Vorschläge), Tag neutral; neue/Löschen gestrichelt mit Symbol; Löschmodus rot umrandet */
 .fti.tpd { --tq: var(--ink2); }

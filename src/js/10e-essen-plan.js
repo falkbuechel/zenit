@@ -57,41 +57,73 @@
     return '<button class="tpsv" data-ptpm="' + k + '"><i>' + ic('cards') + '</i><span><b>Als ' + (k === 'd' ? 'Tages' : 'Mahlzeit') + '-Vorlage speichern</b><small>' + n + ' Teile · ' + kc + ' kcal · zum Wiederholen</small></span>' + ic('chev') + '</button>';
   }
   // Einkaufsliste aus dem Geplanten (food.pl) ab heute für n Tage: Gerichte in Zutaten zerlegt, gleiche Lebensmittel zusammengezählt,
-  // Menge aufgerundet auf Packung/Stück (Portionen der Liste), sonst auf 50 g/ml; nach Kategorie, abgehakt (food.sh) grau unten
+  // Menge aufgerundet auf Packung/Stück (Portionen der Liste), sonst auf 50 g/ml; nach Kategorie, abgehakt (food.sh) grau unten.
+  // Je Zeile: wofür (Tag, Mahlzeit, Gericht, Menge) und Preis als Richtwert (€/kg je Kategorie, einige Lebensmittel eigen)
+  var SHP = { g: 2.5, m: 4, e: 10, h: 4, v: 3, o: 3.5, n: 14, s: 9, d: 1.2, f: 8, r: 12, u: 6, x: 6 };
+  var SHPI = { hafer: 1.3, reis_r: 2, nud_r: 1.5, vknud: 2, kart: 1.2, mquark: 2.5, skyr: 3.3, joghurt: 2, whey: 25, ei: 4.5, eiklar: 5, haehn: 10, rhack: 9, lachs: 25, thun: 12, garnel: 22,
+    tofu: 8, olivoel: 9, rapsoel: 3, butter: 9, parm: 20, banane: 1.5, apfel: 2.5, beeren: 5, mandeln: 14, ernmus: 8, hafmil: 1.2, sojmil: 1.5, cola: 1, colaz: 1, bier: 2, osaft: 1.8 };
   function shopList(n) {
     var st = foodState(), t = dayIdx(Date.now()), m = {}, l = [];
-    function put(id, nm, g) {
+    function put(id, nm, g, src) {
       var it = id && fItem(id), key = it ? id : ('n:' + fnorm(nm)).slice(0, 40); if (!(g > 0)) return;
-      if (!m[key]) { m[key] = { key: key, it: it, n: it ? fEn(it) : nm, g: 0, c: it && !it.dish ? (/^u/.test(id) ? 'u' : CATI[it.cat] ? it.cat : 'x') : 'x' }; l.push(m[key]); }
-      m[key].g += g;
+      if (!m[key]) { m[key] = { key: key, id: it ? id : '', it: it, n: it ? fEn(it) : nm, g: 0, src: [], c: it && !it.dish ? (CATI[it.cat] ? it.cat : /^u/.test(id) ? 'u' : 'x') : 'x' }; l.push(m[key]); }
+      m[key].g += g; m[key].src.push(src);
     }
     st.pl.forEach(function (x) {
       if (x.d < t || x.d >= t + n || !x.r) return;
       var dd = /^d/.test(x.r.i) && fDish(x.r.i);
       if (/^d/.test(x.r.i) && !dd) return;
-      if (dd) dd.ing.forEach(function (q) { put(q.i, q.n || 'Zutat', (+q.a || 0) * x.r.g / Math.max(1, +dd.por || 1)); });
-      else put(x.r.i, x.n, x.r.g);
+      if (dd) dd.ing.forEach(function (q) { var g = (+q.a || 0) * x.r.g / Math.max(1, +dd.por || 1); put(q.i, q.n || 'Zutat', g, { d: x.d, mk: x.mk, n: dd.n, g: g }); });
+      else put(x.r.i, x.n, x.r.g, { d: x.d, mk: x.mk, g: x.r.g });
     });
     l.forEach(function (o) {
       // Packung: größte Portion der Liste (Becher, Dose …), außer Stück/Scheibe → Stück zählen; sonst Gramm
       var u = o.it && o.it.u || [], pk = u.filter(function (q) { return /Becher|Dose|Packung|Flasche|Glas|Beutel|Tafel|Netz|Bund|Kopf/.test(q[0]); }).sort(function (a, b) { return b[1] - a[1]; })[0], pc = u.filter(function (q) { return /Stück/.test(q[0]); })[0];
-      var q = pk || pc; o.a = q ? Math.max(1, Math.ceil(o.g / q[1] - 0.05)) +(pk ? ' × ' + q[0] + ' (' + q[1] + (o.it.ml ? ' ml' : ' g') + ')' : ' ' + q[0]) :Math.ceil(o.g / 50) * 50 + (o.it && o.it.ml ? ' ml' : ' g');
+      var q = pk || pc, cnt = q ? Math.max(1, Math.ceil(o.g / q[1] - 0.05)) : 0, ml = o.it && o.it.ml ? ' ml' : ' g';
+      o.bg = q ? cnt * q[1] : Math.ceil(o.g / 50) * 50;
+      o.a = q ? cnt + (pk ? ' × ' + q[0] + ' (' + q[1] + ml + ')' : ' ' + q[0]) : o.bg + ml;
+      o.eur = o.bg / 1000 * (SHPI[o.id] || SHP[o.c] || SHP.x);
       o.ok = st.sh[o.key] != null;
     });
     return l;
   }
+  function shopN() {
+    // Zeitraum: gewählt, sonst bis zum letzten geplanten Tag der nächsten 7 Tage (mindestens heute)
+    if (ui.shn) return ui.shn;
+    var t = dayIdx(Date.now()), mx = 0; foodState().pl.forEach(function (x) { if (x.d >= t && x.d < t + 7) mx = Math.max(mx, x.d - t + 1); });
+    return mx || 7;
+  }
+  function eur(v) { return v.toFixed(2).replace('.', ',') + ' €'; }
   function shopHtml() {
-    var n = ui.shn || 7, l = shopList(n), co = Object.keys(CATI), h = '';
-    var open = l.filter(function (o) { return !o.ok; }), done = l.filter(function (o) { return o.ok; });
-    function row(o) { return '<button class="shr' + (o.ok ? ' ok' : '') + '" data-shk="' + esc(o.key) + '" aria-pressed="' + o.ok + '"><i>' + (o.ok ? ic('check') : '') + '</i><b>' + esc(o.n) + '</b><small>' + esc(o.a) + '</small></button>'; }
+    var n = shopN(), t = dayIdx(Date.now()), l = shopList(n), co = Object.keys(CATI), h = '';
+    var open = l.filter(function (o) { return !o.ok; }), done = l.filter(function (o) { return o.ok; }), sum = open.reduce(function (a, o) { return a + o.eur; }, 0);
+    // Zeile: Haken links (abhaken), Mitte antippen = wofür (Tag · Mahlzeit · Gericht · Menge), rechts Preis
+    function row(o) {
+      var op = ui.shx === o.key, ck = o.it ? (o.it.dish ? 'dish' : o.c) : 'x';
+      return '<div class="shr' + (o.ok ? ' ok' : '') + (op ? ' open' : '') + '" style="--cc:' + (CCOL[o.c] || CCOL.x) + '"><button class="shc" data-shk="' + esc(o.key) + '" aria-pressed="' + o.ok + '" aria-label="' + esc(o.n) + (o.ok ? ' wieder offen' : ' abhaken') + '">' + (o.ok ? ic('check') : '') + '</button>' +
+        '<button class="shm" data-shx="' + esc(o.key) + '" aria-expanded="' + op + '"><i class="fsc" style="color:' + (o.id ? fTone(o.id, ck) : 'var(--ink3)') + '">' + ic(o.id ? fIco(o.id, ck) : 'food') + '</i><span><b>' + esc(o.n) + '</b><small>' + esc(o.a) + '</small></span><em>≈ ' + eur(o.eur) + '</em></button>' +
+        (op ? '<div class="shw">' + o.src.map(function (q) {
+          return '<p class="m-' + q.mk + '">' + ic(MEALI[q.mk]) + '<span>' + (q.d === t ? 'Heute' : q.d === t + 1 ? 'Morgen' : WDN[wdOf(q.d)].slice(0, 2) + ' ' + fmtShort(q.d)) + (q.n ? ' · ' + esc(q.n) : '') + '</span><small>' + Math.round(q.g) + (o.it && o.it.ml ? ' ml' : ' g') + '</small></p>';
+        }).join('') + '</div>' : '') + '</div>';
+    }
     co.forEach(function (c) {
       var g = open.filter(function (o) { return o.c === c; }); if (!g.length) return;
-      h += '<h3 class="shh">' + ic(CATI[c][0]) + esc(CATI[c][1]) + '</h3>' + g.map(row).join('');
+      h += '<h3 class="shh" style="--cc:' + (CCOL[c] || CCOL.x) + '">' + ic(CATI[c][0]) + esc(CATI[c][1]) + '<small>' + g.length + '</small></h3>' + g.map(row).join('');
     });
-    if (done.length) h += '<h3 class="shh">' + ic('check') + 'Im Wagen</h3>' + done.map(row).join('');
-    return shHead('cart', 'Einkauf', open.length + ' offen · ' + (n === 3 ? 'nächste 3 Tage' : 'nächste 7 Tage')) +
-      '<div class="seg"><button data-shn="3" aria-pressed="' + (n === 3) + '">3 Tage</button><button data-shn="7" aria-pressed="' + (n === 7) + '">7 Tage</button></div>' +
+    if (done.length) h += '<h3 class="shh">' + ic('check') + 'Im Wagen<small>' + done.length + '</small></h3>' + done.map(row).join('');
+    // Zeitraum: Tage ab heute zum Antippen (bis einschließlich), dazu 2 Wochen; gewählt = alle Tage bis zum Ende
+    var days = [1, 2, 3, 4, 5, 6, 7].map(function (k) { return [k, k === 1 ? 'Heute' : WDN[wdOf(t + k - 1)].slice(0, 2)]; }).concat([[14, '2 Wo']]);
+    return shHead('cart', 'Einkauf', 'bis ' + (n === 1 ? 'heute' : dayHead(t + n - 1))) +
+      '<div class="shd" role="group" aria-label="Zeitraum">' + days.map(function (x) { var on = x[0] === 14 ? n === 14 : n < 14 && x[0] <= n; return '<button data-shn="' + x[0] + '" aria-pressed="' + on + '"' + (n === x[0] ? ' class="end"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div>' +
+      (l.length ? '<div class="shs"><span><b>' + open.length + '</b><small>offen</small></span><span><b>≈ ' + eur(sum) + '</b><small>Richtwert</small></span><button class="x" data-shsh="1" aria-label="Liste teilen">' + ic('share') + '</button></div>' : '') +
       '<div class="shl">' + (h || '<p class="muted">Nichts geplant. In Planen › Essen Mahlzeiten einplanen.</p>') + '</div>';
+  }
+  function shopShare() {
+    // Offene Einträge als Text (Notizen, Nachrichten): nach Kategorie, Menge dahinter; ohne Teilen-Dialog in die Zwischenablage
+    var n = shopN(), t = dayIdx(Date.now()), l = shopList(n).filter(function (o) { return !o.ok; }), txt = 'Einkauf bis ' + dayHead(t + n - 1) + '\n';
+    Object.keys(CATI).forEach(function (c) { var g = l.filter(function (o) { return o.c === c; }); if (g.length) txt += '\n' + CATI[c][1] + '\n' + g.map(function (o) { return '- ' + o.n + ': ' + o.a; }).join('\n') + '\n'; });
+    if (navigator.share) { navigator.share({ title: 'Einkauf', text: txt }).catch(function () {}); return; }
+    if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { toast('Liste kopiert', 'check'); }, function () { toast('Kopieren ging nicht', 'close'); });
   }
   function openShop() { ui.sheet = { shop: true }; sheetOpen(shopHtml(), true); }
   function planEat(mk) {
@@ -141,6 +173,8 @@
     if ((el = t.closest('[data-plx]'))) { fUndo(); foodState().pl.splice(+el.dataset.plx, 1); persist(); ui.fresh = false; render(); openPlanMeal(ui.fplan.d, ui.fplan.mk); buzz(6); return true; }
     if (t.closest('[data-pshop]')) { openShop(); return true; }
     if ((el = t.closest('[data-shn]'))) { ui.shn = +el.dataset.shn; $('sheet').innerHTML = shopHtml(); buzz(4); return true; }
+    if ((el = t.closest('[data-shx]'))) { ui.shx = ui.shx === el.dataset.shx ? null : el.dataset.shx; $('sheet').innerHTML = shopHtml(); buzz(4); return true; }
+    if (t.closest('[data-shsh]')) { shopShare(); return true; }
     if ((el = t.closest('[data-shk]'))) { var shk = el.dataset.shk; if (st.sh[shk] != null) delete st.sh[shk]; else st.sh[shk] = dayIdx(Date.now()); persist(); $('sheet').innerHTML = shopHtml(); buzz(6); return true; }
     if (t.closest('[data-fingo]')) { ui.fingo = !ui.fingo; ui.fstpo = false; $('sheet').classList.remove('full'); fpPaint(); buzz(4); return true; }
     // Schritte: Fenster geht ganz auf (.full), die Schritte erscheinen unter den Zutaten

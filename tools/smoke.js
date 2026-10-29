@@ -69,7 +69,7 @@ async function scenario(b, sc, errs) {
       await click('[data-pgt="v"]'); await click('[data-ptpd]'); await click('[data-ptp]'); await shot('tage-vorlagen'); await click('[data-ptpx]'); await click('[data-ptp]'); await click('[data-pgt="g"]'); await click('[data-pws="4"]');
       await click('[data-pshop]'); await click('[data-shn="3"]'); await click('[data-shk]'); await shot('tage-einkauf'); await closeSheet(); await click('[data-pft="t"]');
       if (await click('[data-pnts]')) await closeSheet();
-      await click('[data-pdays]'); await shot('tage-tage'); await click('[data-sheet-close]');
+      await click('[data-ptt="v"]'); await shot('tage-tage'); await click('[data-ptt="w"]');
     }
     // Plan: Trainingstag-Editor öffnen, Übung an/aus, Icon, Filter, Rhythmus, gesperrte Übung, zurück
     if (tab === 'tage' && await click('[data-pedit]')) {

@@ -9,7 +9,7 @@
     var j = ui.harr.indexOf(ui.hcur) + (dx < 0 ? 1 : -1); if (j < 0 || j >= ui.harr.length) return;
     ui.hsel = ui.harr[j]; ui.hdir = dx < 0 ? 1 : -1; ui.fresh = false; render(); buzz(4);
   });
-  function goTab(k, dir) { if (k === ui.tab || TABS.indexOf(k) < 0) return; ui.sw = dir || (TABS.indexOf(k) - TABS.indexOf(ui.tab)); ui.fdrawn = false; ui.fpg = null; ui.fmeal = null; ui.cm = false; if (ui.undo && ui.undo.charAt(0) === '#') ui.undo = null; ui.tab = k; ui.sel = null; ui.del = null; ui.pe = null; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0); }
+  function goTab(k, dir) { if (k === ui.tab || TABS.indexOf(k) < 0) return; ui.sw = dir || (TABS.indexOf(k) - TABS.indexOf(ui.tab)); ui.fdrawn = false; ui.fpg = null; ui.fmeal = null; ui.cm = 0; if (ui.undo && ui.undo.charAt(0) === '#') ui.undo = null; ui.tab = k; ui.sel = null; ui.del = null; ui.pe = null; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0); }
   var sx = 0, sy = 0, st0 = 0, sEl = null, sMode = '', sheetDy = 0, calLock = '';
   document.addEventListener('touchstart', function (e) {
     sMode = ''; if (e.touches.length !== 1) return;
@@ -35,9 +35,10 @@
     var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy, m = sMode; sMode = '';
     if (m === 'sheet') { var sh = $('sheet'); sh.style.transition = ''; sh.style.transform = ''; if (sheetDy > 90) closeSheet(); return; }
     if (m === 'cal' || m === 'fds') {
-      // Kalender senkrecht: nach unten = Monat aufklappen, nach oben = wieder Woche
+      // Kalender senkrecht: nach unten = eine Stufe mehr (7 Tage → 3 → 5 Wochen), nach oben = eine weniger
       // Aufklappen nur, wenn die Seite oben steht (sonst war es ein Scrollen)
-      if (m === 'cal' && calLock === 'y' && Math.abs(dy) > 40 && (dy > 0) !== !!ui.cm && (dy < 0 || $('app').scrollTop <= 0)) { calMon(dy > 0); return; }
+      var lv = ui.cm || 0;
+      if (m === 'cal' && calLock === 'y' && Math.abs(dy) > 40 && (dy > 0 ? lv < 2 && $('app').scrollTop <= 0 : lv > 0)) { calMon(lv + (dy > 0 ? 1 : -1)); return; }
       if (calLock !== 'x') return;
       var fast = Math.abs(dx) / Math.max(1, Date.now() - st0) > 0.35, cg = document.querySelector(m === 'cal' ? '.pc2-g' : '.fds');
       if ((Math.abs(dx) > 50 || fast) && (m === 'cal' ? calMove : fdsMove)(dx < 0 ? 1 : -1)) return;

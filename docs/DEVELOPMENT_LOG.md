@@ -5,7 +5,7 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 ## Stand 2026-10-29
 - Zuletzt (alles live, Commit faf47e1): viele Runden Feinschliff Essen und Planen nach Falks iPhone-Rückmeldungen (Einzelheiten unter Verlauf 28./29.10.). Arbeitsweise: Falk meldet nummerierte Punkte je Bereich, klare Fixes direkt, Umbauten mit Varianten (AskUserQuestion).
 - Falk testet am iPhone: Tagesleiste/Kalender schlicht mit Ringen, Wasser über das Ziel ziehen (dunkelblau, roter Überlauf), Gericht-Fenster mit Topf-Knopf, Kategorien-Raster, Mahlzeiten auf/zu weich, Essen-Vorlagen in Planen, Woche in der Tageskarte, Menüleiste (Strich in Bereichsfarbe).
-- Nächster Schritt: Falks nächste Rückmeldung; sonst übrige Fenster im Essen-Stil (Schnell, Wasser, Ziele/Rechner, eigenes Lebensmittel, Marken, Planen-Fenster) und Training in Planen weiter vereinfachen.
+- Nächster Schritt: Falks notierte Punkte vom 29.10. (oben unter „Offen“: Gerichte-Zutaten, geplante Tage stricheln, Kategorien/Zuletzt ruhiger), dann übrige Fenster im Essen-Stil (Schnell, Wasser, Ziele/Rechner, eigenes Lebensmittel, Marken, Planen-Fenster) und Training in Planen weiter vereinfachen.
 - Offene Entscheidung: alter Wochenplaner (`viewPlanner`, `data-pman`, Pläne-Liste, „Plan ab Datum“) hat keinen Einstieg mehr – entfernen oder als „Pläne“ wieder anbinden?
 - Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
 - App-Icon (oliv) übernimmt iOS erst beim neuen Hinzufügen zum Homescreen. NICHT die App löschen (Daten weg).

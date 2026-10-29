@@ -70,9 +70,9 @@
 /* Bilanz als dunkle Fokus-Karte (.dkc in 00-basis) */
 .fbal {
   position: relative; display: grid; gap: 12px; margin-top: 10px; padding: 14px; border: 1px solid transparent; border-radius: var(--r16); color: var(--ink);
-  /* Licht von unten: flache Ellipse, hauchkühl blau; oben ein feiner warmer Streif */
-  background: radial-gradient(ellipse 90% 55% at 50% 112%, color-mix(in srgb, var(--g-cardio) 18%, transparent), transparent 72%),
-    linear-gradient(180deg, color-mix(in srgb, var(--gold) 7%, transparent), transparent 24%), var(--s1);
+  /* Licht von unten: breite, weich auslaufende Ellipse, hauchkühl (Blau ins Anthrazit gemischt); oben ein feiner warmer Hauch, der früh ausläuft */
+  background: radial-gradient(ellipse 120% 70% at 50% 118%, color-mix(in srgb, color-mix(in srgb, var(--g-cardio) 45%, var(--s1)) 22%, transparent), transparent 80%),
+    linear-gradient(180deg, color-mix(in srgb, color-mix(in srgb, var(--gold) 40%, var(--s1)) 10%, transparent), transparent 30%), var(--s1);
   box-shadow: 0 0 24px -8px color-mix(in srgb, var(--ac) 55%, transparent), 0 10px 22px -14px rgba(0, 0, 0, .6);
 }
 .fresh .fbal.rise { animation: rise .42s var(--ease) both, fglow 1.1s ease-out both; animation-delay: calc(var(--i, 0) * 40ms), .3s; }
@@ -183,9 +183,13 @@
 .fcpi.fprev { opacity: .5; box-shadow: none; animation: fprin .18s var(--ease); }
 @keyframes fprin { from { opacity: 0; transform: scale(.92); } }
 /* Ziel beim Hochziehen eines Vorschlags: die Mahlzeit unter dem Finger leuchtet */
-.fdl .drop { box-shadow: 0 0 0 1.5px var(--mc, var(--ac)), 0 0 18px -4px var(--mc, var(--ac)); transform: scale(1.03); }
+/* Innen gezeichnet (Ring + Tönung), damit nichts am Rand der Reihe abgeschnitten wird; gilt auch für leere Fächer */
+.fdl .fmc.drop, .fdl .drop { box-shadow: inset 0 0 0 1.5px var(--mc, var(--ac)), inset 0 0 14px -6px var(--mc, var(--ac)); background: color-mix(in srgb, var(--mc, var(--ac)) 14%, var(--s1)); }
 .fcpi.arm { box-shadow: 0 0 0 2px var(--danger); }
-.fcpi.gone { opacity: 0; transform: translateY(60px) !important; }
+.fcpi.gone { opacity: 0 !important; transform: translateY(60px) !important; }
+/* Eintrag beim Wegziehen: Glas in der Mahlzeitfarbe, rote Kante, sobald scharf */
+.fcpi.glass { background: linear-gradient(150deg, color-mix(in srgb, var(--mc) 24%, transparent), color-mix(in srgb, var(--mc) 6%, transparent) 65%); -webkit-backdrop-filter: blur(1.5px); backdrop-filter: blur(1.5px); box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--mc) 40%, #fff); }
+.fcpi.glass.arm { box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--mc) 40%, #fff), 0 0 0 1.5px var(--danger); }
 @keyframes ftok { 0% { background: color-mix(in srgb, var(--ac) 30%, var(--s1)); transform: scale(.96); } }
 /* Suchen als Eingabefeld-Optik (vertieft, blasser Text, Scanner im Feld ohne Trennung), Gerichte daneben als erhabene Pille (gleiche Form wie das Feld) */
 .fact2 { display: grid; grid-template-columns: minmax(0, 1fr) 58px; gap: 8px; margin-top: 4px; }
@@ -373,8 +377,13 @@
 @keyframes fdin { from { opacity: 0; transform: translateY(-4px); } }
 .fwa > .ic { width: 18px; height: 18px; color: var(--ink3); }
 /* Wasser-Balken als Regler: sichtbar bleibt der schmale Balken, die Griff-Fläche ist höher */
-.fwa .fbt.wsl { height: 28px; margin: -10px 0; background: transparent; border-radius: 0; overflow: visible; }
+.fwa .fbt.wsl { height: 28px; margin: -10px 0; background: transparent; border-radius: 0; overflow: visible; animation: none !important; }
 .fwa .fbt.wsl::before, .fwa .fbt.wsl > i { top: 10px; }
+.fwa .fbt.wsl > i { transition: none; }
+.fwa .fbt.wsl > em { top: 7px; bottom: 7px; width: 1.5px; background: color-mix(in srgb, var(--ink) 60%, transparent); }
+/* Über dem Ziel: Fülle läuft dunkler aus; über der Grenze: in Rot */
+.fwa .fbt.wsl.hi > i { background: linear-gradient(90deg, var(--fc) 55%, color-mix(in srgb, var(--fc) 55%, #000)); }
+.fwa .fbt.wsl.over > i { background: linear-gradient(90deg, var(--fc) 45%, var(--danger)); }
 .fwa b { font-family: var(--f-mono); font-size: 13px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .fwa b small { font-size: 11px; color: var(--ink3); }
 /* Wasser-Regler: in der Bilanz ziehen (relativ, auch übers Ziel hinaus); im Fenster breit mit Skala */
@@ -599,9 +608,17 @@ button.cday:active { transform: scale(.97); }
   margin-right: 10px; border-color: var(--tl); background: var(--tb); box-shadow: 5px 5px 0 -1px var(--tb), 5px 5px 0 0 var(--tl), 10px 10px 0 -1px var(--tb), 10px 10px 0 0 var(--tl);
 }
 /* Getönte Klammer per Schatten-Ring statt Innenabstand: aufgeklappt bleibt die Zeile gleich hoch */
-.fgrp { flex: none; scroll-snap-align: start; display: flex; align-items: stretch; gap: 6px; margin: 0 4px; border-radius: var(--r16); background: color-mix(in srgb, var(--mc) 26%, transparent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--mc) 26%, transparent); }
+.fgrp {
+  flex: none; scroll-snap-align: start; display: flex; align-items: stretch; gap: 6px; margin: 0 5px; border-radius: var(--r16);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--mc) 24%, transparent), color-mix(in srgb, var(--mc) 12%, transparent));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--mc) 18%, transparent), 0 0 0 5px color-mix(in srgb, var(--mc) 45%, transparent);
+}
 /* Zuklappen vorne: Kategorie-Icon, Anzahl, Kreuz – wie der Zurück-Knopf der Mahlzeit */
-.fgx { display: grid; justify-items: center; align-content: center; gap: 4px; align-self: stretch; width: 46px; padding: 6px 2px; border: 0; border-radius: var(--r14); background: var(--s1); color: var(--mc); font: inherit; }
+/* Gruppenkopf als Karte wie die Mahlzeiten: Farbkante oben, Verlauf der Mahlzeitfarbe, Tastenkante */
+.fgx {
+  display: grid; justify-items: center; align-content: center; gap: 4px; align-self: stretch; width: 46px; padding: 6px 2px; border: 1px solid color-mix(in srgb, var(--mc) 40%, var(--line)); border-top: 3px solid var(--mc);
+  border-radius: var(--r14); background: linear-gradient(170deg, color-mix(in srgb, var(--mc) 22%, var(--s1)), var(--s1) 80%); box-shadow: var(--hs); color: var(--mc); font: inherit;
+}
 .fgx .ic { width: 16px; height: 16px; }
 .fgx .ic + small + .ic { width: 13px; height: 13px; color: var(--ink3); }
 .fgx small { font-family: var(--f-mono); font-size: 11px; color: var(--ink2); }

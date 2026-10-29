@@ -351,16 +351,22 @@
     v = Math.max(0, Math.min(8000, v)); if (v === wsl.v) return;
     wsl.v = v; buzz(3); waShow(v);
     wsl.el.firstElementChild.style.setProperty('--p', Math.min(1, v / mx).toFixed(4));
+    // Balken in der Bilanz: über dem Ziel dunkler (hi), über der Grenze rot (over), live beim Ziehen
+    if (wsl.el.dataset.goal) { wsl.el.classList.toggle('hi', v > +wsl.el.dataset.goal); wsl.el.classList.toggle('over', v > +wsl.el.dataset.lim); }
   }
   function wslEnd() {
-    if (!wsl) return; var w = wsl; wsl = null; if (w.v !== w.v0) waSet(w.v);
+    if (!wsl) return; var w = wsl; wsl = null;
+    // Balken in der Bilanz nur angetippt (nicht gezogen): Wasser-Fenster öffnen
+    if (w.tap) { ui.sheet = { wa: true }; sheetOpen(waHtml()); return; }
+    if (w.v !== w.v0) waSet(w.v);
     if (ui.sheet && ui.sheet.wa) $('sheet').innerHTML = waHtml();
   }
   document.addEventListener('pointerdown', function (ev) {
     var el = ev.target.closest && ev.target.closest('.wsl'); if (!el) return;
-    wsl = { el: el, x: ev.clientX, v0: +el.dataset.v, v: +el.dataset.v }; wslSet(ev.clientX);
+    // Mit data-tap (Bilanz) zählt erst Ziehen ab 6 px, sonst setzt schon das Antippen den Wert (Fenster-Regler)
+    wsl = { el: el, x: ev.clientX, v0: +el.dataset.v, v: +el.dataset.v, tap: !!el.dataset.tap }; if (!wsl.tap) wslSet(ev.clientX);
   });
-  document.addEventListener('pointermove', function (ev) { if (wsl) wslSet(ev.clientX); });
+  document.addEventListener('pointermove', function (ev) { if (!wsl) return; if (wsl.tap) { if (Math.abs(ev.clientX - wsl.x) < 6) return; wsl.tap = false; } wslSet(ev.clientX); });
   document.addEventListener('pointerup', wslEnd);
   document.addEventListener('pointercancel', wslEnd);
   function waSet(v) {
@@ -399,8 +405,10 @@
       '<em><b>' + Math.abs(g.k - s.k) + '</b>' + (g.k - s.k >= 0 ? 'offen' : 'drüber') + '</em><i class="fbt"><i' + pv('fkb', Math.min(1, kp)) + '></i>' + fGh(kp, pq.k / g.k) + fOv(kp, FLIM.k) + '</i></div>' +
       '<div class="fbm">' + ['p', 'f', 'c', 'fb', 'su'].map(function (k) { return fbar(k, s[k], g[k], ex, pq[k]); }).join('') + '</div>' +
       '<div class="fwa' + (wa > wg * FLIM.wa ? ' over' : wa >= wg ? ' hit' : '') + fAnim('wa', wa > wg * FLIM.wa ? 'over' : wa >= wg ? 'hit' : '', wa) + '">' + ic('drop') +
-      // Balken = Regler bis zum Tagesziel (antippen/wischen setzt den Wert, Loslassen speichert); genauer und über das Ziel hinaus über die Zahl rechts
-      '<i class="fbt wsl' + (wa > wg ? ' hi' : '') + '" data-max="' + wg + '" data-v="' + wa + '" data-noswipe="1" role="slider" aria-label="Wasser"><i' + pv('fwa', Math.min(1, wa / wg)) + '></i>' + fOv(wa / wg, FLIM.wa) + '</i>' +
+      // Balken = Regler bis zur Grenze (1,5 × Ziel, Strich = Ziel): wischen setzt den Wert live, Loslassen speichert; antippen öffnet das Wasser-Fenster.
+      // Über dem Ziel dunkler, über der Grenze rot
+      '<i class="fbt wsl' + (wa > wg ? ' hi' : '') + (wa > wg * FLIM.wa ? ' over' : '') + '" data-max="' + Math.round(wg * FLIM.wa) + '" data-goal="' + wg + '" data-lim="' + Math.round(wg * FLIM.wa) + '" data-v="' + wa + '" data-tap="1" data-noswipe="1" role="slider" aria-label="Wasser">' +
+      '<i style="--p:' + Math.min(1, wa / (wg * FLIM.wa)).toFixed(4) + '"></i><em style="--x:' + (1 / FLIM.wa).toFixed(4) + '"></em></i>' +
       '<button class="fwv" data-fwao="1" aria-label="Wasser genau eintragen"><b><span data-wav="1">' + fN2(wa / 1000) + '</span><small>/' + fN(wg / 1000) + ' l</small></b></button>' +
       '</div></section>';
     // Gegessen in einer Zeile (immer gleich hoch): je Mahlzeit in fester Reihenfolge eine Karte (kcal, Kategorien überlappend), fehlende als leerer Platzhalter
@@ -468,7 +476,9 @@
     return '<div class="grab"></div><div class="sh-h">' + (back ? '<button class="x" data-fback="1" aria-label="Zurück">' + ic('back') + '</button>' : '<span class="gi">' + ic(icn) + '</span>') + '<div class="nm"><b>' + esc(title) + '</b><small>' + esc(sub) + '</small></div><button class="x" data-sheet-close aria-label="Schließen">' + ic('close') + '</button></div>';
   }
   // Ein anderes Fenster macht die offene Mahlzeit überflüssig (außer Menge eines ihrer Einträge ändern): sie klappt beim nächsten Zeichnen zu
-  function sheetOpen(html, tall) { if (!(ui.sheet && (ui.sheet.fpick || (ui.sheet.food && ui.sheet.idx != null)))) ui.fmeal = null; $('sheet').className = 'sheet' + (tall ? ' tall' : ''); $('sheet').innerHTML = html; $('shade').classList.add('open'); $('sheet').classList.add('open'); }
+  function sheetOpen(html, tall) {
+    // Offene Mahlzeit sofort zuklappen (auch unter dem Fenster sichtbar), außer beim Ändern eines ihrer Einträge
+    if (ui.fmeal && !(ui.sheet && (ui.sheet.fpick || (ui.sheet.food && ui.sheet.idx != null)))) { ui.fmeal = null; if (ui.tab === 'food') { ui.fresh = false; render(); } } $('sheet').className = 'sheet' + (tall ? ' tall' : ''); $('sheet').innerHTML = html; $('shade').classList.add('open'); $('sheet').classList.add('open'); }
   function openFsearch(keep) {
     ui.sheet = { fsearch: true }; ui.fq = ''; ui.fcat = keep ? ui.fcat : ''; if (!keep) ui.ftab = 'c'; ui.fqm = false; ui.fpick = null; if (!ui.fplan) ui.fday = dayIdx(Date.now()) - fSd();
     sheetOpen(shHead('search', ui.ingm ? 'Zutat' : 'Eintragen', ui.ingm ? 'Für das Gericht' : 'Lebensmittel oder Gericht suchen', !!ui.ingm) + '<div class="fqw"><input id="fq" class="fnm fq" type="search" placeholder="Suchen, z. B. Skyr" autocomplete="off" aria-label="Suchen"><button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button></div><div id="fres" class="fsr">' + fresHtml() + '</div>', true);
@@ -1006,6 +1016,8 @@
     // Vorschläge folgen dem Finger in jede Richtung (scharf erst ab 44 px nach oben), Einträge nur nach unten (löschen)
     var v = fsw.add ? dy : Math.max(0, Math.min(70, dy)); fsw.dy = v;
     fsw.el.style.transform = fsw.add ? 'translate(' + dx + 'px,' + v + 'px)' : 'translateY(' + v + 'px)'; fsw.armd = fsw.add ? v < -44 : v > 44; fsw.el.classList.toggle('arm', fsw.armd);
+    // Eintrag nach unten (löschen): wird gläsern und blendet mit dem Weg aus
+    if (!fsw.add) { fsw.el.classList.add('glass'); fsw.el.style.opacity = Math.max(0.25, 1 - v / 90).toFixed(2); }
     if (fsw.add) {
       fsw.el.style.pointerEvents = 'none'; fsw.el.classList.add('glass');
       var open = document.querySelector('.fdl .fmz'), tg;
@@ -1041,7 +1053,7 @@
         if (tl) { ui.fday = dayIdx(Date.now()) - fSd(); ui.ftok = j; ui.fdmk = mm ? mm[1] : null; buzz([10, 30, 10]); foodRef(tl.i, tl.g); return; }
       } else { f.el.classList.add('gone'); setTimeout(function () { foodDel(f.el.dataset.fdelg ? f.el.dataset.fdelg.split(',').map(Number) : +f.el.dataset.fedit); }, 160); return; }
     }
-    f.el.style.transform = ''; f.el.classList.remove('arm');
+    f.el.style.transform = ''; f.el.style.opacity = ''; f.el.classList.remove('arm', 'glass');
   }
   // Gerichte-Menü: Karte nach rechts wischen = 1 Portion sofort eintragen
   var fdsw = null, fdswMoved = false;
@@ -1107,7 +1119,7 @@
   }, { passive: false });
   document.addEventListener('pointerup', fswEnd);
   // Abgebrochene Geste (iOS-Systemgeste, Anruf): nur zurücksetzen, nie löschen oder eintragen
-  document.addEventListener('pointercancel', function () { if (fsw) { fsw.el.style.transform = ''; fsw.el.style.pointerEvents = ''; fsw.el.classList.remove('arm'); if (fsw.tg) fsw.tg.classList.remove('drop'); fsw = null; } });
+  document.addEventListener('pointercancel', function () { if (fsw) { fsw.el.style.transform = ''; fsw.el.style.pointerEvents = ''; fsw.el.style.opacity = ''; fsw.el.classList.remove('arm', 'glass'); if (fsw.tg) fsw.tg.classList.remove('drop'); if (fsw.pv) fsw.pv.remove(); fsw = null; } });
   function foodPush(x, editIdx) {
     if (ui.fplan && editIdx == null) {
       // Planen: als geplanter Eintrag (Tag, Mahlzeit) speichern, zurück zur Mahlzeit

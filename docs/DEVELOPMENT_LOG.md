@@ -28,6 +28,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-29 – Feinschliff Essen 5, Menüleiste ernster
+- Bilanz: kühles/warmes Licht ins Anthrazit gemischt, breiter und weicher auslaufend.
+- Ziel-Markierung beim Ziehen innen gezeichnet (Ring + Tönung), nicht mehr abgeschnitten, gilt auch für leere Fächer (vorher überschrieb `.fmc.fme` den Schatten).
+- Eintrag nach unten wegziehen: Glas in der Mahlzeitfarbe, blendet mit dem Weg aus, rote Kante wenn scharf. Offene Mahlzeit klappt sofort zu, sobald ein anderes Fenster aufgeht (z. B. Nährwerte).
+- Aufgeklappte Gruppe: Kontur und Verlauf in der Mahlzeitfarbe, Gruppenkopf als Karte mit Farbkante.
+- Wasser-Balken: Regler bis 1,5 × Ziel mit Ziel-Strich; über dem Ziel dunkler, über der Grenze rot (live beim Ziehen); antippen öffnet das Wasser-Fenster (`data-tap`), Ziehen ab 6 px; keine Glow-Animation mehr am Balken (sah als Kasten aus).
+- Menüleiste: aktives Symbol in Tinte ohne Schein, Bereichsfarbe nur im Strich darunter (14 × 3 px, feiner Schein).
+
 ### 2026-10-29 – Menüleiste, Woche in der Tageskarte, Essen-Vorlagen, Fenster im Essen-Stil
 - Menüleiste: jeder Bereich hat eine Farbe (`--bc`: Plan blau, Essen orange, Heute grün, Sammlung gold, Profil lila); aktives Symbol mit Schein und kurzem Federn, Punkt in der Farbe mit Schein, gleitet mit Überschwingen.
 - Planen › Training: Woche (7 Fächer) steckt unten in der dunklen Tageskarte (`pWeekHtml`), darunter nur noch die Workout-Kacheln.

@@ -60,7 +60,6 @@
 .wl .xs2 { width: 36px; height: 36px; }
 .seg.three { grid-template-columns: repeat(3, 1fr); }
 
-@keyframes fdraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 .tabs .bdg { position: absolute; top: 6px; right: 14px; z-index: 2; min-width: 10px; height: 10px; padding: 0 3px; border-radius: var(--r99); background: var(--tc); color: var(--on); font: 800 9px/10px var(--f-mono); text-align: center; box-shadow: 0 0 0 2px var(--s1); }
 .tabs .bdg.hot { background: var(--gold); }
 /* Profil: Karte mit Level und Schnellknöpfen, Statistik-Kacheln mit Mini-Diagramm, Rekorde */
@@ -145,7 +144,6 @@
 .lmk { display: none; }
 .lmk.on { display: inline; }
 .lcs .lgt { fill: var(--gold); font-size: 9px; }
-.pdt { display: inline-block; width: 7px; height: 7px; margin-right: 4px; border-radius: 50%; background: var(--ac); vertical-align: 1px; }
 .sexl { display: grid; }
 .sex { display: grid; grid-template-columns: minmax(0, 1fr) 72px 64px 14px; align-items: center; gap: 8px; min-height: 44px; padding: 0; border: 0; border-top: 1px solid var(--line); background: none; color: var(--ink); font: inherit; text-align: left; }
 .sex:first-child { border-top: 0; }

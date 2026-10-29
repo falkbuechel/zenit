@@ -13,19 +13,23 @@ src/                  Quelle; build.py setzt sie zu EINER Seite zusammen
     90-medien.css     globale Media-Queries, müssen zuletzt kommen
   js/                 Abschnitte EINER Funktion (gemeinsamer Gültigkeitsbereich), laufen in Dateinamen-Reihenfolge
     01-daten.js       Übungen (EX), Gruppen, Konstanten        09-training.js  Satz-Fenster, Stoppuhr, Gesamtuhr, Pause, Rückmeldung/Effekte
-    02-karten.js      Karten, Muskeln, derive()                10-essen.js     Essen-Tab, Lebensmittel, Rechner, Open Food Facts
-    03-speicher.js    Zustand, localStorage, clean*            11-plan.js      Tage-Tab, Editor, Wochenpläne
-    04-demo.js        Testdaten                                12-sammlung.js  Verlauf, Sammlung (Karten, Muskeln, Skilltree), Profil
-    05-hilfen.js      Hilfsfunktionen, Icons (P, ic)           13-statistik.js Statistik, Diagramme
-    06-rendern.js     render(), Tabs, Kopf                     14-ereignisse.js Klick-Handler am document
-    07-heute.js       Heute, Arena, Bergpfad                   15-start.js     Wischen zwischen Tabs, Start
-    08-plan-daten.js  Plan-Hilfen (GORDER, Presets)
+    02-karten.js      Karten, Muskeln, derive()                10a-essen-daten.js    Lebensmittel (FOODS, FCATS, FVAR), Summen
+    03-speicher.js    Zustand, localStorage, clean*            10b-essen-ansicht.js  Rechner-Formeln, Essen-Tab, Wasser, Kacheln/Karten
+    04-demo.js        Testdaten                                10c-essen-suche.js    Open Food Facts, Scan, Mengen-, Schnell-, Gerichte-Fenster
+    05-hilfen.js      Hilfsfunktionen, Icons (P, ic)           10d-essen-fenster.js  Gewicht, Mahlzeiten, Ziele/Rechner, Nährwerte, Wischen/Ziehen
+    06-rendern.js     render(), Tabs, Kopf                     10e-essen-plan.js     Eintragen, Mahlzeit planen, Einkauf, Klick-Handler Essen
+    07-heute.js       Heute, Arena, Bergpfad                   11-plan.js      Planen-Tab, Kalender, Tag-Editor, Wochenplan-Daten (wp/act)
+    08-plan-daten.js  Plan-Hilfen (GORDER, Presets)            12-sammlung.js  Verlauf, Sammlung (Karten, Muskeln, Skilltree), Profil
+                                                               13-statistik.js Statistik, Diagramme
+                                                               14-ereignisse.js Klick-Handler am document
+                                                               15-start.js     Wischen zwischen Tabs, Start
 public/               manifest, Service Worker (sw.js, Netz zuerst, Cache offline), Icons
 build.py              python build.py -> dist/index.html (eine Datei: PWA-Head, CSS, JS, window.ZENIT_V) + public/*; assemble() auch für check.py
 dist/                 Build-Ausgabe zum Hosten (gitignored); dist/index.html läuft auch als Claude-Artifact
 tools/
   check.py            Syntax, doppelte Namen/Klick-Attribute/CSS-Selektoren, Manifest-JSON, Build; Fehler als Datei:Zeile. --fast: ohne Build, still
   hook-check.py       Claude-Hook nach Edit/Write an src/ oder public/: check.py --fast
+  hook-context.py     Claude-Hook am Antwortende: Hinweis „/handoff, dann /clear“ ab 200k Kontext
   smoke.js            Rauchtest: 5 Demo-Szenarien x 5 Tabs + Ansichten/Dialoge, Screenshots -> tools/out/
   compare.js          Pixelvergleich vieler Ansichten (hell/dunkel) gegen einen Git-Stand: beim Aufräumen muss alles gleich bleiben
   make-icons.js       Icons aus SVG -> public/ (Playwright)
@@ -58,7 +62,7 @@ docs/                 DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
   - Rechner (`calcWith`): Mifflin-St Jeor × `pal` + Training (MET 5/7 × kg × Dauer, `trainKcal`) + `rt` × 1100 + `adj`. Makros: Protein g/kg, Fett %, Kohlenhydrate Rest, Ballaststoffe 14 g/1000 kcal, Zucker ≤ 10 %. Lernen (`tdeeEst`): 28 Tage, Ø gegessen − Gewichtstrend × 7700; nur bei ≥ 10 Tagen, ≥ 3 Messungen über ≥ 10 Tage und höchstens 30 % Abweichung von der Formel.
 - plan: `{days, v, ev, cu, ov, ovl, ovk, off, wp, act}`
   - `days: [{id, n, c, i?, rp?, st?, wd, ex}]` – Trainingstage. `i` Icon (`DAYI`, sonst Hauptgruppe via `dIcon`), `rp` Rhythmus (fehlt = jede Woche, 2/3 = alle n Wochen, 0 = einmalig) ab Startwoche `st` (Montag als Tagesindex), `ex` Übungen (gesperrte dürfen drinstehen, erscheinen nach dem Freischalten).
-  - `wp: [{id, n, m: {tagId: [wd]}}]` – gespeicherte Wochenpläne. `act: [{a, p}]` – Zeitstrahl: Plan `p` gilt ab Tag `a` (`actAt`). Wochentage eines Trainingstags an einem Datum: `wdAt`; `days[].wd` ist nur der heutige Stand (`syncWd`). Migration: alte Wochentage = Plan `w1` „Mein Plan“, aktiv ab 0.
+  - `wp: [{id, n, m: {tagId: [wd]}}]` – Wochenpläne; die App ändert nur den heute aktiven (`weekSet`), ein Fenster für mehrere Pläne gibt es nicht mehr. `act: [{a, p}]` – Zeitstrahl: Plan `p` gilt ab Tag `a` (`actAt`). Wochentage eines Trainingstags an einem Datum: `wdAt`; `days[].wd` ist nur der heutige Stand (`syncWd`). Migration: alte Wochentage = Plan `w1` „Mein Plan“, aktiv ab 0.
   - Ob ein Trainingstag an einem Datum dran ist: `onDay` (Wochentag aus dem aktiven Plan + Rhythmus). Was an einem Datum geplant ist: `schedFor` (Urlaub/Krank → nichts, sonst Ausnahme, sonst `onDay`).
   - `ovk[tag] = {s?, w?, b?, r?, a?}` – Ausnahme als Bausteine (ausgesetzt, getauscht mit Tag w → Training b, ersetzt durch r, zusätzlich a); `ov[tag]` = daraus berechnete Liste von Tag-ids (`ovSetF`). `ov`/`ovl` ohne `ovk` stammen vom Tausch im Heute-Tab.
   - `off: [{a, b, k: 'vac'|'sick'}]` – Urlaub/Krank von–bis: nichts geplant, Serie geschützt (`offCount` in `streakCalc`/`derive`).

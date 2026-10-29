@@ -17,7 +17,7 @@ const FIX = `(() => { const T = new Date('2026-10-21T14:00:00').getTime(), D = D
 const NOANIM = '*, *::before, *::after { animation: none !important; transition: none !important; }';
 // Ansichten: Tab, optional ein Klick (Bereich, Fenster). Fenster werden danach geschlossen
 const VIEWS = [['heute'], ['heute', '[data-arena]'], ['food'], ['food', '[data-ftile="0"]'], ['food', '[data-fsearch]'], ['food', '[data-fwao]'], ['heute', '[data-zoom]'], ['fort'], ['fort', '[data-col="mu"]'], ['fort', '[data-col="sk"]'], ['fort', '[data-cardo]'],
-  ['profil'], ['profil', '[data-pstat="tr"]'], ['profil', '[data-pstat="er"]'], ['tage'], ['tage', '[data-pchg]'], ['tage', '[data-pman]']];
+  ['profil'], ['profil', '[data-pstat="tr"]'], ['profil', '[data-pstat="er"]'], ['tage'], ['tage', '[data-pchg]']];
 (async () => {
   const b = await chromium.launch(), shots = {};
   for (const [lab, file] of [['alt', path.join(OLD, 'dist', 'index.html')], ['neu', path.join(ROOT, 'dist', 'index.html')]]) {
@@ -33,7 +33,6 @@ const VIEWS = [['heute'], ['heute', '[data-arena]'], ['food'], ['food', '[data-f
         await p.addStyleTag({ content: NOANIM }); await p.addStyleTag({ content: 'html, body { height: auto !important; overflow: visible !important; } #app { position: static !important; overflow: visible !important; }' }); await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(150);
         const key = cs + '-' + t + (extra ? '-' + extra.replace(/[^a-z0-9]/g, '') : '');
         (shots[key] = shots[key] || {})[lab] = (await p.screenshot({ fullPage: true })).toString('base64');
-        if (extra === '[data-pman]') await p.click('[data-pmanx]').catch(() => {});
         if (extra === '[data-pchg]') await p.click('[data-pchg]').catch(() => {});
         if (extra === '[data-arena]') await p.click('[data-arx]').catch(() => {});
         await p.click('[data-sheet-close]', { timeout: 500 }).catch(() => {});

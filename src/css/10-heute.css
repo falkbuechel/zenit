@@ -113,9 +113,6 @@ textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: var(--r
 .pg[aria-pressed="true"] { background: color-mix(in srgb, var(--gc, var(--ac)) 20%, var(--s2)); border-color: var(--gc, var(--ac)); color: var(--gc, var(--ink)); }
 .pg:first-child[aria-pressed="true"] { color: var(--ink); }
 
-.pgc { display: flex; gap: 8px; flex-wrap: wrap; }
-.pgc span { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: var(--r99); background: color-mix(in srgb, var(--gc) 16%, var(--s3)); color: var(--gc); font-size: 12px; font-weight: 800; }
-.pgc .ic { width: 14px; height: 14px; }
 .ppre { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
 .ppre button { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border-radius: var(--r12); border: 1px solid var(--line); background: var(--s1); color: var(--ink); font-weight: 800; transition: transform .16s var(--ease); }
 .ppre button:active { transform: scale(.97); }
@@ -215,7 +212,6 @@ body.arm .rest-in .btn { width: 100%; min-height: 48px; }
 .bp-n.ms > i { border-color: var(--gold); color: var(--gold); }
 .bp-n span { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: var(--r99); background: var(--s2); font-size: 12px; white-space: nowrap; }
 .bp-hint { margin: 18px 0 0; text-align: center; font-size: 12px; color: var(--ink3); }
-@keyframes zin { from { opacity: 0; transform: scale(.86); } }
 @keyframes zout { from { opacity: 0; transform: scale(1.2); filter: blur(4px); } }
 /* Arena im Vollbild: Tab-Leiste und Kopf ausgeblendet */
 body.arm .tabs, body.arm .brandbar, body.arm #hud { display: none; }

@@ -25,8 +25,8 @@
    Bewegung nur mit Zweck: Woche/Monat gleitet in Blätterrichtung (200 ms), Aufklappen 220 ms, Tageswechsel blendet über (150 ms), Ausnahme gesetzt = kurzes Aufleuchten. */
 .agx { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .22s var(--ease); }
 .agx > div { display: grid; gap: 10px; min-height: 0; overflow: hidden; padding: 0; opacity: 0; visibility: hidden; transition: opacity .12s var(--ease), padding .22s var(--ease), visibility 0s .22s; }
-.pday.open > .pd-x, .todo.open > .agx, .pdb.open > .agx, .exk.open > .agx { grid-template-rows: 1fr; }
-.pday.open > .pd-x > div, .todo.open > .agx > div, .pdb.open > .agx > div, .exk.open > .agx > div { padding-bottom: 12px; opacity: 1; visibility: visible; transition: opacity .2s var(--ease) .05s, padding .22s var(--ease), visibility 0s; }
+.todo.open > .agx, .pdb.open > .agx, .exk.open > .agx { grid-template-rows: 1fr; }
+.todo.open > .agx > div, .pdb.open > .agx > div, .exk.open > .agx > div { padding-bottom: 12px; opacity: 1; visibility: visible; transition: opacity .2s var(--ease) .05s, padding .22s var(--ease), visibility 0s; }
 .agp { margin: 0; font-size: 13px; color: var(--ink2); }
 .agn { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 10px; border-radius: var(--r99); border: 1px solid var(--line); background: var(--s1); color: var(--ink2); font: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: none; transition: transform .14s var(--ease); }
 .agn:active { transform: scale(.97); }
@@ -35,10 +35,6 @@
 .agn.gold { border-color: color-mix(in srgb, var(--gold) 55%, var(--line)); color: var(--gold); }
 .sec-h small.hot { color: var(--flame); }
 @keyframes agfl { from { background-color: color-mix(in srgb, var(--ac) 22%, transparent); } }
-.wvb { margin-top: 8px; gap: 6px; }
-.wvb span { background: var(--s2); color: var(--ink2); font-family: var(--f-mono); font-weight: 600; }
-.wvb span .ic { color: var(--gc); }
-.pgc span.z { background: transparent; box-shadow: inset 0 0 0 1px var(--line); color: var(--ink3); }
 /* Kalender */
 /* Kalender als eigene Fokus-Fläche: Karte mit Tastenkante, Monat links groß, Pfeile rechts kompakt */
 .pcal2 { overflow: hidden; margin-top: 4px; padding: 4px 6px 8px; border: 1px solid var(--line); border-radius: var(--r16); background: var(--s1); box-shadow: var(--hs); }
@@ -111,8 +107,6 @@
 .pft button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 .pft .ic { width: 21px; height: 21px; }
 .pfd { position: absolute; top: 6px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--danger); }
-.pfn { display: flex; align-items: center; gap: 8px; margin: 0; padding: 14px 4px; font-size: 13px; color: var(--ink3); }
-.pfn .ic { width: 18px; height: 18px; }
 .pfs { display: grid; gap: 12px; }
 .pfr2 { display: grid; gap: 6px; }
 .pfr2 span { display: flex; align-items: baseline; gap: 6px; }
@@ -155,16 +149,8 @@
 .pd-n i { position: absolute; top: 3px; right: 2px; min-width: 15px; height: 15px; padding: 0 3px; border-radius: var(--r99); background: var(--danger); color: #fff; font: 700 9.5px/15px var(--f-mono); font-style: normal; }
 .pd-n .ic { width: 19px; height: 19px; }
 .ptg button .ic { width: 16px; height: 16px; color: var(--pc, var(--ink3)); }
-.pday > .pd-x > div { padding: 0; }
-.pday.open > .pd-x > div { padding: 10px 0 2px; }
 /* Zu tun: rote Glocke, aufklappbar */
 .todo { display: grid; grid-template-columns: minmax(0, 1fr); border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--line)); border-radius: var(--r12); overflow: hidden; background: color-mix(in srgb, var(--danger) 6%, var(--s1)); }
-.tdh { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: 0; background: transparent; color: var(--ink); font: inherit; text-align: left; }
-.tdh > .ic:first-child { width: 18px; height: 18px; color: var(--danger); }
-.tdh b { font-size: 14px; }
-.tdh span { min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--r99); background: var(--danger); color: #fff; font-family: var(--f-mono); font-size: 11px; font-weight: 700; display: grid; place-items: center; }
-.tdh .chv { width: 14px; height: 14px; margin-left: auto; color: var(--ink3); transform: rotate(90deg); transition: transform .2s var(--ease); }
-.todo.open .tdh .chv { transform: rotate(-90deg); }
 .todo .agx > div { gap: 0; }
 .tdo { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; min-height: 46px; padding: 6px 12px; border: 0; border-top: 1px solid var(--line); background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: background-color .16s var(--ease); }
 .tdo:active { background: var(--s2); }
@@ -268,58 +254,7 @@ button.pdb-h:active { background: var(--s2); }
 .exr > i .ic { width: 13px; height: 13px; opacity: 0; }
 .exr[aria-pressed="true"] > i { border-color: var(--gc, var(--ac)); background: var(--gc, var(--ac)); }
 .exr[aria-pressed="true"] > i .ic { opacity: 1; }
-/* Trainingstage kompakt */
-.pm-t { margin: 0; flex: 1; font-family: var(--f-display); font-weight: 900; font-size: 26px; text-transform: uppercase; }
-/* Einstieg „Woche planen“ */
-/* Wochenplaner: Presets, Ablageplätze, Karten-Hand */
-.pwkl { display: grid; gap: 6px; margin-top: 10px; }
-/* Stil wie Essen: belegter Tag = Karte, leerer Tag = gestrichelter Platzhalter; Wochentag in Mono, heute als dunkle Pille (wie die Tagesleiste) */
-.psl {
-  position: relative; display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 8px; min-height: 50px; padding: 6px 10px; border: 1px solid var(--line); border-radius: var(--r14); background: var(--s1);
-  box-shadow: var(--hs); transition: background-color .16s var(--ease), border-color .16s var(--ease), transform .16s var(--ease);
-}
-.psl:not(:has(.ptl)) { border-style: dashed; background: transparent; box-shadow: none; }
-.psl > b { justify-self: start; padding: 3px 6px; border-radius: var(--r8); font: 700 12px/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
-.psl.today > b { background: var(--ink); color: var(--bg); }
-.psl.hov { border-color: var(--ink); background: var(--s2); transform: scale(1.015); }
-.psl.clash { border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); box-shadow: inset 3px 0 0 var(--danger); }
-.pwarn { width: 16px; height: 16px; color: var(--danger); }
-.pst { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
-.ptl {
-  display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 3px 3px 3px 8px; border-radius: var(--r10); border: 1px solid color-mix(in srgb, var(--pc) 35%, var(--line));
-  border-top: 2px solid var(--pc); background: linear-gradient(160deg, color-mix(in srgb, var(--pc) 20%, var(--s1)), var(--s1) 80%); font-size: 13px; font-weight: 700;
-}
-.ptl > .ic { width: 15px; height: 15px; color: var(--pc); flex: none; }
-.ptl span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.ptl em { font-style: normal; font-family: var(--f-mono); font-size: 10px; color: var(--ink3); }
-.ptl button { display: grid; place-items: center; width: 24px; height: 24px; border: 0; border-radius: var(--r8); background: transparent; color: var(--ink3); }
-.ptl button .ic { width: 13px; height: 13px; }
-.ptl.over { border-color: var(--danger); }
-.ptl.nw { animation: ptlin .24s var(--ease); }
-@keyframes ptlin { from { opacity: 0; transform: scale(.9); } }
-.pdrop { display: grid; place-items: center; width: 28px; height: 28px; color: var(--ink3); opacity: .7; }
-.pdrop .ic { width: 14px; height: 14px; }
-.pk { position: relative; flex: none; display: grid; align-content: space-between; justify-items: start; width: 96px; height: 132px; margin-left: var(--ov, -18px); padding: 10px 9px; overflow: hidden; isolation: isolate; border-radius: var(--r16); background: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, .16) 1px, transparent 1.5px) 0 0 / 9px 9px, linear-gradient(155deg, color-mix(in srgb, var(--pc) 70%, #fff), var(--pc) 52%, color-mix(in srgb, var(--pc) 78%, #000)); color: var(--on); box-shadow: 0 12px 22px -14px var(--pc), inset 0 0 0 1.5px rgba(255, 255, 255, .28), inset 0 1px 0 rgba(255, 255, 255, .45); -webkit-user-select: none; user-select: none; touch-action: pan-x; rotate: calc(var(--j) * 1.6deg); animation: pkfloat 3.2s ease-in-out infinite alternate; animation-delay: calc(var(--j) * -.7s); transition: translate .2s var(--ease), rotate .2s var(--ease), opacity .2s; }
-@keyframes pkfloat { from { translate: 0 0; } to { translate: 0 -4px; } }
-.pk b { font-size: 15px; line-height: 1.15; }
-.pkd { display: flex; flex-wrap: wrap; gap: 3px; max-width: 64px; }
-.pkd i { width: 6px; height: 6px; border-radius: 50%; background: color-mix(in srgb, var(--on) 28%, transparent); }
-.pkd i.on { background: var(--on); }
-.pkd i.x { background: var(--danger); box-shadow: 0 0 0 1.5px var(--on); }
-.pke { position: absolute; right: 8px; bottom: 8px; display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--on) 16%, transparent); color: var(--on); }
-.pke .ic { width: 14px; height: 14px; }
-.pkw { position: absolute; top: -8px; right: -6px; width: 24px; height: 24px; padding: 4px; border-radius: 50%; background: var(--danger); color: #fff; box-shadow: 0 0 0 2px var(--bg); }
-.pk.full { filter: saturate(.55); opacity: .7; }
-.pk.over, .pk.clash { z-index: 1; box-shadow: 0 0 0 2px var(--danger), 0 12px 22px -14px var(--danger); animation: pkwarn 2.6s ease-in-out infinite; }
-@keyframes pkwarn { 0%, 80%, 100% { translate: 0 0; } 84% { translate: -2px 0; } 88% { translate: 2px 0; } 92% { translate: -1px 0; } }
-.pk.lift { opacity: .3; }
-.pk.ghost { position: fixed; z-index: 50; margin: 0; pointer-events: none; animation: none; rotate: 0deg; translate: none; box-shadow: 0 24px 40px -18px rgba(0, 0, 0, .55); }
-.pk.add { width: 56px; height: 132px; place-items: center; align-content: center; background: transparent; border: 1.5px dashed var(--line); box-shadow: none; color: var(--ink2); animation: none; rotate: 0deg; }
-.pk.add .ic { width: 24px; height: 24px; }
-.pkh + .ppre { margin-top: 0; }
-/* Kalender: Planer-Knopf, Tauschen wählt im Kalender, ausgesetzte Tage */
-.pc2-pl { width: 36px; height: 36px; color: var(--ink2); }
-.pc2-pl .ic { width: 20px; height: 20px; }
+/* Kalender: Tauschen wählt im Kalender, ausgesetzte Tage */
 .pc2-g.swp .pc2.nop { opacity: .3; }
 .pc2.pick { box-shadow: inset 0 0 0 1.5px var(--ink); animation: pick 1.4s ease-in-out infinite; }
 @keyframes pick { 50% { background: var(--s2); } }
@@ -385,40 +320,3 @@ button.pdb-h:active { background: var(--s2); }
 .pup b { display: block; font-size: 14px; }
 .pup small { display: block; font-size: 12px; color: var(--ink3); }
 .pup .chv { width: 14px; height: 14px; color: var(--ink3); }
-.pdc.warn { animation: pkwarn .6s ease-in-out 2; border-color: var(--danger); }
-/* Planer: Verwerfen-Leiste, Meine Pläne */
-.pdc { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--danger) 40%, var(--line)); border-radius: var(--r14); background: color-mix(in srgb, var(--danger) 6%, var(--s1)); font-size: 14px; font-weight: 700; animation: fade .15s var(--ease); }
-.pdc > .ic { width: 18px; height: 18px; color: var(--danger); }
-.pdc span { flex: 1; }
-.wpl { margin-top: 18px; display: grid; gap: 8px; }
-.wpl .sec-h { margin-bottom: 0; }
-.wpc { display: grid; gap: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r14); background: var(--s1); }
-.wpc.cur { border-color: var(--ink2); }
-.wpc.on { border-top: 2px solid var(--ac); background: linear-gradient(160deg, color-mix(in srgb, var(--ac) 12%, var(--s1)), var(--s1) 70%); }
-.wpc-h { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.wpn { flex: 1; min-width: 120px; height: 34px; padding: 0 8px; border: 1px solid transparent; border-radius: var(--r8); background: transparent; color: var(--ink); font: inherit; font-size: 16px; font-weight: 800; }
-.wpn:focus { border-color: var(--line); background: var(--s2); outline: none; }
-.wps { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: var(--r99); background: var(--s2); color: var(--ink3); font-size: 11px; font-weight: 700; }
-.wps .ic { width: 12px; height: 12px; }
-.wps.on { background: color-mix(in srgb, var(--ac) 18%, var(--s2)); color: var(--ac); }
-.wps.fut { background: color-mix(in srgb, var(--gold) 16%, var(--s2)); color: var(--ink2); }
-.wps button { display: grid; place-items: center; width: 18px; height: 18px; padding: 0; border: 0; background: transparent; color: var(--ink3); }
-.wps button .ic { width: 11px; height: 11px; }
-.wpm { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
-.wpm > span { display: grid; justify-items: center; gap: 2px; }
-.wpm small { font-size: 10px; font-weight: 800; color: var(--ink3); }
-.wpm em { display: grid; min-height: 16px; color: var(--pc); font-style: normal; }
-.wpm em .ic { width: 16px; height: 16px; }
-.wpm em.r { color: var(--ink3); }
-.wpb { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.wpb .btn.small { min-height: 36px; font-size: 13px; padding: 0 12px; }
-.wpb .x { margin-left: auto; width: 36px; height: 36px; }
-.wpe { display: inline-flex; align-items: center; gap: 6px; padding: 0 6px; font-size: 12px; font-weight: 700; color: var(--ink3); }
-.wpe .ic { width: 14px; height: 14px; }
-.wpa { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; animation: fade .15s var(--ease); }
-.wpa button, .wpa label { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 0 10px; border-radius: var(--r10); border: 1px solid var(--line); background: var(--s2); color: var(--ink); font: inherit; font-size: 13px; font-weight: 700; }
-.wpa label { position: relative; overflow: hidden; }
-.wpa label .ic { width: 18px; height: 18px; }
-.wpa input { position: absolute; inset: 0; opacity: 0; }
-.wpc.new { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-style: dashed; background: transparent; color: var(--ink2); font: inherit; font-weight: 700; }
-.wpc.new .ic { width: 18px; height: 18px; }

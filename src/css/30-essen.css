@@ -554,7 +554,7 @@ button.cday:active { transform: scale(.97); }
 #c-way .tot + .sub { margin-top: 8px; }
 #c-way .sub { font-size: 12px; color: var(--ink3); }
 .sheet .btn:disabled { opacity: .45; }
-@media (prefers-reduced-motion: reduce) { .agx, .agx > div { transition: none; } .fti.done { animation: none; } .pk.sel::after, .pc2.pick, .rot .ic { animation: none; } .pk, .pk.over, .pk.clash { animation: none; } .ptl.nw { animation: none; } .pday.fl { animation: none; } .pc2-g.in-r, .pc2-g.in-l, .pc2-g.in-m { animation: fade .15s ease; } }
+@media (prefers-reduced-motion: reduce) { .agx, .agx > div { transition: none; } .fti.done { animation: none; } .pc2.pick, .rot .ic { animation: none; } .pday.fl { animation: none; } .pc2-g.in-r, .pc2-g.in-l, .pc2-g.in-m { animation: fade .15s ease; } }
 /* Essen: gegessene Einträge als wischbare Chip-Leiste */
 .fdl { margin-top: 12px; }
 /* Mahlzeit-Karte: Symbol + kcal, Kategorien als überlappende Kreise; Zurück-Knopf, wenn eine Mahlzeit offen ist */

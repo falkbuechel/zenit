@@ -2,12 +2,10 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
-## Stand 2026-10-29
-- Zuletzt (alles live, Commit faf47e1): viele Runden Feinschliff Essen und Planen nach Falks iPhone-Rückmeldungen (Einzelheiten unter Verlauf 28./29.10.). Arbeitsweise: Falk meldet nummerierte Punkte je Bereich, klare Fixes direkt, Umbauten mit Varianten (AskUserQuestion).
+## Stand 2026-10-30
+- Zuletzt: Analyse der Zusammenarbeit + Aufräumen (siehe Verlauf 30.10.). Arbeitsweise: Falk meldet nummerierte Punkte je Bereich, klare Fixes direkt, Umbauten mit Varianten (AskUserQuestion). Nach jeder gepushten Runde /handoff + /clear (Stop-Hook meldet ab 200k Kontext).
 - Falk testet am iPhone: Tagesleiste/Kalender schlicht mit Ringen, Wasser über das Ziel ziehen (dunkelblau, roter Überlauf), Gericht-Fenster mit Topf-Knopf, Kategorien-Raster, Mahlzeiten auf/zu weich, Essen-Vorlagen in Planen, Woche in der Tageskarte, Menüleiste (Strich in Bereichsfarbe).
-- ZUERST (30.10.): 1. Eigene Analyse der Zusammenarbeit – ehrlich auswerten, was besser geht: Performance, Token-Verbrauch, Agenten/Hooks/Skills, Arbeitsablauf; Verbesserungen umsetzen, wo nötig. 2. Danach Aufräumen, nur was nötig: Ordnerstruktur, Code (toter Code, z. B. alter Wochenplaner), Performance; mit `node tools/compare.js` absichern.
-- Danach: Falks notierte Punkte vom 29.10. (oben unter „Offen“: Gerichte-Zutaten, geplante Tage stricheln, Kategorien/Zuletzt ruhiger), dann übrige Fenster im Essen-Stil (Schnell, Wasser, Ziele/Rechner, eigenes Lebensmittel, Marken, Planen-Fenster) und Training in Planen weiter vereinfachen.
-- Offene Entscheidung: alter Wochenplaner (`viewPlanner`, `data-pman`, Pläne-Liste, „Plan ab Datum“) hat keinen Einstieg mehr – entfernen oder als „Pläne“ wieder anbinden?
+- Nächster Schritt: Falks notierte Punkte vom 29.10. (oben unter „Offen“: Gerichte-Zutaten, geplante Tage stricheln, Kategorien/Zuletzt ruhiger), dann übrige Fenster im Essen-Stil (Schnell, Wasser, Ziele/Rechner, eigenes Lebensmittel, Marken, Planen-Fenster) und Training in Planen weiter vereinfachen.
 - Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
 - App-Icon (oliv) übernimmt iOS erst beim neuen Hinzufügen zum Homescreen. NICHT die App löschen (Daten weg).
 - Nicht committet: nichts.
@@ -37,6 +35,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-30 – Analyse der Zusammenarbeit, Aufräumen
+- Analyse (4 Sessions 26.–29.10.): Kontext wuchs auf 530k–970k, Ø 300–460k je Aufruf → ~760M Cache-Read-Token, fast nur durch Gesprächslänge. App-Performance unkritisch (Tab-Wechsel 35–65 ms bei 4× gedrosselter CPU, Laden 0,2 s), Prüfwerkzeuge schnell (check 0,4 s, smoke 26 s).
+- Neu: Stop-Hook `tools/hook-context.py` (Hinweis „/handoff, dann /clear“ ab 200k, danach je +150k). `settings.local.json` von 75 Einmal-Freigaben bereinigt.
+- Alter Wochenplaner entfernt (`viewPlanner`, `plannerClick`, Karten-Hand `pdrag`, `draft`, `planCheck`, `pSheetBack`, `data-pman`, ui-Felder). `plan.wp`/`act` bleiben und wirken weiter; `planSheet` nur noch für den Tag-Editor. Dazu tote CSS-Regeln (Planer, `.tdh`, `.pfn`, `.pdt`, `.skp`, `.pgc`, `.pd-x`) und 5 unbenutzte Keyframes, `dayGroups`.
+- `10-essen.js` (1372 Zeilen) in `10a`–`10e` aufgeteilt (Build byte-gleich), damit gezieltes Lesen billiger wird.
+- Geprüft: `compare.js` alles gleich, smoke ohne Fehler.
 
 ### 2026-10-29 – Letzte Runde des Tages
 - Mahlzeiten-Zeile: Auf-/Zuklappen (Mahlzeit, Gruppe) blendet Karten versetzt weich ein (`ui.fmx` → `.fchips.chg`), auch die Einträge einer Gruppe.

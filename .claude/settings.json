@@ -22,6 +22,9 @@
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [{ "type": "command", "command": "python \"$CLAUDE_PROJECT_DIR/tools/hook-check.py\"", "timeout": 30 }]
       }
+    ],
+    "Stop": [
+      { "hooks": [{ "type": "command", "command": "python \"$CLAUDE_PROJECT_DIR/tools/hook-context.py\"", "timeout": 10 }] }
     ]
   }
 }

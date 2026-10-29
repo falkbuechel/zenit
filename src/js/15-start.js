@@ -9,7 +9,7 @@
     var j = ui.harr.indexOf(ui.hcur) + (dx < 0 ? 1 : -1); if (j < 0 || j >= ui.harr.length) return;
     ui.hsel = ui.harr[j]; ui.hdir = dx < 0 ? 1 : -1; ui.fresh = false; render(); buzz(4);
   });
-  function goTab(k, dir) { if (k === ui.tab || TABS.indexOf(k) < 0) return; ui.sw = dir || (TABS.indexOf(k) - TABS.indexOf(ui.tab)); ui.fdrawn = false; ui.fpg = null; ui.fmeal = null; ui.cm = false; if (ui.undo && ui.undo.charAt(0) === '#') ui.undo = null; ui.tab = k; ui.sel = null; ui.del = null; ui.pe = null; ui.pman = false; ui.pnew = false; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0); }
+  function goTab(k, dir) { if (k === ui.tab || TABS.indexOf(k) < 0) return; ui.sw = dir || (TABS.indexOf(k) - TABS.indexOf(ui.tab)); ui.fdrawn = false; ui.fpg = null; ui.fmeal = null; ui.cm = false; if (ui.undo && ui.undo.charAt(0) === '#') ui.undo = null; ui.tab = k; ui.sel = null; ui.del = null; ui.pe = null; ui.fresh = true; closeSheet(); render(); $('app').scrollTo(0, 0); }
   var sx = 0, sy = 0, st0 = 0, sEl = null, sMode = '', sheetDy = 0, calLock = '';
   document.addEventListener('touchstart', function (e) {
     sMode = ''; if (e.touches.length !== 1) return;
@@ -21,7 +21,6 @@
     else if (!ui.sheet && tg.closest('#view') && !tg.closest('input,textarea,select,.wsp,[data-noswipe]')) sMode = 'page';
   }, { passive: true });
   document.addEventListener('touchmove', function (e) {
-    if (pdrag && pdrag.on) { e.preventDefault(); return; }
     var t = e.touches[0];
     if (sMode === 'bar') { var el = document.elementFromPoint(t.clientX, t.clientY), b = el && el.closest ? el.closest('#tabs [data-tab]') : null; if (b && b.dataset.tab !== ui.tab) { goTab(b.dataset.tab); buzz(5); } }
     else if (sMode === 'sheet') { sheetDy = Math.max(0, t.clientY - sy); var sh = $('sheet'); sh.style.transition = 'none'; sh.style.transform = 'translateY(' + sheetDy + 'px)'; }
@@ -34,7 +33,7 @@
   }, { passive: false });
   document.addEventListener('touchend', function (e) {
     var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy, m = sMode; sMode = '';
-    if (m === 'sheet') { var sh = $('sheet'); sh.style.transition = ''; sh.style.transform = ''; if (sheetDy > 90 && !pSheetBack()) closeSheet(); return; }
+    if (m === 'sheet') { var sh = $('sheet'); sh.style.transition = ''; sh.style.transform = ''; if (sheetDy > 90) closeSheet(); return; }
     if (m === 'cal' || m === 'fds') {
       if (calLock !== 'x') return;
       var fast = Math.abs(dx) / Math.max(1, Date.now() - st0) > 0.35, cg = document.querySelector(m === 'cal' ? '.pc2-g' : '.fds');

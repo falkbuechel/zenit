@@ -71,18 +71,11 @@ async function scenario(b, sc, errs) {
       if (await click('[data-pnts]')) await closeSheet();
       await click('[data-pdays]'); await shot('tage-tage'); await click('[data-sheet-close]');
     }
-    // Plan: Wochenplaner (Karte antippen + Tag antippen, entfernen, speichern, neuer Plan, aktivieren), daraus den Editor öffnen
-    if (tab === 'tage' && await click('[data-pman]')) {
-      await click('.pk[data-pkid]'); await click('[data-pslot="6"]'); await click('[data-punset]'); await click('[data-psave]');
-      await click('[data-wpnew]'); await click('.pk[data-pkid]'); await click('[data-pslot="0"]'); await click('[data-psave]');
-      await click('[data-wpact]'); await click('[data-wpon]'); await shot('tage-planer');
-    }
     // Plan: Trainingstag-Editor öffnen, Übung an/aus, Icon, Filter, Rhythmus, gesperrte Übung, zurück
     if (tab === 'tage' && await click('[data-pedit]')) {
       await click('[data-ptog]'); await click('[data-ptog]'); await click('[data-pic="star"]'); await click('[data-pef="pull"]'); await click('[data-pef="all"]');
       await click('[data-prp="2"]'); await click('[data-pst="1"]'); await click('[data-prp="0"]'); await click('[data-prp="1"]'); await click('[data-plk]'); await click('[data-plk]');
       await shot('tage-editor'); await click('[data-pback]');
-      await click('[data-pmanx]'); await click('[data-pdiscok]');
     }
     // Heute: Bergpfad (Kopfzeile antippen) und zurück, Arena öffnen (Karte, Punkte), verlassen
     if (tab === 'heute') { await click('.hm-lv'); await click('.bp'); await click('[data-arena]'); await click('[data-arv="1"]'); await click('[data-arsave]'); await click('[data-rest="sub"]'); await click('[data-rest="skip"]'); await click('.arm-s .hc'); await closeSheet(); await click('.ar-dots button:last-child'); await click('[data-arx]'); for (let k = 0; k < 8; k++) { await p.waitForTimeout(1700); if (!(await click('.lvfx'))) break; } }

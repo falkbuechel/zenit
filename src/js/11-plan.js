@@ -49,16 +49,16 @@
     return o;
   }
   function calMove(dir) {
-    // Stufe 0 (7 Tage): 7 Tage weiter, Stufe 1 (3 Wochen): 3 Wochen, Stufe 2 (5 Wochen): 4 Wochen. Grenzen: 6 Monate zurück, 6 voraus
+    // Woche: 7 Tage weiter, 5 Wochen: 4 Wochen. Grenzen: 6 Monate zurück, 6 voraus
     var today = dayIdx(Date.now()), a = ui.ca == null ? today : ui.ca;
-    var n = a + dir * [7, 21, 28][ui.cm || 0];
+    var n = a + dir * (ui.cm ? 28 : 7);
     if (n < today - 183 || n > today + 183) return false;
     ui.ca = n; ui.cdir = dir; ui.fresh = false; render(); return true;
   }
   function calMon(lv) {
-    // Stufe 0 = 7 Tage, 1 = 3 Wochen, 2 = 5 Wochen; der Kalender gleitet von der alten zur neuen Höhe
+    // 0 = Woche, 1 = 5 Wochen; der Kalender gleitet von der alten zur neuen Höhe
     var c0 = document.querySelector('.pcal2'), h0 = c0 ? c0.offsetHeight : 0;
-    ui.cm = Math.max(0, Math.min(2, lv)); ui.ca = ui.pd == null ? dayIdx(Date.now()) : ui.pd; ui.cmx = true; ui.fresh = false; render(); buzz(4);
+    ui.cm = lv ? 1 : 0; ui.ca = ui.pd == null ? dayIdx(Date.now()) : ui.pd; ui.cmx = true; ui.fresh = false; render(); buzz(4);
     var c = document.querySelector('.pcal2'); if (!c || !h0 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var h1 = c.offsetHeight; c.style.height = h0 + 'px'; c.style.overflow = 'hidden'; void c.offsetHeight;
     c.style.transition = 'height .38s var(--drawer)'; c.style.height = h1 + 'px';
@@ -121,43 +121,40 @@
     // Kein Titel (wie Essen): der Bereich ergibt sich aus der unteren Leiste
     var h = '';
 
-    // Kalender: Wochenleiste mit dem gewählten Tag in der Mitte (wischen = 7 Tage); Monatsname klappt 5 Wochen auf, die Woche des gewählten Tags in der mittleren Reihe.
-    // Zellen: Ring um die Zahl = Essen (Anteil vom kcal-Ziel), darunter bis zu 3 farbige Symbole (Training, Ereignis: Urlaub gold, Krank rot, Tausch),
-    // Urlaub/Krank über mehrere Tage als durchgehender Balken unten, Haken = trainiert, Waage = Wiegen fällig
-    var q = new Date(a * 864e5), from, to, lead = 0;
-    // Stufen: 7 Tage um den Tag, 3 bzw. 5 Wochen mit seiner Woche in der Mitte
-    if (ui.cm) { from = a - wdOf(a) - (ui.cm === 2 ? 14 : 7); to = from + (ui.cm === 2 ? 34 : 20); }
-    else { from = a - 3; to = a + 3; }
+    // Kalender ruhig: Woche Mo–So oder 5 Wochen (Woche des Tags in der Mitte). Je Tag: Zahl mit Essen-Ring (Anteil vom kcal-Ziel) und EIN Zeichen:
+    // vergangen = Haken (trainiert) bzw. blasser Punkt (verpasst), sonst das erste Training (+n bei mehreren); Ausnahme = kleiner Punkt an der Zahl.
+    // Urlaub/Krank als Band über den Tagen jeder Woche, Überschneidungen in eigenen Reihen
+    var q = new Date(a * 864e5), from, to;
+    if (ui.cm) { from = a - wdOf(a) - 14; to = from + 34; } else { from = a - wdOf(a); to = from + 6; }
     var title = q.toLocaleDateString('de-DE', { month: 'long', timeZone: 'UTC' });
-    var cells = '', swp = ui.pmode === 'swap', lw = lastW(), wdue = lw ? dayIdx(lw.t) + 7 : today;
-    for (k = 0; k < lead; k++) cells += '<i></i>';
-    for (k = from; k <= to; k++) {
-      var ds = schedFor(k), tr = d.byDay[k], of = offAt(k), fk = ovF(k), pk = swp ? (swapOk(sd, k, today) ? ' pick' : ' nop') : '';
-      var under = fk.s || of ? P.days.filter(function (x) { return onDay(x, k); }) : [];
-      var fs = k <= today ? foodSum(k) : planSum(k), fq = fs.items.length ? fs.k / foodGoal(k).k : 0;
-      var fr = dayRing(fq, k > today, k > today ? '' : fq > 1.1 ? ' over' : fq >= 0.85 ? ' ok' : '');
-      // Tauschpaar: beide Tage mit derselben Farbe (aus dem früheren der beiden Tage)
-      var swc = fk.w !== undefined ? SWC[Math.min(k, fk.w) % SWC.length] : '';
-      // Hauptplatz: bis zu 3 Trainings (Tausch-Zeichen zählt mit); Urlaub/Krank sitzt als Zeichen oben links (Gegenstück zur Waage oben rechts)
-      var ems = (swc ? ['<em class="ev tsw" style="--sc:var(' + swc + ')">' + ic('swap') + '</em>'] : []).concat(
-        under.map(function (x) { return '<em class="sk' + (fk.s && !of ? ' st' : '') + '" style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }),
-        ds.map(function (x) { return '<em style="--pc:var(' + PCOL[x.c] + ')">' + ic(dIcon(x)) + '</em>'; }));
-      // Urlaub/Krank über mehrere Tage: die Tage selbst sind eingerahmt (Fläche + feine Kontur in der Farbe, Anfang/Ende abgerundet, Umbruch am Wochenrand).
-      // Anfang/Ende nach den Nachbartagen: gleicher Typ verschmilzt zu einem Band, anderer Typ = eigene Pille mit Fuge
-      var ofp = offAt(k - 1), ofn = offAt(k + 1);
-      var oc = of ? ' off ' + of.k + (!ofp || ofp.k !== of.k || wdOf(k) === 0 || k === from ? ' os' : '') + (!ofn || ofn.k !== of.k || wdOf(k) === 6 || k === to ? ' oe' : '') : '';
-      cells += '<button class="pc2' + pk + oc + (swc ? ' swd' : '') + (k === today ? ' today' : '') + (k === sd ? ' sel' : '') + (k < today ? ' past' : '') + (tr ? ' done' : '') + '" data-cday="' + k + '" aria-label="' + fmtDayL(k) + '"' + (swc ? ' style="--sc:var(' + swc + ')"' : '') + '>' +
-        (ui.cm ? '' : '<small>' + WDN[wdOf(k)].slice(0, 2) + '</small>') + '<b>' + fr + new Date(k * 864e5).getUTCDate() + '</b><span class="ics">' + ems.slice(0, 3).join('') + '</span>' +
-        (tr ? ic('check', 'dn') : '') + (k === wdue && k > today ? ic('scale', 'nf') : '') + (of ? ic(of.k === 'vac' ? 'beach' : 'sick', 'nl ' + of.k) : '') + '</button>';
+    var rows = '', swp = ui.pmode === 'swap';
+    for (var r0 = from; r0 <= to; r0 += 7) {
+      var cells = '', lanes = [], bands = '';
+      (P.off || []).filter(function (o) { return o.b >= r0 && o.a <= r0 + 6; }).sort(function (x, y) { return x.a - y.a; }).forEach(function (o) {
+        var s0 = Math.max(o.a, r0), e0 = Math.min(o.b, r0 + 6), ln = 0; while (lanes[ln] != null && lanes[ln] >= s0) ln++; lanes[ln] = e0;
+        bands += '<button class="pcb ' + o.k + (o.a < r0 ? ' cl' : '') + (o.b > r0 + 6 ? ' cr' : '') + '" data-cday="' + s0 + '" style="grid-column:' + (s0 - r0 + 1) + ' / ' + (e0 - r0 + 2) + ';grid-row:' + (ln + 1) + '" aria-label="' + (o.k === 'vac' ? 'Urlaub' : 'Krank') + ' ' + fmtShort(o.a) + ' – ' + fmtShort(o.b) + '">' +
+          ic(o.k === 'vac' ? 'beach' : 'sick') + (e0 - s0 >= 1 ? '<span>' + (o.k === 'vac' ? 'Urlaub' : 'Krank') + '</span>' : '') + '</button>';
+      });
+      for (k = r0; k < r0 + 7; k++) {
+        var ds = schedFor(k), tr = d.byDay[k], fk = ovF(k), pk = swp ? (swapOk(sd, k, today) ? ' pick' : ' nop') : '';
+        var fs = k <= today ? foodSum(k) : planSum(k), fq = fs.items.length ? fs.k / foodGoal(k).k : 0;
+        var fr = dayRing(fq, k > today, k > today ? '' : fq > 1.1 ? ' over' : fq >= 0.85 ? ' ok' : '');
+        var ex = !offAt(k) && (fk.s || fk.w !== undefined || fk.r || fk.a), sg = '';
+        if (tr) sg = ic('check', 'dn');
+        else if (ds.length) sg = '<em class="' + (k < today ? 'ms' : '') + '" style="--pc:var(' + PCOL[ds[0].c] + ')">' + ic(dIcon(ds[0])) + '</em>' + (ds.length > 1 && k >= today ? '<small>+' + (ds.length - 1) + '</small>' : '');
+        cells += '<button class="pc2' + pk + (k === today ? ' today' : '') + (k === sd ? ' sel' : '') + (k < today ? ' past' : '') + (tr ? ' done' : '') + (ex ? ' exc' : '') + '" data-cday="' + k + '" aria-label="' + fmtDayL(k) + '">' +
+          (ui.cm ? '' : '<small>' + WDN[wdOf(k)].slice(0, 2) + '</small>') + '<b>' + fr + new Date(k * 864e5).getUTCDate() + '</b><span class="ics">' + sg + '</span></button>';
+      }
+      rows += '<div class="pc2-r">' + (bands ? '<div class="pc2-bd">' + bands + '</div>' : '') + '<div class="pc2-c">' + cells + '</div></div>';
     }
     // Kopf: Monat links (antippen = 5 Wochen auf/zu), rechts Glocke (Zu tun) und Tag ändern (Urlaub, Krank, Tauschen, Aussetzen …)
     var nts0 = todo.length, evS =offAt(sd) || ovF(sd).s || ovF(sd).w !== undefined || ovF(sd).r || ovF(sd).a;
     h += '<section class="pcal2 rise' + (ui.cm ? ' mon' : '') + '" style="--i:1"><div class="pc2-h">' +
-      '<button class="pc2-t" data-cmode="1" aria-expanded="' + (ui.cm === 2) + '" aria-label="' + ['3 Wochen zeigen', '5 Wochen zeigen', '7 Tage zeigen'][ui.cm || 0] + '"><b>' + title + '</b><small>' + q.getUTCFullYear() + '</small>' + ic('chev') + '</button>' +
+      '<button class="pc2-t" data-cmode="1" aria-expanded="' + !!ui.cm + '" aria-label="' + (ui.cm ? 'Woche zeigen' : '5 Wochen zeigen') + '"><b>' + title + '</b><small>' + q.getUTCFullYear() + '</small>' + ic('chev') + '</button>' +
       (nts0 ? '<button class="x pd-n" data-pnts="1" aria-label="' + nts0 + ' Hinweise">' + ic('bell') + '<i>' + nts0 + '</i></button>' : '') +
       '<button class="x pc2-ev' + (evS ? ' on' : '') + '" data-pdedit="1" aria-label="Tag ändern: Urlaub, Krank, Tauschen, Aussetzen">' + ic('calev') + '</button></div>' +
       (ui.cm ? '<div class="pc2-w">' + WDN.map(function (n) { return '<span>' + n + '</span>'; }).join('') + '</div>' : '') +
-      '<div class="pc2-g' + (swp ? ' swp' : '') + (ui.cdir ? (ui.cdir > 0 ? ' in-r' : ' in-l') : '') + (ui.cmx ? ' in-m' : '') + '">' + cells + '</div>' +
+      '<div class="pc2-g' + (swp ? ' swp' : '') + (ui.cdir ? (ui.cdir > 0 ? ' in-r' : ' in-l') : '') + (ui.cmx ? ' in-m' : '') + '">' + rows + '</div>' +
       (wk ? '<p class="pc2-n">' + ic('cal') + esc(wk.t) + ' · ' + esc(wk.s) + '</p>' : '') + '</section>';
     ui.cdir = 0; ui.cmx = false;
 
@@ -191,6 +188,7 @@
       if (!sc.length && !off) c += '<div class="pdb rest"><div class="pdb-h"><span class="pdi">' + ic('snow') + '</span><span class="nm"><b>Frei</b><small>' + (kd === 'skip' ? 'Training ausgesetzt' : sd >= today ? 'Erholung' : 'Kein Training geplant') + '</small></span></div></div>';
       var extra = st ? Object.keys(st.ex).filter(function (id) { return !shown[id]; }) : [];
       if (extra.length) c += '<p class="agp">Außerdem: ' + extra.map(function (id) { return esc(EXB[id].n); }).join(' · ') + '</p>';
+      if (sd >= today && !off && P.days.some(function (x) { return !sc.some(function (y) { return y.id === x.id; }); })) c += '<button class="pd-add" data-padd="1">' + ic('plus') + 'Workout an diesem Tag</button>';
       if (sd === today && sc.length) c += '<button class="btn primary pd-go" data-gotab="heute">' + ic('play') + 'Training starten</button>';
       c += pWeekHtml(P, today, sd, dur);
     } else if (ft === 'e') {
@@ -212,18 +210,16 @@
     ui.pfl = null; ui.pdx = false;
 
     if (ft === 't') {
-      // Unter der Tageskarte wie in Essen: Reiter Workouts | Vorlagen. Workouts: antippen = bearbeiten, hochziehen auf Fach, Kalendertag oder Tageskarte; gestrichelt = Vorlagen zeigen.
-      // Vorlagen: neues Workout aus einer Vorlage (öffnet den Editor)
-      var wt = ui.ptt || 'w', tw0 = '<div class="seg pgt">' + [['w', 'Workouts'], ['v', 'Vorlagen']].map(function (x) { return '<button data-ptt="' + x[0] + '" aria-pressed="' + (wt === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>';
-      h += '<section class="pwks rise" style="--i:3">' + tw0 + '<div class="ftl ptl2" data-noswipe="1">' + (wt === 'w' ? P.days.map(function (x) {
+      // Unter der Tageskarte wie in Essen: die Workouts als Kacheln. Antippen = bearbeiten, hochziehen auf ein Wochen-Fach = jede Woche, auf Kalendertag oder Tageskarte = nur dieses Datum.
+      // „Neu“ fragt im Fenster: leer oder aus Vorlage
+      h += '<section class="pwks rise" style="--i:3"><h3 class="xg">' + ic('dumbbell') + 'Workouts</h3><div class="ftl ptl2" data-noswipe="1">' + P.days.map(function (x) {
           var n = x.ex.filter(function (id) { return d.unlocked[id]; }).length;
           return '<button class="ptv" data-pedit="' + x.id + '" data-ptd="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')" aria-label="' + esc(x.n) + ' bearbeiten, hochziehen auf einen Tag = zusätzlich"><i class="ptvi">' + ic(dIcon(x)) + '</i>' +
             '<b class="' + fitCls(x.n, 8) + '">' + esc(x.n) + '</b><small>' + n + (dur[x.id] ? ' · ' + dur[x.id] + '′' : ' Üb.') + '</small></button>';
-        }).join('') + (P.days.length < 8 ? '<button class="fti tplnew" data-ptt="v" aria-label="Neues Workout aus Vorlage">' + ic('plus') + '<small>Neues<br>Workout</small></button>' : '')
-        : P.days.length >= 8 ? '<p class="muted tplh">' + ic('lock') + 'Höchstens 8 Workouts. Lösche eins im Editor, um ein neues anzulegen.</p>' : PRESETS.map(function (pr, j) { return '<button class="ptv" data-ppre="' + j + '" style="--pc:var(' + PCOL[pr.c] + ')" aria-label="Neues Workout: ' + esc(pr.n) + '"><i class="ptvi">' + ic(pr.i) + '</i><b class="' + fitCls(pr.n, 8) + '">' + esc(pr.n) + '</b><small>Vorlage</small></button>'; }).join('')) + '</div></section>';
+        }).join('') + (P.days.length < 8 ? '<button class="fti tplnew" data-pnew="1" aria-label="Neues Workout">' + ic('plus') + '<small>Neues<br>Workout</small></button>' : '') + '</div></section>';
     } else if (sd >= today) {
       // Essen: Reiter Essen | Vorlagen | Gerichte (Essen vorgewählt). Essen = häufige Lebensmittel, Gerichte = alle Gerichte (zuletzt gegessene zuerst, gestrichelt „Neu“);
-      // hochziehen auf eine Mahlzeit = dort einplanen, antippen = übliche Mahlzeit. Vorlagen = gespeicherte Mahlzeiten (auf eine Mahlzeit ziehen) und Tage (auf die Tageskarte); antippen = wie gespeichert
+      // hochziehen auf eine Mahlzeit = dort einplanen, antippen = Menge wählen (übliche Mahlzeit). Vorlagen = gespeicherte Mahlzeiten (auf eine Mahlzeit ziehen) und Tage (auf die Tageskarte); antippen = wie gespeichert
       var pg = ui.pgt || 'e', tg0 = '<div class="seg pgt">' + [['e', 'Essen'], ['v', 'Vorlagen'], ['g', 'Gerichte']].map(function (x) { return '<button data-pgt="' + x[0] + '" aria-pressed="' + (pg === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>', tl = '';
       if (pg === 'e') tl = fTiles().filter(function (x) { return !/^d/.test(x.i); }).map(function (x) { return fTile({ i: x.i, g: x.g }, 'data-pfd="' + x.i + '|' + x.g + '"'); }).join('');
       else if (pg === 'g') {
@@ -423,7 +419,8 @@
     var el, today = dayIdx(Date.now());
     if (ui.pnoclick && Date.now() - ui.pnoclick < 350 && t.closest('.ptv, .fti, .pws')) return true;
     if ((el = t.closest('[data-pws]'))) { var pw = dayIdx(Date.now()) + (+el.dataset.pws) - wdOf(dayIdx(Date.now())); if (pw !== pDaySel()) { ui.pd = pw; ui.ca = pw; ui.pdx = true; } ui.fresh = false; render(); return true; }
-    if ((el = t.closest('[data-pfd]'))) { var pq = el.dataset.pfd.split('|'); planFood(pq[0], +pq[1], pDaySel(), mealFor(pq[0])); return true; }
+    // Kachel antippen = Menge wählen (wie in Essen), hochziehen = sofort einplanen
+    if ((el = t.closest('[data-pfd]'))) { var pq = el.dataset.pfd.split('|'); openPick(pq[0], +pq[1]); ui.fplan = { d: pDaySel(), mk: mealFor(pq[0]), pg: 1 }; ui.fday = dayIdx(Date.now()) - pDaySel(); ui.plEdit = null; fpPaint(); return true; }
     if ((el = t.closest('[data-pgt]'))) { ui.pgt = el.dataset.pgt; ui.tpdel = false; ui.fresh = false; render(); buzz(4); return true; }
     if ((el = t.closest('[data-ptp]'))) {
       var tp0 = foodState().tp, tpi = tp0.map(function (x) { return x.id; }).indexOf(el.dataset.ptp); if (tpi < 0) return true;
@@ -446,12 +443,26 @@
       // Monat bleibt beim Wählen offen (zu über den Monatsnamen oder nach oben wischen)
       if (cd !== s0) { ui.pd = cd; ui.pdx = true; ui.pmode = null; } ui.fresh = false; render(); return true;
     }
-    if (t.closest('[data-cmode]')) { calMon(((ui.cm || 0) + 1) % 3); return true; }
+    if (t.closest('[data-cmode]')) { calMon(ui.cm ? 0 : 1); return true; }
     if ((el = t.closest('[data-pft]'))) { ui.pft = el.dataset.pft; ui.fresh = false; render(); buzz(4); return true; }
     if (t.closest('[data-pdedit]')) { ui.pmode = null; ui.sheet = { pday: true }; sheetOpen(pdayHtml()); return true; }
     if (t.closest('[data-pnts]')) { openNts(); return true; }
     if ((el = t.closest('[data-pfo]'))) { ui.fsd = +el.dataset.pfo; goTab('food'); return true; }
-    if ((el = t.closest('[data-ptt]'))) { ui.ptt = el.dataset.ptt; ui.fresh = false; render(); buzz(4); return true; }
+    if (t.closest('[data-pnew]')) {
+      // Neues Workout: leer (Eigener Tag) zuerst, dann die Vorlagen
+      var pl0 = PRESETS.length - 1, po = [pl0].concat(PRESETS.slice(0, pl0).map(function (x, j) { return j; }));
+      ui.sheet = { pnew: true }; sheetOpen(shHead('dumbbell', 'Neues Workout', 'Leer oder aus Vorlage') + '<div class="ftl">' + po.map(function (j) { var pr = PRESETS[j];
+        return '<button class="ptv" data-ppre="' + j + '" style="--pc:var(' + PCOL[pr.c] + ')"><i class="ptvi">' + ic(j === pl0 ? 'plus' : pr.i) + '</i><b class="' + fitCls(pr.n, 8) + '">' + (j === pl0 ? 'Leer' : esc(pr.n)) + '</b><small>' + (j === pl0 ? 'eigene' : 'Vorlage') + '</small></button>'; }).join('') + '</div>');
+      return true;
+    }
+    if (t.closest('[data-padd]')) {
+      // Workout nur an diesem Datum zusätzlich (wie Hochziehen auf die Tageskarte)
+      var sc0 = schedFor(pDaySel());
+      ui.sheet = { padd: true }; sheetOpen(shHead('dumbbell', 'Workout an diesem Tag', fmtDayL(pDaySel())) + '<div class="ftl">' + plan().days.filter(function (x) { return !sc0.some(function (y) { return y.id === x.id; }); }).map(function (x) {
+        return '<button class="ptv" data-pxa="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')"><i class="ptvi">' + ic(dIcon(x)) + '</i><b class="' + fitCls(x.n, 8) + '">' + esc(x.n) + '</b><small>' + x.ex.length + ' Üb.</small></button>'; }).join('') + '</div>');
+      return true;
+    }
+    if ((el = t.closest('[data-pxa]'))) { closeSheet(true); planExtra(el.dataset.pxa, pDaySel()); return true; }
     if ((el = t.closest('[data-pdb]'))) { var pk = el.dataset.pdb; ui.pdo[pk] = !ui.pdo[pk]; el.setAttribute('aria-expanded', ui.pdo[pk]); el.parentNode.classList.toggle('open', ui.pdo[pk]); return true; }
     if ((el = t.closest('[data-gotab]'))) { goTab(el.dataset.gotab); return true; }
     if ((el = t.closest('[data-rm]'))) { ui.rm = Math.max(-11, Math.min(0, ui.rm + (+el.dataset.rm))); ui.fresh = false; render(); return true; }
@@ -485,6 +496,7 @@
     if ((el = t.closest('[data-pedit]'))) { ui.pe = el.dataset.pedit; ui.pdel = 0; ui.peap = false; ui.pf = domGroup(pDay(ui.pe)) || 'all'; ui.pq = ''; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true; }
     if (t.closest('[data-pback]')) { ui.pe = null; ui.pdel = 0; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true; }
     if ((el = t.closest('[data-ppre]'))) {
+      if (ui.sheet && ui.sheet.pnew) closeSheet(true);
       var pr = PRESETS[+el.dataset.ppre], ids = pr.ids ? pr.ids.slice() : EX.filter(function (e) { return pr.f.indexOf(e.g) >= 0; }).map(function (e) { return e.id; });
       var nd = { id: 'p' + Date.now().toString(36), n: pr.n === 'Eigener Tag' ? 'Tag ' + (P.days.length + 1) : pr.n, c: pr.c, i: pr.i, wd: [], ex: ids };
       P.cu = true; P.days.push(nd); ui.pe = nd.id; ui.peap = true; ui.pf = 'all'; ui.pq = ''; ui.fresh = true; persist(); render(); $('app').scrollTo(0, 0); return true;

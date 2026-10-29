@@ -16,6 +16,8 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Nicht committet: nichts.
 
 ## Offen / Ideen
+- Essen planen weiter an Essen angleichen: Mahlzeit-Karte in Planen klappt noch als Fenster auf (Essen: in der Zeile); Mahlzeit beim Einplanen aus einer Kachel = übliche (`mealFor`), im Mengen-Fenster nicht wählbar.
+- Gerichte bearbeiten: Zutatenmenge noch in g (Einheit nur in der Ansicht `fingHtml` und beim Hinzufügen über das Mengen-Fenster).
 - iPhone-Test offen (30.10.): siehe Stand oben.
 - Bekannt: aus Schnell gemerktes Stück-Lebensmittel zeigt in „Lebensmittel bearbeiten“ die Stück-Werte als „je 100 g“ (Rechengröße 100 = 1 Stück) – bei Bedarf eigene Stück-Ansicht.
 - Bekannt: „Gibt es schon“ im Schnell-Fenster → Zurück führt zur Suche, nicht zurück ins Schnell-Formular (Eingaben weg).
@@ -41,6 +43,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-30 – Mengen in Einheiten, ruhiger Kalender, Training ohne Vorlagen-Reiter
+- Mengen „Einheit zuerst“: `fUnit(it)` = vorgewählte bzw. erste zählbare Portion (`FCOUNT`: Stück, Scheibe, Glas, Becher, Dose, EL, TL …, ≤ 400 g), `fStep` = ½ Einheit (EL/TL ganze), sonst 5/10/25 g nach üblicher Menge, Getränke 50 ml. Mengen-Fenster: Einheit groß („1½ Stück“, wischbar 18 px/Schritt), Gramm klein als `#fa` zum Tippen; Pillen ½·1·2·3·4 (kleine Einheiten 1–5). ± und Wischen rasten aufs Raster. `fAmt` zeigt Einheit (auch in Planen/Einkauf-Zeilen), `fPl` Mehrzahl („2 Scheiben“), `fHalf` ¼ ½ ¾. Zutaten-Chips im Gericht in Einheit, wenn auf ½ ungefähr aufgeht. Daten bleiben in Gramm.
+- Kalender: nur Woche Mo–So (`ui.cm` 0) oder 5 Wochen (1); je Tag Zahl mit Essen-Ring + EIN Zeichen (Haken / blasser Punkt verpasst / erstes Training +n); Ausnahme = Punkt an der Zahl (`.exc`). Urlaub/Krank als Band `.pcb` über den Tagen jeder Woche, Überschneidungen in eigenen Reihen. Tausch-Farben (`SWC`), Waage-, Urlaub-Zeichen und eingerahmte Tage entfernt.
+- Training: Reiter „Vorlagen“ weg (`ui.ptt`); „Neues Workout“ öffnet Fenster „Leer oder aus Vorlage“ (`data-pnew`). Tageskarte: „Workout an diesem Tag“ (`data-padd` → `data-pxa` → `planExtra`).
+- Planen › Essen: Kachel antippen = Mengen-Fenster wie in Essen (`ui.fplan.pg`, schließt nach Einplanen), hochziehen = sofort.
+- Fehler: `data-padd`-Handler steht in `calClick`, dort gibt es kein `P` → `plan()`.
 
 ### 2026-10-30 – Planen: Kalender in 3 Stufen, Essen-Reiter, Einkauf neu, Training im Essen-Stil
 - Kalender: `ui.cm` 0/1/2 = 7 Tage / 3 Wochen / 5 Wochen (Woche des Tags in der Mitte); senkrecht wischen = Stufe ±1, Monatsname schaltet reihum; seitlich 7/21/28 Tage.

@@ -1,9 +1,9 @@
   function foodPush(x, editIdx) {
     if (ui.fplan && editIdx == null) {
-      // Planen: als geplanter Eintrag (Tag, Mahlzeit) speichern, zurück zur Mahlzeit
+      // Planen: als geplanter Eintrag (Tag, Mahlzeit) speichern, zurück zur Mahlzeit (aus einer Kachel unter der Tageskarte: Fenster zu, wie in Essen)
       // Geplanten Eintrag ändern (ui.plEdit = Index in food.pl) oder neu einplanen
       var fp = ui.fplan, pe = ui.plEdit, pl = foodState().pl; fUndo(); x.d = fp.d; x.mk = fp.mk; if (pe != null && pl[pe]) pl[pe] = x; else pl.push(x);
-      persist(); ui.fresh = false; render(); toast((pe != null ? 'Geändert · ' : 'Geplant · ') + Math.round(x.k) + ' kcal', 'cal', true); openPlanMeal(fp.d, fp.mk); return;
+      persist(); ui.fresh = false; render(); toast((pe != null ? 'Geändert · ' : 'Geplant · ') + Math.round(x.k) + ' kcal · ' + MEALS.filter(function (m) { return m[1] === fp.mk; })[0][2], 'cal', true); if (fp.pg) closeSheet(true); else openPlanMeal(fp.d, fp.mk); return;
     }
     var st = foodState(), today = dayIdx(Date.now()), before = foodSum(today).p, goal = foodGoal(today).p;
     // Uhrzeit aus dem Fenster (falls vorhanden) auf den Tag des Eintrags setzen
@@ -142,7 +142,7 @@
     var fb = document.querySelector('#sheet [data-fback]'); if (fb) return foodClick(fb);
     if (ui.sheet.fsearch && ui.fcat && !ui.fq) { ui.fcat = ''; fresSet(); return true; }
     if (ui.sheet.dishEdit) { dishBack(ui.dd && ui.dd.id); return true; }
-    if (ui.fplan && !ui.sheet.plmeal) { openPlanMeal(ui.fplan.d, ui.fplan.mk); return true; }
+    if (ui.fplan && !ui.fplan.pg && !ui.sheet.plmeal) { openPlanMeal(ui.fplan.d, ui.fplan.mk); return true; }
     return false;
   }
   function fstpTog(on) {
@@ -257,7 +257,7 @@
     if ((el = t.closest('[data-fcat]'))) { ui.fcat = el.dataset.fcat; ui.fsub = ''; fresSet(); $('sheet').scrollTop = 0; return true; }
     if ((el = t.closest('[data-ftab]'))) { ui.ftab = el.dataset.ftab; ui.fcat = ''; fresSet(); buzz(4); return true; }
     if ((el = t.closest('[data-famt]'))) { ui.fpick.a = +el.dataset.famt; if ($('fa')) $('fa').value = ui.fpick.a; fpickUpd(); return true; }
-    if ((el = t.closest('[data-fstep]'))) { var it0 = fItem(ui.fpick.i), stp = it0.dish ? 0.25 : it0.pc ? it0.u[0][1] : 10; ui.fpick.a = Math.max(stp, Math.round((ui.fpick.a + stp * (+el.dataset.fstep)) * 100) / 100); if ($('fa')) $('fa').value = ui.fpick.a; fpickUpd(); buzz(4); return true; }
+    if ((el = t.closest('[data-fstep]'))) { var stp = fStep(fItem(ui.fpick.i)); ui.fpick.a = Math.max(stp, Math.round((Math.round(ui.fpick.a / stp) + (+el.dataset.fstep)) * stp * 100) / 100); if ($('fa')) $('fa').value = ui.fpick.a; fpickUpd(); buzz(4); return true; }
     if (t.closest('[data-fpadd]')) { var pk = ui.fpick; if (ui.ingm) ingAdd(pk.i, pk.a); else foodRef(pk.i, pk.a, pk.edit); return true; }
     if ((el = t.closest('[data-fown]'))) { openOwn(el.dataset.fown); return true; }
     if (t.closest('[data-fownsave]')) {

@@ -1,6 +1,4 @@
   // ---------- Plan
-  // SWC: Farben für Tauschpaare im Kalender (beide Tage eines Tauschs gleich)
-  var SWC = ['--g-kh', '--g-cardio', '--g-core', '--g-pull'];
   var GORDER = ['skill', 'pull', 'push', 'kh', 'core', 'cardio', 'mob'], GRANK = {}, EXI = {}, PCOL = ['--g-pull', '--g-push', '--g-core', '--g-kh', '--g-skill', '--g-cardio', '--g-mob'], WDN = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
   GORDER.forEach(function (k, i) { GRANK[k] = i; });
   EX.forEach(function (e, i) { EXI[e.id] = i; });

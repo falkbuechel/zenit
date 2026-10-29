@@ -130,7 +130,7 @@
     var e = EXB[ui.hcur], n = $('arn'); if (!ui.arv || !e) return; v = Math.max(e.u === 'Sek.' ? 5 : 1, Math.min(999, v)); ui.arv.v = v;
     if (n) { n.textContent = v; n.className = v >= rxNow(derive(state.logs), e).r ? 'hit' : ''; }
   }
-  // Zahl wischen (auch der Arena-Zähler #arn, 16 px je Schritt): ab 8 px waagerecht wird aus dem Tippen ein Ziehen; je 10 px ein Schritt (Menge: 5 g, ½ Portion oder eine Grundeinheit; Wasser: 50 ml)
+  // Zahl wischen (auch der Arena-Zähler #arn, 16 px je Schritt): ab 8 px waagerecht wird aus dem Tippen ein Ziehen; je 10 px ein Schritt (Menge: fStep, zählbare Einheiten 18 px; Wasser: 50 ml)
   var nsw = null;
   document.addEventListener('pointerdown', function (ev) {
     var el = ev.target.closest && ev.target.closest('#fa, #fpcn, #wa-v, #arn, #f-e'); if (!el) return;
@@ -146,7 +146,7 @@
     else if (nsw.wa) {
       var v = Math.max(0, Math.min(8000, nsw.v0 + n * 50)); if (v === nsw.v) return; nsw.v = v; buzz(3); waShow(v);
     } else if (ui.fpick) {
-      var it = fItem(ui.fpick.i), stp = it.dish ? 0.25 : it.pc ? it.u[0][1] : 5, a = Math.max(stp, Math.round((nsw.v0 + n * stp) * 100) / 100);
+      var it = fItem(ui.fpick.i), stp = fStep(it), a = Math.max(stp, Math.round((Math.round(nsw.v0 / stp) + (fUnit(it) ? Math.round(dx / 18) : n)) * stp * 100) / 100);
       if (a !== ui.fpick.a) { ui.fpick.a = a; if ($('fa')) $('fa').value = a; fpickUpd(); buzz(3); }
     }
   }, { passive: false });

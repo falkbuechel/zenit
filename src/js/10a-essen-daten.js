@@ -224,9 +224,25 @@
     // Menge lesbar: die Portion, die mit der kleinsten Anzahl glatt aufgeht („1 Schale“, „3× Stück“, halbe erlaubt), sonst Gramm
     // Gerichte in Viertel-Portionen: ¼ ½ ¾ als Zeichen, sonst Zahl mit bis zu zwei Stellen
     if (it.dish) { var fr = { 0.25: '¼', 0.5: '½', 0.75: '¾' }, w = Math.floor(a), q = Math.round((a - w) * 100) / 100; return (fr[q] ? (w ? w + ' ' : '') + fr[q] : fN2(a)) + (a === 1 ? ' Portion' : ' Portionen'); }
-    var best = null;
+    var best = null, cu = fUnit(it);
+    if (!grams && cu) { var cn = a / cu[1]; if (cn >= 0.25 && cn <= 20 && Math.abs(cn * 4 - Math.round(cn * 4)) < 0.02) return fHalf(cn) + ' ' + fPl(cu[0], cn); }
     if (!grams) it.u.forEach(function (u) { var n = a / u[1]; if (n >= 0.5 && n <= 12 && Math.abs(n * 2 - Math.round(n * 2)) < 0.01 && (!best || n < best[0])) best = [n, u[0]]; });
-    return best ? (best[0] === 1 ? '1 ' : fN(best[0]) + '× ') + best[1] : Math.round(a) + (it.ml ? ' ml' : ' g');
+    return best ? fHalf(best[0]) + ' ' + fPl(best[1], best[0]) : Math.round(a) + (it.ml ? ' ml' : ' g');
+  }
+  // Mehrzahl der weiblichen Portionsnamen („2 Scheiben“, „3 Portionen“); Glas, Stück, EL bleiben
+  function fPl(nm, n) { return n > 1 ? nm.replace(/^(Portion|Packung)/, '$1en').replace(/^(Scheibe|Schale|Dose|Flasche|Kugel|Rippe|Hälfte)/, '$1n') : nm; }
+  function fHalf(n) { var w = Math.floor(n + 0.01), q = Math.round((n - w) * 4) / 4, fr = { 0.25: '¼', 0.5: '½', 0.75: '¾' }; return fr[q] ? (w ? w : '') + fr[q] : fN(n); }
+  // Haupteinheit zum Zählen (Stück, Glas, Scheibe, EL …): vorgewählte Portion, sonst die erste zählbare; große Packungen (> 400 g) und Teller/Portion zählen in Gramm
+  var FCOUNT = /^(Stück|Scheibe|Glas|Becher|Dose|Filet|Kugel|Riegel|Ei|Rippe|Flasche|Packung|Hälfte|EL|TL|Messlöffel)/;
+  function fUnit(it) {
+    if (!it || it.dish || !it.u || !it.u.length) return null; if (it.pc) return it.u[0];
+    var ok = it.u.filter(function (u) { return FCOUNT.test(u[0]) && u[1] <= 400; });
+    return ok.filter(function (u) { return u[1] === it.d; })[0] || ok[0] || null;
+  }
+  // Schritt für ± und Wischen: Viertel-Portion beim Gericht, halbe Einheit, sonst nach der üblichen Menge (Getränke 50 ml)
+  function fStep(it) {
+    if (it.dish) return 0.25; var cu = fUnit(it); if (it.pc) return cu[1]; if (cu) return cu[1] <= 30 ? cu[1] : cu[1] / 2;
+    var d0 = it.d || (it.u[0] ? it.u[0][1] : 100); return it.ml ? 50 : d0 >= 150 ? 25 : d0 >= 40 ? 10 : 5;
   }
   function fnorm(s) { return String(s).toLowerCase().replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss'); }
   function foodSum(di) {

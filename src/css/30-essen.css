@@ -412,6 +412,10 @@
 .own2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
 .own2 .fnm, .own2 .fqw { margin: 0; }
 .fpcn b { font-family: var(--f-display); font-size: 24px; font-weight: 900; text-align: center; }
+.fpcu { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.fpcu b { font-size: 28px; }
+.fstep .fag input { max-width: 70px; font-size: 16px; font-weight: 700; color: var(--ink3); border-bottom-width: 1px; }
+.fstep .fag span { font-size: 13px; }
 /* Tagesleiste: wischbar (7 Tage zurück/vor), neuer Monat erscheint kurz darüber */
 .fdw { position: relative; margin-top: 6px; }
 .fds { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0; touch-action: pan-y; will-change: transform; }

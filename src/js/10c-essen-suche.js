@@ -126,13 +126,15 @@
     else s.innerHTML = fpickHtml();
   }
   function fpickHtml() {
-    var pk = ui.fpick, it = fItem(pk.i), back = !!(ui.sheet && ui.sheet.from), un = it.ml ? 'ml' : 'g', b0 = it.u[0];
+    var pk = ui.fpick, it = fItem(pk.i), back = !!(ui.sheet && ui.sheet.from), un = it.ml ? 'ml' : 'g', b0 = it.u[0], cu = fUnit(it);
     // Schnellmengen passend zur Einheit, aufsteigend, mindestens 15 % auseinander: Stück/Portionen als 1×–3× (ein Ei wiegt keiner), Getränke in Glas-/Flaschengrößen,
     // sonst runde Mengen um die übliche; Gericht halbe Portionen, Fast Food Verkaufsportionen. Letzte Pille = zuletzt eingetragene Menge (Uhr), sonst eine fünfte Stufe
     var d0 = it.d || (b0 ? b0[1] : 100), r5 = function (x) { return Math.max(5, Math.round(x / 5) * 5); }, ch, last = null;
     foodState().e.forEach(function (x) { if (x.r && x.r.i === pk.i && (!last || x.t > last.t)) last = { t: x.t, g: x.r.g }; });
     if (it.dish) ch = [[0.5], [0.75], [1], [1.5], [2]];
     else if (it.pc) ch = (it.u.length > 1 ? it.u.slice(it.ub ? 1 : 0).map(function (u) { return [u[1]]; }) : []).concat([1, 2, 3, 4].map(function (n) { return [b0[1] * n]; }));
+    // Zählbar (Stück, Glas, EL …): Vielfache der Einheit, kleine Einheiten ab 1, sonst ab ½
+    else if (cu) ch = (cu[1] <= 30 ? [1, 2, 3, 4, 5] : [0.5, 1, 2, 3, 4]).map(function (n) { return [cu[1] * n]; });
     else if (it.u.length) ch = it.u.map(function (u) { return [u[1]]; }).concat([[b0[1] * 2], [b0[1] * 3]], it.u[1] ? [[it.u[1][1] * 2]] : [], [[b0[1] * 4]]);
     else if (it.ml) ch = [[200, 1], [250, 1], [330, 1], [500, 1], [750, 1]];
     else ch = [[r5(d0 / 2), 1], [d0, 1], [r5(d0 * 1.5), 1], [d0 * 2, 1], [d0 * 3, 1]];
@@ -140,9 +142,10 @@
     ch = ch.filter(function (x, i, a) { return !a.slice(0, i).some(function (y) { return Math.abs(y[0] - x[0]) < Math.max(y[0], x[0]) * 0.15; }); });
     if (last && !ch.slice(0, 4).some(function (y) { return y[0] === last.g; })) ch = ch.slice(0, 4).sort(function (a, b) { return a[0] - b[0]; }).concat([[last.g, 0, 1]]);
     else ch = ch.slice(0, 5).sort(function (a, b) { return a[0] - b[0]; });
-    var sub = it.dish ? 'Gericht · je Portion' : (it.b ? it.b + ' · ' : '') + (it.pc ? b0[0] + ' = ' + Math.round(it.k * b0[1] / 100) + ' kcal' : '100 ' + un + ' = ' + Math.round(it.k) + ' kcal');
-    var amt = it.pc ? '<label class="fpcn"><b id="fpcn">' + fAmt(it, pk.a) + '</b></label>' :
-      '<label><input id="fa" type="number" inputmode="decimal" min="0" step="' + (it.dish ? 0.25 : 5) + '" value="' + pk.a + '" aria-label="Menge"><span>' + (it.dish ? 'Port.' : un) + '</span></label>';
+    var sub = it.dish ? 'Gericht · je Portion' : (it.b ? it.b + ' · ' : '') + (cu ? '1 ' + cu[0] + (it.pc ? '' : ' · ' + cu[1] + ' ' + un) + ' = ' + Math.round(it.k * cu[1] / 100) + ' kcal' : '100 ' + un + ' = ' + Math.round(it.k) + ' kcal');
+    // Zählbar: groß die Einheit („2 Stück“, wischbar), darunter klein die Gramm zum Tippen; Fast Food nur die Einheit
+    var amt = it.pc ? '<label class="fpcn"><b id="fpcn">' + fAmt(it, pk.a) + '</b></label>' : cu ? '<div class="fpcn fpcu"><b id="fpcn">' + fAmt(it, pk.a) + '</b><label class="fag"><input id="fa" type="number" inputmode="decimal" min="0" step="' + fStep(it) + '" value="' + pk.a + '" aria-label="Menge in ' + un + '"><span>' + un + '</span></label></div>' :
+      '<label><input id="fa" type="number" inputmode="decimal" min="0" step="' + fStep(it) + '" value="' + pk.a + '" aria-label="Menge"><span>' + (it.dish ? 'Port.' : un) + '</span></label>';
     // Kopf: Marke wählen (eingebaute Lebensmittel) und Barcode direkt neben dem Schließen
     // Gericht: statt Barcode (hat keinen) der Zutaten-Knopf; an = Zutaten für die gewählte Portion statt der Nährwert-Kacheln
     var hasIng = it.dish && fDish(pk.i) && fDish(pk.i).ing.length, ingOn = hasIng && ui.fingo;
@@ -218,7 +221,9 @@
     return dd.ing.filter(function (q) { return q.n || +q.a > 0; }).map(function (q) {
       // Ohne Menge (Gewürze, „nach Belieben“): n. B. statt Gramm
       var g = (+q.a || 0) * f, src = q.i && (FOODB[q.i] || fOwn(q.i)), ck = src && src.cat ? src.cat : q.i && /^u/.test(q.i) ? 'u' : 'x';
-      return '<span style="--cc:' + fTone(q.i, ck) + '">' + ic(fIco(q.i, ck)) + '<b' + (String(q.n || '').length > 13 ? ' class="l"' : '') + '>' + esc(q.n || 'Zutat') + '</b>' + (g > 0 ? '<em>' + (g < 20 ? Math.round(g) : Math.round(g / 5) * 5) + '</em>' : '<em class="nb">n. B.</em>') + '</span>';
+      // Zählbare Zutat in ihrer Einheit („2 Stück“), wenn es auf ½ Einheit ungefähr aufgeht
+      var cu = src && fUnit(src), cn = cu ? Math.round(g / cu[1] * 2) / 2 : 0, am = cn && Math.abs(cn * cu[1] - g) <= g * 0.15 ? fAmt(src, cn * cu[1]) : g < 20 ? Math.round(g) : Math.round(g / 5) * 5;
+      return '<span style="--cc:' + fTone(q.i, ck) + '">' + ic(fIco(q.i, ck)) + '<b' + (String(q.n || '').length > 13 ? ' class="l"' : '') + '>' + esc(q.n || 'Zutat') + '</b>' + (g > 0 ? '<em>' + am + '</em>' : '<em class="nb">n. B.</em>') + '</span>';
     }).join('') + '<div class="dgp">' + ['k', 'p', 'f', 'c'].map(function (k) { return '<span style="--nc:var(' + NCOL[k] + ')">' + ic(NIC[k]) + '<b>' + Math.round(v[k] || 0) + '</b></span>'; }).join('') + '</div>';
   }
   function fstpHtml(id, ed) {

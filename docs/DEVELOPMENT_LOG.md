@@ -2,18 +2,21 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
-## Stand 2026-10-29 (Abend)
-- Zuletzt: Falks Punkte 1–5 vom 29.10. umgesetzt und gepusht (e07d9f2, siehe Verlauf). Arbeitsweise: nummerierte Punkte je Bereich, Umbauten mit Varianten (gebündelt früh fragen), nach jeder gepushten Runde /handoff + /clear.
-- Falk testet am iPhone: Zutatenliste im Gericht, gestrichelte geplante Tage (in Demo nicht sichtbar geprüft), ruhigere Suche, Nährwert-Kacheln (Schnell, eigenes Lebensmittel, Gericht von Hand, Ziele), Wasser/Tag ändern flach, Tag-Editor als Liste mit Aussehen-Knopf; dazu ältere Tests (Wasser über Ziel, Mahlzeiten auf/zu, Menüleiste).
-- Nächster Schritt: iPhone-Rückmeldung einarbeiten, dann Trainingsplan-Fenster/Tageskarte im neuen Stil oder Menüleiste/Einkaufsliste oder Planen Schritt 4.
-- Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
+## Stand 2026-10-29 (spät)
+- Zuletzt: vier Runden Essen/Planen gepusht (35839b6, 3e8a599, d3ab367) + lokale Vorschau in VS Code (d035d84, 070a181). Arbeitsweise: nummerierte Punkte je Bereich, Varianten gebündelt früh fragen, nach jeder gepushten Runde /handoff + /clear.
+- Falk testet am iPhone: weiche Fenster (Ruckeln?), Gericht (gleiche Höhe, Schritte auf/zu, Rezept einfügen), Suche (Unterarten, Kategorien zu zweit, Zuletzt), Schnell (Gegessen/je, Merken über die Rückmeldung), Planen (Kalender wischen, Auswahl in Reihe, Tag-ändern-Kacheln, Vorlagen mit Namen, Mahlzeit-Kacheln), Hell-Schalter.
+- Vorschau: VS Code startet `tools/serve.py` beim Öffnen (Port 8000, baut bei Änderung neu); Edge-Tools-Tab headless → http://127.0.0.1:8000. Server nie aus Claudes Sitzung starten (für den Tab nicht erreichbar).
+- Nächster Schritt: iPhone-Rückmeldung einarbeiten; danach Trainingsplan-Fenster/Tageskarte im neuen Stil, Menüleiste oder Planen Schritt 4.
+- Offene Entscheidungen: Link-Import für Rezepte (fremder CORS-Dienst)? Skilltree Dead Hang/Hollow nach außen?
 - App-Icon (oliv) übernimmt iOS erst beim neuen Hinzufügen zum Homescreen. NICHT die App löschen (Daten weg).
 - Nicht committet: nichts.
 
 ## Offen / Ideen
-- iPhone-Test offen (29.10. spät): weiche Fenster überall (gleitende Höhe; auf ruckeln achten), Gericht gleiche Höhe + Schritte auf/zu, Kalender wischen auf/zu, Ereignis-Kacheln, Vorlagen mit Namen, Mahlzeit-Kacheln im Tag; dazu Rezept einfügen, Schnell, Hell-Schalter.
+- iPhone-Test offen (29.10. spät): siehe Stand oben.
 - Bekannt: aus Schnell gemerktes Stück-Lebensmittel zeigt in „Lebensmittel bearbeiten“ die Stück-Werte als „je 100 g“ (Rechengröße 100 = 1 Stück) – bei Bedarf eigene Stück-Ansicht.
+- Bekannt: „Gibt es schon“ im Schnell-Fenster → Zurück führt zur Suche, nicht zurück ins Schnell-Formular (Eingaben weg).
 - Entscheidung offen: Link-Import für Rezepte über einen fremden CORS-Dienst (genauer, aber Abhängigkeit)?
+- Kalender senkrecht wischen: kein preventDefault, Seite scrollt mit (Aufklappen nur, wenn die Seite oben steht).
 - Training in Planen: Tageskarte (Woche, Kacheln) evtl. noch kompakter; Trainingsplan-Fenster (`openDays`) noch im alten Kachelstil.
 - Menüleiste: ernst und modern, aber mit etwas mehr Charakter – weiter abstimmen.
 - Woche ziehen ändert den aktiven Plan auch rückwirkend (vergangene Kalendersymbole/Serie können sich verschieben) – ggf. Änderung ab heute als neuer Planstand.

@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Zenit Vorschau",
+      "detail": "Baut dist/, startet http://127.0.0.1:8000 und baut bei jeder Änderung neu",
+      "type": "shell",
+      "command": "python tools/serve.py",
+      "isBackground": true,
+      "problemMatcher": [],
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "silent", "panel": "dedicated" },
+      "runOptions": { "runOn": "folderOpen" }
+    }
+  ]
+}

@@ -35,6 +35,9 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-29 – Lokale Vorschau in VS Code
+- `tools/serve.py`: baut, liefert `dist/` auf http://127.0.0.1:8000 (ohne Cache), baut bei Änderungen in `src/`, `public/`, `build.py` neu. `.vscode/tasks.json` startet es beim Öffnen des Ordners (Strg+Umschalt+B von Hand); Edge-Tools-Tab öffnet die Adresse direkt (`vscode-edge-devtools.defaultUrl`). `localhost` aus Claudes Sitzung war für den Edge-Tab nicht erreichbar → Server immer in VS Code starten.
+
 ### 2026-10-29 – Schritte als Fade, Schnell mit Gegessen + Bezugsmenge, Merken danach, Unterarten in der Suche, Hell-Schalter
 - Gericht: Schritte ohne Icon; zu = Anfang blendet aus (Maske), Tippen oder nach oben Wischen (`fstpTog`, touchmove > 28 px) öffnet, Fensterhöhe gleitet (Höhe messen → `height`-Übergang .48 s, danach frei; `sheetOpen` setzt `style.height` zurück). Ohne Schritte nur Hinweis „Keine Schritte hinterlegt“. Speichern und Zurück aus dem Editor → Übersicht des Gerichts (`dishBack`). Zutaten ohne Menge/Werte bleiben (Gewürze, „n. B.“).
 - Schnell: Zeile über den Treffern, warm abgehoben; X/Zurück geht zur Suche (`from: 's'`). Fenster: gegessen (±, wischbar `#f-e`), „Nährwerte je“ Menge + Einheit, Kacheln, Ergebniszeile (`#fqr`). Hinweis „Gibt es schon“ (`ingMatch`) übernimmt das Lebensmittel. Stern und „je 100 g anlegen“ entfernt; Merken erst nach dem Eintragen per Knopf in der Rückmeldung (nur wenn `libFind` nichts findet) → Fenster mit Kategorien (Namen) + Unterarten.

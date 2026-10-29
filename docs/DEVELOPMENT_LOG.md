@@ -6,6 +6,7 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Zuletzt: Analyse der Zusammenarbeit + Aufräumen (siehe Verlauf 30.10.). Arbeitsweise: Falk meldet nummerierte Punkte je Bereich, klare Fixes direkt, Umbauten mit Varianten (AskUserQuestion). Nach jeder gepushten Runde /handoff + /clear (Stop-Hook meldet ab 200k Kontext).
 - Falk testet am iPhone: Tagesleiste/Kalender schlicht mit Ringen, Wasser über das Ziel ziehen (dunkelblau, roter Überlauf), Gericht-Fenster mit Topf-Knopf, Kategorien-Raster, Mahlzeiten auf/zu weich, Essen-Vorlagen in Planen, Woche in der Tageskarte, Menüleiste (Strich in Bereichsfarbe).
 - Nächster Schritt: Falks notierte Punkte vom 29.10. (oben unter „Offen“: Gerichte-Zutaten, geplante Tage stricheln, Kategorien/Zuletzt ruhiger), dann übrige Fenster im Essen-Stil (Schnell, Wasser, Ziele/Rechner, eigenes Lebensmittel, Marken, Planen-Fenster) und Training in Planen weiter vereinfachen.
+- Ab jetzt: keine Freigaben mehr (settings.json erlaubt alles außer Sperrliste); Fragen einer Runde gebündelt früh stellen, Falk antwortet evtl. übers iPhone (Remote Control in VS Code aktiv, Push-Einstellung über `/config` hat noch nicht geklappt – bei Bedarf später).
 - Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
 - App-Icon (oliv) übernimmt iOS erst beim neuen Hinzufügen zum Homescreen. NICHT die App löschen (Daten weg).
 - Nicht committet: nichts.

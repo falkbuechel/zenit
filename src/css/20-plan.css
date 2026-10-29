@@ -54,15 +54,11 @@
 /* Feste Zeilen (Wochentag, Zahl, Symbole, Haken): jede Zelle und jede Woche gleich hoch, nichts springt beim Wischen */
 .pc2 { position: relative; display: grid; grid-template-rows: 12px 30px 17px 13px; justify-items: center; align-items: center; gap: 3px; padding: 4px 0; border: 0; border-radius: var(--r12); background: transparent; color: var(--ink); font: inherit; -webkit-user-select: none; user-select: none; transition: background-color .16s var(--ease); }
 .pc2:active { background: var(--s2); }
-.pc2 b { position: relative; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; font-family: var(--f-mono); font-size: 14px; font-weight: 600; }
+.pc2 b { position: relative; z-index: 0; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; font-family: var(--f-mono); font-size: 14px; font-weight: 600; }
 /* Wochenleiste: Wochentag über der Zahl (der Monat hat dafür die Kopfzeile) */
 .pc2 > small { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink3); }
 .pc2.today > small { color: var(--ink); }
 /* Essen-Ring um die Tageszahl: Anteil vom kcal-Ziel, grün im Rahmen, rot drüber */
-.pfr { --fc: var(--ink3); position: absolute; inset: -3px; border-radius: 50%; background: conic-gradient(var(--fc) calc(var(--p) * 360deg), color-mix(in srgb, var(--ink3) 22%, transparent) 0); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px)); mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px)); pointer-events: none; }
-.pfr.ok { --fc: var(--ac); }
-.pfr.over { --fc: var(--danger); }
-.pfr.pl { --fc: var(--ink2); opacity: .55; }
 /* Essen in der Fokus-Karte: vier Mahlzeiten im Raster (wie Gegessen) */
 .pml { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .pml .fmc { width: auto; height: 82px; }
@@ -87,7 +83,9 @@
 .pc2.off.os.oe { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--oc) 55%, transparent); }
 .pc2 .ics .ic { width: 15px; height: 15px; }
 .pc2.past b { color: var(--ink3); }
-.pc2.today b { background: var(--ink); color: var(--bg); font-weight: 700; }
+/* Heute: kräftiger Ring statt dunkler Scheibe (wie in Essen), der Kuchen bleibt sichtbar */
+.pc2.today b { color: var(--ink); font-weight: 800; box-shadow: 0 0 0 2px var(--ink); }
+.pc2.today.swd b { box-shadow: 0 0 0 2px var(--ink), 0 0 0 4px var(--sc); }
 .pc2.sel { background: var(--s2); box-shadow: inset 0 0 0 1px var(--line); }
 .pc2 .dn { width: 13px; height: 13px; margin-top: -2px; color: var(--ac); }
 .pc2-g.in-r { animation: pcin-r .2s var(--ease); } .pc2-g.in-l { animation: pcin-l .2s var(--ease); } .pc2-g.in-m { animation: pcin-m .2s var(--ease); }

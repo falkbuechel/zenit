@@ -318,6 +318,8 @@
     return { k: o.k, p: o.p, f: o.f, c: o.c, fb: o.fb, su: o.su, pk: o.k / n, pp: o.p / n, pf: o.f / n, pc: o.c / n, pfb: o.fb / n, psu: o.su / n };
   }
   function fN(x) { return String(Math.round(x * 10) / 10).replace('.', ','); }
+  // Kreis um eine Tageszahl (Essen-Tagesleiste und Planen-Kalender): q = Anteil vom kcal-Ziel; gegessen = Kuchen hinter der Zahl, geplant (fu) = Kontur; st = ok/over/low
+  function dayRing(q, fu, st) { return q ? '<i class="dr ' + (fu ? 'ring' : 'pie') + (st || '') + '" style="--p:' + Math.min(1, q).toFixed(3) + '" aria-hidden="true"></i>' : ''; }
   // Gewählter Tag (Leiste oben, letzte 7 Tage); Wasserziel 35 ml je kg in 250-ml-Schritten
   function fExp(di) {
     // Erwarteter Anteil des Tagesziels: vergangene Tage 1, heute von 8 bis 20 Uhr linear 0 → 1
@@ -392,11 +394,13 @@
     ui.ftiles = tl;
     // Keine Überschrift (wie in Spielen ergibt sich der Bereich aus der unteren Leiste); Ziele/Rechner im Profil
     var h = '';
-    // Tagesleiste: 7 Tage, heute in der Mitte (wischen = 7 Tage zurück/vor), Balken = kcal vom Ziel; grün = Protein (fast) erreicht und kcal im Rahmen, orange = deutlich zu wenig, rot = über 110 %.
-    // Künftige Tage nur zur Ansicht: Umriss, Balken = geplant; antippen öffnet den Tag in Planen
-    var ds = '', pe = today + 3 - fPg() * 7; for (var i = 6; i >= 0; i--) {
-      var di = pe - i, fu = di > today, sm = fu ? planSum(di) : foodSum(di), gd = foodGoal(di), kq = sm.k / gd.k, dc = fu ? ' fut' + (sm.items.length ? ' pl' : '') : !sm.items.length ? '' : kq > 1.1 ? ' over' : sm.p >= gd.p * 0.9 && kq >= 0.85 ? ' ok' : di < today && (sm.p < gd.p * 0.6 || kq < 0.6) ? ' low' : '';
-      ds += '<button class="fdd' + (di === sd ? ' sel' : '') + (di === today ? ' today' : di < today ? ' past' : '') + dc + '" ' + (fu ? 'data-pgo' : 'data-fsd') + '="' + di + '" aria-label="' + esc(fmtDayL(di)) + (fu ? ', in Planen' : '') + '"><small>' + WDN[wdOf(di)].slice(0, 2) + '</small><b>' + new Date(di * 864e5).getUTCDate() + '</b><i style="--p:' + Math.min(1, kq).toFixed(2) + '"></i></button>';
+    // Tagesleiste: 7 Tage, heute in der Mitte (wischen = 7 Tage zurück/vor). Kreis um die Zahl = kcal vom Ziel (wie im Kalender, dayRing): gegessen als Kuchen
+    // (grün = Protein fast erreicht und kcal im Rahmen, orange = deutlich zu wenig, rot = über 110 %), geplant als Kontur. Vergangen / heute / künftig je eine Fläche,
+    // gleichartige Nachbarn verbunden (gs/ge = Anfang/Ende der Gruppe). Künftige Tage nur zur Ansicht, antippen öffnet den Tag in Planen
+    var ds = '', pe = today + 3 - fPg() * 7, grp = function (x) { return x < today ? 'past' : x === today ? 'today' : 'fut'; }; for (var i = 6; i >= 0; i--) {
+      var di = pe - i, fu = di > today, sm = fu ? planSum(di) : foodSum(di), gd = foodGoal(di), kq = sm.k / gd.k, st = fu ? '' : !sm.items.length ? '' : kq > 1.1 ? ' over' : sm.p >= gd.p * 0.9 && kq >= 0.85 ? ' ok' : di < today && (sm.p < gd.p * 0.6 || kq < 0.6) ? ' low' : '';
+      var gc = ' ' + grp(di) + (i === 6 || grp(di - 1) !== grp(di) ? ' gs' : '') + (i === 0 || grp(di + 1) !== grp(di) ? ' ge' : '');
+      ds += '<button class="fdd' + (di === sd ? ' sel' : '') + gc + (fu && sm.items.length ? ' pl' : '') + '" ' + (fu ? 'data-pgo' : 'data-fsd') + '="' + di + '" aria-label="' + esc(fmtDayL(di)) + (fu ? ', in Planen' : '') + '"><small>' + WDN[wdOf(di)].slice(0, 2) + '</small><b>' + dayRing(sm.items.length ? kq : 0, fu, st) + new Date(di * 864e5).getUTCDate() + '</b></button>';
     }
     h += '<div class="fdw rise" style="--i:0">' + (ui.fmon ? '<b class="fmo">' + esc(ui.fmon) + '</b>' : '') + '<nav class="fds' + (ui.fdir ? (ui.fdir > 0 ? ' in-r' : ' in-l') : '') + '">' + ds + '</nav></div>';
     ui.fmon = ''; ui.fdir = 0;
@@ -538,7 +542,7 @@
         // Kategorien alphabetisch in zwei Spalten, eigene Lebensmittel als eigene Kategorie
         var cl = FCATS.map(function (c) { return [c[0], c[1], FOODS.filter(function (x) { return x.cat === c[0] && !x.vh; }).length]; }).concat(st.o.length ? [['u', 'Eigene', st.o.length]] : []);
         h += '<div class="fcl">' + cl.sort(function (a, b) { return a[1].localeCompare(b[1], 'de'); }).map(function (c) {
-          return '<button data-fcat="' + c[0] + '">' + ic(CATI[c[0]][0]) + '<b>' + c[1] + '</b><small>' + c[2] + '</small></button>';
+          return '<button data-fcat="' + c[0] + '" style="--cc:' + (CCOL[c[0]] || CCOL.x) + '"><i class="fsc">' + ic(CATI[c[0]][0]) + '</i><b>' + c[1] + '</b><small>' + c[2] + '</small></button>';
         }).join('') + '</div>';
       }
       h += list.map(fRow).join('') + (tab === 'r' && !list.length ? '<p class="muted">Noch nichts eingetragen.</p>' : '');
@@ -693,8 +697,9 @@
     var dEd = /^d/.test(pk.i) && !ui.ingm && pk.edit == null && ui.sheet && ui.sheet.from === 'd';
     return hd + '<div id="fbr">' + fbrHtml() + '</div>' + fvarHtml(it, pk.i) +
       '<div class="fstep"><button class="sb" data-fstep="-1" aria-label="Weniger">' + ic('minus') + '</button>' + amt + '<button class="sb" data-fstep="1" aria-label="Mehr">' + ic('plus') + '</button></div>' +
-      '<div class="fpc">' + ch.map(function (c) { return '<button data-famt="' + c[0] + '" aria-pressed="' + (c[0] === pk.a) + '"' + (c[2] ? ' aria-label="Zuletzt: ' + fAmt(it, c[0]) + '">' + ic('clock') : '>') + fAmt(it, c[0], c[1]) + '</button>'; }).join('') + '</div>' +
-      '<div class="ftot" id="ftot">' + ftotHtml(fNut(it, pk.a)) + '</div>' + (it.dish ? '<div class="fing" id="fing">' + fingHtml(pk.i, pk.a) + '</div>' : '') + (ui.ingm || ui.fplan ? '' : whenFor(pk.edit)) +
+      // Gericht: keine Schnellmengen (Portion über ± bzw. Wischen in Vierteln), dafür die Zutaten als aufklappbare Zeile (zu: Vorschau der Namen, auf: Liste mit Mengen)
+      (it.dish ? '' : '<div class="fpc">' + ch.map(function (c) { return '<button data-famt="' + c[0] + '" aria-pressed="' + (c[0] === pk.a) + '"' + (c[2] ? ' aria-label="Zuletzt: ' + fAmt(it, c[0]) + '">' + ic('clock') : '>') + fAmt(it, c[0], c[1]) + '</button>'; }).join('') + '</div>') +
+      '<div class="ftot" id="ftot">' + ftotHtml(fNut(it, pk.a)) + '</div>' + (it.dish && fDish(pk.i) && fDish(pk.i).ing.length ? fingWrap(pk.i, pk.a) : '') + (ui.ingm || ui.fplan ? '' : whenFor(pk.edit)) +
       // Eintragen und (beim Ändern) Löschen teilen sich die Zeile: Löschen klein, rot, nur Mülleimer
       '<div class="fpgo"><button class="btn primary big" data-fpadd="1">' + ic('check') + '<span>' + (ui.ingm ? 'Hinzufügen' : ui.fplan ? (ui.plEdit != null ? 'Ändern' : 'Einplanen') : pk.edit != null ? 'Ändern' : 'Eintragen') + (ui.ingm ? '' : '<small id="ffit">' + ffitHtml() + '</small>') + '</span></button>' +
       (pk.edit != null ? '<button class="btn big fpdel" data-fdel="' + pk.edit + '" aria-label="Eintrag löschen">' + ic('trash') + '</button>' : '') +
@@ -745,11 +750,17 @@
     document.querySelectorAll('[data-famt]').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.famt === pk.a)); });
     if ($('fing')) $('fing').innerHTML = fingHtml(pk.i, pk.a);
   }
+  function fingWrap(id, por) {
+    // Zutaten als aufklappbare Zeile: zu = Symbol, Anzahl und die Namen als eine Zeile (ui.fingo merkt sich auf/zu), auf = Liste
+    var dd = fDish(id), l = dd.ing.filter(function (q) { return +q.a > 0; });
+    return '<div class="fingw' + (ui.fingo ? ' open' : '') + '"><button class="fingh" data-fingo="1" aria-expanded="' + !!ui.fingo + '">' + ic('pot') + '<b>' + l.length + ' Zutaten</b>' +
+      '<small>' + esc(l.map(function (q) { return q.n || 'Zutat'; }).join(' · ')) + '</small>' + ic('chev', 'chv') + '</button><div class="agx"><div><div class="fing" id="fing">' + fingHtml(id, por) + '</div></div></div></div>';
+  }
   function fingHtml(id, por) {
-    // Zutaten eines Gerichts für die gewählte Portionenzahl (zum Kochen): Name und Menge, gerundet auf 5 g
+    // Zutaten eines Gerichts für die gewählte Portionenzahl (zum Kochen): Name links, Menge rechts (gerundet auf 5 g)
     var dd = fDish(id); if (!dd || !dd.ing.length) return '';
     var f = por / Math.max(1, +dd.por || 1);
-    return '<b>' + ic('pot') + 'Zutaten</b>' + dd.ing.filter(function (q) { return +q.a > 0; }).map(function (q) {
+    return dd.ing.filter(function (q) { return +q.a > 0; }).map(function (q) {
       var g = (+q.a || 0) * f; return '<span>' + esc(q.n || 'Zutat') + '<em>' + (g < 20 ? Math.round(g) : Math.round(g / 5) * 5) + ' g</em></span>';
     }).join('');
   }
@@ -1232,6 +1243,7 @@
     if (t.closest('[data-pshop]')) { openShop(); return true; }
     if ((el = t.closest('[data-shn]'))) { ui.shn = +el.dataset.shn; $('sheet').innerHTML = shopHtml(); buzz(4); return true; }
     if ((el = t.closest('[data-shk]'))) { var shk = el.dataset.shk; if (st.sh[shk] != null) delete st.sh[shk]; else st.sh[shk] = dayIdx(Date.now()); persist(); $('sheet').innerHTML = shopHtml(); buzz(6); return true; }
+    if ((el = t.closest('[data-fingo]'))) { ui.fingo = !ui.fingo; el.setAttribute('aria-expanded', String(ui.fingo)); el.parentNode.classList.toggle('open', ui.fingo); buzz(4); return true; }
     // Nach dem Speichern verschwindet der Knopf (kein zweites, gleiches Speichern)
     if ((el = t.closest('[data-ptpm]'))) { if (tplSave('m', ui.fplan.d, ui.fplan.mk)) el.remove(); return true; }
     if ((el = t.closest('[data-ple]'))) { var po = foodState().pl[+el.dataset.ple]; if (po && po.r && fItem(po.r.i)) { var pfp = ui.fplan; openPick(po.r.i, po.r.g); ui.fplan = pfp; ui.plEdit = +el.dataset.ple; $('sheet').innerHTML = fpickHtml(); } return true; }

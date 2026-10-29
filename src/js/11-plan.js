@@ -128,7 +128,7 @@
       var ds = schedFor(k), tr = d.byDay[k], of = offAt(k), fk = ovF(k), pk = swp ? (swapOk(sd, k, today) ? ' pick' : ' nop') : '';
       var under = fk.s || of ? P.days.filter(function (x) { return onDay(x, k); }) : [];
       var fs = k <= today ? foodSum(k) : planSum(k), fq = fs.items.length ? fs.k / foodGoal(k).k : 0;
-      var fr = fq ? '<i class="pfr' + (k > today ? ' pl' : fq > 1.1 ? ' over' : fq >= 0.85 ? ' ok' : '') + '" style="--p:' + Math.min(1, fq).toFixed(2) + '"></i>' : '';
+      var fr = dayRing(fq, k > today, k > today ? '' : fq > 1.1 ? ' over' : fq >= 0.85 ? ' ok' : '');
       // Tauschpaar: beide Tage mit derselben Farbe (aus dem früheren der beiden Tage)
       var swc = fk.w !== undefined ? SWC[Math.min(k, fk.w) % SWC.length] : '';
       var ems = (of ? ['<em class="ev ' + of.k + '">' + ic(of.k === 'vac' ? 'beach' : 'sick') + '</em>'] : []).concat(swc ? ['<em class="ev tsw" style="--sc:var(' + swc + ')">' + ic('swap') + '</em>'] : [],

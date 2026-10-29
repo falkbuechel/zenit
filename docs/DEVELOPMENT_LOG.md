@@ -28,6 +28,12 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-29 – Tageskreise einheitlich, Gericht-Fenster, Fenster-Bausteine
+- Tageskreis `dayRing` (Essen-Tagesleiste und Planen-Kalender gleich, CSS `.dr` in 00-basis): gegessen = Kuchen hinter der Zahl, geplant = Kontur in Kühl; ok/over/low färben. Balken unter den Tagen und `.pfr` entfallen. Heute = kräftiger Ring statt dunkler Scheibe.
+- Tagesleiste: vergangen/heute/künftig als verbundene Flächen (`gs`/`ge` = Anfang/Ende), keine Lücken mehr.
+- Gericht-Fenster: keine Schnellmengen, Zutaten als aufklappbare Karte (`fingWrap`, zu = Namen in einer Zeile, auf = Liste Name … Menge, `ui.fingo` merkt es sich).
+- Bausteine für alle Fenster: Kategorie-Symbol als farbiger Kreis (`.fsc`, `--cc`), Kategorien als Kacheln mit Farbkante, Eingabefelder hell und flach, Nährwert-Kacheln mit Farbkante und Kachel-Schrift (Balken 4 px), Mengen-Pillen mit Tastenkante, Zutaten im Gericht-Editor als Karten.
+
 ### 2026-10-29 – Feinschliff Essen 5, Menüleiste ernster
 - Bilanz: kühles/warmes Licht ins Anthrazit gemischt, breiter und weicher auslaufend.
 - Ziel-Markierung beim Ziehen innen gezeichnet (Ring + Tönung), nicht mehr abgeschnitten, gilt auch für leere Fächer (vorher überschrieb `.fmc.fme` den Schatten).

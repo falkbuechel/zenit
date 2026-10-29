@@ -159,7 +159,10 @@ button:active:not(:disabled) { transform: scale(.97); }
 .dr { --fc: var(--ink3); position: absolute; inset: -3px; z-index: -1; border-radius: 50%; pointer-events: none;
   background: conic-gradient(var(--fc) calc(var(--p) * 360deg), color-mix(in srgb, var(--ink3) 18%, transparent) 0);
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px)); mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px)); }
-.dr.pl { --fc: var(--g-cardio); opacity: .6; }
+/* geplant: Ring gestrichelt (Anteil in Kühl, Rest als feine Striche), damit klar ist, dass noch nichts gegessen ist */
+.dr.pl { --fc: var(--g-cardio); opacity: .75;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px)), repeating-conic-gradient(#000 0 14deg, transparent 14deg 24deg);
+  -webkit-mask-composite: source-in; mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px)), repeating-conic-gradient(#000 0 14deg, transparent 14deg 24deg); mask-composite: intersect; }
 .dr.ok { --fc: var(--ac); }
 .dr.over { --fc: var(--danger); }
 .dr.low { --fc: var(--flame); }

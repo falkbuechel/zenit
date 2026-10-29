@@ -141,7 +141,7 @@
     // Gericht: statt Barcode (hat keinen) der Zutaten-Knopf; an = Zutaten für die gewählte Portion statt der Nährwert-Kacheln
     var hasIng = it.dish && fDish(pk.i) && fDish(pk.i).ing.length, ingOn = hasIng && ui.fingo;
     var hd = shHead('food', fName(it), sub, back), hb = (FOODB[pk.i] && !it.pc && it.cat !== 'r' ? '<button class="x' + (ui.fbr && ui.fbr.i === pk.i ? ' on' : '') + '" data-fbr="1" aria-label="Marke wählen">' + ic('tag') + '</button>' : '') +
-      (it.dish ? (hasIng ? '<button class="x' + (ingOn ? ' on' : '') + '" data-fingo="1" aria-pressed="' + !!ingOn + '" aria-label="Zutaten">' + ic('pot') + '</button>' : '') : '<button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button>');
+      (it.dish ? (hasIng ? '<button class="x' + (ingOn ? ' on' : '') + '" data-fingo="1" aria-pressed="' + !!ingOn + '" aria-label="Zutaten">' + ic('ing') + '</button>' : '') : '<button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button>');
     hd = hd.replace('<button class="x" data-sheet-close', hb + '<button class="x" data-sheet-close');
     // Kompakt, ohne Scrollen: Menge (± und wischbar), 4 Schnellmengen, Nährwert-Icons mit Tagesbalken, Tag/Mahlzeit/Uhrzeit in einer Zeile, Eintragen mit „danach frei“
     // Gericht bearbeiten nur aus dem Gerichte-Menü (nicht beim Ändern eines Eintrags): Stift in der Zeile von Eintragen
@@ -151,11 +151,13 @@
       '<div class="fstep"><button class="sb" data-fstep="-1" aria-label="Weniger">' + ic('minus') + '</button>' + amt + '<button class="sb" data-fstep="1" aria-label="Mehr">' + ic('plus') + '</button></div>' +
       // Gericht: keine Schnellmengen (Portion über ± bzw. Wischen in Vierteln), dafür die Zutaten als aufklappbare Zeile (zu: Vorschau der Namen, auf: Liste mit Mengen)
       (it.dish ? '' : '<div class="fpc">' + ch.map(function (c) { return '<button data-famt="' + c[0] + '" aria-pressed="' + (c[0] === pk.a) + '"' + (c[2] ? ' aria-label="Zuletzt: ' + fAmt(it, c[0]) + '">' + ic('clock') : '>') + fAmt(it, c[0], c[1]) + '</button>'; }).join('') + '</div>') +
-      (ingOn ? '<div class="fing" id="fing">' + fingHtml(pk.i, pk.a) + '</div>' : '<div class="ftot" id="ftot">' + ftotHtml(fNut(it, pk.a)) + '</div>') + (ui.ingm || ui.fplan ? '' : whenFor(pk.edit)) +
+      // Zutaten an: nur die Kochliste (ganze Breite), kein Tag/Mahlzeit/Uhrzeit und kein Eintragen; Gericht bearbeiten bleibt als Stift darunter
+      (ingOn ? '<div class="fing" id="fing">' + fingHtml(pk.i, pk.a) + '</div>' + (dEd ? '<div class="fsb fpx"><button class="btn ghost small" data-fde="' + pk.i + '">' + ic('edit') + 'Gericht bearbeiten</button></div>' : '') :
+      '<div class="ftot" id="ftot">' + ftotHtml(fNut(it, pk.a)) + '</div>' + (ui.ingm || ui.fplan ? '' : whenFor(pk.edit)) +
       // Eintragen und (beim Ändern) Löschen teilen sich die Zeile: Löschen klein, rot, nur Mülleimer
       '<div class="fpgo"><button class="btn primary big" data-fpadd="1">' + ic('check') + '<span>' + (ui.ingm ? 'Hinzufügen' : ui.fplan ? (ui.plEdit != null ? 'Ändern' : 'Einplanen') : pk.edit != null ? 'Ändern' : 'Eintragen') + (ui.ingm ? '' : '<small id="ffit">' + ffitHtml() + '</small>') + '</span></button>' +
       (pk.edit != null ? '<button class="btn big fpdel" data-fdel="' + pk.edit + '" aria-label="Eintrag löschen">' + ic('trash') + '</button>' : '') +
-      (dEd ? '<button class="btn big fped" data-fde="' + pk.i + '" aria-label="Gericht bearbeiten">' + ic('edit') + '</button>' : '') + '</div>' +
+      (dEd ? '<button class="btn big fped" data-fde="' + pk.i + '" aria-label="Gericht bearbeiten">' + ic('edit') + '</button>' : '') + '</div>') +
       (ex ? '<div class="fsb fpx">' + ex + '</div>' : '');
   }
   function fDaySum() {
@@ -210,11 +212,15 @@
       var g = (+q.a || 0) * f; return '<span>' + esc(q.n || 'Zutat') + '<em>' + (g < 20 ? Math.round(g) : Math.round(g / 5) * 5) + ' g</em></span>';
     }).join('');
   }
+  function nTile(id, k, v, big, u) {
+    // Nährwert-Eingabe als Kachel wie im Mengen-Fenster (Farbkante oben, Icon + Einheit, Zahl groß); in .ntg: big = halbe Breite, sonst Viertel
+    return '<label class="ntl' + (big ? ' big' : '') + '" style="--nc:var(' + NCOL[k] + ')"><i>' + ic(NIC[k]) + '<small>' + (u || (k === 'k' ? 'kcal' : 'g')) + '</small></i>' +
+      '<input id="' + id + '" type="number" inputmode="decimal" min="0" value="' + (v == null ? '' : v) + '" placeholder="0" aria-label="' + (k === 'k' ? 'Kalorien' : NSH[k]) + '"></label>';
+  }
   function quickHtml(idx) {
     // Schnell eintragen ohne Lebensmittel (z. B. Restaurant): kcal und Nährwerte, Name, Tag/Mahlzeit/Uhrzeit; auch als Reiter in der Suche
     var x = idx != null ? foodState().e[idx] : null;
-    function f(k, u) { return '<label style="--nc:var(' + NCOL[k] + ')">' + ic(NIC[k]) + '<input id="f-' + k + '" type="number" inputmode="decimal" min="0" value="' + (x && x[k] != null ? x[k] : '') + '" placeholder="0" aria-label="' + (k === 'k' ? 'Kalorien' : NSH[k]) + '"><span>' + u + '</span></label>'; }
-    return '<div class="finp">' + f('k', 'kcal') + f('p', 'g') + '</div><div class="finp four">' + f('f', 'g') + f('c', 'g') + f('fb', 'g') + f('su', 'g') + '</div>' +
+    return '<div class="ntg">' + NK.map(function (k) { return nTile('f-' + k, k, x ? x[k] : null, k === 'k' || k === 'p'); }).join('') + '</div>' +
       '<div class="fqn"><input id="f-n" class="fnm" type="text" maxlength="30" placeholder="Name (optional)" value="' + (x ? esc(x.n) : '') + '" aria-label="Name">' +
       (x ? '' : '<button class="x" data-fqm="1" aria-pressed="' + !!ui.fqm + '" aria-label="Als eigenes Lebensmittel merken">' + ic('star') + '</button>') + '</div>' + (ui.fplan ? '' : whenFor(idx)) +
       '<div class="fpgo"><button class="btn primary big" data-fsave="1">' + ic('check') + (x ? 'Ändern' : ui.fplan ? 'Einplanen' : 'Eintragen') + '</button>' + (x ? '<button class="btn big fpdel" data-fdel="' + idx + '" aria-label="Eintrag löschen">' + ic('trash') + '</button>' : '') + '</div>' +
@@ -222,21 +228,22 @@
   }
   function openQuick(idx) {
     ui.sheet = { food: true, idx: idx }; if (!ui.fplan) ui.fday = dayIdx(Date.now()) - fSd(); ui.fqm = false;
-    sheetOpen(shHead('bolt', idx != null ? 'Eintrag ändern' : 'Schnell eintragen', 'Ohne Lebensmittel, z. B. Restaurant') + quickHtml(idx), true);
+    sheetOpen(shHead('bolt', idx != null ? 'Eintrag ändern' : ui.fplan ? 'Schnell einplanen' : 'Schnell eintragen', 'Ohne Lebensmittel, z. B. Restaurant') + quickHtml(idx), true);
   }
   function openOwn(id, bc, dr) {
     // dr: Entwurf aus dem Formular (zurück vom Barcode-Scan)
     var o = id && id !== 'new' ? fOwn(id) : null, src = dr || o || {}, code = bc || (dr && dr.bc) || (o && o.bc) || '';
     ui.sheet = { fown: o ? o.id : 'new', bc: code, ml: src.ml ? 1 : 0 };
-    function f(k) { return '<label class="nl" style="--nc:var(' + NCOL[k] + ')">' + ic(NIC[k]) + '<input id="o-' + k + '" type="number" inputmode="decimal" min="0" value="' + (src[k] != null ? src[k] : '') + '" placeholder="' + (k === 'k' ? 'kcal' : 'g') + '" aria-label="' + (k === 'k' ? 'Kalorien' : NSH[k]) + '"></label>'; }
     var un = dr ? dr.un : o && o.u[0] ? o.u[0][0] : '', ug = dr ? dr.ug : o && o.u[0] ? o.u[0][1] : '';
     sheetOpen(shHead('plus', o ? 'Lebensmittel' : 'Eigenes Lebensmittel', 'Werte je 100 g bzw. 100 ml, z. B. von der Packung') +
       '<input id="o-n" class="fnm" type="text" maxlength="30" placeholder="Name, z. B. Proteinbrot" value="' + esc(src.n || '') + '" aria-label="Name">' +
       '<div class="own2"><input id="o-b" class="fnm" type="text" maxlength="24" placeholder="Marke (optional)" value="' + esc(src.b || '') + '" aria-label="Marke">' +
       '<div class="fqw"><input id="o-bc" class="fnm" type="text" inputmode="numeric" maxlength="14" placeholder="Barcode (optional)" value="' + esc(code) + '" aria-label="Barcode"><button class="x" data-fscan="own" aria-label="Barcode scannen">' + ic('scan') + '</button></div></div>' +
       '<div class="seg fvs"><button data-oml="0" aria-pressed="' + !ui.sheet.ml + '">g</button><button data-oml="1" aria-pressed="' + !!ui.sheet.ml + '">ml</button></div>' +
-      '<div class="dg3">' + NK.map(f).join('') + '</div>' +
-      '<div class="dg3 two"><label>Portion<input id="o-un" type="text" maxlength="12" placeholder="z. B. Scheibe" value="' + esc(String(un)) + '"></label><label>Menge<input id="o-ug" type="number" inputmode="decimal" min="0" value="' + ug + '"></label></div>' +
+      '<div class="ntg">' + NK.map(function (k) { return nTile('o-' + k, k, src[k], k === 'k' || k === 'p'); }).join('') + '</div>' +
+      // Portion: Name und Gramm in einer Zeile, ohne Überschriften
+      '<div class="fqn"><input id="o-un" class="fnm" type="text" maxlength="12" placeholder="Portion, z. B. Scheibe" value="' + esc(String(un)) + '" aria-label="Portion">' +
+      '<label class="ogm"><input id="o-ug" class="fnm" type="number" inputmode="decimal" min="0" placeholder="Menge" value="' + ug + '" aria-label="Menge der Portion"><span>g</span></label></div>' +
       '<button class="btn primary big" data-fownsave="1">' + ic('check') + 'Speichern</button>' + (o ? '<button class="btn ghost small" data-fowndel="1">' + ic('trash') + 'Löschen</button>' : ''), true);
   }
   function ownDraft() { var d = { n: $('o-n').value, b: $('o-b').value, un: $('o-un').value, ug: $('o-ug').value, ml: ui.sheet.ml, bc: $('o-bc').value }; NK.forEach(function (k) { d[k] = $('o-' + k).value; }); return d; }
@@ -284,8 +291,7 @@
           '<label class="dgam"><input id="di-a-' + i + '" type="number" inputmode="decimal" min="0" value="' + (q.a === '' ? '' : q.a) + '" placeholder="0" aria-label="Menge in g"><span>g</span></label>' +
           '<button class="xs2" data-dgx="' + i + '" aria-label="Zutat entfernen">' + ic('close') + '</button></div>' +
           (q.i ? '<small class="dgl">' + ['k', 'p', 'f', 'c'].map(function (k) { return '<span style="--nc:var(' + NCOL[k] + ')">' + ic(NIC[k]) + fNv(k, q[k]) + '</span>'; }).join('') + 'je 100 g</small>' :
-            '<div class="dg3 two"><label class="nl" style="--nc:var(' + NCOL.k + ')">' + ic(NIC.k) + '<input id="di-k-' + i + '" type="number" inputmode="decimal" min="0" value="' + (q.k === '' ? '' : q.k) + '" placeholder="kcal /100 g" aria-label="kcal je 100 g"></label>' +
-            '<label class="nl" style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + '<input id="di-p-' + i + '" type="number" inputmode="decimal" min="0" value="' + (q.p === '' ? '' : q.p) + '" placeholder="g /100 g" aria-label="Protein je 100 g"></label></div>') + '</div>';
+            '<div class="ntg two">' + nTile('di-k-' + i, 'k', q.k, false, 'kcal / 100 g') + nTile('di-p-' + i, 'p', q.p, false, 'g / 100 g') + '</div>') + '</div>';
       }).join('') +
       '<div class="fsb dga"><button class="btn small" data-dgs="1">' + ic('search') + 'Zutat suchen</button><button class="btn small" data-dga="1">' + ic('plus') + 'Von Hand</button></div>' +
       '<div class="fpgo"><button class="btn primary big" data-dsave="1">' + ic('check') + 'Speichern</button>' + (dd.id ? '<button class="btn big fpdup" data-ddup="1" aria-label="Als Kopie anlegen">' + ic('cards') + '</button><button class="btn big fpdel" data-ddel="1" aria-label="Gericht löschen">' + ic('trash') + '</button>' : '') + '</div>';

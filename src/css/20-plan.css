@@ -185,8 +185,8 @@ button.pdb-h:active { background: var(--s2); }
 .pd-go { width: 100%; }
 /* Tag ändern: beschriftete Knöpfe, darunter die zweite Ebene */
 .pda { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
-.pda button { display: grid; justify-items: center; gap: 4px; min-height: 60px; padding: 8px 4px; border-radius: var(--r12); border: 1px solid var(--line); background: var(--s2); color: var(--ink2); font: inherit; font-size: 12px; font-weight: 700; transition: transform .14s var(--ease), background-color .16s var(--ease); }
-.pda button:active { transform: scale(.96); }
+.pda button { display: grid; justify-items: center; gap: 4px; min-height: 60px; padding: 8px 4px; border-radius: var(--r12); border: 1px solid var(--line); background: var(--s1); box-shadow: none; color: var(--ink2); font: inherit; font-size: 12px; font-weight: 700; transition: transform .14s var(--ease), background-color .16s var(--ease); }
+.pda button:active { transform: scale(.96); background: var(--s2); }
 .pda button .ic { width: 20px; height: 20px; }
 .pda button[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--bg); }
 .pdm { animation: fade .15s var(--ease); }
@@ -195,29 +195,34 @@ button.pdb-h:active { background: var(--s2); }
 .pc2 .ics em.off { color: var(--ink2); }
 .pdb.off { border-left-color: var(--ink3); }
 .pdb.off .pdb-h { grid-template-columns: auto 1fr auto; }
-/* Editor: Aussehen (Icon, Farbe, Tage) und Übungen mit Schaltern */
-.pe-set { display: grid; gap: 10px; margin-top: 10px; padding: 12px; border: 1px solid var(--line); border-radius: var(--r16); background: var(--s1); }
+/* Editor: Kopf in einer Zeile (Aussehen-Knopf in der Tagesfarbe), Icon/Farbe aufklappbar, Rhythmus als schmale Leiste, Übungen als Liste */
+.pe-ap { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border: 1px solid color-mix(in srgb, var(--pc) 45%, var(--line)); border-radius: var(--r12);
+  background: color-mix(in srgb, var(--pc) 14%, var(--s1)); color: var(--pc); transition: transform .14s var(--ease); }
+.pe-ap:active { transform: scale(.95); }
+.pe-ap .ic { width: 22px; height: 22px; }
+.pe-ap[aria-expanded="true"] { border-color: var(--pc); box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--pc) 40%, transparent); }
+.pe-set { display: grid; gap: 8px; margin-top: 8px; }
+.pe-apx { display: grid; gap: 10px; padding: 10px; border: 1px solid var(--line); border-radius: var(--r14); background: var(--s1); animation: fade .15s var(--ease); }
 .pe-set .pe-c { margin: 0; }
 .pe-ic { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
-.pe-ic button { display: grid; place-items: center; min-height: 44px; border-radius: var(--r10); border: 1px solid var(--line); background: var(--s2); color: var(--ink2); transition: transform .14s var(--ease); }
+.pe-ic button { display: grid; place-items: center; min-height: 44px; border-radius: var(--r10); border: 1px solid var(--line); background: var(--s1); box-shadow: none; color: var(--ink2); transition: transform .14s var(--ease); }
 .pe-ic button:active { transform: scale(.95); }
 .pe-ic button .ic { width: 22px; height: 22px; }
 .pe-ic button[aria-pressed="true"] { border-color: var(--pc); background: color-mix(in srgb, var(--pc) 20%, var(--s2)); color: var(--pc); }
 .exg { margin-top: 14px; }
 .exg .xg { margin: 0 0 6px; }
 .xg small { margin-left: auto; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--ink3); }
-/* Übungen als Kacheln (2 Spalten, wie die Essen-Vorschläge): drin = getönt mit Farbkante oben und Haken, nicht drin = gestrichelt; gesperrte blass mit Ring */
-.exl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+/* Übungen als Liste in einer hellen Karte (wie Coach-Apps): Name + Muskeln links, Haken rechts in der Gruppenfarbe; nicht drin = blasser Text; gesperrte blass mit Ring */
+.exl { display: grid; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--r14); background: var(--s1); }
 .exr {
-  position: relative; display: flex; align-items: flex-start; gap: 8px; width: 100%; min-height: 62px; padding: 9px 10px; border: 1px dashed color-mix(in srgb, var(--gc, var(--ac)) 35%, var(--line));
-  border-radius: var(--r14); background: transparent; color: var(--ink2); font: inherit; text-align: left; transition: transform .14s var(--ease), background-color .16s var(--ease);
+  position: relative; display: flex; align-items: center; gap: 10px; width: 100%; min-height: 54px; padding: 8px 0; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  border-radius: 0; background: transparent; color: var(--ink2); font: inherit; text-align: left; transition: opacity .16s var(--ease);
 }
-.exr[aria-pressed="true"] { border: 1px solid color-mix(in srgb, var(--gc, var(--ac)) 35%, var(--line)); border-top: 2px solid var(--gc, var(--ac)); padding-top: 8px;
-  background: linear-gradient(160deg, color-mix(in srgb, var(--gc, var(--ac)) 16%, var(--s1)), var(--s1) 75%); box-shadow: var(--hs); color: var(--ink); }
-.exk { grid-column: span 1; border: 1px solid var(--line); border-radius: var(--r14); background: color-mix(in srgb, var(--s2) 50%, transparent); }
-.exk.open { grid-column: 1 / -1; }
-.exk .exr { align-items: center; min-height: 58px; border: 0; }
-.exk .agx > div { padding: 0 10px; }
+.exl > .exr:last-child, .exl > .exk:last-child, .exk:last-child .exr { border-bottom: 0; }
+.exr[aria-pressed="true"] { color: var(--ink); }
+.exk { border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+.exk .exr { border: 0; }
+.exk .agx > div { padding: 0 0 10px; }
 .xg.lkh { color: var(--ink3); }
 /* Fortschrittsring zum Freischalten */
 .ring { position: relative; flex: none; display: grid; place-items: center; width: 38px; height: 38px; }
@@ -237,21 +242,20 @@ button.pdb-h:active { background: var(--s2); }
 .lkd .agp { display: flex; align-items: center; gap: 6px; }
 .lkd .agp .ic { width: 14px; height: 14px; color: var(--ac); }
 /* Rhythmus im Editor */
-.pe-rp { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-.pe-rp button { min-height: 40px; padding: 0 4px; border-radius: var(--r10); border: 1px solid var(--line); background: var(--s2); color: var(--ink2); font: inherit; font-size: 12px; font-weight: 700; transition: transform .14s var(--ease); }
-.pe-rp button:active { transform: scale(.96); }
-.pe-rp button[aria-pressed="true"] { border-color: var(--pc); background: color-mix(in srgb, var(--pc) 20%, var(--s2)); color: var(--ink); }
+.pe-rp { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: var(--r12); background: var(--s1); }
+.pe-rp button { min-height: 34px; padding: 0 4px; border-radius: var(--r10); border: 0; background: transparent; color: var(--ink2); font: inherit; font-size: 12px; font-weight: 700; transition: background-color .16s var(--ease); }
+.pe-rp button[aria-pressed="true"] { background: color-mix(in srgb, var(--pc) 20%, var(--s2)); color: var(--ink); }
 .pe-st { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 2px; font-family: var(--f-mono); font-size: 13px; color: var(--ink2); }
-.exr:active { transform: translateY(2px); box-shadow: none; }
+.exr:active { opacity: .6; }
 .exr > span:first-child { flex: 1; min-width: 0; }
-.exr b { display: -webkit-box; overflow: hidden; font-size: calc(13px * var(--tf, 1)); line-height: 1.2; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+.exr b { display: -webkit-box; overflow: hidden; font-size: calc(14px * var(--tf, 1)); line-height: 1.2; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
 .exr.lk b { display: flex; align-items: center; gap: 5px; }
 .exr b .ic { color: var(--ink3); width: 13px; height: 13px; flex: none; }
 .exr small { display: block; overflow: hidden; margin-top: 2px; font-size: 11px; color: var(--ink3); white-space: nowrap; text-overflow: ellipsis; }
 .exr.lk b, .exr.lk small { opacity: .6; }
 /* Haken oben rechts: leerer Kreis, drin = gefüllt in der Gruppenfarbe */
-.exr > i { display: grid; place-items: center; flex: none; width: 20px; height: 20px; border: 1.5px solid color-mix(in srgb, var(--gc, var(--ac)) 45%, var(--line)); border-radius: 50%; color: var(--s1); transition: background-color .2s var(--ease); }
-.exr > i .ic { width: 13px; height: 13px; opacity: 0; }
+.exr > i { display: grid; place-items: center; flex: none; width: 24px; height: 24px; border: 1.5px solid color-mix(in srgb, var(--gc, var(--ac)) 45%, var(--line)); border-radius: 50%; color: var(--s1); transition: background-color .2s var(--ease); }
+.exr > i .ic { width: 15px; height: 15px; opacity: 0; }
 .exr[aria-pressed="true"] > i { border-color: var(--gc, var(--ac)); background: var(--gc, var(--ac)); }
 .exr[aria-pressed="true"] > i .ic { opacity: 1; }
 /* Kalender: Tauschen wählt im Kalender, ausgesetzte Tage */

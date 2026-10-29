@@ -135,7 +135,6 @@
     if ((el = t.closest('[data-ftile]'))) { if (fswMoved) { fswMoved = false; return true; } var tl = (ui.ftiles || [])[+el.dataset.ftile]; if (tl) { ui.fday = dayIdx(Date.now()) - fSd(); buzz(8); openPick(tl.i, tl.g); } return true; }
     if (t.closest('[data-fsearch]')) { openFsearch(); return true; }
     if (t.closest('[data-fdishes]')) { openDishes(); return true; }
-    if (t.closest('[data-fquick]')) { openQuick(null); return true; }
     if ((el = t.closest('[data-fpick]'))) { if (ui.fdgno && Date.now() - ui.fdgno < 400) return true; var from =ui.sheet && (ui.sheet.fsearch || ui.sheet.fdishes) ? (ui.sheet.fsearch ? 's' : 'd') : null; openPick(el.dataset.fpick); ui.sheet.from = from; $('sheet').innerHTML = fpickHtml(); return true; }
     if (t.closest('[data-fback]')) { if (ui.sheet && ui.sheet.fsearch && ui.ingm) ingBack(); else if (ui.sheet && ui.sheet.from === 'o') openOwn(ui.odraft.id, null, ui.odraft); else if (ui.sheet && ui.sheet.from === 'd') openDishes(); else { var q0 = ui.fq; openFsearch(true); ui.fq = q0 || ''; $('fq').value = ui.fq; $('fres').innerHTML = fresHtml(); } return true; }
     if ((el = t.closest('[data-fvar]'))) { ui.fpick.i = el.dataset.fvar; $('sheet').innerHTML = fpickHtml(); return true; }

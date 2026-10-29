@@ -71,7 +71,8 @@
     peak: '<path d="M3 19 12 4l9 15z"/><path d="m8.500 19 3.500-6 3.500 6"/>', data: '<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.700 3.100 3 7 3s7-1.300 7-3V6M5 12c0 1.700 3.100 3 7 3s7-1.300 7-3"/>'
   };
   P.edit = '<path d="M4 20h4L19 9l-4-4L4 16v4zM13 7l4 4"/>';
-  P.trash = '<path d="M5 7h14M10 7V4.500h4V7M7 7l1 13h8l1-13"/>';
+  P.ing = '<path d="M9.500 7H20M9.500 12H20M9.500 17H20"/><circle cx="5" cy="7" r="1.200"/><circle cx="5" cy="12" r="1.200"/><circle cx="5" cy="17" r="1.200"/>';
+  P.trash ='<path d="M5 7h14M10 7V4.500h4V7M7 7l1 13h8l1-13"/>';
   P.swap = '<path d="M4 8h13l-3-3M20 16H7l3 3"/>';
   P.roll = '<rect x="3" y="8.500" width="18" height="7" rx="3.500"/><path d="M8 8.500v7M12 8.500v7M16 8.500v7"/>';
   P.food = '<path d="M7 3v7a2 2 0 0 0 2 2v9M11 3v7a2 2 0 0 1-2 2M9 3v6M17 21V3c-2.500 1.500-3.500 4.500-3.500 8H17"/>';

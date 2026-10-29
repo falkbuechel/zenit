@@ -42,7 +42,7 @@
     // Ziele im Stil der übrigen Fenster: Nährwert-Icons und -Farben statt Namen, Übernehmen/Speichern unten fixiert
     var c = ui.cpr, g = foodGoal(), h = shHead('calc', 'Rechner', 'Tagesziel für kcal und Nährwerte') + '<div class="seg"><button data-gmode="a" aria-pressed="' + (ui.gmode === 'a') + '">Automatisch</button><button data-gmode="m" aria-pressed="' + (ui.gmode === 'm') + '">Eigene Werte</button></div>';
     if (ui.gmode === 'm') {
-      return h + '<div class="dg3">' + NK.map(function (k) { return '<label class="nl" style="--nc:var(' + NCOL[k] + ')">' + ic(NIC[k]) + '<input id="g-' + k + '" type="number" inputmode="numeric" min="0" value="' + g[k] + '" aria-label="' + (k === 'k' ? 'kcal' : NSH[k] + ' in g') + '"></label>'; }).join('') + '</div>' +
+      return h + '<div class="ntg">' + NK.map(function (k) { return nTile('g-' + k, k, g[k], k === 'k' || k === 'p'); }).join('') + '</div>' +
         '<p class="muted fnote">Leere Felder rechnet die App aus den kcal (Fett 25 %, Ballaststoffe 14 g je 1000 kcal, Zucker höchstens 10 %).</p><div class="fpgo"><button class="btn primary big" data-fgsave="1">' + ic('check') + 'Speichern</button></div>';
     }
     function crg(id, lab, v, min, max, st, lo, hi, k) { return '<label class="crg"' + (k ? ' style="--nc:var(' + NCOL[k] + ')"' : '') + '><span><i class="crn">' + (k ? ic(NIC[k]) : '') + lab + '</i><b id="c-' + id + 'v"></b></span><input id="c-' + id + '" type="range" min="' + min + '" max="' + max + '" step="' + st + '" value="' + v + '">' + (lo ? '<i class="crl"><em>' + lo + '</em><em>' + hi + '</em></i>' : '') + '</label>'; }

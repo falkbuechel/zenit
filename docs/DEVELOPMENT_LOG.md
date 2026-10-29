@@ -5,18 +5,15 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 ## Stand 2026-10-30
 - Zuletzt: Analyse der Zusammenarbeit + Aufräumen (siehe Verlauf 30.10.). Arbeitsweise: Falk meldet nummerierte Punkte je Bereich, klare Fixes direkt, Umbauten mit Varianten (AskUserQuestion). Nach jeder gepushten Runde /handoff + /clear (Stop-Hook meldet ab 200k Kontext).
 - Falk testet am iPhone: Tagesleiste/Kalender schlicht mit Ringen, Wasser über das Ziel ziehen (dunkelblau, roter Überlauf), Gericht-Fenster mit Topf-Knopf, Kategorien-Raster, Mahlzeiten auf/zu weich, Essen-Vorlagen in Planen, Woche in der Tageskarte, Menüleiste (Strich in Bereichsfarbe).
-- Nächster Schritt: Falks notierte Punkte vom 29.10. (oben unter „Offen“: Gerichte-Zutaten, geplante Tage stricheln, Kategorien/Zuletzt ruhiger), dann übrige Fenster im Essen-Stil (Schnell, Wasser, Ziele/Rechner, eigenes Lebensmittel, Marken, Planen-Fenster) und Training in Planen weiter vereinfachen.
+- Nächster Schritt: iPhone-Rückmeldung zur Runde 29.10. (Punkte 1–5 umgesetzt, siehe Verlauf), danach Menüleiste/Einkaufsliste oder Planen Schritt 4.
 - Ab jetzt: keine Freigaben mehr (settings.json erlaubt alles außer Sperrliste); Fragen einer Runde gebündelt früh stellen, Falk antwortet evtl. übers iPhone (Remote Control in VS Code aktiv, Push-Einstellung über `/config` hat noch nicht geklappt – bei Bedarf später).
 - Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
 - App-Icon (oliv) übernimmt iOS erst beim neuen Hinzufügen zum Homescreen. NICHT die App löschen (Daten weg).
 - Nicht committet: nichts.
 
 ## Offen / Ideen
-- Gerichte (Rückmeldung 29.10.): Icon für Zutaten anpassen; bei angezeigten Zutaten übersichtlich und ohne Tag/Mahlzeit/Uhrzeit darunter, Eintragen dort auch nicht sinnvoll → den Platz besser nutzen.
-- Tagesleiste: Gruppieren darf wegbleiben, aber geplante Tage anteilig stricheln o. ä., damit klar ist, dass sie geplant sind.
-- Kategorien und Zuletzt (Suche): Anordnung gut, wirkt aber noch zu verspielt/unstimmig zum Essen-Tab (mehrere Gründe, evtl. der Schatten).
-- Übrige Fenster im Essen-Stil (einheitliche Bausteine): Schnell, Wasser, Ziele/Rechner, eigenes Lebensmittel, Marken, Planen-Fenster (Tag ändern, Trainingsplan, Editor); Schnell-Fenster ließ sich im Test nicht öffnen → prüfen.
-- Training in Planen: noch cleaner/kompakter, bequem und schnell wie bei Coaches (Woche in der Karte ist der Anfang).
+- iPhone-Test offen (29.10. Runde): Zutatenliste im Gericht, gestrichelte geplante Tage, ruhigere Suche, Nährwert-Kacheln in den Fenstern, Editor als Liste. Schnell öffnete in Chromium aus Suche-Reiter und „Mahlzeit planen“ – falls es am iPhone weiter hakt: wo genau getippt?
+- Training in Planen: Tageskarte (Woche, Kacheln) evtl. noch kompakter; Trainingsplan-Fenster (`openDays`) noch im alten Kachelstil.
 - Menüleiste: ernst und modern, aber mit etwas mehr Charakter – weiter abstimmen.
 - Woche ziehen ändert den aktiven Plan auch rückwirkend (vergangene Kalendersymbole/Serie können sich verschieben) – ggf. Änderung ab heute als neuer Planstand.
 - Einkaufsliste: braucht ein sauberes Aufräumen in Funktion, Design und UX (erst wenn Planen fertig ist); Preis eventuell geschätzt.
@@ -36,6 +33,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-29 – Gericht-Zutaten, geplante Tage gestrichelt, Suche ruhiger, Nährwert-Kacheln, Editor als Liste
+- Gericht-Fenster: Zutaten-Knopf mit neuem Listen-Icon (`P.ing`); Zutaten an = einspaltige Kochliste, ohne Tag/Mahlzeit/Uhrzeit und Eintragen, darunter nur „Gericht bearbeiten“ (aus dem Gerichte-Menü).
+- Tageskreis geplant (`.dr.pl`): Ring gestrichelt per zweiter Maske (`repeating-conic-gradient`, `mask-composite: intersect`), gilt in Tagesleiste und Kalender.
+- Suche: Kategorien und Treffer flach (kein Schatten), Farbe nur als feine Kante (inset-Schatten), Kategorie-Icon grau ohne Farbkreis, Werte je 100 g in Tinte (nur Icons farbig).
+- Neuer Baustein `nTile` (10c, CSS `.ntg`/`.ntl`): Nährwert-Eingabe als Kachel wie im Mengen-Fenster; in Schnell, eigenem Lebensmittel, Gericht-Zutat von Hand, Ziele „Eigene Werte“. Portion beim eigenen Lebensmittel ohne Großbuchstaben-Labels (`.ogm`). Entfernt: `.nl`, `.finp.four`, `.dg3.two`, toter Handler `data-fquick` (kein Knopf mehr).
+- Wasser-Schnellwerte, „Tag ändern“ und Icon-Raster flach und hell statt grauer Tasten. Schnell beim Planen heißt „Schnell einplanen“.
+- Tag-Editor: Kopf in einer Zeile (Zurück, Aussehen-Knopf in Tagesfarbe `data-peap`/`ui.peap` klappt Icon/Farbe auf, Name, Löschen; neuer Tag aus Vorlage öffnet aufgeklappt), Rhythmus als schmale Leiste, Übungen als einspaltige Liste in einer Karte mit Haken rechts.
 
 ### 2026-10-30 – Analyse der Zusammenarbeit, Aufräumen
 - Analyse (4 Sessions 26.–29.10.): Kontext wuchs auf 530k–970k, Ø 300–460k je Aufruf → ~760M Cache-Read-Token, fast nur durch Gesprächslänge. App-Performance unkritisch (Tab-Wechsel 35–65 ms bei 4× gedrosselter CPU, Laden 0,2 s), Prüfwerkzeuge schnell (check 0,4 s, smoke 26 s).

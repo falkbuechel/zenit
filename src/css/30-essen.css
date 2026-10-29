@@ -14,7 +14,7 @@
 .fb.now { stroke: var(--ink); stroke-width: 1; }
 .finp { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0 10px; }
 .finp label { display: grid; gap: 4px; position: relative; font-size: 12px; font-weight: 800; color: var(--ink3); text-transform: uppercase; letter-spacing: .08em; }
-.finp label > .ic, .nl > .ic { width: 18px; height: 18px; color: var(--nc, var(--ink3)); }
+.finp label > .ic { width: 18px; height: 18px; color: var(--nc, var(--ink3)); }
 .finp input { width: 100%; height: 64px; padding: 0 44px 0 14px; border-radius: var(--r14); border: 1px solid var(--line); background: var(--s2); color: var(--ink); font-family: var(--f-display); font-weight: 900; font-size: 32px; }
 /* Fokus fein wie die Bilanz-Kontur statt dickem Rahmen */
 .finp input:focus, .fnm:focus { outline: none; box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--ac) 70%, transparent), 0 0 14px -6px var(--ac); }
@@ -55,7 +55,26 @@
 .dgp span, .dgl span { display: inline-flex; align-items: center; gap: 3px; color: var(--nc); }
 .dgp .ic { width: 16px; height: 16px; }
 .dgp b { font-family: var(--f-mono); font-size: 16px; }
-.nl { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 6px; }
+/* Nährwert-Eingabe als Kachel (nTile) wie die Nährwert-Kacheln im Mengen-Fenster: Farbkante oben, Icon + Einheit, Zahl groß; kcal/Protein halbe Breite, Rest Viertel */
+.ntg { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; margin: 8px 0 10px; }
+.ntg.two { margin: 0; }
+.ntl { grid-column: span 3; display: grid; gap: 1px; min-width: 0; padding: 6px 8px 3px; border: 1px solid var(--line); border-top: 2px solid var(--nc); border-radius: var(--r10);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--nc) 10%, var(--s1)), var(--s1)); color: var(--nc); }
+.ntl.big, .ntg.two .ntl { grid-column: span 6; }
+.ntl.big { padding: 8px 12px 4px; border-radius: var(--r12); }
+.ntl > i { display: flex; align-items: center; justify-content: space-between; gap: 4px; font-style: normal; }
+.ntl > i .ic { flex: none; width: 14px; height: 14px; }
+.ntl.big > i .ic { width: 17px; height: 17px; }
+.ntl small { overflow: hidden; font-family: var(--f-mono); font-size: 10px; white-space: nowrap; color: var(--ink3); }
+.ntl input { width: 100%; min-width: 0; height: 30px; padding: 0; border: 0; background: transparent; color: var(--ink); font-family: var(--f-display); font-size: 20px; font-weight: 900; }
+.ntl.big input { height: 42px; font-size: 32px; }
+.ntl input::placeholder { color: color-mix(in srgb, var(--ink3) 55%, transparent); }
+.ntl input:focus { outline: none; }
+.ntl:focus-within { box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--nc) 60%, transparent), 0 0 14px -6px var(--nc); }
+/* Portion beim eigenen Lebensmittel: Gramm mit Einheit im Feld */
+.ogm { position: relative; flex: none; width: 110px; }
+.ogm .fnm { margin: 0; padding-right: 26px; text-align: right; }
+.ogm span { position: absolute; right: 10px; top: 14px; font-size: 13px; color: var(--ink3); }
 .jump {
   position: fixed; left: 50%; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); z-index: 7; display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 16px 0 12px;
   border: 0; border-radius: var(--r99); background: var(--ac); color: var(--on); font-weight: 800; box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--ac) 70%, #000);
@@ -227,22 +246,21 @@
 .fdck small { margin-left: 3px; font-family: var(--f-mono); font-size: 10px; font-weight: 600; color: var(--ink3); }
 /* Werte je 100 g (Suche) bzw. je Portion (Gericht): klein in festen Spalten mit Nährwert-Icons */
 .f100 { display: flex; align-items: center; gap: 0; margin-top: 2px; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
-.f100 i { display: inline-flex; align-items: center; gap: 2px; width: 46px; font-style: normal; color: var(--nc); }
-.f100 .ic { flex: none; width: 12px; height: 12px; }
+.f100 i { display: inline-flex; align-items: center; gap: 2px; width: 46px; font-style: normal; color: var(--ink2); }
+.f100 .ic { flex: none; width: 12px; height: 12px; color: var(--nc); }
 .f100 em { font-style: normal; font-size: 10px; }
 /* Suchzeile rechts: kcal der üblichen Menge, darunter die Menge */
 .fsk { display: grid; justify-items: end; flex: none; font-style: normal; }
 .fsk b { font-family: var(--f-display); font-size: 18px; font-weight: 900; }
 .fsk b small { margin-left: 2px; font-size: 10px; font-weight: 500; color: var(--ink3); }
 .fsk > small { font-size: 11px; color: var(--ink3); }
-/* Kategorien alphabetisch in zwei Spalten */
-/* Kategorien als 3er-Raster aus Kacheln: Farbkante oben (--cc), ruhige helle Fläche, Symbol im farbigen Kreis oben, Name darunter, Anzahl klein oben rechts */
+/* Kategorien als 3er-Raster aus flachen Kacheln: Farbe nur als feine Kante oben (--cc), Symbol grau, Name darunter, Anzahl klein oben rechts */
 .fcl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
 .fcl button {
-  position: relative; display: grid; align-content: space-between; justify-items: start; gap: 6px; min-width: 0; min-height: 76px; padding: 8px 8px 7px; border: 1px solid var(--line); border-top: 3px solid var(--cc, var(--line));
-  border-radius: var(--r12); background: var(--s1); box-shadow: var(--hs); color: var(--ink); font: inherit; text-align: left;
+  position: relative; display: grid; align-content: space-between; justify-items: start; gap: 6px; min-width: 0; min-height: 72px; padding: 9px 9px 8px; border: 1px solid var(--line);
+  box-shadow: inset 0 2px 0 var(--cc, var(--line)); border-radius: var(--r12); background: var(--s1); color: var(--ink); font: inherit; text-align: left; transition: background-color .16s var(--ease);
 }
-.fcl button:active { transform: translateY(2px); box-shadow: none; }
+.fcl button:active { background: var(--s2); }
 .fcl b { max-width: 100%; overflow: hidden; font-size: 12px; line-height: 1.15; overflow-wrap: anywhere; }
 .fcl small { position: absolute; top: 7px; right: 8px; font-family: var(--f-mono); font-size: 10.5px; color: var(--ink3); }
 /* Gerichte-Menü: Filter nach Mahlzeit, Karte mit „+ 1 Portion“ unten rechts, Kopie im Editor */
@@ -304,14 +322,14 @@
 .fem > .fmc { flex: 1 1 0; width: auto; min-width: 0; }
 .fsr { display: grid; gap: 6px; }
 .fsr .xg { margin: 4px 0 0; color: var(--ink3); }
-/* Treffer wie die Essen-Karten: Farbkante (hier links, Kategorie --cc), ruhige helle Fläche, Tastenkante */
+/* Treffer flach: feine Farbkante links (Kategorie --cc), ruhige helle Fläche, kein Schatten */
 .fsi {
-  display: flex; align-items: center; gap: 10px; width: 100%; min-width: 0; min-height: 52px; padding: 8px 12px 8px 10px; border: 1px solid var(--line); border-left: 3px solid var(--cc, var(--line)); border-radius: var(--r12);
-  background: var(--s1); box-shadow: var(--hs); color: var(--ink); font: inherit; text-align: left; transition: background-color .16s var(--ease);
+  display: flex; align-items: center; gap: 10px; width: 100%; min-width: 0; min-height: 52px; padding: 8px 12px 8px 10px; border: 1px solid var(--line); border-radius: var(--r12);
+  background: var(--s1); box-shadow: inset 2px 0 0 var(--cc, var(--line)); color: var(--ink); font: inherit; text-align: left; transition: background-color .16s var(--ease);
 }
 .fsi:active { background: var(--s2); }
-.fsi.own { border-left: 3px solid var(--g-skill); }
-.fsi.dish { border-left: 3px solid var(--g-push); }
+.fsi.own { --cc: var(--g-skill); }
+.fsi.dish { --cc: var(--g-push); }
 .fsi span { flex: 1; min-width: 0; }
 .fsi b { display: block; font-size: 14px; }
 .fsi small { display: block; overflow: hidden; font-size: 11px; white-space: nowrap; text-overflow: ellipsis; color: var(--ink3); }
@@ -320,9 +338,9 @@
 .fsb { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
 /* Suche: Reiter, darunter immer gleiche Zeilen mit Kategorie-Icon */
 .seg.fst { grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 4px; }
-/* Kategorie-Symbol als farbiger Kreis (wie die Kategorie-Kreise in den Mahlzeiten) */
-.fsc { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%; background: color-mix(in srgb, var(--cc, var(--ac)) 18%, var(--s1)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cc, var(--ac)) 35%, transparent); color: color-mix(in srgb, var(--cc, var(--ac)) 75%, var(--ink)); }
-.fsc .ic { width: 17px; height: 17px; }
+/* Kategorie-Symbol schlicht grau (Farbe steckt nur in der Kante) */
+.fsc { display: grid; place-items: center; flex: none; width: 26px; height: 26px; color: var(--ink2); }
+.fsc .ic { width: 19px; height: 19px; }
 .fsi b small { display: inline; font-weight: 400; color: var(--ink3); }
 .fsi > .ic { flex: none; width: 16px; height: 16px; color: var(--ink3); }
 .fcb { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 0; border: 0; background: transparent; color: var(--ink); font: inherit; }
@@ -422,7 +440,10 @@
 .wsx::before { content: ""; position: absolute; top: 0; right: 0; left: 0; height: 6px; border-right: 1px solid var(--line); background: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px calc(100% / var(--n))); }
 .wsx span { position: absolute; top: 8px; left: calc(var(--x) * 100%); transform: translateX(-50%); font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
 .wqk { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
-.wqk button { display: grid; place-items: center; gap: 4px; min-height: 66px; border: 1px solid var(--line); border-radius: var(--r14); background: var(--s2); color: var(--ink2); font: inherit; transition: transform .14s var(--ease); }
+/* Schnellwerte wie die Nährwert-Kacheln: feine Kante oben in der Wasserfarbe, helle Fläche */
+.wqk button { display: grid; place-items: center; gap: 4px; min-height: 62px; border: 1px solid var(--line); border-top: 2px solid var(--fc); border-radius: var(--r12);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--fc) 9%, var(--s1)), var(--s1)); box-shadow: none; color: var(--ink2); font: inherit; transition: transform .14s var(--ease); }
+.wqk button:last-child { border-top-color: var(--line); background: var(--s1); }
 .wqk button:active { transform: scale(.95); }
 .wqk .ic { width: 22px; height: 22px; color: var(--fc); }
 .wqk button:last-child .ic { color: var(--ink3); }
@@ -469,9 +490,10 @@
 .btn.fped { flex: none; width: 58px; padding: 0; }
 /* Zutaten eines Gerichts im Mengen-Fenster: kleine Pillen (Name + Menge), passen sich der Portionenzahl an */
 /* Zutaten (über den Topf im Kopf) statt der Nährwert-Kacheln: zwei Spalten Name … Menge, ruhig, passt sich der Portion an */
-.fing { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 14px; padding: 4px 12px; border: 1px solid var(--line); border-top: 2px solid var(--ac); border-radius: var(--r12); background: var(--s1); animation: fade .18s var(--ease); }
-.fing span { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; min-width: 0; padding: 7px 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 50%, transparent); font-size: 13px; }
-.fing em { font: 600 12px/1 var(--f-mono); font-style: normal; color: var(--ink2); }
+.fing { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; padding: 4px 14px; border: 1px solid var(--line); border-top: 2px solid var(--ac); border-radius: var(--r12); background: var(--s1); animation: fade .18s var(--ease); }
+.fing span { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; min-width: 0; padding: 10px 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 50%, transparent); font-size: 15px; }
+.fing span:last-child { border-bottom: 0; }
+.fing em { font: 600 14px/1 var(--f-mono); font-style: normal; color: var(--ink2); }
 .btn.fpdel { flex: none; width: 58px; padding: 0; border-color: color-mix(in srgb, var(--danger) 40%, var(--line)); background: color-mix(in srgb, var(--danger) 12%, var(--s1)); color: var(--danger); }
 /* Marke fehlt: Anlegen über die ganze Breite, kräftiger */
 .btn.fanl { width: 100%; border-color: var(--ac); background: color-mix(in srgb, var(--ac) 14%, var(--s1)); color: var(--ac); font-weight: 800; }
@@ -490,12 +512,7 @@
 .fpgo span { display: grid; justify-items: start; line-height: 1.1; }
 .fpgo small { font-size: 11px; font-weight: 600; opacity: .85; }
 .fpx { justify-content: center; }
-.finp.four { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 0; }
-.finp.four input { height: 52px; padding: 0 24px 0 10px; font-size: 18px; }
-.finp.four span { right: 8px; bottom: 17px; }
-.dg3.two { grid-template-columns: 1fr 1fr; margin: 10px 0; }
 .dgl { font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
-.dg .dg3.two { margin: 0; }
 .dgl .ic { width: 13px; height: 13px; }
 .crg { display: grid; gap: 2px; }
 .crn { display: inline-flex; align-items: center; gap: 5px; font-style: normal; }

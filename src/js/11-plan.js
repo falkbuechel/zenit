@@ -304,11 +304,13 @@
   function weekDel(m, id, w) { var a = m[id] || []; if (a.indexOf(w) >= 0) a.splice(a.indexOf(w), 1); }
   function syncWd() { var t = dayIdx(Date.now()); plan().days.forEach(function (x) { x.wd = wdAt(x, t).slice(); }); }
   function viewPlanEdit(d, day) {
-    var h = '<div class="pe-top rise" style="--i:0"><button class="x" data-pback="1" aria-label="Zurück">' + ic('back') + '</button><input id="pe-n" class="pe-n" type="text" maxlength="18" value="' + esc(day.n) + '" aria-label="Name"><button class="x" data-pdel="' + day.id + '" aria-label="Tag löschen"' + (ui.pdel ? ' style="color:var(--danger)"' : '') + '>' + (ui.pdel ? '<b class="sure">Sicher?</b>' : ic('trash')) + '</button></div>';
+    // Kopf in einer Zeile: Zurück, Aussehen (Icon in der Tagesfarbe, antippen = Icon/Farbe klappen auf), Name, Löschen
+    var h = '<div class="pe-top rise" style="--i:0;--pc:var(' + PCOL[day.c] + ')"><button class="x" data-pback="1" aria-label="Zurück">' + ic('back') + '</button>' +
+      '<button class="pe-ap" data-peap="1" aria-expanded="' + !!ui.peap + '" aria-label="Icon und Farbe">' + ic(dIcon(day)) + '</button><input id="pe-n" class="pe-n" type="text" maxlength="18" value="' + esc(day.n) + '" aria-label="Name"><button class="x" data-pdel="' + day.id + '" aria-label="Tag löschen"' + (ui.pdel ? ' style="color:var(--danger)"' : '') + '>' + (ui.pdel ? '<b class="sure">Sicher?</b>' : ic('trash')) + '</button></div>';
     // Aussehen und Rhythmus: Icon, Farbe, Wochentage, Wiederholung (jede / alle 2 / alle 3 Wochen / einmalig ab Startwoche)
     var rp = dRp(day), st = dSt(day), a = new Date(st * 864e5), b = new Date((st + 6) * 864e5);
-    h += '<section class="pe-set rise" style="--i:1;--pc:var(' + PCOL[day.c] + ')"><div class="pe-ic" role="group" aria-label="Icon">' + DAYI.map(function (k) { return '<button data-pic="' + k + '" aria-pressed="' + (dIcon(day) === k) + '" aria-label="Icon ' + k + '">' + ic(k) + '</button>'; }).join('') + '</div>' +
-      '<div class="pe-c">' + PCOL.map(function (c, j) { return '<button data-pc="' + j + '" style="--pc:var(' + c + ')" aria-pressed="' + (day.c === j) + '" aria-label="Farbe ' + (j + 1) + '"><i class="pdot big"></i></button>'; }).join('') + '</div>' +
+    h += '<section class="pe-set rise" style="--i:1;--pc:var(' + PCOL[day.c] + ')">' + (ui.peap ? '<div class="pe-apx"><div class="pe-ic" role="group" aria-label="Icon">' + DAYI.map(function (k) { return '<button data-pic="' + k + '" aria-pressed="' + (dIcon(day) === k) + '" aria-label="Icon ' + k + '">' + ic(k) + '</button>'; }).join('') + '</div>' +
+      '<div class="pe-c">' + PCOL.map(function (c, j) { return '<button data-pc="' + j + '" style="--pc:var(' + c + ')" aria-pressed="' + (day.c === j) + '" aria-label="Farbe ' + (j + 1) + '"><i class="pdot big"></i></button>'; }).join('') + '</div></div>' : '') +
       '<div class="pe-rp" role="group" aria-label="Wiederholung">' + [[1, 'Jede Woche'], [2, 'Alle 2 Wo.'], [3, 'Alle 3 Wo.'], [0, 'Einmalig']].map(function (o) { return '<button data-prp="' + o[0] + '" aria-pressed="' + (rp === o[0]) + '">' + o[1] + '</button>'; }).join('') + '</div>' +
       (rp !== 1 ? '<div class="pe-st"><button class="x" data-pst="-1" aria-label="Woche früher">' + ic('back') + '</button><span>' + (rp ? 'Ab ' : 'Nur ') + a.getUTCDate() + '.' + (a.getUTCMonth() + 1) + '. – ' + b.getUTCDate() + '.' + (b.getUTCMonth() + 1) + '.</span><button class="x" data-pst="1" aria-label="Woche später">' + ic('chev') + '</button></div>' : '') + '</section>';
     // Übungen: Filter (Zahl = im Plan), Suche, Liste
@@ -456,13 +458,14 @@
     if (calClick(t)) return true;
     var el, P = plan(), day, a;
     function done(keepScroll) { persist(); ui.fresh = false; render(); }
-    if ((el = t.closest('[data-pedit]'))) { if (ui.sheet && ui.sheet.pdays) { closeSheet(true); ui.sheet = null; } ui.pe = el.dataset.pedit; ui.pdel = 0; ui.pf = domGroup(pDay(ui.pe)) || 'all'; ui.pq = ''; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true; }
+    if ((el = t.closest('[data-pedit]'))) { if (ui.sheet && ui.sheet.pdays) { closeSheet(true); ui.sheet = null; } ui.pe = el.dataset.pedit; ui.pdel = 0; ui.peap = false; ui.pf = domGroup(pDay(ui.pe)) || 'all'; ui.pq = ''; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true; }
     if (t.closest('[data-pback]')) { ui.pe = null; ui.pdel = 0; ui.fresh = true; render(); $('app').scrollTo(0, 0); return true; }
     if ((el = t.closest('[data-ppre]'))) {
       if (ui.sheet && ui.sheet.pdays) closeSheet(true); var pr = PRESETS[+el.dataset.ppre], ids = pr.ids ? pr.ids.slice() : EX.filter(function (e) { return pr.f.indexOf(e.g) >= 0; }).map(function (e) { return e.id; });
       var nd = { id: 'p' + Date.now().toString(36), n: pr.n === 'Eigener Tag' ? 'Tag ' + (P.days.length + 1) : pr.n, c: pr.c, i: pr.i, wd: [], ex: ids };
-      P.cu = true; P.days.push(nd); ui.pe = nd.id; ui.pf = 'all'; ui.pq = ''; ui.fresh = true; persist(); render(); $('app').scrollTo(0, 0); return true;
+      P.cu = true; P.days.push(nd); ui.pe = nd.id; ui.peap = true; ui.pf = 'all'; ui.pq = ''; ui.fresh = true; persist(); render(); $('app').scrollTo(0, 0); return true;
     }
+    if (t.closest('[data-peap]')) { ui.peap = !ui.peap; ui.fresh = false; render(); return true; }
     if ((el = t.closest('[data-pc]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; day.c = +el.dataset.pc; done(); } return true; }
     if ((el = t.closest('[data-ptog]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; var xi = day.ex.indexOf(el.dataset.ptog); if (xi >= 0) day.ex.splice(xi, 1); else day.ex = sortIds(day.ex.concat([el.dataset.ptog])); done(); } return true; }
     if ((el = t.closest('[data-pic]')) && ui.pe) { day = pDay(ui.pe); if (day) { P.cu = true; day.i = el.dataset.pic; done(); } return true; }

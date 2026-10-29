@@ -2,6 +2,10 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-29 Bypass-Modus mit Sicherheitsnetz
+- Falk arbeitet mit „Bypass permissions“ (keine Rückfragen). Schutz über PreToolUse-Hook `tools/hook-guard.py` (greift auch im Bypass) + deny-Regeln (zusätzlich: Zugangsdaten ~/.ssh, gh, .git-credentials, .npmrc nicht lesen). `settings.local.json` von Einmal-Freigaben geleert.
+- Gesperrtes braucht Falk selbst im Terminal. Regeln sind Textmuster: neue Fälle in `RULES` ergänzen und mit Beispielbefehlen testen.
+
 ## Stand 2026-10-29 (spät)
 - Zuletzt: vier Runden Essen/Planen gepusht (35839b6, 3e8a599, d3ab367) + lokale Vorschau in VS Code (d035d84, 070a181). Arbeitsweise: nummerierte Punkte je Bereich, Varianten gebündelt früh fragen, nach jeder gepushten Runde /handoff + /clear.
 - Falk testet am iPhone: weiche Fenster (Ruckeln?), Gericht (gleiche Höhe, Schritte auf/zu, Rezept einfügen), Suche (Unterarten, Kategorien zu zweit, Zuletzt), Schnell (Gegessen/je, Merken über die Rückmeldung), Planen (Kalender wischen, Auswahl in Reihe, Tag-ändern-Kacheln, Vorlagen mit Namen, Mahlzeit-Kacheln), Hell-Schalter.

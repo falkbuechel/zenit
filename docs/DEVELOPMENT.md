@@ -28,6 +28,7 @@ build.py              python build.py -> dist/index.html (eine Datei: PWA-Head, 
 dist/                 Build-Ausgabe zum Hosten (gitignored); dist/index.html läuft auch als Claude-Artifact
 tools/
   check.py            Syntax, doppelte Namen/Klick-Attribute/CSS-Selektoren, Manifest-JSON, Build; Fehler als Datei:Zeile. --fast: ohne Build, still
+  hook-guard.py       Claude-Hook vor Befehl/Schreiben (Sicherheitsnetz im Bypass-Modus): sperrt Force-Push, verwerfende Git-Befehle, rekursives Löschen außer dist/tools/out/node_modules/Scratchpad, Systemeingriffe, Netz-Skripte, Installationen, Schreiben außerhalb Projekt/Scratchpad/~/.claude und in dist/ oder .git/
   hook-check.py       Claude-Hook nach Edit/Write an src/ oder public/: check.py --fast
   hook-context.py     Claude-Hook am Antwortende: Hinweis „/handoff, dann /clear“ ab 200k Kontext
   smoke.js            Rauchtest: 5 Demo-Szenarien x 5 Tabs + Ansichten/Dialoge, Screenshots -> tools/out/

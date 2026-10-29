@@ -12,6 +12,9 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Nicht committet: nichts.
 
 ## Offen / Ideen
+- Gerichte (Rückmeldung 29.10.): Icon für Zutaten anpassen; bei angezeigten Zutaten übersichtlich und ohne Tag/Mahlzeit/Uhrzeit darunter, Eintragen dort auch nicht sinnvoll → den Platz besser nutzen.
+- Tagesleiste: Gruppieren darf wegbleiben, aber geplante Tage anteilig stricheln o. ä., damit klar ist, dass sie geplant sind.
+- Kategorien und Zuletzt (Suche): Anordnung gut, wirkt aber noch zu verspielt/unstimmig zum Essen-Tab (mehrere Gründe, evtl. der Schatten).
 - Übrige Fenster im Essen-Stil (einheitliche Bausteine): Schnell, Wasser, Ziele/Rechner, eigenes Lebensmittel, Marken, Planen-Fenster (Tag ändern, Trainingsplan, Editor); Schnell-Fenster ließ sich im Test nicht öffnen → prüfen.
 - Training in Planen: noch cleaner/kompakter, bequem und schnell wie bei Coaches (Woche in der Karte ist der Anfang).
 - Menüleiste: ernst und modern, aber mit etwas mehr Charakter – weiter abstimmen.

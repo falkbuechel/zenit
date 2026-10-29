@@ -2,14 +2,20 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
-## Stand 2026-10-28 (2)
-- Zuletzt: Essen-Rückmeldung vom 28.10. komplett, Planen Schritt 3 Einkaufsliste, Planer/Editor im Essen-Stil, App-Icon oliv (Einzelheiten unter Verlauf).
-- Falk testet am iPhone: Wie gestern (Mahlzeiten bleiben), Vorschläge 4×2, Suchfeld + Gerichte-Knopf, dunkle Bilanz (hell und dunkel), Einkauf (Planen › Essen), Editor-Kacheln, Planer-Stil.
-- App-Icon: iOS übernimmt es erst beim neuen Hinzufügen zum Homescreen. NICHT die App löschen (Daten weg) – höchstens vorher Backup.
-- Nächster Schritt: Planen Schritt 4 (Vorschläge „fehlt noch“).
+## Stand 2026-10-29
+- Zuletzt (alles live, Commit faf47e1): viele Runden Feinschliff Essen und Planen nach Falks iPhone-Rückmeldungen (Einzelheiten unter Verlauf 28./29.10.). Arbeitsweise: Falk meldet nummerierte Punkte je Bereich, klare Fixes direkt, Umbauten mit Varianten (AskUserQuestion).
+- Falk testet am iPhone: Tagesleiste/Kalender schlicht mit Ringen, Wasser über das Ziel ziehen (dunkelblau, roter Überlauf), Gericht-Fenster mit Topf-Knopf, Kategorien-Raster, Mahlzeiten auf/zu weich, Essen-Vorlagen in Planen, Woche in der Tageskarte, Menüleiste (Strich in Bereichsfarbe).
+- Nächster Schritt: Falks nächste Rückmeldung; sonst übrige Fenster im Essen-Stil (Schnell, Wasser, Ziele/Rechner, eigenes Lebensmittel, Marken, Planen-Fenster) und Training in Planen weiter vereinfachen.
+- Offene Entscheidung: alter Wochenplaner (`viewPlanner`, `data-pman`, Pläne-Liste, „Plan ab Datum“) hat keinen Einstieg mehr – entfernen oder als „Pläne“ wieder anbinden?
 - Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
+- App-Icon (oliv) übernimmt iOS erst beim neuen Hinzufügen zum Homescreen. NICHT die App löschen (Daten weg).
+- Nicht committet: nichts.
 
 ## Offen / Ideen
+- Übrige Fenster im Essen-Stil (einheitliche Bausteine): Schnell, Wasser, Ziele/Rechner, eigenes Lebensmittel, Marken, Planen-Fenster (Tag ändern, Trainingsplan, Editor); Schnell-Fenster ließ sich im Test nicht öffnen → prüfen.
+- Training in Planen: noch cleaner/kompakter, bequem und schnell wie bei Coaches (Woche in der Karte ist der Anfang).
+- Menüleiste: ernst und modern, aber mit etwas mehr Charakter – weiter abstimmen.
+- Woche ziehen ändert den aktiven Plan auch rückwirkend (vergangene Kalendersymbole/Serie können sich verschieben) – ggf. Änderung ab heute als neuer Planstand.
 - Einkaufsliste: braucht ein sauberes Aufräumen in Funktion, Design und UX (erst wenn Planen fertig ist); Preis eventuell geschätzt.
 - Planen Schritt 4: Vorschläge „fehlt noch“ (reine Logik: Protein je kcal, passt in den Rest, oft gegessen, vermutlich da).
 - Planen Schritt 5: Event (kcal reservieren) ordentlich umsetzen; Cheatday ohne Sonderregel, Urlaub/Krank bleiben.

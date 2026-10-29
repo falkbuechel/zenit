@@ -74,7 +74,8 @@
 .pc2 .ics em.ev.vac { color: var(--gold); }
 .pc2 .ics em.ev.sick { color: var(--danger); }
 .pc2 .ics em.ev.tsw { color: var(--sc); }
-.pc2.swd b { box-shadow: 0 0 0 1.5px var(--sc); }
+/* Tauschpaar: Symbol in der Paarfarbe und die Zahl darin eingefärbt (kein zweiter Ring neben dem kcal-Ring) */
+.pc2.swd b { color: var(--sc); }
 /* Urlaub/Krank über mehrere Tage: Tage eingerahmt wie eine Gruppe (Fläche + feine Kontur oben/unten, an Anfang und Ende seitlich und abgerundet) */
 .pc2.off { --oc: var(--gold); border-radius: 0; background: color-mix(in srgb, var(--oc) 9%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--oc) 55%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--oc) 55%, transparent); }
 .pc2.off.sick { --oc: var(--danger); }
@@ -83,9 +84,9 @@
 .pc2.off.os.oe { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--oc) 55%, transparent); }
 .pc2 .ics .ic { width: 15px; height: 15px; }
 .pc2.past b { color: var(--ink3); }
-/* Heute: kräftiger Ring statt dunkler Scheibe (wie in Essen), der Kuchen bleibt sichtbar */
-.pc2.today b { color: var(--ink); font-weight: 800; box-shadow: 0 0 0 2px var(--ink); }
-.pc2.today.swd b { box-shadow: 0 0 0 2px var(--ink), 0 0 0 4px var(--sc); }
+/* Heute wie in Essen: dezente warme Pille, Zahl fett (der kcal-Ring bleibt frei) */
+.pc2.today { background: color-mix(in srgb, var(--gold) 13%, transparent); }
+.pc2.today b { color: var(--ink); font-weight: 800; }
 .pc2.sel { background: var(--s2); box-shadow: inset 0 0 0 1px var(--line); }
 .pc2 .dn { width: 13px; height: 13px; margin-top: -2px; color: var(--ac); }
 .pc2-g.in-r { animation: pcin-r .2s var(--ease); } .pc2-g.in-l { animation: pcin-l .2s var(--ease); } .pc2-g.in-m { animation: pcin-m .2s var(--ease); }

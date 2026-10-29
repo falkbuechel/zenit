@@ -28,6 +28,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-29 – Letzte Runde des Tages
+- Mahlzeiten-Zeile: Auf-/Zuklappen (Mahlzeit, Gruppe) blendet Karten versetzt weich ein (`ui.fmx` → `.fchips.chg`), auch die Einträge einer Gruppe.
+- Gericht-Fenster: kein Barcode (Gerichte haben keinen), dafür Topf-Knopf im Kopf (`data-fingo`); an = Zutaten in zwei Spalten statt der Nährwert-Kacheln. `fingWrap`/aufklappbare Karte entfernt.
+- Tagesleiste und Kalender schlicht: nur noch dünner kcal-Ring (`.dr`, geplant kühl/blass), keine Kuchen und keine Gruppenflächen; heute = dezente warme Pille, gewählter Tag leicht hinterlegt; Tauschpaar färbt die Zahl statt eines zweiten Rings.
+- Wasser-Balken: voll = Ziel, kein Ziel-Strich; über das Ziel hinaus über den rechten Rand ziehen (20 ml/px), Füllung läuft dunkelblau aus; über der Grenze (1,5 × Ziel) füllt vorne ein roter Balken nach (`.wov`, `waOv` wie bei den Nährwerten).
+- Kategorien: 3er-Raster, Symbol oben, Anzahl klein oben rechts, nach Farbe sortiert (warm → kühl); kein seitlicher Verlauf mehr in Kategorien, Suchtreffern und Nährwert-Zeilen.
+
 ### 2026-10-29 – Tageskreise einheitlich, Gericht-Fenster, Fenster-Bausteine
 - Tageskreis `dayRing` (Essen-Tagesleiste und Planen-Kalender gleich, CSS `.dr` in 00-basis): gegessen = Kuchen hinter der Zahl, geplant = Kontur in Kühl; ok/over/low färben. Balken unter den Tagen und `.pfr` entfallen. Heute = kräftiger Ring statt dunkler Scheibe.
 - Tagesleiste: vergangen/heute/künftig als verbundene Flächen (`gs`/`ge` = Anfang/Ende), keine Lücken mehr.

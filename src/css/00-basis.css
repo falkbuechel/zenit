@@ -158,12 +158,12 @@ button:active:not(:disabled) { transform: scale(.97); }
   --g-pull: #45b39f; --g-push: #e8843c; --g-core: #d9628f; --g-kh: #9a86dd; --g-skill: #b7c94b; --g-cardio: #4aa2d6; --g-mob: #e3b83d; --gold: #f2c14e; --flame: #f0822b;
   --hs: 0 2px 0 rgba(0, 0, 0, .55); color: var(--ink);
 }
-/* Tageskreis (dayRing) um eine Zahl, in Essen-Tagesleiste und Planen-Kalender gleich: gegessen = Kuchen hinter der Zahl (Anteil gefüllt, feiner Rand),
-   geplant = Kontur (Ring in Kühl, Rest gestrichelt angedeutet). Farbe: ok grün, over rot, low orange, sonst neutral */
-.dr { --fc: var(--ink3); position: absolute; inset: -3px; z-index: -1; border-radius: 50%; pointer-events: none; }
-.dr.pie { background: conic-gradient(color-mix(in srgb, var(--fc) 34%, transparent) calc(var(--p) * 360deg), color-mix(in srgb, var(--ink3) 8%, transparent) 0); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fc) 45%, transparent); }
-.dr.ring { --fc: var(--g-cardio); background: conic-gradient(var(--fc) calc(var(--p) * 360deg), color-mix(in srgb, var(--fc) 22%, transparent) 0);
+/* Tageskreis (dayRing) um eine Zahl, in Essen-Tagesleiste und Planen-Kalender gleich: dünner Ring = Anteil vom kcal-Ziel auf einer feinen Spur;
+   geplant kühl und blasser. Farbe: ok grün, over rot, low orange, sonst neutral */
+.dr { --fc: var(--ink3); position: absolute; inset: -3px; z-index: -1; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(var(--fc) calc(var(--p) * 360deg), color-mix(in srgb, var(--ink3) 18%, transparent) 0);
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px)); mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px)); }
+.dr.pl { --fc: var(--g-cardio); opacity: .6; }
 .dr.ok { --fc: var(--ac); }
 .dr.over { --fc: var(--danger); }
 .dr.low { --fc: var(--flame); }

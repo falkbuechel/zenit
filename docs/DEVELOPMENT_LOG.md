@@ -2,11 +2,10 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
-## Stand 2026-10-30
-- Zuletzt: Analyse der Zusammenarbeit + Aufräumen (siehe Verlauf 30.10.). Arbeitsweise: Falk meldet nummerierte Punkte je Bereich, klare Fixes direkt, Umbauten mit Varianten (AskUserQuestion). Nach jeder gepushten Runde /handoff + /clear (Stop-Hook meldet ab 200k Kontext).
-- Falk testet am iPhone: Tagesleiste/Kalender schlicht mit Ringen, Wasser über das Ziel ziehen (dunkelblau, roter Überlauf), Gericht-Fenster mit Topf-Knopf, Kategorien-Raster, Mahlzeiten auf/zu weich, Essen-Vorlagen in Planen, Woche in der Tageskarte, Menüleiste (Strich in Bereichsfarbe).
-- Nächster Schritt: iPhone-Rückmeldung zur Runde 29.10. (Punkte 1–5 umgesetzt, siehe Verlauf), danach Menüleiste/Einkaufsliste oder Planen Schritt 4.
-- Ab jetzt: keine Freigaben mehr (settings.json erlaubt alles außer Sperrliste); Fragen einer Runde gebündelt früh stellen, Falk antwortet evtl. übers iPhone (Remote Control in VS Code aktiv, Push-Einstellung über `/config` hat noch nicht geklappt – bei Bedarf später).
+## Stand 2026-10-29 (Abend)
+- Zuletzt: Falks Punkte 1–5 vom 29.10. umgesetzt und gepusht (e07d9f2, siehe Verlauf). Arbeitsweise: nummerierte Punkte je Bereich, Umbauten mit Varianten (gebündelt früh fragen), nach jeder gepushten Runde /handoff + /clear.
+- Falk testet am iPhone: Zutatenliste im Gericht, gestrichelte geplante Tage (in Demo nicht sichtbar geprüft), ruhigere Suche, Nährwert-Kacheln (Schnell, eigenes Lebensmittel, Gericht von Hand, Ziele), Wasser/Tag ändern flach, Tag-Editor als Liste mit Aussehen-Knopf; dazu ältere Tests (Wasser über Ziel, Mahlzeiten auf/zu, Menüleiste).
+- Nächster Schritt: iPhone-Rückmeldung einarbeiten, dann Trainingsplan-Fenster/Tageskarte im neuen Stil oder Menüleiste/Einkaufsliste oder Planen Schritt 4.
 - Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
 - App-Icon (oliv) übernimmt iOS erst beim neuen Hinzufügen zum Homescreen. NICHT die App löschen (Daten weg).
 - Nicht committet: nichts.

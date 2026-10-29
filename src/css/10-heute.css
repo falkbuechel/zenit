@@ -161,6 +161,8 @@ body.arm .rest-in .btn { width: 100%; min-height: 48px; }
 /* Rückgängig: kleiner Pfeil im Hinweis, nur solange er steht */
 .tundo { display: grid; place-items: center; width: 30px; height: 30px; margin-left: 4px; padding: 0; border: 0; border-radius: 50%; background: rgba(127, 127, 127, .25); color: inherit; }
 .tundo .ic { width: 16px; height: 16px; }
+/* Folgeschritt in der Rückmeldung (z. B. merken): goldener Kreis */
+.tundo.tact { width: 34px; height: 34px; background: color-mix(in srgb, var(--gold) 30%, transparent); color: var(--gold); }
 .sw { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--s2); border: 1px solid var(--line); border-radius: var(--r12); padding: 10px 12px; margin-bottom: 10px; width: 100%; text-align: left; font-weight: 700; }
 .sw small { display: block; font-weight: 500; color: var(--ink2); font-size: 12px; }
 .sw i { width: 46px; height: 28px; border-radius: var(--r99); background: var(--s3); position: relative; flex: none; transition: background-color .2s; }

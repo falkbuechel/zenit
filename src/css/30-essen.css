@@ -272,22 +272,23 @@
 /* Schnell: Name und Stern (als eigenes Lebensmittel merken) in einer Zeile */
 .fqn { display: flex; gap: 6px; }
 .fqn .fnm { flex: 1; min-width: 0; }
-.fqn .x { flex: none; width: 46px; height: 46px; border: 1px solid var(--line); background: var(--s2); }
-.fqn .x[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); background: color-mix(in srgb, var(--gold) 14%, var(--s2)); }
-.fqn .x[aria-pressed="true"] .ic { fill: currentColor; }
-/* Schnell: Menge + Einheit in einer Zeile; Kategorie zum Merken als Icon-Reihe in der Kategoriefarbe */
-.fqa { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 6px; margin-bottom: 4px; }
-.fqa .fnm { margin: 0; font-family: var(--f-mono); font-weight: 600; text-align: center; }
-.fqa .seg { margin: 0; grid-template-columns: .8fr .8fr 1.2fr 1.3fr; }
-.fqa .seg button { min-height: 36px; padding: 0 2px; font-size: 13px; }
-.fqc { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 4px; }
-.fqc:empty { display: none; }
-.fqc button { display: grid; place-items: center; height: 40px; border: 1px solid var(--line); border-radius: var(--r10); background: var(--s1); color: var(--ink3); cursor: pointer; }
-.fqc button .ic { width: 18px; height: 18px; }
-.fqc button[aria-pressed="true"] { border-color: var(--cc); background: color-mix(in srgb, var(--cc) 16%, var(--s1)); color: var(--cc); }
-/* Schnell-Zeile unter den Treffern: Suchtext als Name, gestrichelt wie „neu“ */
-.fsi.fqk { --cc: var(--gold); border-style: dashed; }
+/* Schnell: „Nährwerte je“ Menge + Einheit in einer Zeile, darunter die Kacheln; Ergebniszeile = was eingetragen wird */
+.fqa { display: grid; grid-template-columns: auto 64px minmax(0, 1fr); align-items: center; gap: 6px; margin-top: 4px; }
+.fqa small { font-size: 12px; font-weight: 700; color: var(--ink3); }
+.fqa .fnm { height: 40px; margin: 0; padding: 0 6px; font-family: var(--f-mono); font-weight: 600; text-align: center; }
+.fqa .seg { margin: 0; grid-template-columns: .8fr .8fr 1.2fr 1.3fr; padding: 3px; }
+.fqa .seg button { min-height: 32px; padding: 0 2px; font-size: 12.5px; }
+.fqr { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 20px; margin: -2px 0 4px; font: 600 13px/1 var(--f-mono); color: var(--ink2); }
+.fqr .ic { width: 15px; height: 15px; color: var(--ac); }
+/* Schnell-Zeile über den Treffern: leicht abgehoben wie ein Vorschlag (warmer Hauch, Kante in Gold) */
+.fsi.fqk { --cc: var(--gold); margin-bottom: 4px; background: linear-gradient(90deg, color-mix(in srgb, var(--gold) 13%, var(--s1)), color-mix(in srgb, var(--gold) 4%, var(--s1))); border-color: color-mix(in srgb, var(--gold) 35%, var(--line)); }
 .fsi.fqk .fsc { color: var(--gold); }
+/* Schnell: Hinweis, dass es das Lebensmittel schon gibt */
+.fsi.fqx { min-height: 44px; margin-bottom: 8px; padding-block: 6px; }
+/* Merken nach dem Schnell-Eintrag: Kategorien als Raster mit Namen, darunter die Unterarten */
+.fcl.qsc button { min-height: 62px; }
+.fcl.qsc button[aria-pressed="true"] { border-color: var(--cc); background: color-mix(in srgb, var(--cc) 16%, var(--s1)); }
+.fsbb.qss { margin: 10px 0; flex-wrap: wrap; overflow: visible; }
 /* Gericht nach rechts gewischt: bereit zum Eintragen */
 .fdcb.arm { box-shadow: inset 3px 0 0 var(--ac); }
 .btn.fpdup { flex: none; width: 58px; padding: 0; }
@@ -352,6 +353,14 @@
 .fsb { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
 /* Suche: Reiter, darunter immer gleiche Zeilen mit Kategorie-Icon */
 .seg.fst { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 0 4px; }
+/* Kategorie: Leiste der Unterarten (wischbar, filtert) und Abschnittsköpfe in Icon und Ton der Unterart */
+.fsbb { display: flex; gap: 6px; margin: 2px -20px 6px; padding: 0 20px 2px; overflow-x: auto; scrollbar-width: none; }
+.fsbb::-webkit-scrollbar { display: none; }
+.fsbb button { flex: none; display: inline-flex; align-items: center; gap: 5px; height: 34px; padding: 0 11px; border: 1px solid var(--line); border-radius: var(--r10); background: var(--s1); color: var(--ink2); font: 600 13px/1 var(--f-body); white-space: nowrap; }
+.fsbb button .ic { width: 15px; height: 15px; color: var(--cc, var(--ink3)); }
+.fsbb button[aria-pressed="true"] { border-color: var(--cc, var(--ink)); background: color-mix(in srgb, var(--cc, var(--ink)) 16%, var(--s1)); color: var(--ink); }
+.fsbh { display: flex; align-items: center; gap: 6px; margin: 10px 0 2px; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--cc); }
+.fsbh .ic { width: 15px; height: 15px; }
 /* Kategorie-Symbol schlicht grau (Farbe steckt nur in der Kante) */
 .fsc { display: grid; place-items: center; flex: none; width: 26px; height: 26px; color: var(--ink2); }
 .fsc .ic { width: 19px; height: 19px; }
@@ -512,19 +521,19 @@
 .fing b { flex: 1; min-width: 0; overflow: hidden; font-weight: 600; white-space: nowrap; text-overflow: ellipsis; }
 .fing em { flex: none; font: 600 12px/1 var(--f-mono); font-style: normal; color: var(--ink2); }
 .fing em::after { content: " g"; color: var(--ink3); }
+.fing em.nb { color: var(--ink3); }
+.fing em.nb::after { content: none; }
 .fing .dgp { grid-column: 1 / -1; justify-content: center; gap: 16px; margin-top: 4px; }
-/* Griff zu den Schritten: nur angedeutet (Strich + Anzahl), antippen = Fenster ganz auf */
-.fstp { display: grid; justify-items: center; gap: 5px; width: 100%; padding: 6px 0 2px; border: 0; background: transparent; color: var(--ink3); font: inherit; cursor: pointer; }
-.fstp i { width: 44px; height: 4px; border-radius: 2px; background: var(--line); transition: transform .2s var(--ease); }
-.fstp[aria-expanded="true"] i { transform: scaleX(.6); }
-.fstp span { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; }
-.fstp .ic { width: 14px; height: 14px; }
-.fsts { display: grid; gap: 0; margin: 0; padding: 4px 14px; border: 1px solid var(--line); border-radius: var(--r12); background: var(--s1); list-style: none; counter-reset: st; animation: fade .18s var(--ease); }
+/* Schritte: zu blendet der Anfang nach unten aus (Fade = es geht weiter), Tippen/Wischen öffnet; auf läuft die Liste ganz aus */
+.fsts { position: relative; padding: 8px 14px 4px; border: 1px solid var(--line); border-radius: var(--r12); background: var(--s1); cursor: pointer; }
+.fsts.peek { max-height: 108px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent); mask-image: linear-gradient(180deg, #000 35%, transparent); }
+.fsth { display: block; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); }
+.fsts ol { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; counter-reset: st; }
+.fsts:not(.peek) ol { animation: fade .3s var(--ease); }
 .fsts li { position: relative; padding: 11px 0 11px 30px; border-bottom: 1px solid color-mix(in srgb, var(--line) 50%, transparent); font-size: 14.5px; line-height: 1.4; counter-increment: st; }
 .fsts li:last-child { border-bottom: 0; }
 .fsts li::before { content: counter(st); position: absolute; top: 11px; left: 0; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--s3); font: 700 11px/1 var(--f-mono); color: var(--ink2); }
-.fsts:empty { display: none; }
-.fstn { margin: 0; text-align: center; }
+.fstn { margin: 4px 0 0; font-size: 13px; text-align: center; }
 .sheet.tall.full { height: 90dvh; align-content: start; }
 /* Gericht-Editor: Schritte als nummerierte Textfelder; Rezept einfügen = großes Textfeld */
 .dst { display: grid; grid-template-columns: 22px minmax(0, 1fr) 42px; align-items: start; gap: 6px; margin-bottom: 6px; }

@@ -85,6 +85,7 @@
     if ((el = t.closest('[data-muso]'))) { ui.sheet = { mus: el.dataset.muso }; sheetOpen(musSheet(derive(state.logs), el.dataset.muso), true); return; }
     if ((el = t.closest('[data-cdet]'))) { closeSheet(); ui.tab = 'fort'; ui.sel = el.dataset.cdet; ui.fresh = true; render(); $('app').scrollTo(0, 0); return; }
     if (t.closest('[data-undo]')) { undo(); return; }
+    if ((el = t.closest('[data-thm]'))) { themeSet(el.dataset.thm); $('sheet').innerHTML = setHtml(); buzz(4); return; }
     if ((el = t.closest('[data-rest]'))) { if (el.dataset.rest === 'skip') stopRest(); else addRest(el.dataset.rest === 'sub' ? -15 : 15); return; }
     if ((el = t.closest('[data-xr]'))) { ui.xr = el.dataset.xr; ui.pt = null; ui.fresh = true; render(); return; }
     if ((el = t.closest('[data-xm]'))) { ui.xm = el.dataset.xm; ui.fresh = true; render(); return; }
@@ -132,13 +133,15 @@
   // Zahl wischen (auch der Arena-Zähler #arn, 16 px je Schritt): ab 8 px waagerecht wird aus dem Tippen ein Ziehen; je 10 px ein Schritt (Menge: 5 g, ½ Portion oder eine Grundeinheit; Wasser: 50 ml)
   var nsw = null;
   document.addEventListener('pointerdown', function (ev) {
-    var el = ev.target.closest && ev.target.closest('#fa, #fpcn, #wa-v, #arn'); if (!el) return;
-    nsw = { el: el, x: ev.clientX, on: false, wa: /^wa-/.test(el.id), ar: el.id === 'arn', v0: el.id === 'arn' ? ui.arv && ui.arv.v : /^wa-/.test(el.id) ? foodState().wa[fSd()] || 0 : ui.fpick ? ui.fpick.a : 0 };
+    var el = ev.target.closest && ev.target.closest('#fa, #fpcn, #wa-v, #arn, #f-e'); if (!el) return;
+    nsw = { el: el, x: ev.clientX, on: false, wa: /^wa-/.test(el.id), ar: el.id === 'arn', fq: el.id === 'f-e', v0: el.id === 'f-e' ? quickRead().a : el.id === 'arn' ? ui.arv && ui.arv.v : /^wa-/.test(el.id) ? foodState().wa[fSd()] || 0 : ui.fpick ? ui.fpick.a : 0 };
   });
   document.addEventListener('pointermove', function (ev) {
     if (!nsw) return; var dx = ev.clientX - nsw.x;
     if (!nsw.on) { if (Math.abs(dx) < 8) return; nsw.on = true; if (document.activeElement === nsw.el) nsw.el.blur(); }
     ev.preventDefault(); var n = Math.round(dx / 10);
+    // Schnell: gegessene Menge in 5 g/ml bzw. halben Stück/Portionen
+    if (nsw.fq) { var fqs = /^(g|ml)$/.test(ui.fqd.u) ? 5 : 0.5, fv = Math.max(fqs, Math.round((nsw.v0 + n * fqs) * 10) / 10); if (+nsw.el.value !== fv) { nsw.el.value = fv; quickRead(); buzz(3); } return; }
     if (nsw.ar) { var ae = EXB[ui.hcur], av = nsw.v0 + Math.round(dx / 16) * (ae && ae.u === 'Sek.' ? 5 : 1); if (ui.arv && av !== ui.arv.v) { arvSet(av); buzz(3); } }
     else if (nsw.wa) {
       var v = Math.max(0, Math.min(8000, nsw.v0 + n * 50)); if (v === nsw.v) return; nsw.v = v; buzz(3); waShow(v);

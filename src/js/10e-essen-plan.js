@@ -94,10 +94,21 @@
     if (!ui.sheet) return false;
     var fb = document.querySelector('#sheet [data-fback]'); if (fb) return foodClick(fb);
     if (ui.sheet.fsearch && ui.fcat && !ui.fq) { ui.fcat = ''; $('fres').innerHTML = fresHtml(); return true; }
-    if (ui.sheet.dishEdit) { openDishes(); return true; }
+    if (ui.sheet.dishEdit) { dishBack(ui.dd && ui.dd.id); return true; }
     if (ui.fplan && !ui.sheet.plmeal) { openPlanMeal(ui.fplan.d, ui.fplan.mk); return true; }
     return false;
   }
+  function fstpTog(on) {
+    // Schritte auf/zu: Fensterhöhe von der jetzigen zur neuen weich gleiten lassen (Höhe in px messen, dann übergehen; danach wieder frei)
+    var s = $('sheet'), h0 = s.offsetHeight; ui.fstpo = on; s.style.transition = 'none'; s.style.height = ''; s.classList.toggle('full', on); s.innerHTML = fpickHtml();
+    var h1 = s.offsetHeight; s.style.height = h0 + 'px'; void s.offsetHeight;
+    s.style.transition = 'height .48s var(--drawer), transform .34s var(--drawer)'; s.style.height = h1 + 'px'; s.scrollTo({ top: 0 });
+    clearTimeout(fstpT); fstpT = setTimeout(function () { s.style.height = ''; s.style.transition = ''; }, 520); buzz(4);
+  }
+  var fstpT = null, fstpY = null;
+  // Nach oben wischen auf den angedeuteten Schritten öffnet sie
+  document.addEventListener('touchstart', function (ev) { var p = ev.target.closest && ev.target.closest('.fsts.peek'); fstpY = p ? ev.touches[0].clientY : null; }, { passive: true });
+  document.addEventListener('touchmove', function (ev) { if (fstpY != null && fstpY - ev.touches[0].clientY > 28) { fstpY = null; fstpTog(true); } }, { passive: true });
   function foodClick(t) {
     var el, st = foodState();
     if ((el = t.closest('[data-ddm]'))) {
@@ -112,7 +123,7 @@
     if ((el = t.closest('[data-shk]'))) { var shk = el.dataset.shk; if (st.sh[shk] != null) delete st.sh[shk]; else st.sh[shk] = dayIdx(Date.now()); persist(); $('sheet').innerHTML = shopHtml(); buzz(6); return true; }
     if (t.closest('[data-fingo]')) { ui.fingo = !ui.fingo; ui.fstpo = false; $('sheet').classList.remove('full'); $('sheet').innerHTML = fpickHtml(); buzz(4); return true; }
     // Schritte: Fenster geht ganz auf (.full), die Schritte erscheinen unter den Zutaten
-    if (t.closest('[data-fstp]')) { ui.fstpo = !ui.fstpo; $('sheet').classList.toggle('full', ui.fstpo); $('sheet').innerHTML = fpickHtml(); buzz(4); return true; }
+    if (t.closest('[data-fstp]')) { fstpTog(!ui.fstpo); return true; }
     // Nach dem Speichern verschwindet der Knopf (kein zweites, gleiches Speichern)
     if ((el = t.closest('[data-ptpm]'))) { if (tplSave('m', ui.fplan.d, ui.fplan.mk)) el.remove(); return true; }
     if ((el = t.closest('[data-ple]'))) { var po = foodState().pl[+el.dataset.ple]; if (po && po.r && fItem(po.r.i)) { var pfp = ui.fplan; openPick(po.r.i, po.r.g); ui.fplan = pfp; ui.plEdit = +el.dataset.ple; $('sheet').innerHTML = fpickHtml(); } return true; }
@@ -120,10 +131,24 @@
     if (t.closest('[data-plq]')) { openQuick(null); return true; }
     if ((el = t.closest('[data-fpe]'))) { if (fswMoved) { fswMoved = false; return true; } planEat(el.dataset.fpe); return true; }
     if ((el = t.closest('[data-pgo]'))) { ui.pd = +el.dataset.pgo; ui.ca = ui.pd; ui.pft = 'e'; goTab('tage'); return true; }
-    if ((el = t.closest('[data-fqm]'))) { ui.fqm = !ui.fqm; el.setAttribute('aria-pressed', String(ui.fqm)); $('fqc').innerHTML = fqcHtml(); quickRead(); buzz(4); return true; }
-    if (t.closest('[data-fquick]')) { openQuick(null, ui.fq.trim()); return true; }
-    if ((el = t.closest('[data-fqu]'))) { ui.fqd.u = el.dataset.fqu; document.querySelectorAll('[data-fqu]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === el)); }); buzz(4); return true; }
-    if ((el = t.closest('[data-fqc]'))) { ui.fqd.cat = el.dataset.fqc; $('fqc').innerHTML = fqcHtml(); quickRead(); buzz(4); return true; }
+    if (t.closest('[data-fquick]')) { openQuick(null, ui.fq.trim(), 's'); return true; }
+    if ((el = t.closest('[data-fqx]'))) { var qfr = ui.sheet.from; openPick(el.dataset.fqx); ui.sheet.from = qfr; $('sheet').innerHTML = fpickHtml(); return true; }
+    if ((el = t.closest('[data-fqu]'))) {
+      // Einheit wechseln: Mengen, die noch auf der üblichen Bezugsmenge standen, wandern mit (100 g → 1 Stück)
+      var qd = quickRead(), d0 = quDef(qd.u), d1 = quDef(el.dataset.fqu); if (qd.r === d0 || !qd.r) $('f-r').value = d1; if (qd.a === d0 || !qd.a) $('f-e').value = d1;
+      qd.u = el.dataset.fqu; document.querySelectorAll('[data-fqu]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === el)); }); $('fqeu').textContent = el.textContent; quickRead(); buzz(4); return true;
+    }
+    if ((el = t.closest('[data-fqst]'))) { var qs = quickRead(), qst = /^(g|ml)$/.test(qs.u) ? 10 : 0.5; $('f-e').value = Math.max(qst, Math.round((qs.a + qst * +el.dataset.fqst) * 10) / 10); quickRead(); buzz(4); return true; }
+    if ((el = t.closest('[data-fqsv]'))) { var qe = st.e[ui.qsv && ui.qsv.i]; $('toast').className = 'toast'; if (qe && qe.t === ui.qsv.t && !qe.r) { ui.sheet = { qsv: true }; sheetOpen(qsvHtml(), true); } return true; }
+    if ((el = t.closest('[data-qsc]'))) { ui.qsv.cat = el.dataset.qsc; ui.qsv.sb = ''; $('sheet').innerHTML = qsvHtml(); buzz(4); return true; }
+    if ((el = t.closest('[data-qss]'))) { ui.qsv.sb = el.dataset.qss; $('sheet').innerHTML = qsvHtml(); buzz(4); return true; }
+    if (t.closest('[data-qsok]')) {
+      // Eigenes Lebensmittel aus dem Eintrag: g/ml je 100 umgerechnet, Portion = gegessene Menge; Stück/Portion: Rechengröße 100 = 1 Stück, Werte je Stück
+      var sv = ui.qsv, se = st.e[sv.i]; if (!sv.cat) { toast('Kategorie wählen', 'bolt'); return true; } if (!se || se.t !== sv.t || !se.qa) { closeSheet(true); return true; }
+      var sgm = /^(g|ml)$/.test(se.qa[1]), sf = sgm ? 100 / se.qa[0] : 1 / se.qa[0], so = { id: 'u' + Date.now().toString(36), n: se.n, cat: sv.cat, u: [[sgm ? 'Portion' : QU.filter(function (u) { return u[0] === se.qa[1]; })[0][1], sgm ? se.qa[0] : 100]] };
+      if (sv.sb) so.sb = sv.sb; NK.forEach(function (k) { so[k] = Math.round((se[k] || 0) * sf * 10) / 10; }); if (se.qa[1] === 'ml') so.ml = 1;
+      st.o.push(so); se.r = { i: so.id, g: sgm ? se.qa[0] : se.qa[0] * 100 }; delete se.qa; persist(); closeSheet(true); ui.fresh = false; render(); toast('Gemerkt · in der Suche unter ' + CATI[sv.cat][1], 'star'); return true;
+    }
     if (t.closest('[data-fdsw]') && fdswMoved) { fdswMoved = false; return true; }
     if ((el = t.closest('[data-fdel]'))) { foodDel(+el.dataset.fdel); return true; }
     if ((el = t.closest('[data-fmk]'))) { fmkSet(el.dataset.fmk); $('fmk').dataset.man = '1'; buzz(4); return true; }
@@ -168,7 +193,8 @@
     if (t.closest('[data-fbrr]')) { fbrLoad(); return true; }
     if (t.closest('[data-fonr]')) { ui.fon = null; fonSearch(); return true; }
     if ((el = t.closest('[data-fbrp]'))) { var bx = ui.fbr && ui.fbr.r[+el.dataset.fbrp]; if (bx) pickFrom(offSave(bx)); return true; }
-    if ((el = t.closest('[data-fcat]'))) { ui.fcat = el.dataset.fcat; $('fres').innerHTML = fresHtml(); $('sheet').scrollTop = 0; return true; }
+    if ((el = t.closest('[data-fsub]'))) { var sbl = el.parentNode.scrollLeft; ui.fsub = el.dataset.fsub; $('fres').innerHTML = fresHtml(); var sbb = document.querySelector('.fsbb'); if (sbb) sbb.scrollLeft = sbl; buzz(4); return true; }
+    if ((el = t.closest('[data-fcat]'))) { ui.fcat = el.dataset.fcat; ui.fsub = ''; $('fres').innerHTML = fresHtml(); $('sheet').scrollTop = 0; return true; }
     if ((el = t.closest('[data-ftab]'))) { ui.ftab = el.dataset.ftab; ui.fcat = ''; $('fres').innerHTML = fresHtml(); buzz(4); return true; }
     if ((el = t.closest('[data-famt]'))) { ui.fpick.a = +el.dataset.famt; if ($('fa')) $('fa').value = ui.fpick.a; fpickUpd(); return true; }
     if ((el = t.closest('[data-fstep]'))) { var it0 = fItem(ui.fpick.i), stp = it0.dish ? 0.25 : it0.pc ? it0.u[0][1] : 10; ui.fpick.a = Math.max(stp, Math.round((ui.fpick.a + stp * (+el.dataset.fstep)) * 100) / 100); if ($('fa')) $('fa').value = ui.fpick.a; fpickUpd(); buzz(4); return true; }
@@ -180,7 +206,7 @@
       if (!ov('k')) { toast('kcal je 100 g eintragen', 'bolt'); return true; }
       var oid = ui.sheet.fown !== 'new' ? ui.sheet.fown : 'u' + Date.now().toString(36), o = { id: oid, n: nm.slice(0, 30), u: [] };
       NK.forEach(function (k) { o[k] = ov(k); }); var un = $('o-un').value.trim(), ug = ov('ug'); if (un && ug) o.u.push([un.slice(0, 12), ug]);
-      var o0 = fOwn(oid); if (o0) { if (o0.b) o.b = o0.b; if (o0.bc) o.bc = o0.bc; if (o0.cat) o.cat = o0.cat; o.u = o.u.concat(o0.u.slice(1)); } if (ui.sheet.bc) o.bc = ui.sheet.bc; if (ui.sheet.ml) o.ml = 1; else delete o.ml;
+      var o0 = fOwn(oid); if (o0) { if (o0.b) o.b = o0.b; if (o0.bc) o.bc = o0.bc; if (o0.cat) o.cat = o0.cat; if (o0.sb) o.sb = o0.sb; o.u = o.u.concat(o0.u.slice(1)); } if (ui.sheet.bc) o.bc = ui.sheet.bc; if (ui.sheet.ml) o.ml = 1; else delete o.ml;
       var bv = $('o-b').value.trim(), bcv = $('o-bc').value.replace(/\D/g, ''); if (bv) o.b = bv.slice(0, 24); else delete o.b; if (/^\d{6,14}$/.test(bcv)) o.bc = bcv; else delete o.bc;
       if (o.bc) st.o.forEach(function (y) { if (y.id !== oid && y.bc === o.bc) delete y.bc; });
       var oi = st.o.map(function (y) { return y.id; }).indexOf(oid); if (oi >= 0) st.o[oi] = o; else st.o.push(o);
@@ -226,20 +252,16 @@
     }
     if (t.closest('[data-fsave]')) {
       var q = quickRead(); if (!q) return true;
-      if (!q.ok) { buzz(10); toast(!(q.v.k > 0) ? 'kcal eintragen' : !ui.fqm ? 'Wert prüfen' : !q.n.trim() ? 'Name zum Merken eintragen' : !(q.a > 0) ? 'Menge zum Merken eintragen' : 'Kategorie wählen', 'bolt'); return true; }
-      var xq = { n: q.n.trim().slice(0, 30), k: Math.round(q.v.k), p: Math.round((q.v.p || 0) * 10) / 10 };
-      ['f', 'c', 'fb', 'su'].forEach(function (k) { if (q.v[k] != null) xq[k] = Math.round(q.v[k] * 10) / 10; });
-      // qa: Menge + Einheit, nur zum Wiederanzeigen beim Ändern
-      if (q.a > 0) xq.qa = [Math.round(q.a * 10) / 10, q.u];
-      var qi = ui.sheet && ui.sheet.idx != null ? ui.sheet.idx : null;
-      if (ui.fqm && qi == null) {
-        // Merken: eigenes Lebensmittel in der gewählten Kategorie. g/ml: Werte auf 100 umgerechnet, Portion = diese Menge.
-        // Stück/Portion: Rechengröße 100 = 1 Stück, Werte je Stück. Der Eintrag behält seine Werte und verweist auf das neue Lebensmittel
-        var gm = q.u === 'g' || q.u === 'ml', qf = gm ? 100 / q.a : 1 / q.a, qo = { id: 'u' + Date.now().toString(36), n: xq.n, cat: q.cat, u: [[gm ? 'Portion' : QU.filter(function (u) { return u[0] === q.u; })[0][1], gm ? xq.qa[0] : 100]] };
-        NK.forEach(function (k) { qo[k] = Math.round((xq[k] || 0) * qf * 10) / 10; }); if (q.u === 'ml') qo.ml = 1; st.o.push(qo); ui.fqm = false;
-        xq.r = { i: qo.id, g: gm ? xq.qa[0] : xq.qa[0] * 100 }; delete xq.qa; foodPush(xq, null); return true;
-      }
-      foodPush(xq, qi); return true;
+      if (!q.ok) { buzz(10); toast(!(q.v.k > 0) ? 'kcal eintragen' : !(q.a > 0) ? 'Gegessene Menge eintragen' : !(q.r > 0) ? 'Bezugsmenge eintragen' : 'Wert prüfen', 'bolt'); return true; }
+      var xq = { n: q.n.trim().slice(0, 30), k: Math.round(q.t.k), p: Math.round((q.t.p || 0) * 10) / 10 };
+      ['f', 'c', 'fb', 'su'].forEach(function (k) { if (q.t[k] != null) xq[k] = Math.round(q.t[k] * 10) / 10; });
+      // qa: gegessene Menge + Einheit (zum Ändern und Merken)
+      xq.qa = [Math.round(q.a * 10) / 10, q.u];
+      var qi = ui.sheet && ui.sheet.idx != null ? ui.sheet.idx : null, plan0 = !!ui.fplan, td = dayIdx(Date.now()), pg0 = foodSum(td).p < foodGoal(td).p;
+      foodPush(xq, qi);
+      // Gibt es das noch nicht: dezent anbieten, es zu merken (Knopf in der Rückmeldung, verschwindet von selbst); nicht über „Proteinziel erreicht“
+      if (qi == null && !plan0 && xq.n && !libFind(xq.n) && !(pg0 && foodSum(td).p >= foodGoal(td).p)) { ui.qsv = { i: st.e.length - 1, t: xq.t, n: xq.n, cat: '', sb: '' }; toast('+' + xq.k + ' kcal · merken?', 'check', false, ['fqsv', 'star', 'Als Lebensmittel merken']); }
+      return true;
     }
     if (t.closest('[data-fgsave]')) {
       var gg = {}; NK.forEach(function (k) { var f = Math.round(parseFloat($('g-' + k).value) || 0); if (f > 0) gg[k] = f; });

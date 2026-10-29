@@ -221,11 +221,16 @@
   // Kategorien: Icon und kurzer Name (Suche, Gegessen); Schlüssel wie FCATS, dazu Eigene, Gerichte, Schnell, Sonstiges
   var CATI = { g: ['bread', 'Brot'], m: ['milk', 'Milch'], e: ['steak', 'Fleisch'], h: ['bean', 'Bohnen'], v: ['carrot', 'Gemüse'], o: ['snack', 'Obst'], n: ['nut', 'Nüsse'], s: ['candy', 'Süßes'], d: ['glass', 'Getränke'],
     f: ['burger', 'Fast Food'], r: ['food', 'Restaurant'], u: ['user', 'Eigene'], dish: ['pot', 'Gerichte'], q: ['bolt', 'Schnell'], x: ['food', 'Sonstiges'] };
-  // Icon je Lebensmittel, wo das Kategorie-Icon nicht passt (Fisch ist kein Ei); sonst das der Kategorie
-  var FICO = {}; [['fish', 'lachs thun garnel seela sushi'], ['steak', 'rhack rhack5 steak schwf kschin salami salamil schnitz steakb'], ['np', 'haehn pute'], ['egg', 'ei eiklar'],
-    ['cheese', 'gouda goudal mozz mozzl feta fetal parm huette frisch frischl'], ['cup', 'skyr mquark quark40 quark20 joghurt35 joghurt joghurt01 grjog grjog2 ppudd'], ['bottle', 'whey'],
-    ['drop', 'olivoel rapsoel butter halbf honig'], ['bowl', 'hafer muesli cornfl reis_r reis_g nud_r nud_g vknud quinoa cous ramen bowl'], ['burger', 'rburg burger']].forEach(function (g) { g[1].split(' ').forEach(function (id) { FICO[id] = g[0]; }); });
-  function fIco(id, ck) { return FICO[id] || (CATI[ck] || CATI.x)[0]; }
+  // Icon je Lebensmittel: eigenes, wo die Unterart nicht genau passt, sonst das der Unterart (FSUB), sonst der Kategorie
+  var FICO = { garnel: 'shrimp', sushi: 'fish', orange: 'citrus', ernmus: 'jar', avoc: 'leaf', toast: 'sandw', cwurst: 'sausage', ppudd: 'cup', mc_pom: 'fries', pommes: 'fries' };
+  function fSb(id) { var it = id && (FOODB[id] || (/^u/.test(id) ? fOwn(id) : null)); return it && it.sb && FSUBK[it.sb] ? FSUBK[it.sb] : null; }
+  function fIco(id, ck) { var s = fSb(id); return FICO[id] || (s ? s[3] : (CATI[ck] || CATI.x)[0]); }
+  // Farbton der Unterart: Kategoriefarbe abwechselnd heller/dunkler gemischt (je Index in der Kategorie), damit Abschnitte unterscheidbar bleiben
+  function sbTone(s) {
+    var i = FSUB.filter(function (q) { return q[0] === s[0]; }).indexOf(s), m = [0, 22, -22, 40, -38, 55][i] || 0, b = CCOL[s[0]] || CCOL.x;
+    return m ? 'color-mix(in srgb, ' + b + ' ' + (100 - Math.abs(m)) + '%, ' + (m > 0 ? 'var(--ink)' : 'var(--bg)') + ')' : b;
+  }
+  function fTone(id, ck) { var s = fSb(id); return s ? sbTone(s) : CCOL[ck] || (ck === 'dish' ? 'var(--ac)' : CCOL.x); }
   // Kategorie eines Eintrags: Schlüssel aus FCATS, sonst Eigene, Gerichte oder Schnell
   function fCat(x) {
     var id = x.r && x.r.i, it = id && FOODB[id];
@@ -265,9 +270,9 @@
   // Ein anderes Fenster macht die offene Mahlzeit überflüssig (außer Menge eines ihrer Einträge ändern): sie klappt beim nächsten Zeichnen zu
   function sheetOpen(html, tall) {
     // Offene Mahlzeit sofort zuklappen (auch unter dem Fenster sichtbar), außer beim Ändern eines ihrer Einträge
-    if (ui.fmeal && !(ui.sheet && (ui.sheet.fpick || (ui.sheet.food && ui.sheet.idx != null)))) { ui.fmeal = null; if (ui.tab === 'food') { ui.fresh = false; render(); } } $('sheet').className = 'sheet' + (tall ? ' tall' : ''); $('sheet').innerHTML = html; $('shade').classList.add('open'); $('sheet').classList.add('open'); }
+    if (ui.fmeal && !(ui.sheet && (ui.sheet.fpick || (ui.sheet.food && ui.sheet.idx != null)))) { ui.fmeal = null; if (ui.tab === 'food') { ui.fresh = false; render(); } } $('sheet').className = 'sheet' + (tall ? ' tall' : ''); $('sheet').style.height = ''; $('sheet').innerHTML = html; $('shade').classList.add('open'); $('sheet').classList.add('open'); }
   function openFsearch(keep) {
-    ui.sheet = { fsearch: true }; ui.fq = ''; ui.fcat = keep ? ui.fcat : ''; if (!keep) ui.ftab = 'c'; ui.fqm = false; ui.fpick = null; if (!ui.fplan) ui.fday = dayIdx(Date.now()) - fSd();
+    ui.sheet = { fsearch: true }; ui.fq = ''; ui.fcat = keep ? ui.fcat : ''; if (!keep) ui.ftab = 'c'; ui.fpick = null; if (!ui.fplan) ui.fday = dayIdx(Date.now()) - fSd();
     sheetOpen(shHead('search', ui.ingm ? 'Zutat' : 'Eintragen', ui.ingm ? 'Für das Gericht' : 'Lebensmittel oder Gericht suchen', !!ui.ingm) + '<div class="fqw"><input id="fq" class="fnm fq" type="search" placeholder="Suchen, z. B. Skyr" autocomplete="off" aria-label="Suchen"><button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button></div><div id="fres" class="fsr">' + fresHtml() + '</div>', true);
     $('sheet').classList.add('fs');
     setTimeout(function () { var i = $('fq'); if (i && !('ontouchstart' in window)) i.focus(); }, 350);
@@ -277,7 +282,7 @@
     var it = fItem(id), uu = !it.dish && !it.pc && it.u.length ? it.u[it.ub && it.u[1] ? 1 : 0] : null, pa = it.dish ? 1 : it.pc ? it.d || it.u[it.ub ? 1 : 0][1] : uu ? uu[1] : it.ml ? 250 : 100, v = fNut(it, pa), ck = it.dish ? 'dish' : CATI[it.cat] ? it.cat : /^u/.test(id) ? 'u' : 'x';
     // Darunter klein die Werte je 100 g (bei Gerichten je Portion) in festen Spalten: die drei, die für die Kategorie zählen (NREL, z. B. Zucker bei Süßem)
     var h100 = it.dish ? v : it, nr = NREL[ck] || NREL.x;
-    return '<button class="fsi" data-fpick="' + id + '" style="--cc:' + (CCOL[ck] || (ck === 'dish' ? 'var(--ac)' : CCOL.x)) + '"><i class="fsc">' + ic(fIco(id, ck)) + '</i><span><b>' + esc(fName(it)) + (it.b ? ' <small>' + esc(it.b) + '</small>' : '') + '</b>' +
+    return '<button class="fsi" data-fpick="' + id + '" style="--cc:' + fTone(id, ck) + '"><i class="fsc">' + ic(fIco(id, ck)) + '</i><span><b>' + esc(fName(it)) + (it.b ? ' <small>' + esc(it.b) + '</small>' : '') + '</b>' +
       '<small class="f100">' + nr.map(function (k) { return '<i style="--nc:var(' + NCOL[k] + ')" aria-label="' + NSH[k] + '">' + ic(NIC[k]) + fN(h100[k] || 0) + '</i>'; }).join('') + '<em>' + (it.dish ? '/Port.' : it.ml ? '/100 ml' : '/100 g') + '</em></small></span>' +
       '<i class="fsk"><b>' + Math.round(v.k) + '<small>kcal</small></b><small>' + (uu ? '1 ' + esc(uu[0]) : fAmt(it, pa)) + '</small></i></button>';
   }
@@ -310,9 +315,9 @@
         var it0 = fItem(id), n = fnorm(fHay(it0)), i = n.indexOf(q); if (i >= 0) sc.push([id, i === 0 ? 0 : n.indexOf(' ' + q) >= 0 ? 1 : 2]);
       });
       sc.sort(function (a, b) { return a[1] - b[1]; });
-      h = sc.length ? sc.slice(0, 30).map(function (x) { return fRow(x[0]); }).join('') : '<p class="muted">Hier nichts gefunden.</p>';
-      // Immer möglich: unter den Treffern den Suchtext als Schnell-Eintrag (nicht beim Zutat fürs Gericht)
-      if (!ui.ingm) h += '<button class="fsi fqk" data-fquick="1"><i class="fsc">' + ic('bolt') + '</i><span><b>„' + esc(ui.fq.trim().slice(0, 30)) + '“</b><small>Schnell ' + (ui.fplan ? 'einplanen' : 'eintragen') + ' · Menge und kcal selbst</small></span>' + ic('chev') + '</button>';
+      // Immer möglich: über den Treffern den Suchtext als Schnell-Eintrag, leicht abgehoben wie ein Vorschlag (nicht beim Zutat fürs Gericht)
+      h = (ui.ingm ? '' : '<button class="fsi fqk" data-fquick="1"><i class="fsc">' + ic('bolt') + '</i><span><b>„' + esc(ui.fq.trim().slice(0, 30)) + '“</b><small>Schnell ' + (ui.fplan ? 'einplanen' : 'eintragen') + ' · Werte selbst</small></span>' + ic('chev') + '</button>') +
+        (sc.length ? sc.slice(0, 30).map(function (x) { return fRow(x[0]); }).join('') : '<p class="muted">Hier nichts gefunden.</p>');
       h += '<div id="fon">' + fonHtml() + '</div>';
     } else {
       // Schnell gibt es nur noch als Zeile unter den Treffern (Suchtext = Name)
@@ -321,8 +326,20 @@
       if (tab === 'r') st.e.slice().sort(function (a, b) { return b.t - a.t; }).forEach(function (x) { if (list.length < 6 && x.r && fItem(x.r.i) && list.indexOf(x.r.i) < 0 && !(ui.ingm && /^d/.test(x.r.i))) list.push(x.r.i); });
       else if (ui.fcat) {
         h += '<button class="fcb" data-fcat="">' + ic('back') + ic(CATI[ui.fcat][0]) + '<b>' + (ui.fcat === 'u' ? 'Eigene' : FCATS.filter(function (c) { return c[0] === ui.fcat; })[0][1]) + '</b></button>';
-        // Eigene mit Kategorie (aus Schnell gemerkt) stehen vorn in ihrer Kategorie
-        list = ui.fcat === 'u' ? st.o.map(function (x) { return x.id; }) : st.o.concat(FOODS).filter(function (x) { return x.cat === ui.fcat && !x.vh; }).map(function (x) { return x.id; });
+        // Eigene mit Kategorie (gemerkt) stehen in ihrer Kategorie: mit Unterart in deren Abschnitt, sonst vorn unter „Eigene“.
+        // Leiste der Unterarten filtert (ui.fsub), bei „Alle“ Abschnitte mit kleinem Kopf in Icon und Ton der Unterart
+        if (ui.fcat === 'u') list = st.o.map(function (x) { return x.id; });
+        else {
+          var all = st.o.concat(FOODS).filter(function (x) { return x.cat === ui.fcat && !x.vh; }), subs = FSUB.filter(function (s) { return s[0] === ui.fcat; }), fs = ui.fsub && FSUBK[ui.fsub] && FSUBK[ui.fsub][0] === ui.fcat ? ui.fsub : '';
+          var secs = [['', 'Eigene', 'user', all.filter(function (x) { return !FSUBK[x.sb]; })]].concat(subs.map(function (s) { return [s[1], s[2], s[3], all.filter(function (x) { return x.sb === s[1]; }), s]; })).filter(function (q) { return q[3].length; });
+          if (secs.length > 1) h += '<div class="fsbb" data-noswipe="1"><button data-fsub="" aria-pressed="' + !fs + '">Alle</button>' + secs.filter(function (q) { return q[0]; }).map(function (q) {
+            return '<button data-fsub="' + q[0] + '" style="--cc:' + sbTone(q[4]) + '" aria-pressed="' + (fs === q[0]) + '">' + ic(q[2]) + esc(q[1]) + '</button>'; }).join('') + '</div>';
+          secs.forEach(function (q) {
+            if (fs && q[0] !== fs) return;
+            if (!fs && secs.length > 1) h += '<h3 class="fsbh" style="--cc:' + (q[4] ? sbTone(q[4]) : 'var(--ink3)') + '">' + ic(q[2]) + esc(q[1]) + '</h3>';
+            h += q[3].map(function (x) { return fRow(x.id); }).join('');
+          });
+        }
       } else {
         // Kategorien alphabetisch in zwei Spalten, eigene Lebensmittel als eigene Kategorie
         var cl = FCATS.map(function (c) { return [c[0], c[1], st.o.concat(FOODS).filter(function (x) { return x.cat === c[0] && !x.vh; }).length]; }).concat(st.o.length ? [['u', 'Eigene', st.o.length]] : []);

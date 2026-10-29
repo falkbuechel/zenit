@@ -167,6 +167,25 @@
     ['r', 'Restaurant & Imbiss', 'schnitz spagb pcarb curryr gyros rburg steakb cwurst bowl csalat sushi ramen pizza doener burger pommes lasag']
   ];
   FCATS.forEach(function (c) { c[2].split(' ').forEach(function (id) { if (FOODB[id]) FOODB[id].cat = c[0]; }); });
+  // Unterarten je Kategorie: [Kategorie, Schlüssel, Name, Icon, ids]; setzt .sb. Reihenfolge = Abschnitte in der Suche, Index in der Kategorie = Farbton (fTone)
+  var FSUB = [
+    ['g', 'gfl', 'Flocken & Müsli', 'bowl', 'hafer muesli cornfl'], ['g', 'gre', 'Reis & Körner', 'rice', 'reis_r reis_g quinoa cous'], ['g', 'gnu', 'Nudeln', 'pasta', 'nud_r nud_g vknud'],
+    ['g', 'gka', 'Kartoffeln', 'potato', 'kart skart'], ['g', 'gbr', 'Brot', 'bread', 'vkbrot mischbr broet toast wrap reisw'],
+    ['m', 'mmi', 'Milch & Drinks', 'milk', 'milch35 milch15 milch03 hafmil sojmil'], ['m', 'mjo', 'Joghurt & Quark', 'cup', 'skyr mquark quark40 quark20 joghurt35 joghurt joghurt01 grjog grjog2 ppudd'],
+    ['m', 'mka', 'Käse', 'cheese', 'huette frisch frischl gouda goudal mozz mozzl feta fetal parm'], ['m', 'mbu', 'Butter & Sahne', 'butter', 'butter halbf sahne sahnel'], ['m', 'mpr', 'Protein', 'bottle', 'whey'],
+    ['e', 'eei', 'Eier', 'egg', 'ei eiklar'], ['e', 'egf', 'Geflügel', 'np', 'haehn pute'], ['e', 'efl', 'Fleisch', 'steak', 'rhack rhack5 steak schwf'], ['e', 'ewu', 'Wurst & Schinken', 'sausage', 'kschin salami salamil'],
+    ['e', 'efi', 'Fisch & Meer', 'fish', 'lachs thun seela garnel'],
+    ['h', 'hhu', 'Hülsenfrüchte', 'bean', 'linsen_r linsen_g kicher kidney edam'], ['h', 'hto', 'Tofu', 'tofu', 'tofu'], ['h', 'hau', 'Aufstrich', 'jar', 'hummus'],
+    ['v', 'vgr', 'Grün', 'leaf', 'brok spinat salat zucch gurke erbsen'], ['v', 'vfr', 'Fruchtgemüse', 'tomato', 'papr tomate avoc mais'], ['v', 'vwu', 'Wurzel, Zwiebel & Pilz', 'carrot', 'karotte zwieb champ'],
+    ['o', 'oap', 'Äpfel & Kiwi', 'snack', 'apfel kiwi'], ['o', 'obe', 'Beeren & Trauben', 'grapes', 'beeren erdb trauben'], ['o', 'osu', 'Südfrüchte', 'banana', 'banane orange datteln'],
+    ['n', 'nnu', 'Nüsse', 'nut', 'mandeln walnuss erdnuss cashew ernmus'], ['n', 'nsa', 'Samen', 'seed', 'leins chia'], ['n', 'noe', 'Öl', 'drop', 'olivoel rapsoel'],
+    ['s', 'ssc', 'Schokolade', 'choc', 'zbschok mschok'], ['s', 'sri', 'Riegel', 'bar', 'priegel'], ['s', 'ssa', 'Chips', 'chips', 'chips'], ['s', 'sgu', 'Gummi & Eis', 'candy', 'gummi vaneis'], ['s', 'sau', 'Aufstrich', 'jar', 'honig marm nusscr'],
+    ['d', 'dsa', 'Saft', 'glass', 'osaft'], ['d', 'dso', 'Softdrinks', 'can', 'cola colaz'], ['d', 'dbi', 'Bier', 'beer', 'bier bieraf'],
+    ['f', 'fbu', 'Burger', 'burger', 'mc_bigmac mc_cheese mc_hamb bk_whop'], ['f', 'fsa', 'Sandwich', 'sandw', 'mc_chick sub_chick'], ['f', 'fch', 'Chicken', 'np', 'mc_nug kfc_strip'], ['f', 'fpo', 'Pommes', 'fries', 'mc_pom'],
+    ['r', 'rpa', 'Pasta', 'pasta', 'spagb pcarb lasag'], ['r', 'rpi', 'Pizza', 'pizza', 'pizza'], ['r', 'rfl', 'Fleisch & Döner', 'steak', 'schnitz gyros steakb cwurst doener'],
+    ['r', 'rbu', 'Burger & Pommes', 'burger', 'rburg burger pommes'], ['r', 'ras', 'Asiatisch & Bowls', 'bowl', 'curryr bowl sushi ramen'], ['r', 'rsa', 'Salat', 'leaf', 'csalat']
+  ];
+  var FSUBK = {}; FSUB.forEach(function (s) { FSUBK[s[1]] = s; s[4].split(' ').forEach(function (id) { if (FOODB[id]) FOODB[id].sb = s[1]; }); });
   // Varianten: Grundname (bn) in Listen ohne Fett-Angabe, Variante (vl) in der Mengenwahl umschaltbar (vg); in Kategorien und Suche nur die erste (vh = versteckt)
   var FVAR = [['Milch', [['milch15', '1,5 %'], ['milch35', '3,5 %'], ['milch03', '0,3 %']]], ['Quark', [['mquark', 'Mager'], ['quark20', '20 %'], ['quark40', '40 %']]], ['Naturjoghurt', [['joghurt', '1,5 %'], ['joghurt35', '3,5 %'], ['joghurt01', '0,1 %']]],
     ['Griechischer Joghurt', [['grjog', '10 %'], ['grjog2', '2 %']]], ['Gouda', [['gouda', 'Normal'], ['goudal', 'Light']]], ['Mozzarella', [['mozz', 'Normal'], ['mozzl', 'Light']]], ['Feta', [['feta', 'Normal'], ['fetal', 'Light']]],

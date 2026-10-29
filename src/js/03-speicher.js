@@ -38,6 +38,8 @@
       if (x.ml) r.ml = 1;
       // cat: Such-Kategorie (beim Merken aus Schnell gewählt)
       if (typeof x.cat === 'string' && FCATS.some(function (c) { return c[0] === x.cat; })) r.cat = x.cat;
+      // sb: Unterart (FSUB) passend zur Kategorie
+      if (r.cat && FSUBK[x.sb] && FSUBK[x.sb][0] === r.cat) r.sb = x.sb;
       return r;
     });
     var d = (Array.isArray(f.d) ? f.d : []).filter(function (x) { return x && typeof x.id === 'string' && typeof x.n === 'string' && Array.isArray(x.ing); }).slice(0, 60).map(function (x) {

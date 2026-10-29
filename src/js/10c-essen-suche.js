@@ -209,57 +209,71 @@
     // Zutaten eines Gerichts für die gewählte Portionenzahl (zum Kochen) als Chips in der Farbe ihrer Kategorie: Icon, Name, Menge (gerundet auf 5 g); darunter die Nährwerte
     var dd = fDish(id); if (!dd || !dd.ing.length) return '';
     var f = por / Math.max(1, +dd.por || 1), v = fNut(fItem(id), por);
-    return dd.ing.filter(function (q) { return +q.a > 0; }).map(function (q) {
+    return dd.ing.filter(function (q) { return q.n || +q.a > 0; }).map(function (q) {
+      // Ohne Menge (Gewürze, „nach Belieben“): n. B. statt Gramm
       var g = (+q.a || 0) * f, src = q.i && (FOODB[q.i] || fOwn(q.i)), ck = src && src.cat ? src.cat : q.i && /^u/.test(q.i) ? 'u' : 'x';
-      return '<span style="--cc:' + (CCOL[ck] || CCOL.x) + '">' + ic(fIco(q.i, ck)) + '<b>' + esc(q.n || 'Zutat') + '</b><em>' + (g < 20 ? Math.round(g) : Math.round(g / 5) * 5) + '</em></span>';
+      return '<span style="--cc:' + fTone(q.i, ck) + '">' + ic(fIco(q.i, ck)) + '<b>' + esc(q.n || 'Zutat') + '</b>' + (g > 0 ? '<em>' + (g < 20 ? Math.round(g) : Math.round(g / 5) * 5) + '</em>' : '<em class="nb">n. B.</em>') + '</span>';
     }).join('') + '<div class="dgp">' + ['k', 'p', 'f', 'c'].map(function (k) { return '<span style="--nc:var(' + NCOL[k] + ')">' + ic(NIC[k]) + '<b>' + Math.round(v[k] || 0) + '</b></span>'; }).join('') + '</div>';
   }
   function fstpHtml(id, ed) {
-    // Griff zu den Schritten: zu = nur angedeutet (Griff, Anzahl); auf = Fenster ganz hoch, nummerierte Schritte; ohne Schritte der Weg zum Hinzufügen (nur aus dem Gerichte-Menü)
+    // Schritte: zu = der Anfang blendet nach unten aus (Fade deutet an, dass es weitergeht), Tippen oder nach oben Wischen öffnet; auf = Fenster gleitet ganz hoch.
+    // Ohne Schritte nichts zum Öffnen, nur ein klarer Hinweis (Hinzufügen über den Stift im Kopf)
     var dd = fDish(id), st = dd && dd.st || [], on = !!ui.fstpo;
-    return '<button class="fstp" data-fstp="1" aria-expanded="' + on + '"><i></i><span>' + ic('ing') + (st.length ? st.length + (st.length === 1 ? ' Schritt' : ' Schritte') : 'Schritte') + '</span></button>' +
-      (on ? '<ol class="fsts">' + st.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ol>' +
-        (!st.length ? '<p class="muted fstn">Noch keine Schritte.</p>' : '') + (ed ? '<div class="fsb fpx"><button class="btn ghost small" data-fde="' + id + '">' + ic('plus') + (st.length ? 'Schritte ändern' : 'Schritte hinzufügen') + '</button></div>' : '') : '');
+    if (!st.length) return '<p class="muted fstn">Keine Schritte hinterlegt' + (ed ? ' · über den Stift hinzufügen' : '') + '</p>';
+    return '<div class="fsts' + (on ? '' : ' peek') + '" data-fstp="1" role="button" aria-expanded="' + on + '" aria-label="' + st.length + (st.length === 1 ? ' Schritt' : ' Schritte') + (on ? ' zuklappen' : ' anzeigen') + '">' +
+      '<b class="fsth">' + st.length + (st.length === 1 ? ' Schritt' : ' Schritte') + '</b><ol>' + st.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ol></div>';
   }
   function nTile(id, k, v, big, u) {
     // Nährwert-Eingabe als Kachel wie im Mengen-Fenster (Farbkante oben, Icon + Einheit, Zahl groß); in .ntg: big = halbe Breite, sonst Viertel
     return '<label class="ntl' + (big ? ' big' : '') + '" style="--nc:var(' + NCOL[k] + ')"><i>' + ic(NIC[k]) + '<small>' + (u || (k === 'k' ? 'kcal' : 'g')) + '</small></i>' +
       '<input id="' + id + '" type="number" inputmode="decimal" min="0" value="' + (v == null ? '' : v) + '" placeholder="0" aria-label="' + (k === 'k' ? 'Kalorien' : NSH[k]) + '"></label>';
   }
-  // Schnell: Einheiten der Menge (Werte gelten für die ganze Menge)
-  var QU = [['g', 'g'], ['ml', 'ml'], ['st', 'Stück'], ['po', 'Portion']];
+  // Schnell: Einheiten (Name, kurz, übliche Bezugsmenge)
+  var QU = [['g', 'g', 100], ['ml', 'ml', 100], ['st', 'Stück', 1], ['po', 'Portion', 1]];
+  function quDef(u) { return (QU.filter(function (x) { return x[0] === u; })[0] || QU[0])[2]; }
   function quickHtml(idx) {
-    // Schnell eintragen, ob es das Lebensmittel gibt oder nicht: Name (aus der Suche), Menge + Einheit, Nährwerte dieser Menge, Tag/Mahlzeit/Uhrzeit.
-    // Stern = als eigenes Lebensmittel merken, dann Kategorie wählen. Eintragen bleibt grau, bis kcal da sind (beim Merken auch Name, Menge, Kategorie)
-    var x = idx != null ? foodState().e[idx] : null, q = ui.fqd;
-    return '<div class="fqn"><input id="f-n" class="fnm" type="text" maxlength="30" placeholder="Name, z. B. Döner" value="' + esc(q.n) + '" aria-label="Name">' +
-      (x ? '' : '<button class="x" data-fqm="1" aria-pressed="' + !!ui.fqm + '" aria-label="Als eigenes Lebensmittel merken">' + ic('star') + '</button>') + '</div>' +
-      '<div class="fqa"><input id="f-a" class="fnm" type="number" inputmode="decimal" min="0" placeholder="Menge" value="' + (q.a || '') + '" aria-label="Menge">' +
-      '<div class="seg">' + QU.map(function (u) { return '<button data-fqu="' + u[0] + '" aria-pressed="' + (q.u === u[0]) + '">' + u[1] + '</button>'; }).join('') + '</div></div>' +
-      '<div id="fqc" class="fqc">' + fqcHtml() + '</div>' +
-      '<div class="ntg">' + NK.map(function (k) { return nTile('f-' + k, k, x ? x[k] : null, k === 'k' || k === 'p'); }).join('') + '</div>' + (ui.fplan ? '' : whenFor(idx)) +
-      '<div class="fpgo"><button class="btn primary big" data-fsave="1">' + ic('check') + (x ? 'Ändern' : ui.fplan ? 'Einplanen' : 'Eintragen') + '</button>' + (x ? '<button class="btn big fpdel" data-fdel="' + idx + '" aria-label="Eintrag löschen">' + ic('trash') + '</button>' : '') + '</div>' +
-      (x ? '' : '<div class="fsb fpx"><button class="btn ghost small" data-fown="new">' + ic('plus') + 'Lebensmittel je 100 g anlegen</button></div>');
+    // Schnell eintragen, ob es das Lebensmittel gibt oder nicht: oben „gegessen“ (± und wischbar), darunter Nährwerte je Bezugsmenge wie auf der Packung (je 100 g, je Stück …),
+    // darunter live, was eingetragen wird. Gibt es den Namen schon, ein Hinweis zum Übernehmen. Eintragen bleibt grau, bis kcal und Mengen da sind
+    var x = idx != null ? foodState().e[idx] : null, q = ui.fqd, u = QU.filter(function (y) { return y[0] === q.u; })[0];
+    return '<div id="fqh">' + fqhHtml() + '</div><input id="f-n" class="fnm" type="text" maxlength="30" placeholder="Name, z. B. Döner" value="' + esc(q.n) + '" aria-label="Name">' +
+      '<div class="fstep"><button class="sb" data-fqst="-1" aria-label="Weniger">' + ic('minus') + '</button><label><input id="f-e" type="number" inputmode="decimal" min="0" value="' + (q.a || '') + '" placeholder="0" aria-label="Gegessen"><span id="fqeu">' + u[1] + '</span></label><button class="sb" data-fqst="1" aria-label="Mehr">' + ic('plus') + '</button></div>' +
+      '<div class="fqa"><small>Nährwerte je</small><input id="f-r" class="fnm" type="number" inputmode="decimal" min="0" value="' + (q.r || '') + '" aria-label="Bezugsmenge">' +
+      '<div class="seg">' + QU.map(function (y) { return '<button data-fqu="' + y[0] + '" aria-pressed="' + (q.u === y[0]) + '">' + y[1] + '</button>'; }).join('') + '</div></div>' +
+      '<div class="ntg">' + NK.map(function (k) { return nTile('f-' + k, k, q.v ? q.v[k] : null, k === 'k' || k === 'p'); }).join('') + '</div><p class="fqr" id="fqr"></p>' + (ui.fplan ? '' : whenFor(idx)) +
+      '<div class="fpgo"><button class="btn primary big" data-fsave="1">' + ic('check') + (x ? 'Ändern' : ui.fplan ? 'Einplanen' : 'Eintragen') + '</button>' + (x ? '<button class="btn big fpdel" data-fdel="' + idx + '" aria-label="Eintrag löschen">' + ic('trash') + '</button>' : '') + '</div>';
   }
-  function fqcHtml() {
-    // Kategorie zum Merken (nur mit Stern): Icons der Such-Kategorien
-    return ui.fqm ? FCATS.map(function (c) { return '<button data-fqc="' + c[0] + '" style="--cc:' + (CCOL[c[0]] || CCOL.x) + '" aria-pressed="' + (ui.fqd.cat === c[0]) + '" aria-label="' + c[1] + '">' + ic(CATI[c[0]][0]) + '</button>'; }).join('') : '';
+  function fqhHtml() {
+    // Gibt es das schon (eigenes oder eingebautes Lebensmittel zum Namen)? Dann bequem übernehmen statt abtippen
+    var n = (ui.fqd.n || '').trim(), it = n.length >= 3 && ui.sheet && ui.sheet.idx == null ? ingMatch(n) : null; if (!it) return '';
+    return '<button class="fsi fqx" data-fqx="' + it.id + '" style="--cc:' + fTone(it.id, it.cat || 'u') + '"><i class="fsc">' + ic(fIco(it.id, it.cat || 'u')) + '</i><span><b>Gibt es schon: ' + esc(fName(it)) + '</b><small>' + Math.round(it.k) + ' kcal je 100 ' + (it.ml ? 'ml' : 'g') + ' · übernehmen</small></span>' + ic('chev') + '</button>';
   }
   function quickRead() {
-    // Felder lesen; fehlt Pflichtiges, ist Eintragen gesperrt (grau)
+    // Felder lesen: Werte je Bezugsmenge r, eingetragen wird gegessen a / r davon (q.t); fehlt Pflichtiges, ist Eintragen gesperrt (grau)
     var q = ui.fqd, v = function (k) { var e = $('f-' + k), f = e ? parseFloat(e.value) : NaN; return isFinite(f) && f >= 0 ? f : null; };
     if (!$('f-n')) return null;
-    q.n = $('f-n').value; q.a = (v('a') || 0) >= 0.1 ? v('a') : 0; q.v = {}; NK.forEach(function (k) { q.v[k] = v(k); });
-    q.ok = (q.v.k || 0) > 0 && q.v.k <= 20000 && (q.v.p || 0) <= 1000 && (!ui.fqm || (q.n.trim() && q.a > 0 && q.cat));
+    q.n = $('f-n').value; q.a = (v('e') || 0) >= 0.1 ? v('e') : 0; q.r = (v('r') || 0) >= 0.1 ? v('r') : 0; q.v = {}; q.t = {};
+    NK.forEach(function (k) { q.v[k] = v(k); q.t[k] = q.v[k] == null || !q.r ? null : q.v[k] * q.a / q.r; });
+    q.ok = (q.v.k || 0) > 0 && q.a > 0 && q.r > 0 && q.t.k <= 20000 && (q.t.p || 0) <= 1000;
     var b = document.querySelector('[data-fsave]'); if (b) b.classList.toggle('off', !q.ok);
+    var r = $('fqr'); if (r) r.innerHTML = q.ok ? ic('check') + Math.round(q.t.k) + ' kcal · ' + fN(q.t.p || 0) + ' g Protein' : !(q.v.k > 0) ? 'kcal eintragen' : 'Mengen eintragen';
+    var h = $('fqh'); if (h) h.innerHTML = fqhHtml();
     return q;
   }
-  function openQuick(idx, name) {
-    var x = idx != null ? foodState().e[idx] : null;
-    ui.fqd = { n: x ? x.n : name || '', a: x && x.qa ? x.qa[0] : '', u: x && x.qa ? x.qa[1] : 'g', cat: '' };
-    ui.sheet = { food: true, idx: idx }; if (!ui.fplan) ui.fday = dayIdx(Date.now()) - fSd(); ui.fqm = false;
-    sheetOpen(shHead('bolt', idx != null ? 'Eintrag ändern' : ui.fplan ? 'Schnell einplanen' : 'Schnell eintragen', 'Werte für die ganze Menge') + quickHtml(idx), true);
+  function openQuick(idx, name, from) {
+    // Ändern: die Werte des Eintrags gelten für die eingetragene Menge (ohne Menge als 1 Portion)
+    var x = idx != null ? foodState().e[idx] : null, qa = x && x.qa ? x.qa : x ? [1, 'po'] : null, v = {};
+    if (x) NK.forEach(function (k) { v[k] = x[k] != null ? x[k] : null; });
+    ui.fqd = { n: x ? x.n : name || '', a: qa ? qa[0] : 100, r: qa ? qa[0] : 100, u: qa ? qa[1] : 'g', v: x ? v : null };
+    ui.sheet = { food: true, idx: idx, from: from || null }; if (!ui.fplan) ui.fday = dayIdx(Date.now()) - fSd();
+    sheetOpen(shHead('bolt', idx != null ? 'Eintrag ändern' : ui.fplan ? 'Schnell einplanen' : 'Schnell eintragen', 'Gegessen, Werte laut Packung', !!from) + quickHtml(idx), true);
     quickRead();
+  }
+  function qsvHtml() {
+    // Nach dem Schnell-Eintrag merken: Kategorie mit Namen, dann Unterart; Speichern legt das Lebensmittel an und verbindet den Eintrag
+    var s = ui.qsv, subs = FSUB.filter(function (q) { return q[0] === s.cat; });
+    return shHead('star', 'Als Lebensmittel merken', s.n) + '<div class="fcl qsc">' + FCATS.map(function (c) { return '<button data-qsc="' + c[0] + '" style="--cc:' + (CCOL[c[0]] || CCOL.x) + '" aria-pressed="' + (s.cat === c[0]) + '"><i class="fsc">' + ic(CATI[c[0]][0]) + '</i><b>' + c[1] + '</b></button>'; }).join('') + '</div>' +
+      (subs.length ? '<div class="fsbb qss">' + subs.map(function (q) { return '<button data-qss="' + q[1] + '" style="--cc:' + sbTone(q) + '" aria-pressed="' + (s.sb === q[1]) + '">' + ic(q[3]) + esc(q[2]) + '</button>'; }).join('') + '</div>' : '') +
+      '<button class="btn primary big' + (s.cat ? '' : ' off') + '" data-qsok="1">' + ic('check') + 'Merken</button>';
   }
   function openOwn(id, bc, dr) {
     // dr: Entwurf aus dem Formular (zurück vom Barcode-Scan)
@@ -407,17 +421,20 @@
     dd.st = (dd.st || []).concat(r.st); if (!dd.n && r.n) dd.n = r.n; if (r.por) dd.por = Math.min(50, r.por);
     var miss = r.ing.filter(function (q) { return !q.i; }).length;
     ui.sheet = { dishEdit: true }; sheetOpen(dishEditHtml(), true);
-    toast(r.ing.length + ' Zutaten, ' + r.st.length + ' Schritte' + (miss ? ' · ' + miss + ' ohne Werte' : ''), miss ? 'bolt' : 'check', true);
+    toast(r.ing.length + ' Zutaten, ' + r.st.length + ' Schritte' + (miss ? ' · ' + miss + ' ohne Werte (zählen 0 kcal)' : ''), miss ? 'bolt' : 'check');
   }
   function saveDish() {
-    readDraft(); var dd = ui.dd, ing = dd.ing.filter(function (q) { return (+q.a || 0) > 0 && ((+q.k || 0) > 0 || (+q.p || 0) > 0); });
+    // Zutaten mit Namen bleiben auch ohne Menge oder Werte (Gewürze, „nach Belieben“, zählen 0 kcal); mindestens eine braucht Menge und Werte
+    readDraft(); var dd = ui.dd, val = function (q) { return (+q.a || 0) > 0 && ((+q.k || 0) > 0 || (+q.p || 0) > 0); }, ing = dd.ing.filter(function (q) { return val(q) || String(q.n || '').trim(); });
     if (!dd.n.trim()) { toast('Name fehlt', 'bolt'); return; }
-    if (!ing.length) { toast('Zutat mit Menge eintragen', 'bolt'); return; }
+    if (!ing.some(val)) { toast('Zutat mit Menge eintragen', 'bolt'); return; }
     var st = foodState(), o = { id: dd.id || 'd' + Date.now().toString(36), n: dd.n.trim().slice(0, 30), por: dd.por, ing: ing.map(function (q) {
       var r = { n: (q.n || '').trim().slice(0, 30), a: +q.a || 0, k: +q.k || 0, p: +q.p || 0 }; ['f', 'c', 'fb', 'su'].forEach(function (k) { if (q[k] != null) r[k] = +q[k] || 0; }); if (q.i) r.i = q.i; return r;
     }) };
     if (dd.m && dd.m.length) o.m = dd.m.slice();
     var sts = (dd.st || []).map(function (s) { return s.trim(); }).filter(Boolean); if (sts.length) o.st = sts;
     var ix = st.d.map(function (y) { return y.id; }).indexOf(o.id); if (ix >= 0) st.d[ix] = o; else st.d.push(o);
-    persist(); ui.fresh = false; render(); toast('Gericht gespeichert', 'check'); openDishes();
+    persist(); ui.fresh = false; render(); toast('Gericht gespeichert', 'check'); dishBack(o.id);
   }
+  // Aus dem Editor zurück in die Übersicht des Gerichts (wie aus dem Gerichte-Menü geöffnet); neues, nicht gespeichertes Gericht → Gerichte-Menü
+  function dishBack(id) { if (!id || !fDish(id)) { openDishes(); return; } openPick(id); ui.sheet.from = 'd'; $('sheet').innerHTML = fpickHtml(); }

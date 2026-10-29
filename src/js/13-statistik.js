@@ -153,7 +153,9 @@
   }
   function setHtml() {
     var h = '<div class="grab"></div><div class="sh-h"><span class="gi">' + ic('gear') + '</span><div class="nm"><b>Einstellungen</b><small>Timer und Daten</small></div><button class="x" data-sheet-close aria-label="Schließen">' + ic('close') + '</button></div>';
-    h += '<section class="sec"><h2 class="sec-h">' + ic('clock') + 'Einstellungen</h2><button class="sw" data-act="resttoggle" aria-pressed="' + restOn + '"><span>Pausen-Timer</span><i></i></button></section>';
+    h += '<section class="sec"><h2 class="sec-h">' + ic('clock') + 'Einstellungen</h2><button class="sw" data-act="resttoggle" aria-pressed="' + restOn + '"><span>Pausen-Timer</span><i></i></button>' +
+      // Aussehen: Auto folgt dem iPhone, sonst fest hell oder dunkel
+      '<div class="seg thm">' + [['', 'Auto', 'sun'], ['light', 'Hell', 'sun'], ['dark', 'Dunkel', 'moon']].map(function (o) { return '<button data-thm="' + o[0] + '" aria-pressed="' + (themeGet() === o[0]) + '">' + (o[0] ? ic(o[2]) : '') + o[1] + '</button>'; }).join('') + '</div></section>';
     h += '<section class="sec"><h2 class="sec-h">' + ic('data') + 'Daten<small>' + (store === 'cloud' ? 'im Artifact gespeichert' : 'nur in diesem Browser') + '</small></h2>';
     if (sync) h += '<p class="hint">' + esc(sync) + '</p>';
     if (!window.claude && !DEMO) { var lb = 0; try { lb = +localStorage.getItem('zenit.lastBackup') || 0; } catch (e) { /* egal */ } h += '<p class="hint">' + (lb ? 'Letztes Backup: ' + (daysSince(lb) === 0 ? 'heute' : 'vor ' + daysSince(lb) + ' Tagen') : 'Noch kein Backup. Sichere die Datei in „Dateien“ oder iCloud.') + '</p>'; }
@@ -163,6 +165,13 @@
       [['mid', 'Seit 5 Monaten'], ['gold', 'Goldene Serie'], ['broken', 'Serie gerissen'], ['fresh', 'Neu dabei'], ['empty', 'Leer']].map(function (o) { return '<button class="btn small" data-demo="' + o[0] + '">' + o[1] + '</button>'; }).join('') +
       (DEMO ? '<button class="btn small primary" data-demo="off">Demo beenden</button>' : '') + '</div>';
     return h + '</section>' + (window.ZENIT_V ? '<p class="hint mono">Version ' + esc(window.ZENIT_V) + '</p>' : '');
+  }
+  function themeGet() { try { return localStorage.getItem('zenit.theme') || ''; } catch (e) { return ''; } }
+  function themeSet(v) {
+    // data-theme an <html> schaltet die Token (00-basis.css); Statusleiste (theme-color) zieht mit
+    try { if (v) localStorage.setItem('zenit.theme', v); else localStorage.removeItem('zenit.theme'); } catch (e) { /* egal */ }
+    var r = document.documentElement; if (v) r.dataset.theme = v; else r.removeAttribute('data-theme');
+    var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(r).getPropertyValue('--bg').trim() || '#0d0f0c';
   }
   function openSettings() { ui.sheet = { settings: true }; $('sheet').className = 'sheet tall'; $('sheet').innerHTML = setHtml(); $('shade').classList.add('open'); $('sheet').classList.add('open'); }
 

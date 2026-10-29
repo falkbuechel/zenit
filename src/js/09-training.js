@@ -222,14 +222,16 @@
 
   // ---------- Rückmeldung
   var toastT;
-  function toast(msg, icon, withUndo) {
+  function toast(msg, icon, withUndo, act) {
     var t = $('toast');
     // Essen: Rückgängig steht als Knopf in der Kopfzeile, daher keine Einblendung (außer Erfolgen wie dem Proteinziel); bei offenem Fenster ist der Knopf verdeckt, dann bleibt sie
     if (withUndo && ui.tab === 'food' && !ui.sheet && ui.undo && ui.undo.charAt(0) === '#') { if (icon !== 'trophy') return; withUndo = false; }
-    t.innerHTML = ic(icon || 'bolt') + '<span>' + esc(msg) + '</span>' + (withUndo ? '<button class="tundo" data-undo aria-label="Rückgängig">' + ic('undo') + '</button>' : '');
-    t.className = 'toast on' + (withUndo ? ' act' : '');
+    // act: [data-Attribut, Icon, Beschriftung] = ein Knopf für einen Folgeschritt (z. B. Schnell-Eintrag merken)
+    t.innerHTML = ic(icon || 'bolt') + '<span>' + esc(msg) + '</span>' + (withUndo ? '<button class="tundo" data-undo aria-label="Rückgängig">' + ic('undo') + '</button>' : '') +
+      (act ? '<button class="tundo tact" data-' + act[0] + '="1" aria-label="' + esc(act[2]) + '">' + ic(act[1]) + '</button>' : '');
+    t.className = 'toast on' + (withUndo || act ? ' act' : '');
     clearTimeout(toastT);
-    toastT = setTimeout(function () { t.className = 'toast'; }, withUndo ? 5500 : 2800);
+    toastT = setTimeout(function () { t.className = 'toast'; }, withUndo || act ? 6000 : 2800);
   }
   function floaty(txt, rect) {
     var el = document.createElement('span');

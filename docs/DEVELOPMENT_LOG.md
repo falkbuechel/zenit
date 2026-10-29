@@ -11,7 +11,7 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Nicht committet: nichts.
 
 ## Offen / Ideen
-- iPhone-Test offen (29.10. spät): Gericht-Chips + Schritte-Griff, Rezept einfügen (mit echtem Rezepttext, z. B. Chefkoch), Schnell aus der Suche (Menge/Einheit, Merken + Kategorie), Icons in der Suche, helles Design der Fokus-Karte.
+- iPhone-Test offen (29.10. spät): Schritte-Fade + Gleiten (Tippen/Wischen), Rezept einfügen mit echtem Text, Schnell (Gegessen/je, Merken über die Rückmeldung), Unterarten + Icons in der Suche, Hell-Schalter.
 - Bekannt: aus Schnell gemerktes Stück-Lebensmittel zeigt in „Lebensmittel bearbeiten“ die Stück-Werte als „je 100 g“ (Rechengröße 100 = 1 Stück) – bei Bedarf eigene Stück-Ansicht.
 - Entscheidung offen: Link-Import für Rezepte über einen fremden CORS-Dienst (genauer, aber Abhängigkeit)?
 - Training in Planen: Tageskarte (Woche, Kacheln) evtl. noch kompakter; Trainingsplan-Fenster (`openDays`) noch im alten Kachelstil.
@@ -34,6 +34,12 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-29 – Schritte als Fade, Schnell mit Gegessen + Bezugsmenge, Merken danach, Unterarten in der Suche, Hell-Schalter
+- Gericht: Schritte ohne Icon; zu = Anfang blendet aus (Maske), Tippen oder nach oben Wischen (`fstpTog`, touchmove > 28 px) öffnet, Fensterhöhe gleitet (Höhe messen → `height`-Übergang .48 s, danach frei; `sheetOpen` setzt `style.height` zurück). Ohne Schritte nur Hinweis „Keine Schritte hinterlegt“. Speichern und Zurück aus dem Editor → Übersicht des Gerichts (`dishBack`). Zutaten ohne Menge/Werte bleiben (Gewürze, „n. B.“).
+- Schnell: Zeile über den Treffern, warm abgehoben; X/Zurück geht zur Suche (`from: 's'`). Fenster: gegessen (±, wischbar `#f-e`), „Nährwerte je“ Menge + Einheit, Kacheln, Ergebniszeile (`#fqr`). Hinweis „Gibt es schon“ (`ingMatch`) übernimmt das Lebensmittel. Stern und „je 100 g anlegen“ entfernt; Merken erst nach dem Eintragen per Knopf in der Rückmeldung (nur wenn `libFind` nichts findet) → Fenster mit Kategorien (Namen) + Unterarten.
+- Suche: `FSUB` (46 Unterarten, ~22 neue Icons), Kategorie-Ansicht mit wischbarer Unterart-Leiste (`data-fsub`) und Abschnittsköpfen, Farbton je Unterart (`sbTone`), auch in Gericht-Chips.
+- Einstellungen: Aussehen Auto/Hell/Dunkel.
 
 ### 2026-10-29 – Gericht-Schritte und Rezept einfügen, Schnell aus der Suche, Icons je Lebensmittel, Fokus-Karte hell
 - Gericht (Zutaten-Knopf): Zutaten als Chips zu zweit in Kategoriefarbe mit Icon, Nährwerte der Portion in einer Zeile, darunter Griff „Schritte“ (`data-fstp`, `ui.fstpo`): Fenster ganz auf (`.sheet.tall.full`), nummerierte Schritte. Stift zum Bearbeiten im Kopf (nur aus dem Gerichte-Menü).

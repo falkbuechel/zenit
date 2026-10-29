@@ -16,16 +16,16 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Nicht committet: nichts.
 
 ## Offen / Ideen
-- iPhone-Test offen (29.10. spät): siehe Stand oben.
+- iPhone-Test offen (30.10.): siehe Stand oben.
 - Bekannt: aus Schnell gemerktes Stück-Lebensmittel zeigt in „Lebensmittel bearbeiten“ die Stück-Werte als „je 100 g“ (Rechengröße 100 = 1 Stück) – bei Bedarf eigene Stück-Ansicht.
 - Bekannt: „Gibt es schon“ im Schnell-Fenster → Zurück führt zur Suche, nicht zurück ins Schnell-Formular (Eingaben weg).
 - Entscheidung offen: Link-Import für Rezepte über einen fremden CORS-Dienst (genauer, aber Abhängigkeit)?
 - Kalender senkrecht wischen: kein preventDefault, Seite scrollt mit (Aufklappen nur, wenn die Seite oben steht).
-- Training in Planen: Tageskarte (Woche, Kacheln) evtl. noch kompakter; Trainingsplan-Fenster (`openDays`) noch im alten Kachelstil.
+- Training in Planen: Editor (Übungsliste) noch nicht im Kachelstil der Woche geprüft; Woche „7 Trainings · 0 frei“ ohne Hinweis auf fehlende Ruhetage.
 - Menüleiste: ernst und modern, aber mit etwas mehr Charakter – weiter abstimmen.
 - Woche ziehen ändert den aktiven Plan auch rückwirkend (vergangene Kalendersymbole/Serie können sich verschieben) – ggf. Änderung ab heute als neuer Planstand.
-- Einkaufsliste: braucht ein sauberes Aufräumen in Funktion, Design und UX (erst wenn Planen fertig ist); Preis eventuell geschätzt.
-- Planen Schritt 4: Vorschläge „fehlt noch“ (reine Logik: Protein je kcal, passt in den Rest, oft gegessen, vermutlich da).
+- Einkaufsliste: Preise nur grob (Kategorie €/kg + ~30 Lebensmittel); eigene Preise je Lebensmittel optional.
+- Nächste Runde: Tag/Woche Essen kopieren („wie letzte Woche“) + Planen Schritt 4: Vorschläge „fehlt noch“ (Protein je kcal, passt in den Rest, oft gegessen).
 - Planen Schritt 5: Event (kcal reservieren) ordentlich umsetzen; Cheatday ohne Sonderregel, Urlaub/Krank bleiben.
 - Planen Schritt 6: „Was habe ich“ nur abgeleitet (abgehakt = könnte da sein), keine Pflege.
 - iPhone-Test offen: Pause-Vollbild in der Arena, Skilltree (Linien, Leuchten, Info-Leiste)

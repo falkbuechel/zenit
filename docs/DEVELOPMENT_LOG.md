@@ -10,7 +10,8 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Offene Entscheidung: Skilltree – Dead Hang/Hollow nach außen rücken (kürzere Linien zu Backlever/Frontlever)?
 
 ## Offen / Ideen
-- Einkauf: Preis eventuell geschätzt.
+- Einkaufsliste: braucht ein sauberes Aufräumen in Funktion, Design und UX (erst wenn Planen fertig ist); Preis eventuell geschätzt.
+- Fenster (Gerichte, Suche, Nährwertinfo) optisch an Essen angleichen; Training in Planen kompakter; Menüleiste mit mehr Charakter; Tages-/Mahlzeit-Vorlagen beim Essen planen (Varianten vom 29.10.).
 - Planen Schritt 4: Vorschläge „fehlt noch“ (reine Logik: Protein je kcal, passt in den Rest, oft gegessen, vermutlich da).
 - Planen Schritt 5: Event (kcal reservieren) ordentlich umsetzen; Cheatday ohne Sonderregel, Urlaub/Krank bleiben.
 - Planen Schritt 6: „Was habe ich“ nur abgeleitet (abgehakt = könnte da sein), keine Pflege.
@@ -27,6 +28,17 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-29 – Feinschliff Essen/Planen 2
+- Bilanz: Licht unten kühl blau (`--g-cardio`), oben fein warm (`--gold`).
+- Wasser-Balken in der Bilanz ist wieder ein Regler (`.fbt.wsl`, bis zum Tagesziel, `data-noswipe` gegen Tab-Wischen); genauer über die Zahl rechts.
+- Gerichte: Halten nur 0,17 s, Glas in der Kartenfarbe (rohes `--dc` vom Elternteil). Im Mengen-Fenster eines Gerichts die Zutaten für die gewählte Portion (`fingHtml`, `#fing`).
+- Vorschläge: ohne Verlauf nur 4; folgen dem Finger in jede Richtung, scharf erst ab 44 px nach oben (`fsw.armd`).
+- Ziehen: Vorschau = blasser echter Eintrag; Ziel-Markierung als feiner Ring + Schein in der Mahlzeitfarbe. Offene Mahlzeit klappt bei anderen Fenstern (`sheetOpen`, außer Menge eines Eintrags) und beim Tab-Wechsel zu.
+- Tagesleiste: vergangen leicht neutral (`.past`), heute warm gold, künftig kühl blau. „Wie gestern“ näher am Rückgängig-Knopf.
+- Kalender: „Heute“-Knopf weg; Urlaub/Krank rahmen die Tage ein (Fläche + feine Kontur, `.off.os/.oe`, Umbruch am Wochenrand) statt Balken; Tauschpaare in gleicher Farbe (`SWC`, Ring um die Zahl). Fehler: Tausch-Symbol hatte die Klasse `sw`, die in Heute schon ein Schalter ist (große Box überlappte) → `tsw`. Monat klappt nach Antippen eines Tages zu.
+- „Zusätzlich“: Auswahl zum An-/Abwählen, beliebig viele, Fenster bleibt offen (vorher entfernte ein zweites Tippen die Zugefügten).
+- Essen planen: geplanten Eintrag antippen = Menge ändern (`data-ple`, `ui.plEdit`, Knopf „Ändern“).
 
 ### 2026-10-29 – Planen: Woche zum Ziehen, Kalender-Ereignisse; Menüleiste; Gerichte ziehen
 - Menüleiste hell und flach: aktives Symbol in Akzent, gleitender Punkt darunter (`placeInd`), keine erhöhte Mitte mehr.

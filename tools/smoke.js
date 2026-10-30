@@ -7,7 +7,7 @@ const path = require('path'), fs = require('fs'), { pathToFileURL } = require('u
 const ARGS = process.argv.slice(2), SHOTS = ARGS.includes('--shots');
 const URL_ = ARGS.filter(a => !a.startsWith('--'))[0] || pathToFileURL(path.join(__dirname, '..', 'dist', 'index.html')).href;
 const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
-const SCEN = ['mid', 'gold', 'broken', 'fresh', 'empty'];
+const SCEN = ['mid', 'empty'];
 const TABS = ['heute', 'tage', 'food', 'fort', 'profil'];
 // Je Tab: Schalter, von denen jeweils jeder Wert einmal angeklickt wird (alle harmlos, nichts löscht)
 const TOGGLES = ['[data-xr]', '[data-xm]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-pft]', '[data-pdb]', '[data-fsd]', '[data-fwa]', '[data-hsel]', '[data-col]', '[data-cf2]', '[data-cg]', '[data-pstat]', '[data-srng]', '[data-sall]', '[data-kmon]', '[data-lcf]', '[data-msel]', '[data-fstk]'];

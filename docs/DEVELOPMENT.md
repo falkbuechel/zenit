@@ -31,7 +31,7 @@ tools/
   hook-guard.py       Claude-Hook vor Befehl/Schreiben (Sicherheitsnetz im Bypass-Modus): sperrt Force-Push, verwerfende Git-Befehle, rekursives Löschen außer dist/tools/out/node_modules/Scratchpad, Systemeingriffe, Netz-Skripte, Installationen, Schreiben außerhalb Projekt/Scratchpad/~/.claude und in dist/ oder .git/
   hook-check.py       Claude-Hook nach Edit/Write an src/ oder public/: check.py --fast
   hook-context.py     Claude-Hook am Antwortende: Hinweis „/handoff, dann /clear“ ab 200k Kontext
-  smoke.js            Rauchtest: 5 Demo-Szenarien x 5 Tabs + Ansichten/Dialoge, Screenshots -> tools/out/
+  smoke.js            Rauchtest: 2 Demo-Szenarien (Voll, Leer) x 5 Tabs + Ansichten/Dialoge, Screenshots -> tools/out/
   compare.js          Pixelvergleich vieler Ansichten (hell/dunkel) gegen einen Git-Stand: beim Aufräumen muss alles gleich bleiben
   make-icons.js       Icons aus SVG -> public/ (Playwright)
 .github/workflows/pages.yml   Push auf main -> check + smoke -> GitHub Pages
@@ -51,7 +51,7 @@ docs/                 DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 - iOS-Datenrisiko: Daten nur in localStorage der Homescreen-App. App vom Homescreen löschen = Daten weg; Safari-Tab ist ein getrennter Speicher (kann nach 7 Tagen ohne Nutzung gelöscht werden). Schutz: Backup (Erinnerung im Profil).
 
 ## 3. Daten
-- localStorage `stufenbuch.v1`: `{u, logs, plan, food}`. Demo-Modus nutzt `stufenbuch.demo` (Profil > Zahnrad > Testdaten, 5 Szenarien, `demoData(kind)`).
+- localStorage `stufenbuch.v1`: `{u, logs, plan, food}`. Demo-Modus nutzt `stufenbuch.demo` (Profil > Zahnrad > Testdaten: Voll `mid` mit allen Datenformen, Leer `empty`; `demoData(kind)`).
 - logs: `{t, e, s:[…], k?}`; `e` = Übungs-id, `'warm'` oder `'sess'`.
 - food: `{g, e, d, o, w, pr, m, wa, pl, sh, tp}`
   - `tp: [{id: 't…', n, k: 'm'|'d', mk?, it: [{i, g, mk?}]}]` – Vorlagen zum Essen planen: Mahlzeit (`k 'm'`, Mahlzeit `mk`) oder Tag (`k 'd'`, je Eintrag `mk`); Einträge = Quelle `i` + Menge `g`. Speichern im Fenster „Mahlzeit planen“ bzw. Kachel „Tag“ in Planen › Essen › Vorlagen (`tplSave`), einplanen per Antippen/Ziehen (`tplAdd`). (`wa`: Wasser je Tag `{Tagesindex: ml}`; `sh`: Einkauf abgehakt `{Schlüssel: Tagesindex}`, Schlüssel = Lebensmittel-id oder `n:`Name, `cleanFood` vergisst nach 14 Tagen)

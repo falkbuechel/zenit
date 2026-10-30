@@ -2,6 +2,10 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-30 – Demo: nur noch Voll + Leer
+- `demoData`: „Voll“ (`mid`) enthält jetzt alle Datenformen: 6 Trainingstage (Lauf alle 2 Wochen, einmaliger Test), 2 Wochenpläne mit Zeitstrahl, Urlaub (vorbei/kommend), Krank, Ausnahmen (ausgesetzt, Tausch, ersetzt + zusätzlich), Gerichte mit Schritten/fester Mahlzeit/Gewürz, eigenes Lebensmittel mit Marke/Barcode, Schnell-Eintrag, Geplantes für 7 Tage, Vorlagen (Mahlzeit, Tag), Wasser, Einkauf abgehakt. „Leer“ wie bisher. Gold/Gerissen/Neu entfallen (Smoke: 2 Szenarien).
+- Fehler aus der letzten Runde behoben: `.pmn` war mit den alten Planen-Mahlzeitkacheln gelöscht, wird aber von der Woche-Kachel genutzt (Text lief über).
+
 ## 2026-10-30 – UX-Review Essen/Planen, Aufräumen
 - Neu: Skill `ux-review` (Heuristiken + Kernaufgaben + Konsistenz), Messung `node tools/ux-scan.js` (unslop-Audit `tools/unslop-audit.js`, Tippziele, Schriftgrößen, Screenshots `tools/out/ux-*`). Quellen in `.claude/skills/README.md`.
 - Routine „Damir unslop-Skill prüfen“ (täglich 9:00, Cloud, nur Websuche): meldet, sobald Damir Sokolovskys eigener Skill erscheint → dann mit Emil-Skills ein Design-Setup bauen.

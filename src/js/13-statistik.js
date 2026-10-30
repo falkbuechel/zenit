@@ -162,7 +162,7 @@
     h += '<div class="row"><button class="btn small" data-act="export">Backup</button><button class="btn small" data-act="import">Einlesen</button><button class="btn small' + (ui.del === 'all' ? ' danger' : '') + '" data-act="wipe">' + (ui.del === 'all' ? 'Wirklich alles löschen?' : 'Alles löschen') + '</button></div>';
     if (ui.io !== '') h += '<div style="display:grid;gap:8px;margin-top:10px"><textarea id="io" spellcheck="false" aria-label="Backup-Daten">' + esc(ui.io === ' ' ? '' : ui.io) + '</textarea><div class="row"><button class="btn small primary" data-act="doimport">Einlesen und zusammenführen</button><button class="btn small ghost" data-act="ioclose">Schließen</button></div></div>';
     h += '</section><section class="sec"><h2 class="sec-h">' + ic('play') + 'Testdaten<small>' + (DEMO ? 'Demo aktiv, echte Daten sicher' : 'getrennt von deinen Daten') + '</small></h2><div class="row demo-r">' +
-      [['mid', 'Seit 5 Monaten'], ['gold', 'Goldene Serie'], ['broken', 'Serie gerissen'], ['fresh', 'Neu dabei'], ['empty', 'Leer']].map(function (o) { return '<button class="btn small" data-demo="' + o[0] + '">' + o[1] + '</button>'; }).join('') +
+      [['mid', 'Voll'], ['empty', 'Leer']].map(function (o) { return '<button class="btn small" data-demo="' + o[0] + '">' + o[1] + '</button>'; }).join('') +
       (DEMO ? '<button class="btn small primary" data-demo="off">Demo beenden</button>' : '') + '</div>';
     return h + '</section>' + (window.ZENIT_V ? '<p class="hint mono">Version ' + esc(window.ZENIT_V) + '</p>' : '');
   }

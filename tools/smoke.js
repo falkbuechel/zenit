@@ -1,10 +1,10 @@
-// Rauchtest gegen dist/: jedes Demo-Szenario laden, alle Tabs, Ansichten und Dialoge durchklicken.
+// Rauchtest gegen dist/: jedes Demo-Szenario laden, alle Tabs, Ansichten und Dialoge durchklicken. --wide: als Laptop (1440×900, Leiste links, zwei Bereiche, Seitenfeld)
 // Schlägt fehl bei jedem JS-Fehler. Aufruf: node tools/smoke.js [url] [--shots]  (vorher python tools/check.py)
 // Szenarien laufen parallel (eigener Kontext = eigener Speicher), Animationen sind aus, daher kaum Wartezeiten.
 // Screenshots der Tabs -> tools/out/, mit --shots zusätzlich Dialoge, Planer, Editor.
 const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs'), { pathToFileURL } = require('url');
-const ARGS = process.argv.slice(2), SHOTS = ARGS.includes('--shots');
+const ARGS = process.argv.slice(2), SHOTS = ARGS.includes('--shots'), VP = ARGS.includes('--wide') ? { width: 1440, height: 900 } : { width: 390, height: 844 };
 const URL_ = ARGS.filter(a => !a.startsWith('--'))[0] || pathToFileURL(path.join(__dirname, '..', 'dist', 'index.html')).href;
 const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const SCEN = ['mid', 'empty'];
@@ -14,7 +14,7 @@ const TOGGLES = ['[data-xr]', '[data-xm]', '[data-cday]', '[data-cnav]', '[data-
 const NOANIM = '*, *::before, *::after { animation: none !important; transition: none !important; }';
 
 async function scenario(b, sc, errs) {
-  const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, hasTouch: true, reducedMotion: 'reduce' });
+  const ctx = await b.newContext({ viewport: VP, deviceScaleFactor: 1, hasTouch: true, reducedMotion: 'reduce' });
   await ctx.addInitScript(css => { document.addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = css; document.head.appendChild(s); }); }, NOANIM);
   // Open Food Facts nicht wirklich fragen (Suche ab 3 Zeichen): leere Antwort, Test bleibt offline und gleich
   await ctx.route(/openfoodfacts\.org/, r => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: '{"products":[],"status":0}' }));

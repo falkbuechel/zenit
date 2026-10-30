@@ -15,7 +15,7 @@
     sMode = ''; if (e.touches.length !== 1) return;
     var t = e.touches[0], tg = e.target; sx = t.clientX; sy = t.clientY; st0 = Date.now(); sEl = tg; sheetDy = 0;
     if (tg.closest('#tabs')) sMode = 'bar';
-    else if (tg.closest('#sheet .grab, #sheet .sh-h')) { sMode = 'sheet'; if (shMorph.busy) { var mh = $('sheet').style.minHeight; shMorphStop(); $('sheet').style.minHeight = mh; } }
+    else if (tg.closest('#sheet .grab, #sheet .sh-h') && document.documentElement.dataset.sz !== 'e') { sMode = 'sheet'; if (shMorph.busy) { var mh = $('sheet').style.minHeight; shMorphStop(); $('sheet').style.minHeight = mh; } }
     else if (!ui.sheet && tg.closest('.pcal2')) { sMode = 'cal'; calLock = ''; }
     else if (!ui.sheet && tg.closest('.fds')) { sMode = 'fds'; calLock = ''; }
     else if (!ui.sheet && tg.closest('#view') && !tg.closest('input,textarea,select,.wsp,[data-noswipe]')) sMode = 'page';

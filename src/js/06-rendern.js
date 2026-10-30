@@ -67,7 +67,22 @@
     ind.style.transform = 'translate(' + x + 'px,' + y + 'px)'; ind.style.setProperty('--bc', a.style.getPropertyValue('--bc'));
     if (!ind.classList.contains('on')) requestAnimationFrame(function () { requestAnimationFrame(function () { ind.classList.add('on'); }); });
   }
-  window.addEventListener('resize', placeInd);
+  // Größenklasse nach Breite in iPhone-13-Maß (Pixel / Skalierung, siehe html in 00-basis.css), wie Apple/Material:
+  // c kompakt < 600, m mittel < 840 (Leiste links), e breit (zusätzlich zwei Bereiche, Fenster als Seitenfeld). Setzt data-sz an <html> für 80-breit.css
+  function szSet() {
+    var h = document.documentElement, w = innerWidth / (parseFloat(getComputedStyle(h).fontSize) / 16 || 1), z = w < 600 ? 'c' : w < 840 ? 'm' : 'e';
+    if (h.dataset.sz === z) return false; h.dataset.sz = z; return true;
+  }
+  // Breit: Abschnitte des Tabs auf zwei Bereiche verteilen, links Übersicht, rechts das Gewählte (PANER). Ohne Treffer bleibt eine Fläche (80-breit.css)
+  var PANER = { tage: '.pday', food: '.fact2, .ftl', fort: '.mchips, .minf', profil: '.pstg' };
+  function paneSplit(v) {
+    var q = PANER[ui.tab], ks = [].slice.call(v.children);
+    if (document.documentElement.dataset.sz !== 'e' || !q || !ks.some(function (el) { return el.matches(q); })) return;
+    var l = document.createElement('div'), r = document.createElement('div'); l.className = r.className = 'pn';
+    ks.forEach(function (el) { if (!el.matches('.seg')) (el.matches(q) ? r : l).appendChild(el); });
+    v.appendChild(l); v.appendChild(r); v.classList.add('pns');
+  }
+  window.addEventListener('resize', function () { if (szSet()) render(); placeInd(); });
   window.addEventListener('pageshow', placeInd);
   if (window.visualViewport) visualViewport.addEventListener('resize', placeInd);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeInd);
@@ -86,9 +101,11 @@
     placeInd();
     var NT = notices(d, now); ui.nts = NT; badges(NT);
     var v = $('view');
-    v.className = 'page gut' + (fresh ? ' fresh' : '') + (ui.sw ? (ui.sw > 0 ? ' sw-l' : ' sw-r') : '');
+    szSet();
+    v.className = 'page gut tv-' + ui.tab + (fresh ? ' fresh' : '') + (ui.sw ? (ui.sw > 0 ? ' sw-l' : ' sw-r') : '');
     ui.sw = 0;
     v.innerHTML = ui.tab === 'heute' ? viewToday(d, now) : ui.tab === 'tage' ? viewPlan(d, now) : ui.tab === 'food' ? viewFood(d, now) : ui.tab === 'fort' ? viewProgress(d, now) : viewProfile(d, now);
+    paneSplit(v);
     document.body.classList.toggle('arm', ui.tab === 'heute' && !!ui.arena);
     stApply();
     if (ui.tab === 'fort' && (ui.col || 'ka') === 'ka') { var un0 = EX.filter(function (e) { return d.unlocked[e.id]; }).map(function (e) { return e.id; }); if (!seenUx || un0.length !== seenUx.length) { saveSeen(un0); badges(notices(d, now)); } }

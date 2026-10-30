@@ -1,0 +1,28 @@
+/* Breite Geräte (iPad, Laptop): Größenklasse data-sz an <html> (szSet in 06-rendern.js, Breite in iPhone-13-Maß).
+   m = Leiste links statt unten. e = zusätzlich zwei Bereiche (paneSplit: .pns > .pn) und Fenster als Seitenfeld rechts. Kompakt (c) = alles wie am iPhone */
+
+/* Leiste links: Symbole senkrecht in der Mitte, Inhalt rückt nach rechts, unten wird Platz frei */
+:root:is([data-sz="m"], [data-sz="e"]) #app { padding-left: calc(76px + env(safe-area-inset-left, 0px)); }
+:root:is([data-sz="m"], [data-sz="e"]) .tabs { top: 0; right: auto; width: calc(76px + env(safe-area-inset-left, 0px)); border-top: 0; border-right: 1px solid color-mix(in srgb, var(--line) 70%, transparent); }
+:root:is([data-sz="m"], [data-sz="e"]) .tabs-in { height: 100%; max-width: none; flex-direction: column; justify-content: center; gap: 6px; padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
+:root:is([data-sz="m"], [data-sz="e"]) .tabs button { flex: none; width: 100%; height: 60px; }
+:root:is([data-sz="m"], [data-sz="e"]) .page { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+:root:is([data-sz="m"], [data-sz="e"]) .toast { left: calc(50% + 38px); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+:root:is([data-sz="m"], [data-sz="e"]) .jump { left: calc(50% + 38px); bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
+:root:is([data-sz="m"], [data-sz="e"]) .rest { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); padding-left: calc(92px + env(safe-area-inset-left, 0px)); }
+
+/* Zwei Bereiche: links Übersicht, rechts das Gewählte; Umschalter (.seg) über beiden. Tabs ohne Aufteilung: Heute schmal in der Mitte, Sammlung als Raster */
+:root[data-sz="e"] .gut { max-width: 1000px; }
+:root[data-sz="e"] #view:is(.pns, .tv-fort) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; align-items: start; }
+/* Sammlung ohne Aufteilung: nur die Kartengruppen (.cgr) nebeneinander, alles andere (Umschalter, Filter, Skilltree, Kartendetail) über beide */
+:root[data-sz="e"] #view.pns > .seg, :root[data-sz="e"] #view.tv-fort:not(.pns) > :not(.cgr) { grid-column: 1 / -1; }
+:root[data-sz="e"] .pn { min-width: 0; }
+:root[data-sz="e"] #view.tv-heute { max-width: 680px; }
+
+/* Fenster als Seitenfeld: volle Höhe rechts, Inhalt links bleibt sichtbar, kein Ziehen (15-start.js) */
+:root[data-sz="e"] .sheet { top: 0; left: auto; width: 420px; max-width: 45vw; height: auto; max-height: none; margin: 0; align-content: start; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; border-bottom: 1px solid var(--line); border-right: 0; border-radius: var(--r20) 0 0 var(--r20); padding-top: calc(16px + env(safe-area-inset-top, 0px)); transform: translateX(104%); }
+:root[data-sz="e"] .sheet.open, :root[data-sz="e"] .sheet.open.peek { transform: none; }
+:root[data-sz="e"] .sheet > .grab { display: none; }
+:root[data-sz="e"] .shade.open { opacity: .35; }
+/* Gericht ziehen (.peek): Ziele links liegen frei, Schatten fast weg */
+:root[data-sz="e"] .shade.open.peek { opacity: .12; }

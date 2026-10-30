@@ -2,6 +2,15 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-30 Breite Geräte (iPad quer, Laptop)
+- Größenklassen wie Apple/Material, gemessen in iPhone-13-Maß (Pixel / Skalierung): `c` < 600, `m` < 840, `e` ab 840 (`szSet`, `data-sz` an `<html>`, Wechsel beim Drehen/Fenstergröße → `render`).
+- Falk gewählt: Leiste links (m, e), feste Zweiteilung (e: Plan Kalender+Workouts | Tag; Essen Bilanz+Mahlzeiten | Suche+Kacheln; Muskeln Figur | Liste; Profil Kopf | Statistik; Karten als 2er-Raster, Skilltree volle Breite, Heute schmal mittig), Fenster als Seitenfeld rechts (volle Höhe, kein Ziehen).
+- Umsetzung: `paneSplit` verschiebt nach dem Rendern die Abschnitte in zwei `.pn` (`PANER` je Tab); CSS in `src/css/80-breit.css`.
+- iPad hochkant bleibt kompakt (1,4×, wie großes iPhone). Laptop 1440×900: Plan und Essen ohne Scrollen.
+- Prüfung: `fit.js` mit iPad hochkant/quer + Laptop (0 Funde), `smoke.js --wide` fehlerfrei. Echte Touch-Laptops ungetestet (nur Nachbildung).
+- Aufräumen: `viewDetail` (12-sammlung.js) wird nie erreicht, `ui.sel` wird nirgends gesetzt (Karten öffnen per `data-cardo` im Fenster).
+- Offen: Heute breit noch einspaltig (kommt mit dem Heute-Stil); Seitenfeld rechts deckt den rechten Bereich ab, Breite fest 420 statt exakt der Bereich.
+
 ## 2026-10-30 Gleiches Bild auf allen iPhones
 - Bezug iPhone 13 (390 breit). CSS bleibt in px; `build.py` (`rem()`) rechnet beim Bauen px → rem, `html` font-size = 100vw/24.375, begrenzt auf 320–430 Breite (Faktor 0,82–1,10). Bleiben Pixel: ≤ 2px (Linien), `@media`-Bedingungen, `PX` groß geschrieben (Konvention wie postcss-pxtorem).
 - Breiter als 430 (iPad, Rechner): wächst weiter, solange die Höhe reicht (`min(100vw/24.375, 100lvh/52.75, 24PX)`, = 390×844 eingepasst, max 1,5×). iPad hochkant 1,4×, iPad Pro 1,5×, iPad quer/Rechner 1,1×. Dadurch auch 16 Pro Max voll 1,128× statt 1,10×.

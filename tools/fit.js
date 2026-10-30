@@ -1,4 +1,4 @@
-// Gerätegrößen: jede Ansicht auf allen aktuellen iPhone-Größen messen und mit dem iPhone 13 (390×844, Bezug) vergleichen.
+// Gerätegrößen: jede Ansicht auf allen aktuellen iPhone-Größen, iPad und Laptop messen und mit dem iPhone 13 (390×844, Bezug) vergleichen.
 // Gemeldet wird nur, was auf einem anderen Gerät schlechter ist als auf dem Bezug: ragt aus dem Bild, wird abgeschnitten,
 // bricht in mehr Zeilen um oder überlappt anderen Text. Aufruf: python tools/check.py, dann node tools/fit.js [--all]
 // --all: auch Funde, die schon auf dem Bezug bestehen. Exit 1 bei Funden.
@@ -7,7 +7,9 @@ const path = require('path'), { pathToFileURL } = require('url');
 const ALL = process.argv.includes('--all');
 const URL_ = pathToFileURL(path.join(__dirname, '..', 'dist', 'index.html')).href;
 const REF = 'iPhone 13';
-const DEV = [['iPhone 13', 390, 844], ['iPhone SE', 375, 667], ['iPhone 13 mini', 375, 812], ['iPhone 15', 393, 852], ['iPhone 16 Pro', 402, 874], ['iPhone 13 Pro Max', 428, 926], ['iPhone 15 Plus', 430, 932], ['iPhone 16 Pro Max', 440, 956]];
+const DEV = [['iPhone 13', 390, 844], ['iPhone SE', 375, 667], ['iPhone 13 mini', 375, 812], ['iPhone 15', 393, 852], ['iPhone 16 Pro', 402, 874], ['iPhone 13 Pro Max', 428, 926], ['iPhone 15 Plus', 430, 932], ['iPhone 16 Pro Max', 440, 956],
+  // breit (80-breit.css): iPad hochkant bleibt kompakt (1,4×), iPad quer und Laptop mit Leiste links und zwei Bereichen
+  ['iPad hochkant', 820, 1180], ['iPad quer', 1180, 820], ['Laptop', 1440, 900]];
 const FIX = `(() => { const T = new Date('2026-10-21T14:00:00').getTime(), D = Date;
   globalThis.Date = class extends D { constructor(...a) { super(...(a.length ? a : [T])); } static now() { return T; } }; Math.random = () => 0.5; })();`;
 const NOANIM = '*, *::before, *::after { animation: none !important; transition: none !important; }';

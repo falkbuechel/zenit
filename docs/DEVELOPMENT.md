@@ -10,6 +10,7 @@ src/                  Quelle; build.py setzt sie zu EINER Seite zusammen
   css/                nach Bereichen, Reihenfolge = Dateiname
     00-basis.css      Tokens (Farben, Schriften), Grundlayout, iOS-Eigenheiten, Kopf, Navigation, Sheet, Rückmeldung, gemeinsame Bausteine, Level-up
     10-heute.css 20-plan.css 30-essen.css 40-sammlung.css 50-profil.css
+    80-breit.css      breite Geräte nach Größenklasse data-sz (Leiste links, zwei Bereiche, Fenster als Seitenfeld)
     90-medien.css     globale Media-Queries, müssen zuletzt kommen
   js/                 Abschnitte EINER Funktion (gemeinsamer Gültigkeitsbereich), laufen in Dateinamen-Reihenfolge
     01-daten.js       Übungen (EX), Gruppen, Konstanten        09-training.js  Satz-Fenster, Stoppuhr, Gesamtuhr, Pause, Rückmeldung/Effekte
@@ -31,8 +32,8 @@ tools/
   hook-guard.py       Claude-Hook vor Befehl/Schreiben (Sicherheitsnetz im Bypass-Modus): sperrt Force-Push, verwerfende Git-Befehle, rekursives Löschen außer dist/tools/out/node_modules/Scratchpad, Systemeingriffe, Netz-Skripte, Installationen, Schreiben außerhalb Projekt/Scratchpad/~/.claude und in dist/ oder .git/
   hook-check.py       Claude-Hook nach Edit/Write an src/ oder public/: check.py --fast
   hook-context.py     Claude-Hook am Antwortende: Hinweis „/handoff, dann /clear“ ab 200k Kontext
-  smoke.js            Rauchtest: 2 Demo-Szenarien (Voll, Leer) x 5 Tabs + Ansichten/Dialoge, Screenshots -> tools/out/
-  fit.js              Gerätegrößen: alle Ansichten auf 8 iPhone-Größen, meldet, was schlechter ist als auf dem iPhone 13 (raus, abgeschnitten, Umbruch, Überlappen)
+  smoke.js            Rauchtest: 2 Demo-Szenarien (Voll, Leer) x 5 Tabs + Ansichten/Dialoge, Screenshots -> tools/out/; --wide als Laptop
+  fit.js              Gerätegrößen: alle Ansichten auf 8 iPhone-Größen + iPad hochkant/quer + Laptop, meldet, was schlechter ist als auf dem iPhone 13 (raus, abgeschnitten, Umbruch, Überlappen)
   compare.js          Pixelvergleich vieler Ansichten (hell/dunkel) gegen einen Git-Stand: beim Aufräumen muss alles gleich bleiben
   make-icons.js       Icons aus SVG -> public/ (Playwright)
 .github/workflows/pages.yml   Push auf main -> check + smoke -> GitHub Pages
@@ -47,6 +48,7 @@ docs/                 DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 - CSS: Regel in die Datei des Bereichs; Media-Queries direkt hinter ihre Grundregeln in derselben Datei, globale in `90-medien.css`.
 - Hosting: GitHub Pages https://falkbuechel.github.io/zenit/ (öffentliches Repo). Adresse nicht wechseln, localStorage hängt an ihr.
 - Skalierung: Bezug iPhone 13 (390 breit). CSS in px schreiben, `build.py` macht daraus rem; `html` font-size wächst mit der Breite (320–430), breiter nur so weit die Höhe reicht (max 1,5×). Pixel bleiben: ≤ 2px, `@media`, `PX` groß. Größen aus JS (Inline-Styles) in rem (Wert/16) oder gemessen.
+- Breite Geräte: `szSet` (06-rendern.js) setzt `data-sz` an `<html>` nach Breite in iPhone-13-Maß: `c` < 600 wie iPhone, `m` < 840 Leiste links, `e` zusätzlich zwei Bereiche (`paneSplit`: Abschnitte aus `PANER` je Tab nach rechts in `.pn`, Rest links; Sammlung als Raster, Heute schmal) und Fenster als Seitenfeld rechts. iPad hochkant bleibt `c` (1,4×). Neuer Abschnitt, der rechts stehen soll: Selektor in `PANER`. Nicht über Position im `#view` suchen (`v.children`), breit liegt alles in `.pn`.
 - Aussehen: Einstellungen › Auto/Hell/Dunkel (`themeSet`, localStorage `zenit.theme`, setzt `data-theme` an `<html>` und `theme-color`).
 - Version: `build.py` setzt `window.ZENIT_V` (Commit · Datum, `+` = lokale ungesicherte Änderungen), sichtbar unten im Zahnrad-Menü.
 - Service-Worker-Cache heißt `zenit-v2` (`public/sw.js`). Netz zuerst, daher kein Versions-Bump für neue Builds nötig; nur erhöhen, wenn sich die Dateiliste `FILES` ändert.

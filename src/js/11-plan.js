@@ -122,29 +122,33 @@
     // Kein Titel (wie Essen): der Bereich ergibt sich aus der unteren Leiste
     var h = '';
 
-    // Kalender: Woche Mo–So, 3 oder 5 Wochen (Woche des Tags in der Mitte). Je Tag wie die Essen-Leiste drei feste Zeilen, nichts liegt übereinander:
-    // Wochentag (nur in der Woche) | Zahl mit Essen-Ring (dayFood) | EIN Zeichen. Zeichen: trainiert = Haken, Tage in Folge als Kette, volle Woche
-    // (alles Geplante erledigt) gold; sonst Urlaub/Krank, Tausch (Farbe des Paars), ausgesetzt, geplantes Training (+n, verpasst blass)
+    // Kalender: Woche Mo–So, 3 oder 5 Wochen (Woche des Tags in der Mitte). Bedeutung über Füllung und Kontur statt Zeichen, nichts liegt übereinander:
+    // Kachel gefüllt = Serie (Trainingstage mit höchstens einem Ruhetag dazwischen, Urlaub/Krank zählt nicht; volle Woche gold), Kontur um die Kacheln = Urlaub/Krank;
+    // Kreis voll = an dem Tag trainiert, hell in Workout-Farbe = geplant (+n mehrere), Ring außen = Essen (dayFood), Punkt oben rechts = Tausch (Farbe des Paars)
     var q = new Date(a * 864e5), w0 = a - wdOf(a), from = w0 - [0, 7, 14][ui.cm || 0], to = from + [7, 21, 35][ui.cm || 0] - 1;
     var title = q.toLocaleDateString('de-DE', { month: 'long', timeZone: 'UTC' });
     var rows = '', swp = ui.pmode === 'swap', pairs = [];
     for (k = from; k <= to; k++) { var fw = ovF(k).w; if (fw !== undefined && pairs.indexOf(Math.min(k, fw)) < 0) pairs.push(Math.min(k, fw)); }
     pairs.sort(function (x, y) { return x - y; });
     function offK(x) { return (P.off || []).filter(function (o) { return o.a <= x && o.b >= x; }).map(function (o) { return o.k; }).filter(function (v, i, r) { return r.indexOf(v) === i; }).sort().join(' '); }
+    var band = {}, tds = [], i0, j0;
+    for (k = from - 14; k <= to; k++) if (d.byDay[k]) tds.push(k);
+    for (i0 = 0; i0 < tds.length; i0 = j0 + 1) {
+      j0 = i0; while (j0 + 1 < tds.length && tds[j0 + 1] - tds[j0] - offCount(tds[j0] + 1, tds[j0 + 1] - 1) <= 2) j0++;
+      if (j0 > i0) for (k = tds[i0]; k <= tds[j0]; k++) band[k] = 1;
+    }
     for (var r0 = from; r0 <= to; r0 += 7) {
       var cells = '', due = 0, hit = 0;
       for (k = r0; k < r0 + 7; k++) if (schedFor(k).length) { due++; if (d.byDay[k]) hit++; }
       for (k = r0; k < r0 + 7; k++) {
-        var ds = schedFor(k), tr = d.byDay[k], fk = ovF(k), pk = swp ? (swapOk(sd, k, today) ? ' pick' : ' nop') : '', sg = '', sk = '', sv = '', dk = offK(k);
-        var pi = fk.w !== undefined ? pairs.indexOf(Math.min(k, fk.w)) : -1;
-        if (tr) { sk = ' dn' + (due && hit === due ? ' gold' : '') + (k > r0 && d.byDay[k - 1] ? ' jl' : '') + (k < r0 + 6 && d.byDay[k + 1] ? ' jr' : ''); sg = '<i>' + ic('check') + '</i>'; }
-        // Urlaub/Krank: Zeichen an jedem Tag, am ersten kräftig
-        else if (dk) { sk = ' off' + (k === r0 || offK(k - 1) !== dk ? '' : ' mid'); sv = '--oc:var(' + (dk.indexOf('sick') >= 0 ? '--danger' : '--gold') + ')'; sg = ic(dk === 'vac' ? 'beach' : 'sick'); }
-        else if (pi >= 0) { sk = ' pkx'; sv = '--sc:var(' + ['--g-cardio', '--g-core', '--g-pull', '--g-kh'][pi % 4] + ')'; sg = ic('swap'); }
-        else if (fk.s) sg = ic('skip');
-        else if (ds.length) { sk = ' pl' + (k < today ? ' ms' : ''); sv = '--pc:var(' + PCOL[ds[0].c] + ')'; sg = ic(dIcon(ds[0])) + (ds.length > 1 && k >= today ? '<small>+' + (ds.length - 1) + '</small>' : ''); }
-        cells += '<button class="pc2' + pk + (k === today ? ' today' : k < today ? ' past' : ' fut') + (k === sd ? ' sel' : '') + '" data-cday="' + k + '" aria-label="' + fmtDayL(k) + (tr ? ', trainiert' : '') + (dk === 'vac' ? ', Urlaub' : dk ? ', krank' : '') + '">' +
-          (ui.cm ? '' : '<small>' + WDN[wdOf(k)].slice(0, 2) + '</small>') + '<b>' + dayFood(k, today) + new Date(k * 864e5).getUTCDate() + '</b><i class="pci' + sk + '"' + (sv ? ' style="' + sv + '"' : '') + '>' + sg + '</i></button>';
+        var ds = schedFor(k), tr = d.byDay[k], fk = ovF(k), pk = swp ? (swapOk(sd, k, today) ? ' pick' : ' nop') : '', dk = offK(k);
+        var pi = fk.w !== undefined ? pairs.indexOf(Math.min(k, fk.w)) : -1, pl = !tr && !fk.s && ds.length && k >= today;
+        var sb = band[k] ? ' pser' + (due && hit === due ? ' gold' : '') + (k > r0 && band[k - 1] ? ' pjl' : '') + (k < r0 + 6 && band[k + 1] ? ' pjr' : '') : '';
+        var so = dk ? ' off ' + dk + (k === r0 || offK(k - 1) !== dk ? ' os' : '') + (k === r0 + 6 || offK(k + 1) !== dk ? ' oe' : '') : '';
+        cells += '<button class="pc2' + pk + (k === today ? ' today' : k < today ? ' past' : ' fut') + (k === sd ? ' sel' : '') + sb + so + '" data-cday="' + k + '"' + (pl ? ' style="--pc:var(' + PCOL[ds[0].c] + ')"' : '') +
+          ' aria-label="' + fmtDayL(k) + (tr ? ', trainiert' : pl ? ', ' + esc(ds.map(function (x) { return x.n; }).join(', ')) : '') + (dk === 'vac' ? ', Urlaub' : dk ? ', krank' : '') + '">' +
+          (ui.cm ? '' : '<small>' + WDN[wdOf(k)].slice(0, 2) + '</small>') + '<b' + (tr ? ' class="dn"' : pl ? ' class="pl"' : '') + '>' + dayFood(k, today) + new Date(k * 864e5).getUTCDate() + '</b>' +
+          (pi >= 0 ? '<i class="pcx" style="--sc:var(' + ['--g-cardio', '--g-core', '--g-pull', '--g-kh'][pi % 4] + ')"></i>' : '') + (pl && ds.length > 1 ? '<i class="pcn">+' + (ds.length - 1) + '</i>' : '') + '</button>';
       }
       rows += '<div class="pc2-r"><div class="pc2-c">' + cells + '</div></div>';
     }

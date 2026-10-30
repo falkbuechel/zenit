@@ -2,6 +2,12 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-31 Geplant ohne Striche, Kalender über Füllung und Kontur
+- Falk: gestrichelt/gestreift passt nicht zum Stil. Geplant jetzt überall gedämpfte Fläche + feine Kontur (`.fmc.fpm`, `.fplr`), im Balken eine Schicht HINTER dem Gegessenen von 0 bis gegessen+geplant (`.fbt` isolation, `.gh` z-index -1), sonst Lücke; Ring geplant durchgehend gedämpft (`.dr.pl`).
+- Kalender (Falks Mischung aus Kacheln und Kreisen, je eigene Bedeutung): Kachel gefüllt = Serie (`band`: Trainingstage mit ≤ 1 Ruhetag dazwischen, Urlaub/Krank zählt nicht, wie `streakCalc`; volle Woche gold), Kontur um Kacheln = Urlaub/Krank (kombinierbar), Kreis voll = trainiert, hell in Workout-Farbe = geplant, Ring = Essen, Punkt oben rechts = Tausch, +n = mehrere. Zeichenzeile `.pci` entfällt, Zellen niedriger.
+- Fehler: Klassen `.stk`/`.sl`/`.sr` gab es schon (Sammlung) → Zellen lagen übereinander; jetzt `.pser`, `.pjl`, `.pjr`.
+- `fit.js` meldet breit „überlappt“ für weggescrollte Knöpfe der Kategorie-Leiste in Planen › Essen (abgeschnitten, sichtbar ok) – Fehlalarm.
+
 ## 2026-10-31 Planen neu angeordnet (wie Essen, aber eigenes Leitelement)
 - Falk: eigenmächtige Stil-Versuche (Heute A/B/C, harte Kanten) waren nicht gut; er will leiten. Farben bleiben, es ging um Anordnung und Verwendung. Essen ist im Kern fertig (Restpunkte unter Offen).
 - Weg mit Entwürfen (Screenshots aus der echten App, `#view` ersetzt): erst B „wie Essen“ gewählt, Kalender soll bleiben, aber ohne Überlappungen und im Essen-Stil; Unterscheidung durch Anordnung, nicht durch Farbe.

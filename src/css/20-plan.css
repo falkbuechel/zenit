@@ -48,12 +48,12 @@
 .pc2-w, .pc2-c { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .pc2-w span { padding: 6px 0 4px; text-align: center; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
 /* Feste Zeilen (Wochentag, Zahl, Symbole, Haken): jede Zelle und jede Woche gleich hoch, nichts springt beim Wischen */
-.pc2 { position: relative; display: grid; grid-template-rows: 12px 30px 17px; justify-items: center; align-items: center; gap: 3px; padding: 4px 0; border: 0; border-radius: var(--r12); background: transparent; color: var(--ink); font: inherit; -webkit-user-select: none; user-select: none; transition: background-color .16s var(--ease); }
+.pc2 { position: relative; display: grid; grid-template-rows: 12px 34px; justify-items: center; align-items: center; gap: 3px; padding: 4px 0; border: 0; border-radius: var(--r12); background: transparent; color: var(--ink); font: inherit; -webkit-user-select: none; user-select: none; transition: background-color .16s var(--ease); }
 .pc2:active { background: var(--s2); }
 .pc2 b { position: relative; z-index: 0; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; font-family: var(--f-mono); font-size: 14px; font-weight: 600; }
 /* Wochenleiste: Wochentag über der Zahl (der Monat hat dafür die Kopfzeile) */
 .pc2 > small { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink3); }
-.pc2.today > small { color: var(--ink); }
+.pc2.today > small { color: color-mix(in srgb, var(--gold) 80%, var(--ink)); font-weight: 800; }
 /* Essen-Ring um die Tageszahl: Anteil vom kcal-Ziel, grün im Rahmen, rot drüber */
 /* Essen in der Fokus-Karte: vier Mahlzeiten im Raster (wie Gegessen) */
 .pml { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
@@ -61,7 +61,7 @@
 /* Mahlzeit-Kachel im Tag: Name der Mahlzeit oben, die ersten Einträge (zwei Zeilen), kcal unten; leer = Plus mittig */
 .pml .fmc:disabled { opacity: .45; }
 /* Wochenleiste: Meldungen neben der Zahl statt über dem Wochentag */
-.pcal2.mon .pc2 { grid-template-rows: 30px 17px; }
+.pcal2.mon .pc2 { grid-template-rows: 34px; }
 /* Kopf rechts: Serie (Flamme + Tage), Glocke */
 .pc2-h > .pd-n { order: 1; }
 .pc2-s { display: inline-flex; align-items: center; gap: 3px; margin-right: 6px; font: 800 13px var(--f-mono); color: var(--flame); }
@@ -69,9 +69,9 @@
 .pc2-ev.on { color: var(--ac); }
 .pc2.past b { color: var(--ink3); }
 /* Heute wie in Essen: dezente warme Pille, Zahl fett (der kcal-Ring bleibt frei) */
-.pc2.today { background: color-mix(in srgb, var(--gold) 13%, transparent); }
+.pc2.today:not(.pser) { background: color-mix(in srgb, var(--gold) 13%, transparent); }
 .pc2.today b { color: var(--ink); font-weight: 800; }
-.pc2.sel:not(.today) { background: var(--s2); }
+.pc2.sel { box-shadow: inset 0 0 0 1.5px var(--ink2); }
 /* Künftige Tage kühl wie in der Essen-Leiste */
 .pc2.fut { --cool: color-mix(in srgb, var(--g-cardio) 70%, var(--ink3)); }
 .pc2.fut > small, .pc2.fut b { color: var(--cool); }
@@ -79,21 +79,24 @@
 @keyframes pcin-r { from { opacity: 0; transform: translateX(28px); } }
 @keyframes pcin-l { from { opacity: 0; transform: translateX(-28px); } }
 @keyframes pcin-m { from { opacity: 0; transform: translateY(-6px); } }
-/* Zeichen unter der Zahl (eine feste Zeile): trainiert = Haken im Punkt, Tage in Folge als Kette, volle Woche gold; Urlaub/Krank, Tausch, geplant */
-.pci { --bc: var(--ac); position: relative; display: grid; place-items: center; width: 100%; height: 16px; color: var(--ink3); font-style: normal; }
-.pci.gold { --bc: var(--gold); }
-.pci .ic { position: relative; z-index: 1; width: 15px; height: 15px; }
-.pci small { position: absolute; left: calc(50% + 8px); font: 700 9px var(--f-mono); color: var(--ink3); }
-.pci > i { position: relative; z-index: 1; display: grid; place-items: center; width: 15px; height: 15px; border-radius: 50%; background: var(--bc); color: #fff; }
-.pci > i .ic { width: 10px; height: 10px; stroke-width: 3; }
-.pci.jl::before, .pci.jr::after { content: ""; position: absolute; top: 50%; height: 2px; margin-top: -1px; background: var(--bc); }
-.pci.jl::before { left: 0; right: 50%; }
-.pci.jr::after { left: 50%; right: 0; }
-.pci.pl .ic { color: var(--pc); }
-.pci.ms .ic { opacity: .3; }
-.pci.off .ic { color: var(--oc); }
-.pci.off.mid .ic { opacity: .45; }
-.pci.pkx .ic { color: var(--sc); }
+/* Kreis: voll = trainiert, hell in der Workout-Farbe = geplant; der Essen-Ring (.dr) bleibt außen */
+.pc2 b.dn { background: var(--ac); color: #fff; font-weight: 800; }
+.pc2 b.pl { background: color-mix(in srgb, var(--pc) 22%, transparent); color: var(--ink); }
+.pcx { position: absolute; top: 4px; right: 5px; width: 7px; height: 7px; border-radius: 50%; background: var(--sc); }
+.pcn { position: absolute; top: 3px; right: 3px; font: 800 9px/1 var(--f-mono); font-style: normal; color: var(--ink3); }
+/* Kachel: Serie als gefüllte Fläche, Tage der Serie laufen zu einem Band zusammen; volle Woche gold */
+.pc2.pser { --bc: var(--ac); background: color-mix(in srgb, var(--bc) 16%, transparent); }
+.pc2.pser.gold { --bc: var(--gold); }
+.pc2.pjl { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.pc2.pjr { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+/* Urlaub/Krank: Kontur um die Tage (Gold/Rot), rund nur an Anfang und Ende je Zeile; lässt sich mit der Serie kombinieren */
+.pc2.off { --oc: var(--gold); }
+.pc2.off.sick { --oc: var(--danger); }
+.pc2.off::before { content: ""; position: absolute; inset: 1px 0; border: 1.5px solid color-mix(in srgb, var(--oc) 65%, transparent); border-right: 0; border-left: 0; border-radius: inherit; pointer-events: none; }
+.pc2.off:not(.os) { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.pc2.off:not(.oe) { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.pc2.off.os::before { border-left: 1.5px solid color-mix(in srgb, var(--oc) 65%, transparent); }
+.pc2.off.oe::before { border-right: 1.5px solid color-mix(in srgb, var(--oc) 65%, transparent); }
 .pc2-g { touch-action: pan-y; will-change: transform; }
 .pc2-r + .pc2-r { margin-top: 2px; }
 .pc2-n { display: flex; align-items: center; gap: 6px; margin: 6px 4px 0; font-size: 12px; font-weight: 700; color: var(--flame); }

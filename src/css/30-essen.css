@@ -126,7 +126,7 @@
 .fbk > .fbt { grid-column: 1 / -1; height: 12px; }
 .fbk.hit > em, .fbk.hit > em b { color: var(--ac); }
 .fbk.over > em, .fbk.over > em b { color: var(--danger); }
-.fbt { position: relative; display: block; height: 8px; border-radius: var(--r99); background: var(--s3); overflow: hidden; }
+.fbt { position: relative; isolation: isolate; display: block; height: 8px; border-radius: var(--r99); background: var(--s3); overflow: hidden; }
 .fbt > i { position: relative; display: block; overflow: hidden; width: calc(var(--p, 0) * 100%); height: 100%; border-radius: inherit; background: var(--fc, var(--g-push)); transition: width .6s var(--ease); }
 /* Verlauf: blass am Anfang, volle Farbe in der Mitte, dunkel und satt an der Spitze */
 .fbt > i::after, .wsl > i::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, rgba(255, 255, 255, .3), rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, .28)); }
@@ -148,8 +148,8 @@
 .fmb.fb { --fc: var(--g-pull); }
 .fmb.su { --fc: var(--g-core); }
 /* Zu viel: roter Balken füllt sich über der eigenen Farbe neu (gleicher Verlauf und Glanz), leuchtende Spitze; beim Überschreiten füllt er sich sichtbar nach */
-/* Geplant, noch nicht gegessen: schraffiert hinter der Füllung */
-.fbt > i.gh { position: absolute; top: 0; left: calc(var(--a) * 100%); width: calc(var(--w) * 100%); background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--fc) 55%, transparent) 0 3px, color-mix(in srgb, var(--fc) 18%, transparent) 3px 6px); border-radius: 0; }
+/* Geplant, noch nicht gegessen: gedämpfte Schicht hinter der Füllung (von 0 bis gegessen + geplant), so entsteht keine Lücke */
+.fbt > i.gh { position: absolute; top: 0; left: 0; z-index: -1; width: calc((var(--a) + var(--w)) * 100%); border-radius: inherit; background: color-mix(in srgb, var(--fc) 30%, var(--s3)); }
 .fbt > i.gh::before, .fbt > i.gh::after { display: none; }
 .fbt > i.ov { position: absolute; top: 0; left: 0; z-index: 1; width: calc(var(--o) * 100%); background: var(--danger); box-shadow: 0 0 8px 1px color-mix(in srgb, var(--danger) 70%, transparent); }
 .fa-bad i.ov { animation: ovfill .8s var(--ease) both; }
@@ -307,8 +307,9 @@
   background: linear-gradient(180deg, color-mix(in srgb, var(--mc) 9%, transparent), color-mix(in srgb, var(--mc) 3%, transparent)); box-shadow: inset 0 2px 4px color-mix(in srgb, #000 10%, transparent);
 }
 .fmc.fme .ic { width: 20px; height: 20px; opacity: .8; }
-/* Geplant (Umriss in der Mahlzeitfarbe, ohne Fläche): in Essen heute antippen = gegessen, in Planen = planen */
-.fmc.fpm, .fcpi.fpm { border: 1.5px dashed color-mix(in srgb, var(--mc) 70%, transparent); background: color-mix(in srgb, var(--mc) 6%, transparent); box-shadow: none; }
+/* Geplant (gedämpfte Fläche und feine Kontur in der Mahlzeitfarbe): in Essen heute antippen = gegessen, in Planen = planen */
+.fmc.fpm, .fcpi.fpm { border: 1px solid color-mix(in srgb, var(--mc) 40%, var(--line)); background: color-mix(in srgb, var(--mc) 9%, var(--s1)); box-shadow: none; }
+.fmc.fpm > * { opacity: .78; }
 .fmc.fpm small { font-family: var(--f-mono); font-size: 10px; color: var(--ink3); }
 .fmc.fpm .fmt .ic + .ic { color: var(--ink3); }
 .fcpi.fpm b .ic { color: var(--mc); }
@@ -327,7 +328,7 @@
 .fplh em .ic { width: 15px; height: 15px; }
 .fplh > small { margin-left: auto; font-size: 12px; color: var(--ink3); }
 .fpl { display: grid; gap: 6px; }
-.fplr { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 8px; padding: 6px 6px 6px 8px; border: 1.5px dashed color-mix(in srgb, var(--mc) 60%, transparent); border-radius: var(--r12); }
+.fplr { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 8px; padding: 6px 6px 6px 8px; border: 1px solid color-mix(in srgb, var(--mc) 40%, var(--line)); border-radius: var(--r12); background: color-mix(in srgb, var(--mc) 7%, var(--s1)); }
 .fplr span { display: grid; min-width: 0; }
 .fplr span[data-ple] { cursor: pointer; }
 /* Vorlage speichern: eigene Zeile mit Stapel-Symbol (Vorlage = mehrere Teile, kein Gericht); offen = Name + Speichern; danach Bestätigung */

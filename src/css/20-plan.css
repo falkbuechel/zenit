@@ -364,3 +364,8 @@ button.pdb-h:active { background: var(--s2); }
 .pup b { display: block; font-size: 14px; }
 .pup small { display: block; font-size: 12px; color: var(--ink3); }
 .pup .chv { width: 14px; height: 14px; color: var(--ink3); }
+/* Versuch (data-exp): Planen im Stil der Heute-Bühne, harte Kanten, versetzte Schatten, Stufenfarbe als Akzent */
+[data-exp] .pday { border: 2px solid var(--ink); border-radius: 16px; box-shadow: 4px 4px 0 var(--ink); }
+[data-exp] .pdb { border: 2px solid var(--ink); border-left: 6px solid var(--pc, var(--ink)); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); }
+[data-exp] .pft { border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+[data-exp] .cd { border-radius: 6px; }

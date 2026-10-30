@@ -355,3 +355,14 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 .ar-dots button.d { background: var(--ac); }
 .ar-dots button.c { width: 24px; border-radius: 5px; background: var(--ink); }
 .arm-v .cpg { justify-content: center; margin: 0; }
+/* Variante B Arena: Bühne immer dunkel, Neon in Stufenfarbe, Boden-Spot */
+[data-exp="b"] .hm-bg { border-color: var(--pt); background: radial-gradient(60% 30% at 50% 92%, color-mix(in srgb, var(--pt) 45%, transparent), transparent 70%), radial-gradient(120% 90% at 50% 0%, #1d2320, #0b0d0b 75%); box-shadow: 0 0 0 2px #0b0d0b, 0 0 28px -6px var(--pt); }
+[data-exp="b"] .hm-bg svg { opacity: .25; }
+[data-exp="b"] .hm-b > i:not(.dg-r) { border-color: var(--pt); background: #121512; color: #e9ede7; box-shadow: 0 0 12px -4px var(--pt); }
+[data-exp="b"] .hm-b small { color: #c9d1cb; }
+[data-exp="b"] .hm-go { background: var(--pt); color: #0b0d0b; }
+/* Variante C Poster: schräge Streifen, riesiger Stufenname hinter dem Gorilla */
+[data-exp="c"] .hm-bg { background: repeating-linear-gradient(-35deg, color-mix(in srgb, var(--pt) 18%, var(--s1)) 0 14px, var(--s1) 14px 28px); transform: rotate(-1.2deg); }
+[data-exp="c"] .hm-bg::before { content: attr(data-tag); top: auto; bottom: 18%; color: color-mix(in srgb, var(--pt) 60%, var(--ink)); font: 900 64px/1 var(--f-stencil); letter-spacing: 0; opacity: .35; text-transform: uppercase; }
+[data-exp="c"] .hm-say { border-radius: 4px; background: var(--pt); color: #0b0d0b; transform: translateX(-50%) rotate(3deg); }
+[data-exp="c"] .hm-plan b { font-size: 44px; transform: skewX(-8deg); }

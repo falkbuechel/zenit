@@ -8,6 +8,8 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## 2026-10-30 Versuch Neu/Alt, Maskottchen-Gorilla
 - Falk: freie Hand für Heute/Plan, alles hinter Schalter; später gemeinsam auswählen, was bleibt. Name „Zenit“ und Farben dürfen sich noch ändern.
+- Varianten statt Neu/Alt: Zahnrad › Alt | A Labor | B Arena (dunkle Bühne, Neon in Stufenfarbe) | C Poster (Streifen, schräg, Stufenname groß); `EXPV` + `data-exp="a|b|c"`. Planen (alle Varianten): Tageskarte, Blöcke, Filter mit harter Kante und versetztem Schatten.
+- Blender: Subdivision nach dem Remesh gegen die Treppen war viel zu langsam (> 10 Min), wieder raus; besser Voxel feiner oder Normalen per Datatransfer.
 - Schalter: Zahnrad › Neu | Alt (`EXP`, `expSet`, localStorage `zenit.exp`, `data-exp` an `<html>`). Neue CSS-Regeln mit `[data-exp]`-Präfix, Daten unverändert.
 - Heute (Neu): Bühne als Trainings-Labor (Raster, harte Kante, versetzte Schatten), Knöpfe mit Druck-Schatten, Fortschritt gestreift, Partner-Spruch über dem Maskottchen (`MSAY`, `mSay`: go/run/done/risk/rest, wechselt täglich).
 - `gorilla(mood, tr)`: SVG-Platzhalter (kantig, cel-shaded), Stufen: ab 2 Bandagen, ab 3 Silber, ab 4 Muskelnähte, ab 5 Aura. Falk: zu grob/vektorhaft, nur Platzhalter.

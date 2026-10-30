@@ -2,37 +2,28 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
-## 2026-10-31 Geplant ohne Striche, Kalender über Füllung und Kontur
-- Falk: gestrichelt/gestreift passt nicht zum Stil. Geplant jetzt überall gedämpfte Fläche + feine Kontur (`.fmc.fpm`, `.fplr`), im Balken eine Schicht HINTER dem Gegessenen von 0 bis gegessen+geplant (`.fbt` isolation, `.gh` z-index -1), sonst Lücke; Ring geplant durchgehend gedämpft (`.dr.pl`).
-- Kalender (Falks Mischung aus Kacheln und Kreisen, je eigene Bedeutung): Kachel gefüllt = Serie (`band`: Trainingstage mit ≤ 1 Ruhetag dazwischen, Urlaub/Krank zählt nicht, wie `streakCalc`; volle Woche gold), Kontur um Kacheln = Urlaub/Krank (kombinierbar), Kreis voll = trainiert, hell in Workout-Farbe = geplant, Ring = Essen, Punkt oben rechts = Tausch, +n = mehrere. Zeichenzeile `.pci` entfällt, Zellen niedriger.
-- Fehler: Klassen `.stk`/`.sl`/`.sr` gab es schon (Sammlung) → Zellen lagen übereinander; jetzt `.pser`, `.pjl`, `.pjr`.
-- `fit.js` meldet breit „überlappt“ für weggescrollte Knöpfe der Kategorie-Leiste in Planen › Essen (abgeschnitten, sichtbar ok) – Fehlalarm.
-
-## 2026-10-31 Planen neu angeordnet (wie Essen, aber eigenes Leitelement)
-- Falk: eigenmächtige Stil-Versuche (Heute A/B/C, harte Kanten) waren nicht gut; er will leiten. Farben bleiben, es ging um Anordnung und Verwendung. Essen ist im Kern fertig (Restpunkte unter Offen).
-- Weg mit Entwürfen (Screenshots aus der echten App, `#view` ersetzt): erst B „wie Essen“ gewählt, Kalender soll bleiben, aber ohne Überlappungen und im Essen-Stil; Unterscheidung durch Anordnung, nicht durch Farbe.
-- Kalender: Zellen wie die Essen-Tagesleiste, drei feste Zeilen (Wochentag | Zahl mit Ring | EIN Zeichen `.pci`): trainiert = Haken im Punkt, Tage in Folge als Kette, volle Woche gold; sonst Urlaub/Krank, Tausch (Paarfarbe), ausgesetzt, geplant (+n). Band, Plakette, Tausch-Strich, Kapsel, Ausnahme-Punkt entfallen. Serie (Flamme, `streakInfo`) im Kopf; Tag ändern wandert zur Tagesüberschrift.
-- Tag: Karte `.pday` führt mit dem Training (Zeilen, Name groß, Minuten, Übungsliste klappt auf), darunter kcal als schmale Zeile; dann Überschrift des Tags (`.pdm2`, Knöpfe: Rückgängig, In Essen öffnen, Workout dazu, Tag ändern) und die vier Mahlzeiten. Schalter Training/Essen (`ui.pft`) und „Training starten“ raus.
-- Ablage: Reiter Workouts | Essen | Gerichte | Vorlagen + Einkauf (`ui.pgt`, Standard `w`); vergangene Tage: Essen-Reiter verweisen auf Essen.
-- Wochenraster (`pWeekHtml`, `.pws`/`.pwsc`-Ziehen) entfernt; Wochentage jetzt im Workout-Fenster (`.pe-wd`, `data-pwd` → `weekSet`). Drop für Essen: `.pdm2 .pml`.
-
 ## 2026-10-29 Bypass-Modus mit Sicherheitsnetz
 - Falk arbeitet mit „Bypass permissions“ (keine Rückfragen). Schutz über PreToolUse-Hook `tools/hook-guard.py` (greift auch im Bypass) + deny-Regeln (zusätzlich: Zugangsdaten ~/.ssh, gh, .git-credentials, .npmrc nicht lesen). `settings.local.json` von Einmal-Freigaben geleert.
 - Gesperrtes braucht Falk selbst im Terminal. Regeln sind Textmuster: neue Fälle in `RULES` ergänzen und mit Beispielbefehlen testen.
 
-## Stand 2026-10-31
-- Gerade: Planen neu angeordnet (siehe oben), Falk testet am iPhone. Heute-Varianten A/B/C (Zahnrad) noch drin, harte Kanten in Planen entfernt.
-- Falk testet: Planen (Kalender-Zeichen, Kette/Gold, Tageskarte, Mahlzeiten, Ablage, Ziehen auf Tag/Mahlzeit, Wochentage im Workout-Fenster, Tag ändern/Tauschen).
-- Nächster Schritt: Falks Rückmeldung zu Planen einarbeiten; dann Heute (geleitet, mit Entwürfen) und Essen-Restpunkte; Gorilla verfeinern.
-- Breit (iPad quer/Laptop) für Planen nicht nachgezogen: `PANER` tage = `.pday, .pdm2`, Rest links.
-- Offene Entscheidungen: App-Name/Farbe (darf sich ändern); Maskottchen-Wahl beim Start (3 Tiere, kleiner XP-Buff) erst später; Link-Import Rezepte; Skilltree Dead Hang/Hollow.
+## Stand 2026-10-31 (Abend)
+- Gerade: Planen neu angeordnet (c854689) und Kalender/Geplant-Stil (169d15c), beides gepusht. Falk leitet Design-Arbeit: erst Entwürfe (Screenshots der echten App), dann bauen.
+- Falk testet am iPhone: Planen (Kalender: Serie als Fläche, Urlaub/Krank als Kontur, Kreis voll = trainiert, hell = geplant, Tausch-Punkt; Tageskarte; Mahlzeiten; Ablage; Ziehen auf Tag/Mahlzeit; Wochentage im Workout-Fenster) und gedämpftes „geplant“ in Essen.
+- Nächster Schritt: Falks Rückmeldung zu Planen/Kalender einarbeiten; dann Heute geleitet neu (Varianten A/B/C im Zahnrad noch drin, Falk fand sie nicht gut) und Essen-Restpunkte.
+- Offene Entscheidungen: Heute-Richtung; App-Name/Farbe; Maskottchen-Wahl später; Link-Import Rezepte; Skilltree Dead Hang/Hollow.
 - Vorschau: `tools/serve.py` (Port 8000) startet VS Code; nie aus Claudes Sitzung starten. App NICHT vom Homescreen löschen (Daten weg).
-- Nicht committet: nichts (nach dem Push).
+- Nicht committet: nur dieses Log.
+
+## 2026-10-31 Essen: künftige Tage in Essen ansehen statt Sprung nach Planen
+- Tagesleiste: künftige Tage wählbar (`data-fsd`, `fSd` bis heute + 60), kein Link mehr nach Planen (`data-pgo` entfernt). Gewählter Tag wandert beim Wischen auch in die Zukunft mit.
+- Künftiger Tag nur Ansicht: Bilanz mit Geplantem als Schatten (`fExp` = 0), Mahlzeiten geplant ohne Antippen; kein Wasser, keine Suche/Kacheln, kein „Wie gestern“. Eintragen nur in Planen.
+- Eintrags-Tag zentral `fBack()` (nie Zukunft), statt `today - fSd()` an 6 Stellen.
 
 ## Offen / Ideen
+- Breit: Planen nur grob (rechts `.pday, .pdm2`, links Kalender + Ablage), nicht abgestimmt. `fit.js` meldet dort weggescrollte Knöpfe der Kategorie-Leiste als Überlappung (Fehlalarm, ggf. im Test ausnehmen).
 - Breit: Heute noch einspaltig (mit dem Heute-Stil aufteilen); Seitenfeld fest 420 breit statt exakt der rechte Bereich; echte Touch-Laptops ungetestet.
 - Aufräumen: `viewDetail` (12-sammlung.js) wird nie erreicht (`ui.sel` nie gesetzt).
-- Falks Eindruck: Essen stark, später mehr Charakter (nicht flach); Plan noch nicht kompakt/clean genug.
+- Falks Eindruck: Essen stark (im Kern fertig), später mehr Charakter (nicht flach). Unterschied zu Essen über Anordnung, nicht über Farbe.
 - UX-Scan offen: 12–13 Schriftgrößen auf ≤ 8 Stufen bündeln, 5 Schriftgewichte; Bilanz-Licht `fshine` läuft endlos (Akku); Planen hat zwei Schalter-Ebenen (Training/Essen + Reiter).
 - Sehr lange Wörter (Griechischer, Naturjoghurt) werden in 4er-Kacheln nach Silben getrennt; ggf. Icon-Platz nur in Zeile 1 freihalten.
 - Trainings-Kacheln „Blackr…“ (Woche) noch abgeschnitten statt eingepasst.
@@ -43,9 +34,9 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Bekannt: „Gibt es schon“ im Schnell-Fenster → Zurück führt zur Suche, nicht zurück ins Schnell-Formular (Eingaben weg).
 - Entscheidung offen: Link-Import für Rezepte über einen fremden CORS-Dienst (genauer, aber Abhängigkeit)?
 - Kalender senkrecht wischen: kein preventDefault, Seite scrollt mit (Aufklappen nur, wenn die Seite oben steht).
-- Training in Planen: Editor (Übungsliste) noch nicht im Kachelstil der Woche geprüft; Woche „7 Trainings · 0 frei“ ohne Hinweis auf fehlende Ruhetage.
+- Planen: Workouts ohne Dauer (Lauf, Test) zeigen keine Minuten; Wochenübersicht (Trainings/freie Tage) fehlt seit dem Wochenraster, Hinweis auf fehlende Ruhetage.
 - Menüleiste: ernst und modern, aber mit etwas mehr Charakter – weiter abstimmen.
-- Woche ziehen ändert den aktiven Plan auch rückwirkend (vergangene Kalendersymbole/Serie können sich verschieben) – ggf. Änderung ab heute als neuer Planstand.
+- Wochentag im Workout-Fenster (`data-pwd`) ändert den aktiven Plan auch rückwirkend (vergangene Kalendersymbole/Serie können sich verschieben) – ggf. Änderung ab heute als neuer Planstand.
 - Einkaufsliste: Packungspreise geschätzt (Discounter); Obst/Gemüse ohne Packung über €/kg; eigene Preise je Lebensmittel optional.
 - Kalender: „volle Woche“ zählt nur geplante Tage.
 - Nächste Runde: Tag/Woche Essen kopieren („wie letzte Woche“) + Planen Schritt 4: Vorschläge „fehlt noch“ (Protein je kcal, passt in den Rest, oft gegessen).
@@ -66,6 +57,20 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+## 2026-10-31 (169d15c) Geplant ohne Striche, Kalender über Füllung und Kontur
+- Falk: gestrichelt/gestreift passt nicht zum Stil. Geplant jetzt überall gedämpfte Fläche + feine Kontur (`.fmc.fpm`, `.fplr`), im Balken eine Schicht HINTER dem Gegessenen von 0 bis gegessen+geplant (`.fbt` isolation, `.gh` z-index -1), sonst Lücke; Ring geplant durchgehend gedämpft (`.dr.pl`).
+- Kalender (Falks Mischung aus Kacheln und Kreisen, je eigene Bedeutung): Kachel gefüllt = Serie (`band`: Trainingstage mit ≤ 1 Ruhetag dazwischen, Urlaub/Krank zählt nicht, wie `streakCalc`; volle Woche gold), Kontur um Kacheln = Urlaub/Krank (kombinierbar), Kreis voll = trainiert, hell in Workout-Farbe = geplant, Ring = Essen, Punkt oben rechts = Tausch, +n = mehrere. Zeichenzeile `.pci` entfällt, Zellen niedriger.
+- Fehler: Klassen `.stk`/`.sl`/`.sr` gab es schon (Sammlung) → Zellen lagen übereinander; jetzt `.pser`, `.pjl`, `.pjr`.
+- `fit.js` meldet breit „überlappt“ für weggescrollte Knöpfe der Kategorie-Leiste in Planen › Essen (abgeschnitten, sichtbar ok) – Fehlalarm.
+
+## 2026-10-31 (c854689) Planen neu angeordnet (wie Essen, aber eigenes Leitelement)
+- Falk: eigenmächtige Stil-Versuche (Heute A/B/C, harte Kanten) waren nicht gut; er will leiten. Farben bleiben, es ging um Anordnung und Verwendung. Essen ist im Kern fertig (Restpunkte unter Offen).
+- Weg mit Entwürfen (Screenshots aus der echten App, `#view` ersetzt): erst B „wie Essen“ gewählt, Kalender soll bleiben, aber ohne Überlappungen und im Essen-Stil; Unterscheidung durch Anordnung, nicht durch Farbe.
+- Kalender: Zellen wie die Essen-Tagesleiste, drei feste Zeilen (Wochentag | Zahl mit Ring | EIN Zeichen `.pci`): trainiert = Haken im Punkt, Tage in Folge als Kette, volle Woche gold; sonst Urlaub/Krank, Tausch (Paarfarbe), ausgesetzt, geplant (+n). Band, Plakette, Tausch-Strich, Kapsel, Ausnahme-Punkt entfallen. Serie (Flamme, `streakInfo`) im Kopf; Tag ändern wandert zur Tagesüberschrift.
+- Tag: Karte `.pday` führt mit dem Training (Zeilen, Name groß, Minuten, Übungsliste klappt auf), darunter kcal als schmale Zeile; dann Überschrift des Tags (`.pdm2`, Knöpfe: Rückgängig, In Essen öffnen, Workout dazu, Tag ändern) und die vier Mahlzeiten. Schalter Training/Essen (`ui.pft`) und „Training starten“ raus.
+- Ablage: Reiter Workouts | Essen | Gerichte | Vorlagen + Einkauf (`ui.pgt`, Standard `w`); vergangene Tage: Essen-Reiter verweisen auf Essen.
+- Wochenraster (`pWeekHtml`, `.pws`/`.pwsc`-Ziehen) entfernt; Wochentage jetzt im Workout-Fenster (`.pe-wd`, `data-pwd` → `weekSet`). Drop für Essen: `.pdm2 .pml`.
 
 ## 2026-10-30 Versuch (a19da35, 029bd37): Heute-Varianten, Maskottchen-Gorilla
 - Falk: freie Hand für Heute/Plan, alles hinter Schalter; später gemeinsam auswählen, was bleibt. Name „Zenit“ und Farben dürfen sich noch ändern.

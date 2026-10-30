@@ -288,7 +288,7 @@
     var x = idx != null ? foodState().e[idx] : null, qa = x && x.qa ? x.qa : x ? [1, 'po'] : null, v = {};
     if (x) NK.forEach(function (k) { v[k] = x[k] != null ? x[k] : null; });
     ui.fqd = { n: x ? x.n : name || '', a: qa ? qa[0] : 100, r: qa ? qa[0] : 100, u: qa ? qa[1] : 'g', v: x ? v : null };
-    ui.sheet = { food: true, idx: idx, from: from || null }; if (!ui.fplan) ui.fday = dayIdx(Date.now()) - fSd();
+    ui.sheet = { food: true, idx: idx, from: from || null }; if (!ui.fplan) ui.fday = fBack();
     sheetOpen(shHead('bolt', idx != null ? 'Eintrag ändern' : ui.fplan ? 'Schnell einplanen' : 'Schnell eintragen', 'Gegessen, Werte laut Packung', !!from) + quickHtml(idx), true);
     quickRead();
   }
@@ -317,7 +317,7 @@
   }
   function ownDraft() { var d = { n: $('o-n').value, b: $('o-b').value, un: $('o-un').value, ug: $('o-ug').value, ml: ui.sheet.ml, bc: $('o-bc').value }; NK.forEach(function (k) { d[k] = $('o-' + k).value; }); return d; }
   function openDishes() {
-    ui.sheet = { fdishes: true }; if (!ui.fplan) ui.fday = dayIdx(Date.now()) - fSd(); sheetOpen(dishesHtml(), true);
+    ui.sheet = { fdishes: true }; if (!ui.fplan) ui.fday = fBack(); sheetOpen(dishesHtml(), true);
   }
   function dishesHtml() {
     // Gerichte-Menü: Filter nach Mahlzeit (fest gewählt oder meist gegessen, dishMeals); Karten (antippen = Menge wählen und bearbeiten, nach rechts wischen = 1 Portion sofort,

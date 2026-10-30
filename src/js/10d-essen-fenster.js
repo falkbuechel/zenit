@@ -186,7 +186,7 @@
       if (f.add) {
         // Eintragen: abgelegt auf einer Mahlzeit = diese Mahlzeit, sonst nach der aktuellen Uhrzeit
         var j = +f.el.dataset.ftile, tl = (ui.ftiles || [])[j], mm = f.tg && /\bm-(fr|mi|sn|ab)\b/.exec(f.tg.className);
-        if (tl) { ui.fday = dayIdx(Date.now()) - fSd(); ui.ftok = j; ui.fdmk = mm ? mm[1] : null; buzz([10, 30, 10]); foodRef(tl.i, tl.g); return; }
+        if (tl) { ui.fday = fBack(); ui.ftok = j; ui.fdmk = mm ? mm[1] : null; buzz([10, 30, 10]); foodRef(tl.i, tl.g); return; }
       } else { f.el.classList.add('gone'); setTimeout(function () { foodDel(f.el.dataset.fdelg ? f.el.dataset.fdelg.split(',').map(Number) : +f.el.dataset.fedit); }, 160); return; }
     }
     f.el.style.transform = ''; f.el.style.opacity = ''; f.el.classList.remove('arm', 'glass');
@@ -202,7 +202,7 @@
   });
   document.addEventListener('pointerup', function () {
     if (!fdsw) return; var f = fdsw; fdsw = null; f.el.style.transform = ''; f.el.classList.remove('arm');
-    if (f.dx > 60) { ui.fday = dayIdx(Date.now()) - fSd(); buzz([10, 30, 10]); closeSheet(true); foodRef(f.el.dataset.fdsw, 1); }
+    if (f.dx > 60) { ui.fday = fBack(); buzz([10, 30, 10]); closeSheet(true); foodRef(f.el.dataset.fdsw, 1); }
   });
   document.addEventListener('pointercancel', function () { if (fdsw) { fdsw.el.style.transform = ''; fdsw.el.classList.remove('arm'); fdsw = null; } });
   // Gerichte-Fenster: Karte kurz halten (0,17 s), dann ziehen. Das Fenster gleitet nach unten weg (Kante bleibt), die Mahlzeiten oben leuchten;
@@ -235,7 +235,7 @@
     ui.fdgno = Date.now(); if (g.gh) g.gh.remove(); if (g.tg) g.tg.classList.remove('drop');
     $('sheet').classList.remove('peek'); $('shade').classList.remove('peek');
     var mm = g.tg && ev.type !== 'pointercancel' && /\bm-(fr|mi|sn|ab)\b/.exec(g.tg.className); if (!mm) return;
-    ui.fday = dayIdx(Date.now()) - fSd(); ui.fdmk = mm[1]; buzz([10, 30, 10]); foodRef(g.el.dataset.fdsw, 1);
+    ui.fday = fBack(); ui.fdmk = mm[1]; buzz([10, 30, 10]); foodRef(g.el.dataset.fdsw, 1);
     setTimeout(function () { if (!ui.sheet && ui.tab === 'food') openDishes(); }, 260);
   }
   document.addEventListener('pointerup', fdgEnd);

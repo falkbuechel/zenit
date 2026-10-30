@@ -46,7 +46,7 @@ docs/                 DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 - Neue JS-Funktionen in die passende Datei; Code, der beim Laden läuft (z. B. `GORDER.forEach`), braucht alles Vorherige → Reihenfolge beachten.
 - CSS: Regel in die Datei des Bereichs; Media-Queries direkt hinter ihre Grundregeln in derselben Datei, globale in `90-medien.css`.
 - Hosting: GitHub Pages https://falkbuechel.github.io/zenit/ (öffentliches Repo). Adresse nicht wechseln, localStorage hängt an ihr.
-- Skalierung: Bezug iPhone 13 (390 breit). CSS in px schreiben, `build.py` macht daraus rem; `html` font-size wächst mit der Breite (320–430). Pixel bleiben: ≤ 2px, `@media`, `PX` groß. Größen aus JS (Inline-Styles) in rem (Wert/16) oder gemessen.
+- Skalierung: Bezug iPhone 13 (390 breit). CSS in px schreiben, `build.py` macht daraus rem; `html` font-size wächst mit der Breite (320–430), breiter nur so weit die Höhe reicht (max 1,5×). Pixel bleiben: ≤ 2px, `@media`, `PX` groß. Größen aus JS (Inline-Styles) in rem (Wert/16) oder gemessen.
 - Aussehen: Einstellungen › Auto/Hell/Dunkel (`themeSet`, localStorage `zenit.theme`, setzt `data-theme` an `<html>` und `theme-color`).
 - Version: `build.py` setzt `window.ZENIT_V` (Commit · Datum, `+` = lokale ungesicherte Änderungen), sichtbar unten im Zahnrad-Menü.
 - Service-Worker-Cache heißt `zenit-v2` (`public/sw.js`). Netz zuerst, daher kein Versions-Bump für neue Builds nötig; nur erhöhen, wenn sich die Dateiliste `FILES` ändert.

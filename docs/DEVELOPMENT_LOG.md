@@ -4,6 +4,7 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## 2026-10-30 Gleiches Bild auf allen iPhones
 - Bezug iPhone 13 (390 breit). CSS bleibt in px; `build.py` (`rem()`) rechnet beim Bauen px → rem, `html` font-size = 100vw/24.375, begrenzt auf 320–430 Breite (Faktor 0,82–1,10). Bleiben Pixel: ≤ 2px (Linien), `@media`-Bedingungen, `PX` groß geschrieben (Konvention wie postcss-pxtorem).
+- Breiter als 430 (iPad, Rechner): wächst weiter, solange die Höhe reicht (`min(100vw/24.375, 100lvh/52.75, 24PX)`, = 390×844 eingepasst, max 1,5×). iPad hochkant 1,4×, iPad Pro 1,5×, iPad quer/Rechner 1,1×. Dadurch auch 16 Pro Max voll 1,128× statt 1,10×.
 - Auf 390 pixelgleich (`compare.js` nur Kantenglättung). `@media (max-width: 380px)` entfernt (nicht mehr nötig). Querformat bleibt gesperrt (`.rot`).
 - Skilltree: Knoten-/Beschriftungs-Positionen aus JS jetzt in rem (`stPos`), `stBox` in echten Pixeln; sonst wuchsen Knoten, Abstände nicht.
 - Neu `tools/fit.js`: alle Ansichten auf 8 iPhone-Größen (SE bis 16 Pro Max) messen, meldet nur, was schlechter ist als auf dem iPhone 13 (ragt raus, abgeschnitten, gekürzt, mehr Zeilen, Text überlappt in derselben Ebene). Vorher 111 Funde (u. a. Urlaub/Krank auf 375 abgeschnitten, Gerichte überlappt, Kategorienamen auf Pro Max gekürzt), jetzt 0. In `/check`.

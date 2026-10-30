@@ -6,19 +6,18 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Falk arbeitet mit „Bypass permissions“ (keine Rückfragen). Schutz über PreToolUse-Hook `tools/hook-guard.py` (greift auch im Bypass) + deny-Regeln (zusätzlich: Zugangsdaten ~/.ssh, gh, .git-credentials, .npmrc nicht lesen). `settings.local.json` von Einmal-Freigaben geleert.
 - Gesperrtes braucht Falk selbst im Terminal. Regeln sind Textmuster: neue Fälle in `RULES` ergänzen und mit Beispielbefehlen testen.
 
-## Stand 2026-10-30
-- Zuletzt: Planen-Runde (Kalender 3 Stufen, Essen-Reiter, Einkauf neu, Training-Woche als Kacheln) + Sicherheitsnetz `tools/hook-guard.py` (3c42d66).
-- Falk testet am iPhone: Kalender (Wischen durch 3 Stufen, Bänder Urlaub/Krank), Essen | Vorlagen | Gerichte, Einkauf (Zeitraum, wofür, Preis, Teilen), Woche als Kacheln (Ziehen verschieben/tauschen/entfernen), Workouts | Vorlagen. Dazu noch offen aus der Runde davor: weiche Fenster, Gericht, Suche, Schnell, Hell-Schalter.
-- Vorschau: VS Code startet `tools/serve.py` beim Öffnen (Port 8000, baut bei Änderung neu); Edge-Tools-Tab headless → http://127.0.0.1:8000. Server nie aus Claudes Sitzung starten (für den Tab nicht erreichbar).
-- Nächste Runde (Falk hat gewählt): Tag/Woche Essen kopieren („wie letzte Woche“), Fehlt-noch-Vorschläge (Rest kcal/Protein → passende Kacheln zuerst), Ereignis-Tage (kcal vorher einsparen).
-- Offene Entscheidungen: Link-Import für Rezepte (fremder CORS-Dienst)? Skilltree Dead Hang/Hollow nach außen?
-- App-Icon (oliv) übernimmt iOS erst beim neuen Hinzufügen zum Homescreen. NICHT die App löschen (Daten weg).
-- Nicht committet: nichts.
+## Stand 2026-10-30 (abends)
+- Zuletzt: zwei Runden Essen/Planen (ec789f3, c700bfb): Mengen in Einheiten + Liter, Kalender 3 Stufen mit Trainings-Flächen/Tauschpaaren/Bändern in einer Reihe, Training ohne Vorlagen-Reiter, Planen › Essen mit Kategorien/Gericht-Karten/getrennten Vorlagen, Einkauf in Kaufgrößen (`SHB`).
+- Falk testet am iPhone: Mengen-Fenster (Stück/Glas/EL, Gramm klein, Wischen), Zutaten-Chips antippen, Gericht „≈ g“, Kalender (Flächen, volle Woche gold, ⇄A, geteiltes Band), „Workout an diesem Tag“, „Neues Workout“, Planen-Kategorien, Gericht-Karten hochziehen, Einkaufspreise.
+- Nächster Schritt: Falks Rückmeldung; danach offene Runde: Essen kopieren („wie letzte Woche“), Fehlt-noch-Vorschläge, Ereignis-Tage.
+- Offene Entscheidungen: Link-Import für Rezepte (fremder CORS-Dienst)? Skilltree Dead Hang/Hollow nach außen? Mahlzeit im Mengen-Fenster beim Einplanen wählbar machen?
+- Vorschau: `tools/serve.py` (Port 8000) startet VS Code; nie aus Claudes Sitzung starten. App-Icon erst nach neuem Hinzufügen; App NICHT löschen (Daten weg).
+- Nicht committet: nur dieses Log.
 
 ## Offen / Ideen
 - Essen planen weiter an Essen angleichen: Mahlzeit-Karte in Planen klappt noch als Fenster auf (Essen: in der Zeile); Mahlzeit beim Einplanen aus einer Kachel = übliche (`mealFor`), im Mengen-Fenster nicht wählbar.
 - Gerichte bearbeiten: Zutatenmenge noch in g (Einheit nur in der Ansicht `fingHtml` und beim Hinzufügen über das Mengen-Fenster).
-- iPhone-Test offen (30.10.): siehe Stand oben.
+- iPhone-Test offen: siehe Stand oben.
 - Bekannt: aus Schnell gemerktes Stück-Lebensmittel zeigt in „Lebensmittel bearbeiten“ die Stück-Werte als „je 100 g“ (Rechengröße 100 = 1 Stück) – bei Bedarf eigene Stück-Ansicht.
 - Bekannt: „Gibt es schon“ im Schnell-Fenster → Zurück führt zur Suche, nicht zurück ins Schnell-Formular (Eingaben weg).
 - Entscheidung offen: Link-Import für Rezepte über einen fremden CORS-Dienst (genauer, aber Abhängigkeit)?
@@ -26,7 +25,8 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Training in Planen: Editor (Übungsliste) noch nicht im Kachelstil der Woche geprüft; Woche „7 Trainings · 0 frei“ ohne Hinweis auf fehlende Ruhetage.
 - Menüleiste: ernst und modern, aber mit etwas mehr Charakter – weiter abstimmen.
 - Woche ziehen ändert den aktiven Plan auch rückwirkend (vergangene Kalendersymbole/Serie können sich verschieben) – ggf. Änderung ab heute als neuer Planstand.
-- Einkaufsliste: Preise nur grob (Kategorie €/kg + ~30 Lebensmittel); eigene Preise je Lebensmittel optional.
+- Einkaufsliste: Packungspreise geschätzt (Discounter); Obst/Gemüse ohne Packung über €/kg; eigene Preise je Lebensmittel optional.
+- Kalender: Bänder (Urlaub/Krank) brauchen noch eine eigene Zeile über der Woche; „volle Woche“ zählt nur geplante Tage.
 - Nächste Runde: Tag/Woche Essen kopieren („wie letzte Woche“) + Planen Schritt 4: Vorschläge „fehlt noch“ (Protein je kcal, passt in den Rest, oft gegessen).
 - Planen Schritt 5: Event (kcal reservieren) ordentlich umsetzen; Cheatday ohne Sonderregel, Urlaub/Krank bleiben.
 - Planen Schritt 6: „Was habe ich“ nur abgeleitet (abgehakt = könnte da sein), keine Pflege.

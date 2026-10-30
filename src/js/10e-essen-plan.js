@@ -130,8 +130,7 @@
     if (done.length) h += '<h3 class="shh">' + ic('check') + 'Im Wagen<small>' + done.length + '</small></h3>' + done.map(row).join('');
     // Zeitraum: Tage ab heute zum Antippen (bis einschließlich), dazu 2 Wochen; gewählt = alle Tage bis zum Ende
     var days = [1, 2, 3, 4, 5, 6, 7].map(function (k) { return [k, k === 1 ? 'Heute' : WDN[wdOf(t + k - 1)].slice(0, 2)]; }).concat([[14, '2 Wo']]);
-    return shHead('cart', 'Einkauf', 'bis ' + (n === 1 ? 'heute' : dayHead(t + n - 1))) +
-      '<div class="shd" role="group" aria-label="Zeitraum">' + days.map(function (x) { var on = x[0] === 14 ? n === 14 : n < 14 && x[0] <= n; return '<button data-shn="' + x[0] + '" aria-pressed="' + on + '"' + (n === x[0] ? ' class="end"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div>' +
+    return '<div class="shd" role="group" aria-label="Zeitraum">' + days.map(function (x) { var on = x[0] === 14 ? n === 14 : n < 14 && x[0] <= n; return '<button data-shn="' + x[0] + '" aria-pressed="' + on + '"' + (n === x[0] ? ' class="end"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div>' +
       (l.length ? '<div class="shs"><span><b>' + open.length + '</b><small>offen</small></span><span><b>≈ ' + eur(sum) + '</b><small>Richtwert</small></span><button class="x" data-shsh="1" aria-label="Liste teilen">' + ic('share') + '</button></div>' : '') +
       '<div class="shl">' + (h || '<p class="muted">Nichts geplant. In Planen › Essen Mahlzeiten einplanen.</p>') + '</div>';
   }
@@ -142,7 +141,6 @@
     if (navigator.share) { navigator.share({ title: 'Einkauf', text: txt }).catch(function () {}); return; }
     if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { toast('Liste kopiert', 'check'); }, function () { toast('Kopieren ging nicht', 'close'); });
   }
-  function openShop() { ui.sheet = { shop: true }; sheetOpen(shopHtml(), true); }
   function planEat(mk) {
     // Heute Geplantes einer Mahlzeit als gegessen eintragen: jetzt, oder zur üblichen Uhrzeit, wenn die Mahlzeit schon vorbei ist
     var st = foodState(), today = dayIdx(Date.now()), l = st.pl.filter(function (x) { return x.d === today && x.mk === mk; }); if (!l.length) return;
@@ -188,11 +186,10 @@
     if ((el = t.closest('[data-pml]'))) { var pd0 = ui.pd == null ? dayIdx(Date.now()) : ui.pd; openPlanMeal(pd0, el.dataset.pml); return true; }
     if ((el = t.closest('[data-pla]'))) { var pa = el.dataset.pla.split('|'); buzz(8); foodRef(pa[0], +pa[1]); return true; }
     if ((el = t.closest('[data-plx]'))) { fUndo(); foodState().pl.splice(+el.dataset.plx, 1); persist(); ui.fresh = false; render(); openPlanMeal(ui.fplan.d, ui.fplan.mk); buzz(6); return true; }
-    if (t.closest('[data-pshop]')) { openShop(); return true; }
-    if ((el = t.closest('[data-shn]'))) { ui.shn = +el.dataset.shn; $('sheet').innerHTML = shopHtml(); buzz(4); return true; }
-    if ((el = t.closest('[data-shx]'))) { ui.shx = ui.shx === el.dataset.shx ? null : el.dataset.shx; $('sheet').innerHTML = shopHtml(); buzz(4); return true; }
+    if ((el = t.closest('[data-shn]'))) { ui.shn = +el.dataset.shn; render(); buzz(4); return true; }
+    if ((el = t.closest('[data-shx]'))) { ui.shx = ui.shx === el.dataset.shx ? null : el.dataset.shx; render(); buzz(4); return true; }
     if (t.closest('[data-shsh]')) { shopShare(); return true; }
-    if ((el = t.closest('[data-shk]'))) { var shk = el.dataset.shk; if (st.sh[shk] != null) delete st.sh[shk]; else st.sh[shk] = dayIdx(Date.now()); persist(); $('sheet').innerHTML = shopHtml(); buzz(6); return true; }
+    if ((el = t.closest('[data-shk]'))) { var shk = el.dataset.shk; if (st.sh[shk] != null) delete st.sh[shk]; else st.sh[shk] = dayIdx(Date.now()); persist(); render(); buzz(6); return true; }
     if (t.closest('[data-fingo]')) { ui.fingo = !ui.fingo; ui.fstpo = false; $('sheet').classList.remove('full'); fpPaint(); buzz(4); return true; }
     // Schritte: Fenster geht ganz auf (.full), die Schritte erscheinen unter den Zutaten
     if (t.closest('[data-fstp]')) { fstpTog(!ui.fstpo); return true; }

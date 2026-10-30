@@ -7,7 +7,19 @@
   function fitCls(s, n) {
     s = String(s); n = n || 10; var w = s.split(/[\s\-\/]+/).reduce(function (a, x) { return Math.max(a, x.length); }, 0);
     if (s.length > n * 2.6) return 'tf3';
-    return w > n * 1.3 ? 'tf1' : w > n * 1.12 || s.length > n * 2.2 ? 'tf2' : w > n || s.length > n * 1.8 ? 'tf1' : '';
+    return w > n * 1.3 ? 'tf3' : w > n * 1.12 || s.length > n * 2.2 ? 'tf2' : w > n || s.length > n * 1.8 ? 'tf1' : '';
+  }
+  // Namen in Kacheln: nach dem Zeichnen messen und verkleinern, bis jedes Wort in die Zeile passt (keine Trennung mitten im Wort)
+  function fitNames(root) {
+    (root || document).querySelectorAll('.fti b').forEach(function (b) {
+      var cs = getComputedStyle(b), av = b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), f = parseFloat(cs.getPropertyValue('--tf')) || 1;
+      var m = document.createElement('span'); m.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap';
+      m.textContent = b.textContent.split(/[\s\-\/]+/).reduce(function (a, x) { return x.length > a.length ? x : a; }, ''); b.appendChild(m);
+      var w = m.offsetWidth; b.removeChild(m);
+      // Passt das Wort auch klein nicht (Hähnchenbrust): normale Größe, Silbentrennung
+      var r = Math.floor(f * av / w * 50) / 50;
+      if (w > av && av > 0) { if (r >= 0.66) b.style.setProperty('--tf', r.toFixed(2)); else b.style.webkitHyphens = b.style.hyphens = 'auto'; }
+    });
   }
   function fmtDate(ms) { return new Date(ms).toLocaleDateString('de-DE', { day: 'numeric', month: 'short' }); }
   function fmtDay(di) { return new Date(di * 864e5).toLocaleDateString('de-DE', { day: 'numeric', month: 'short', timeZone: 'UTC' }); }

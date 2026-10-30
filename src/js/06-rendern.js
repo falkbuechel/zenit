@@ -93,7 +93,7 @@
     if ((ui.sheet && ui.sheet.plan) || ui.pe) planSheet(d);
     hydrate(snap, fresh);
     if (ui.scroll) { var sc = ui.scroll; ui.scroll = null; setTimeout(function () { scrollToEl(sc); }, 60); }
-    jumpMode = ''; updJump();
+    jumpMode = ''; updJump(); fitNames($('view'));
     // Gesammelte Belohnungen zeigen, sobald Heute ohne Arena sichtbar ist (rwPlay prüft Tab, Arena, offenes Fenster)
     if (rwq.length && !rwOn) setTimeout(rwPlay, 600);
   }

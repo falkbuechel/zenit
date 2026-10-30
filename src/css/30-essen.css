@@ -135,7 +135,8 @@
 @media (prefers-reduced-motion: reduce) { .fbt > i::before, .wsl > i::before { animation: none; display: none; } }
 /* Jeder Wert hat seine eigene Farbe (--fc), auch im Ziel; Zustand zeigen Zahl und Animation (kcal: --fc in .fbk) */
 .fbm { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
-.fmb { display: grid; gap: 4px; min-width: 0; cursor: pointer; }
+.fmb { position: relative; display: grid; gap: 4px; min-width: 0; cursor: pointer; }
+.fmb::after { content: ""; position: absolute; inset: -8px -3px; }
 /* Icon, Wert und Ziel klein in einer Zeile (bis 999/999), darunter der Balken */
 .fmb span { display: flex; align-items: center; gap: 2px; min-width: 0; color: var(--fc); white-space: nowrap; }
 .fmb span .ic { flex: none; width: 14px; height: 14px; margin-right: 1px; }
@@ -184,7 +185,7 @@
 .ftq { position: absolute; top: 6px; right: 6px; display: flex; color: var(--tq); }
 .ftq .ic { width: 12px; height: 12px; }
 .fti.q-f .ftq .ic { fill: currentColor; }
-.fti b { display: -webkit-box; align-self: start; padding-right: 12px; overflow: hidden; font-size: calc(13px * var(--tf, 1)); line-height: 1.15; -webkit-hyphens: auto; hyphens: auto; overflow-wrap: anywhere;
+.fti b { display: -webkit-box; align-self: start; padding-right: 12px; overflow: hidden; font-size: calc(13px * var(--tf, 1)); line-height: 1.15; overflow-wrap: anywhere;
   -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 .ftv { display: flex; align-items: baseline; justify-content: space-between; gap: 4px; min-width: 0; }
 .ftv > span { font-family: var(--f-display); font-size: 18px; font-weight: 900; line-height: 1; }

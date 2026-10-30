@@ -67,7 +67,7 @@ async function scenario(b, sc, errs) {
       await click('[data-pml]'); await click('[data-pla]'); await closeSheet(); await click('[data-pfd]'); await shot('tage-essen');
       // Vorlagen: Tag speichern, einplanen, Löschmodus, zurück zu Gerichten
       await click('[data-pgt="v"]'); await click('[data-ptpd]'); await click('[data-ptp]'); await shot('tage-vorlagen'); await click('[data-ptpx]'); await click('[data-ptp]'); await click('[data-pgt="g"]'); await click('[data-pws="4"]');
-      await click('[data-pshop]'); await click('[data-shn="3"]'); await click('[data-shk]'); await shot('tage-einkauf'); await closeSheet(); await click('[data-pft="t"]');
+      await click('[data-pgt="s"]'); await click('[data-shn="3"]'); await click('[data-shk]'); await shot('tage-einkauf'); await click('[data-pgt="e"]'); await click('[data-pft="t"]');
       if (await click('[data-pnts]')) await closeSheet();
       await click('[data-ptt="v"]'); await shot('tage-tage'); await click('[data-ptt="w"]');
     }

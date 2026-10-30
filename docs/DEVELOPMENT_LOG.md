@@ -2,6 +2,15 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-30 – UX-Review Essen/Planen, Aufräumen
+- Neu: Skill `ux-review` (Heuristiken + Kernaufgaben + Konsistenz), Messung `node tools/ux-scan.js` (unslop-Audit `tools/unslop-audit.js`, Tippziele, Schriftgrößen, Screenshots `tools/out/ux-*`). Quellen in `.claude/skills/README.md`.
+- Routine „Damir unslop-Skill prüfen“ (täglich 9:00, Cloud, nur Websuche): meldet, sobald Damir Sokolovskys eigener Skill erscheint → dann mit Emil-Skills ein Design-Setup bauen.
+- Planen › Essen: Einkauf ist 4. Reiter (Wagen-Symbol, Liste direkt im Bereich statt Fenster; `openShop`/`data-pshop` entfernt), Kopf nur noch „In Essen öffnen“ + Schalter.
+- Mahlzeit-Kacheln in Planen wie in Essen (×Anzahl, kcal, Kategorie-Kreise; leer nur Symbol). Kachel-Symbol in Planen › Häufig = Herkunft (zuletzt/häufig/Uhrzeit), in Kategorien = Art.
+- Namen in Kacheln: `fitNames` misst das längste Wort nach dem Rendern und verkleinert (keine Trennung mitten im Wort); passt es auch bei 66 % nicht, normale Größe mit Silbentrennung. Fehler in `fitCls` behoben (längstes Wort bekam die schwächste Stufe).
+- Zahlen überall `tabular-nums` (kein Springen), Makro-Balken mit größerer Tippfläche (::after).
+- Offen aus dem Scan: 12–13 Schriftgrößen (9,5/10/10,5/11/11,5 …) auf ≤ 8 Stufen bündeln, 5 Schriftgewichte, Bilanz-Licht `fshine` läuft endlos (Akku, bewusstes Design – prüfen), Planen: zwei Schalter-Ebenen (Training/Essen + Reiter).
+
 ## 2026-10-29 Bypass-Modus mit Sicherheitsnetz
 - Falk arbeitet mit „Bypass permissions“ (keine Rückfragen). Schutz über PreToolUse-Hook `tools/hook-guard.py` (greift auch im Bypass) + deny-Regeln (zusätzlich: Zugangsdaten ~/.ssh, gh, .git-credentials, .npmrc nicht lesen). `settings.local.json` von Einmal-Freigaben geleert.
 - Gesperrtes braucht Falk selbst im Terminal. Regeln sind Textmuster: neue Fälle in `RULES` ergänzen und mit Beispielbefehlen testen.

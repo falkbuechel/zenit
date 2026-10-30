@@ -165,7 +165,7 @@
     if (ft === 'd') ft = 't';
     // Kurzer Tagesname, damit Umschalter und Knöpfe in eine Zeile passen
     var dq = new Date(sd * 864e5), dh = sd === today ? 'Heute' : sd === today + 1 ? 'Morgen' : sd === today - 1 ? 'Gestern' : WDN[wdOf(sd)].slice(0, 2) + ' ' + dq.getUTCDate() + '.' + (dq.getUTCMonth() + 1) + '.';
-    c += '<div class="pd-h"><b aria-label="' + esc(dayHead(sd)) + '">' + dh + '</b>' + (ft === 'e' ? (sd <= today ? '<button class="x" data-pfo="' + sd + '" aria-label="In Essen öffnen">' + ic('open') + '</button>' : '') + '<button class="x" data-pshop="1" aria-label="Einkauf">' + ic('cart') + '</button>' : '') +
+    c += '<div class="pd-h"><b aria-label="' + esc(dayHead(sd)) + '">' + dh + '</b>' + (ft === 'e' ? (sd <= today ? '<button class="x" data-pfo="' + sd + '" aria-label="In Essen öffnen">' + ic('open') + '</button>' : '') : '') +
       '<span class="pft" role="group" aria-label="Ansicht">' + [['t', 'dumb', 'Training'], ['e', 'food', 'Essen']].map(function (x) { return '<button data-pft="' + x[0] + '" aria-pressed="' + (ft === x[0]) + '" aria-label="' + x[2] + '">' + ic(x[1]) + '</button>'; }).join('') + '</span></div>';
     if (swp) c += '<p class="pdh">' + ic('swap') + 'Tag im Kalender wählen<button class="x" data-pmode="swap" aria-label="Tauschen abbrechen">' + ic('close') + '</button></p>';
     if (ft === 't') {
@@ -202,10 +202,10 @@
         '<em style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + Math.round(pv0) + '<small>/' + eg.p + '</small></em></span>' +
         '<i class="fbt"><i style="--p:' + Math.min(1, es.k / (eg.k || 1)).toFixed(3) + '"></i>' + fGh(es.k / (eg.k || 1), ps.k / (eg.k || 1)) + '</i></div></div><div class="pml">' + MEALS.map(function (m) {
         var ei = es.items.filter(function (o) { return mealOfE(o.x)[1] === m[1]; }), pi = ps.items.filter(function (o) { return o.x.mk === m[1]; }), kc = Math.round(ei.concat(pi).reduce(function (a, o) { return a + (o.x.k || 0); }, 0));
-        // Kachel: Symbol + Name der Mahlzeit, darunter die ersten Einträge (gegessen, dann geplant), unten kcal; leer: Plus
-        var canP = sd > today || (sd === today && nowH < m[0]), cls = ei.length ? '' : pi.length ? ' fpm' : ' fme', nl = ei.concat(pi).map(function (o) { return o.x.n; });
-        return '<button class="fmc pmc m-' + m[1] + cls + '"' + (canP ? ' data-pml="' + m[1] + '"' : ' disabled') + ' aria-label="' + m[2] + (canP ? ' planen' : '') + '">' +
-          '<span class="fmt">' + ic(MEALI[m[1]]) + '<small>' + m[2] + '</small></span>' + (nl.length ? '<span class="pmn">' + esc(nl.slice(0, 2).join(', ')) + (nl.length > 2 ? ' +' + (nl.length - 2) : '') + '</span><b>' + kc + '<em>kcal</em></b>' : canP ? ic('plus', 'pmp') : '') + '</button>';
+        // Kachel wie in Essen (fMealCard): Symbol und Anzahl (gegessen + geplant), kcal groß, Kategorien als Kreise; leer: nur das Symbol
+        var canP = sd > today || (sd === today && nowH < m[0]), cls = ei.length ? '' : pi.length ? ' fpm' : ' fme', al = ei.concat(pi);
+        return '<button class="fmc m-' + m[1] + cls + '"' + (canP ? ' data-pml="' + m[1] + '"' : ' disabled') + ' aria-label="' + m[2] + (canP ? ' planen' : '') + '">' +
+          (al.length ? '<span class="fmt">' + ic(MEALI[m[1]]) + '<small>×' + al.length + '</small></span><b>' + kc + '<em>kcal</em></b><span class="fcs">' + fCats({ l: al }).slice(0, 3).map(function (q) { return '<i>' + ic(CATI[q.c][0]) + '</i>'; }).join('') + '</span>' : ic(MEALI[m[1]])) + '</button>';
       }).join('') + '</div>';
     }
     h += '<section class="pday dkc rise' + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
@@ -220,9 +220,11 @@
             '<b class="' + fitCls(x.n, 8) + '">' + esc(x.n) + '</b><small>' + n + (dur[x.id] ? ' · ' + dur[x.id] + '′' : ' Üb.') + '</small></button>';
         }).join('') + (P.days.length < 8 ? '<button class="fti tplnew" data-pnew="1" aria-label="Neues Workout">' + ic('plus') + '<small>Neues<br>Workout</small></button>' : '') + '</div></section>';
     } else if (sd >= today) {
-      // Essen: Reiter Essen | Vorlagen | Gerichte (Essen vorgewählt). Essen = häufige Lebensmittel, Gerichte = alle Gerichte (zuletzt gegessene zuerst, gestrichelt „Neu“);
+      // Essen: Reiter Essen | Vorlagen | Gerichte | Einkauf (Essen vorgewählt). Essen = häufige Lebensmittel, Gerichte = alle Gerichte (zuletzt gegessene zuerst, gestrichelt „Neu“);
       // hochziehen auf eine Mahlzeit = dort einplanen, antippen = Menge wählen (übliche Mahlzeit). Vorlagen = gespeicherte Mahlzeiten (auf eine Mahlzeit ziehen) und Tage (auf die Tageskarte); antippen = wie gespeichert
-      var pg = ui.pgt || 'e', tg0 = '<div class="seg pgt">' + [['e', 'Essen'], ['v', 'Vorlagen'], ['g', 'Gerichte']].map(function (x) { return '<button data-pgt="' + x[0] + '" aria-pressed="' + (pg === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>', tl = '';
+      // Einkauf = Einkaufsliste (shopHtml) direkt im Bereich, Reiter als Symbol
+      var pg = ui.pgt || 'e', tl = '', tg0 = '<div class="seg pgt">' + [['e', 'Essen'], ['v', 'Vorlagen'], ['g', 'Gerichte'], ['s', '', 'cart']].map(function (x) {
+        return '<button data-pgt="' + x[0] + '" aria-pressed="' + (pg === x[0]) + '"' + (x[2] ? ' aria-label="Einkauf">' + ic(x[2]) : '>' + x[1]) + '</button>'; }).join('') + '</div>';
       // Essen: Kategorie-Leiste wie in der Suche (Häufig, dann FCATS, Eigene), darunter alle Lebensmittel der Kategorie in ihrer üblichen Menge (Einheit)
       var st0 = foodState(), fc = ui.pfc || 'h', cb = '', wrap = 'ftl';
       if (pg === 'e') {
@@ -230,13 +232,14 @@
           return '<button data-pfc="' + c[0] + '" aria-pressed="' + (fc === c[0]) + '" style="--cc:' + (c[0] === 'h' ? 'var(--ac)' : CCOL[c[0]] || CCOL.x) + '">' + ic(c[0] === 'h' ? 'star' : (CATI[c[0]] || CATI.x)[0]) + c[1] + '</button>'; }).join('') + '</div>';
         var its = fc === 'h' ? fTiles().filter(function (x) { return !/^d/.test(x.i); }) : st0.o.concat(FOODS).filter(function (x) { return (fc === 'u' ? /^u/.test(x.id) && !x.cat : x.cat === fc) && !x.vh; })
           .map(function (x) { var cu = fUnit(x); return { i: x.id, g: cu ? cu[1] : x.d || (x.u && x.u[0] ? x.u[0][1] : x.ml ? 250 : 100) }; });
-        tl = its.map(function (x) { return fTile({ i: x.i, g: x.g }, 'data-pfd="' + x.i + '|' + x.g + '"'); }).join('');
+        // Häufig: Symbol = Herkunft (zuletzt, häufig, zur Uhrzeit) wie in Essen, in einer Kategorie = Art des Lebensmittels
+        tl = its.map(function (x) { return fTile({ i: x.i, g: x.g, q: x.q }, 'data-pfd="' + x.i + '|' + x.g + '"'); }).join('');
       } else if (pg === 'g') {
         // Gerichte wie im Gerichte-Menü (Karten), nur einplanen; anlegen und bearbeiten in Essen
         var lt = {}; st0.e.forEach(function (x) { if (x.r && /^d/.test(x.r.i)) lt[x.r.i] = Math.max(lt[x.r.i] || 0, x.t); }); wrap = 'fdg';
         tl = st0.d.slice().sort(function (x, y) { return (lt[y.id] || 0) - (lt[x.id] || 0); }).map(function (x) { return fDishCard(x, 'data-pfd="' + x.id + '|1"'); }).join('') ||
           '<p class="muted tplh">' + ic('pot') + 'Noch keine Gerichte. Anlegen in Essen › Gerichte.</p>';
-      } else tl = tplTiles(sd);
+      } else if (pg === 's') { tl = shopHtml(); wrap = 'pshp'; } else tl = tplTiles(sd);
       h += '<section class="pwks rise" style="--i:3">' + tg0 + cb + '<div class="' + wrap + '" data-noswipe="1">' + tl + '</div></section>';
     }
 

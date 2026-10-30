@@ -261,12 +261,12 @@
         if (q) { var pc = reqLine(q, d).pct / 100, a = P[f], b = P[e.id]; if (pc > 0) lines += ln(a, { x: a.x + (b.x - a.x) * pc, y: a.y + (b.y - a.y) * pc }, 'pg'); }
       });
     });
-    MUS.forEach(function (m) { var q = mLevel(d.mp[m[0]] || 0), p = P['m:' + m[0]]; nodes += '<button class="stm' + (sel === 'm:' + m[0] ? ' sel' : '') + '" data-stn="m:' + m[0] + '" style="left:' + p.x.toFixed(0) + 'px;top:' + p.y.toFixed(0) + 'px">' + embHtml(m[0], q.lv) + '<small>' + m[1] + ' ' + q.lv + '</small></button>'; });
+    MUS.forEach(function (m) { var q = mLevel(d.mp[m[0]] || 0), p = P['m:' + m[0]]; nodes += '<button class="stm' + (sel === 'm:' + m[0] ? ' sel' : '') + '" data-stn="m:' + m[0] + '" style="' + stPos(p.x, p.y) + '">' + embHtml(m[0], q.lv) + '<small>' + m[1] + ' ' + q.lv + '</small></button>'; });
     EX.forEach(function (e) {
       var p = P[e.id], own = !!d.unlocked[e.id], c = cardOf(d, e), sk = e.g === 'skill', nx = !own && (e.req || []).every(function (q) { return d.unlocked[q[0]]; });
       if (sk) { tot++; if (own) lit++; }
-      if (stSat[e.id]) { nodes += '<button class="sts r' + rarOf(e) + (own ? ' on' : '') + (sel === e.id ? ' sel' : '') + '" data-stn="' + e.id + '" style="left:' + p.x.toFixed(0) + 'px;top:' + p.y.toFixed(0) + 'px" aria-label="' + esc(e.n) + '"></button>'; return; }
-      nodes += '<button class="stx r' + rarOf(e) + (sk ? ' sk' : '') + (own ? ' on l' + lookOf(c.lv) : nx ? ' nx' : '') + (sel === e.id ? ' sel' : '') + '" data-stn="' + e.id + '" style="left:' + p.x.toFixed(0) + 'px;top:' + p.y.toFixed(0) + 'px"><i>' + (own ? c.lv : ic('lock')) + '</i><small>' + esc(e.n) + '</small></button>';
+      if (stSat[e.id]) { nodes += '<button class="sts r' + rarOf(e) + (own ? ' on' : '') + (sel === e.id ? ' sel' : '') + '" data-stn="' + e.id + '" style="' + stPos(p.x, p.y) + '" aria-label="' + esc(e.n) + '"></button>'; return; }
+      nodes += '<button class="stx r' + rarOf(e) + (sk ? ' sk' : '') + (own ? ' on l' + lookOf(c.lv) : nx ? ' nx' : '') + (sel === e.id ? ' sel' : '') + '" data-stn="' + e.id + '" style="' + stPos(p.x, p.y) + '"><i>' + (own ? c.lv : ic('lock')) + '</i><small>' + esc(e.n) + '</small></button>';
     });
     // Sektoren: jede Muskelgruppe ein Kuchenstück in ihrer Farbe mit großem Namen am Rand (Überblick beim Herauszoomen; später Illustrationen je Region)
     var rings = '', labels = '';
@@ -274,17 +274,19 @@
       function pt(a, r) { a = a * Math.PI / 180; return (STC + Math.cos(a) * r).toFixed(1) + ',' + (STC + Math.sin(a) * r).toFixed(1); }
       var R1 = 120, R2 = 690, lg = w.a2 - w.a1 > 180 ? 1 : 0, mid = (w.a1 + w.a2) / 2, mr = mid * Math.PI / 180;
       rings += '<path class="sct" style="fill:' + MUSC[w.k] + '" d="M' + pt(w.a1, R1) + 'L' + pt(w.a1, R2) + 'A' + R2 + ',' + R2 + ' 0 ' + lg + ' 1 ' + pt(w.a2, R2) + 'L' + pt(w.a2, R1) + 'A' + R1 + ',' + R1 + ' 0 ' + lg + ' 0 ' + pt(w.a1, R1) + 'Z"/>';
-      labels += '<b class="stl2" style="left:' + (STC + Math.cos(mr) * 640).toFixed(0) + 'px;top:' + (STC + Math.sin(mr) * 640).toFixed(0) + 'px;color:' + MUSC[w.k] + '">' + MUSN[w.k] + '</b>';
+      labels += '<b class="stl2" style="' + stPos(STC + Math.cos(mr) * 640, STC + Math.sin(mr) * 640) + ';color:' + MUSC[w.k] + '">' + MUSN[w.k] + '</b>';
     });
     // Ecke oben links: Fortschritt
     return '<div class="stmap rise" id="stmap" style="--i:1" data-noswipe="1"><div class="stcan" id="stcan"><svg viewBox="0 0 ' + STW + ' ' + STW + '" width="' + STW + '" height="' + STW + '" aria-hidden="true">' + rings + glow + lines + '</svg>' + labels + '<i class="stc2">' + ic('peak') + '</i>' + nodes + '</div>' +
       '<div class="stk"><b>' + lit + '<small>/' + tot + '</small></b><span>Skills</span><b>' + EX.filter(function (e) { return d.unlocked[e.id]; }).length + '<small>/' + EX.length + '</small></b><span>Übungen</span></div>' +
       stInfo(d, sel) + '</div>';
   }
+  // Netz-Koordinaten sind Pixel auf 390 Breite: als rem setzen (wächst wie das CSS mit, .stcan), stBox in echten Pixeln
+  function stPos(x, y) { return 'left:' + (x / 16).toFixed(3) + 'rem;top:' + (y / 16).toFixed(3) + 'rem'; }
   function stBox() {
     // Ausdehnung des Netzes (mit Rand für Beschriftungen)
-    var P = stLayout(), xs = [], ys = []; Object.keys(P).forEach(function (k) { xs.push(P[k].x); ys.push(P[k].y); });
-    return { x0: Math.min.apply(null, xs) - 70, y0: Math.min.apply(null, ys) - 50, x1: Math.max.apply(null, xs) + 70, y1: Math.max.apply(null, ys) + 50 };
+    var P = stLayout(), xs = [], ys = [], u = parseFloat(getComputedStyle(document.documentElement).fontSize) / 16 || 1; Object.keys(P).forEach(function (k) { xs.push(P[k].x); ys.push(P[k].y); });
+    return { x0: (Math.min.apply(null, xs) - 70) * u, y0: (Math.min.apply(null, ys) - 50) * u, x1: (Math.max.apply(null, xs) + 70) * u, y1: (Math.max.apply(null, ys) + 50) * u };
   }
   function stFit() { var m = $('stmap'), b = stBox(); return m ? Math.min(m.clientWidth / (b.x1 - b.x0), (m.clientHeight - 70) / (b.y1 - b.y0)) : 0.3; }
   function stApply() {

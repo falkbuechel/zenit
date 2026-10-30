@@ -1,4 +1,4 @@
-import os,shutil,glob,subprocess
+import os,re,shutil,glob,subprocess
 ROOT=os.path.dirname(os.path.abspath(__file__))
 # Quelle: src/index.html (Gerüst) + src/css/*.css an <!--CSS--> + src/js/*.js an <!--JS--> (jeweils in Dateinamen-Reihenfolge).
 # Die JS-Teile sind Abschnitte EINER Funktion (IIFE im Gerüst): gemeinsamer Gültigkeitsbereich, Reihenfolge zählt (Code läuft beim Laden von oben nach unten).
@@ -20,6 +20,13 @@ def assemble():
             if a<line<=a+c: return f if f=='src/index.html' else '%s:%d'%(f,line-a)
         return '?'
     return txt, where
+def rem(css):
+    # px -> rem (1rem = 16px auf 390 Breite, siehe html in 00-basis.css): alles wächst mit der Bildschirmbreite.
+    # Bleiben Pixel: Werte bis 2px (Linien), Bedingungen von @media, groß geschriebenes PX (wie postcss-pxtorem)
+    def conv(m):
+        v=float(m.group(1))
+        return m.group(0) if abs(v)<=2 else ('%.4f'%(v/16)).rstrip('0').rstrip('.')+'rem'
+    return ''.join(p if p.startswith('@media') else re.sub(r'(?<![\w.#-])(-?\d*\.?\d+)px\b',conv,p) for p in re.split(r'(@media[^{]*\{)',css))
 def git(*a):
     try: return subprocess.run(['git',*a],capture_output=True,text=True,encoding='utf-8',cwd=ROOT).stdout.strip()
     except OSError: return ''
@@ -27,7 +34,7 @@ def build():
     # Version für Zahnrad-Menü: Commit + Datum, "+" = lokaler Build mit ungesicherten Änderungen
     ver=git('rev-parse','--short','HEAD')
     if ver: ver+=('+' if git('status','--porcelain') else '')+' · '+git('log','-1','--format=%cd','--date=format:%d.%m.%y %H:%M')
-    s=assemble()[0]
+    s=''.join(rem(t) if f.endswith('.css') else t for f,t in parts())
     head='''<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#0d0f0c">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">

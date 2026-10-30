@@ -2,40 +2,30 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
-## 2026-10-30 – Planen: Kalender belohnend, Einkauf neu; Essen: Mehrzahl, Zutat-Übersicht, Gericht in Gramm
-- Kalender: trainierte Tage als Glas-Band (Verlauf, Lichtkante, Kontur), Serie ab 3 Tagen: Licht läuft beim Öffnen einmal durch (`--si`), Zahl als Plakette `.pcs` am Ende; volle Woche Gold mit kurzem Aufleuchten. Tausch = Farbstrich unten `.tsl` (Paarfarbe, kein Buchstabe, Workout-Symbol bleibt). Urlaub/Krank = Kontur-Kapsel um die Tage (`.off .os/.oe`), Symbol am ersten Tag, keine Band-Zeile mehr (`.pcb`/`.pc2-bd` entfernt). Klasse `sk` war belegt (90-medien) → `srk`.
-- Planen › Essen: Einkauf als eigener Knopf neben den Reitern (`.pgtw`, wie Gerichte neben der Suche); Kategorie-Leiste behält die Wischposition (`data-kx`, snapshot/hydrate); Kacheln ohne Herkunft in der Farbe ihrer Art (`--tq` = `fTone`).
-- Namen überall (Klasse `fit` aus `fitCls`): `fitNames` wählt 100/88/78 %, Trennung nur an Leerzeichen/Bindestrich, Zahl+Einheit zusammen, sonst Silbentrennung; auch im Fenster (MutationObserver, gebündelt) und nach dem Laden der Schrift.
-- Planen ohne Einblendungen unten: Bestätigungen nur Vibration, Rückgängig-Knopf im Kopf der Tageskarte; Fehler/Hinweise (close, bolt, check) bleiben. „Neue Übung frei“ steht in der Glocke statt unten.
-- Einkauf: Zeile = Bedarf → Kauf (`need`, `a`), Preis rechts, bei mehreren „à“ je Packung/Stück; aufgeklappt je Tag eine Zeile (Mahlzeiten als Symbole, Gerichte zusammengefasst) + Rest. Summe zählt abgehakt mit. Nach links wischen = „Zuhause“ (`food.sh['x:'+key]`, `shKx`), dort zurückholbar.
-- Essen: Mehrzahl `fPl`/`fCnt` (Tüten, Filets, Eier, Pizzen, kleine/große, „2× 9er-Box“). Zutat im Gericht antippen = Kurzübersicht kcal/P/F/KH darunter (`ui.fingx`), Menge rechtsbündig; kein Wechsel ins Mengen-Fenster mehr. Gericht: Gramm unter den Portionen eintippbar (`#fdg`) → Portionen = g / Portionsgewicht.
-
-## 2026-10-30 – Demo: nur noch Voll + Leer
-- `demoData`: „Voll“ (`mid`) enthält jetzt alle Datenformen: 6 Trainingstage (Lauf alle 2 Wochen, einmaliger Test), 2 Wochenpläne mit Zeitstrahl, Urlaub (vorbei/kommend), Krank, Ausnahmen (ausgesetzt, Tausch, ersetzt + zusätzlich), Gerichte mit Schritten/fester Mahlzeit/Gewürz, eigenes Lebensmittel mit Marke/Barcode, Schnell-Eintrag, Geplantes für 7 Tage, Vorlagen (Mahlzeit, Tag), Wasser, Einkauf abgehakt. „Leer“ wie bisher. Gold/Gerissen/Neu entfallen (Smoke: 2 Szenarien).
-- Fehler aus der letzten Runde behoben: `.pmn` war mit den alten Planen-Mahlzeitkacheln gelöscht, wird aber von der Woche-Kachel genutzt (Text lief über).
-
-## 2026-10-30 – UX-Review Essen/Planen, Aufräumen
-- Neu: Skill `ux-review` (Heuristiken + Kernaufgaben + Konsistenz), Messung `node tools/ux-scan.js` (unslop-Audit `tools/unslop-audit.js`, Tippziele, Schriftgrößen, Screenshots `tools/out/ux-*`). Quellen in `.claude/skills/README.md`.
-- Routine „Damir unslop-Skill prüfen“ (täglich 9:00, Cloud, nur Websuche): meldet, sobald Damir Sokolovskys eigener Skill erscheint → dann mit Emil-Skills ein Design-Setup bauen.
-- Planen › Essen: Einkauf ist 4. Reiter (Wagen-Symbol, Liste direkt im Bereich statt Fenster; `openShop`/`data-pshop` entfernt), Kopf nur noch „In Essen öffnen“ + Schalter.
-- Mahlzeit-Kacheln in Planen wie in Essen (×Anzahl, kcal, Kategorie-Kreise; leer nur Symbol). Kachel-Symbol in Planen › Häufig = Herkunft (zuletzt/häufig/Uhrzeit), in Kategorien = Art.
-- Namen in Kacheln: `fitNames` misst das längste Wort nach dem Rendern und verkleinert (keine Trennung mitten im Wort); passt es auch bei 66 % nicht, normale Größe mit Silbentrennung. Fehler in `fitCls` behoben (längstes Wort bekam die schwächste Stufe).
-- Zahlen überall `tabular-nums` (kein Springen), Makro-Balken mit größerer Tippfläche (::after).
-- Offen aus dem Scan: 12–13 Schriftgrößen (9,5/10/10,5/11/11,5 …) auf ≤ 8 Stufen bündeln, 5 Schriftgewichte, Bilanz-Licht `fshine` läuft endlos (Akku, bewusstes Design – prüfen), Planen: zwei Schalter-Ebenen (Training/Essen + Reiter).
+## 2026-10-30 Gleiches Bild auf allen iPhones
+- Bezug iPhone 13 (390 breit). CSS bleibt in px; `build.py` (`rem()`) rechnet beim Bauen px → rem, `html` font-size = 100vw/24.375, begrenzt auf 320–430 Breite (Faktor 0,82–1,10). Bleiben Pixel: ≤ 2px (Linien), `@media`-Bedingungen, `PX` groß geschrieben (Konvention wie postcss-pxtorem).
+- Auf 390 pixelgleich (`compare.js` nur Kantenglättung). `@media (max-width: 380px)` entfernt (nicht mehr nötig). Querformat bleibt gesperrt (`.rot`).
+- Skilltree: Knoten-/Beschriftungs-Positionen aus JS jetzt in rem (`stPos`), `stBox` in echten Pixeln; sonst wuchsen Knoten, Abstände nicht.
+- Neu `tools/fit.js`: alle Ansichten auf 8 iPhone-Größen (SE bis 16 Pro Max) messen, meldet nur, was schlechter ist als auf dem iPhone 13 (ragt raus, abgeschnitten, gekürzt, mehr Zeilen, Text überlappt in derselben Ebene). Vorher 111 Funde (u. a. Urlaub/Krank auf 375 abgeschnitten, Gerichte überlappt, Kategorienamen auf Pro Max gekürzt), jetzt 0. In `/check`.
+- Regel: Neue Größen in JS-Inline-Styles in rem (Wert/16) oder messen, nie feste px für Layout.
 
 ## 2026-10-29 Bypass-Modus mit Sicherheitsnetz
 - Falk arbeitet mit „Bypass permissions“ (keine Rückfragen). Schutz über PreToolUse-Hook `tools/hook-guard.py` (greift auch im Bypass) + deny-Regeln (zusätzlich: Zugangsdaten ~/.ssh, gh, .git-credentials, .npmrc nicht lesen). `settings.local.json` von Einmal-Freigaben geleert.
 - Gesperrtes braucht Falk selbst im Terminal. Regeln sind Textmuster: neue Fälle in `RULES` ergänzen und mit Beispielbefehlen testen.
 
-## Stand 2026-10-30 (abends)
-- Zuletzt: zwei Runden Essen/Planen (ec789f3, c700bfb): Mengen in Einheiten + Liter, Kalender 3 Stufen mit Trainings-Flächen/Tauschpaaren/Bändern in einer Reihe, Training ohne Vorlagen-Reiter, Planen › Essen mit Kategorien/Gericht-Karten/getrennten Vorlagen, Einkauf in Kaufgrößen (`SHB`).
-- Falk testet am iPhone: Mengen-Fenster (Stück/Glas/EL, Gramm klein, Wischen), Zutaten-Chips antippen, Gericht „≈ g“, Kalender (Flächen, volle Woche gold, ⇄A, geteiltes Band), „Workout an diesem Tag“, „Neues Workout“, Planen-Kategorien, Gericht-Karten hochziehen, Einkaufspreise.
-- Nächster Schritt: Falks Rückmeldung; danach offene Runde: Essen kopieren („wie letzte Woche“), Fehlt-noch-Vorschläge, Ereignis-Tage.
-- Offene Entscheidungen: Link-Import für Rezepte (fremder CORS-Dienst)? Skilltree Dead Hang/Hollow nach außen? Mahlzeit im Mengen-Fenster beim Einplanen wählbar machen?
-- Vorschau: `tools/serve.py` (Port 8000) startet VS Code; nie aus Claudes Sitzung starten. App-Icon erst nach neuem Hinzufügen; App NICHT löschen (Daten weg).
+## Stand 2026-10-30 (Nacht)
+- Zuletzt gepusht: 390191d (UX-Review, Einkauf-Reiter), c873049 (Demo Voll/Leer), 34c304b (Kalender Glas-Band/Serie/Kapsel, Einkauf neu, Namen-System, Zutat-Übersicht, Gericht in g).
+- Falk testet am iPhone: Kalender (Band, Licht/Serie-Zahl, Gold-Woche, Tausch-Strich, Urlaub/Krank-Kontur), Einkauf (Wischen nach Zuhause, à-Preis, Rest), Namen in Kacheln, Zutat antippen, Gericht-Gramm. Demo vorher neu laden (Zahnrad › Testdaten › Voll).
+- Routine „Damir unslop-Skill prüfen“ täglich 9:00 (claude.ai/code/routines); wenn verfügbar: mit Emil-Skills + `ux-review` ein Design-Setup bauen.
+- Nächster Schritt: Falks Rückmeldung; dann offene Runde Essen kopieren / Fehlt-noch-Vorschläge / Ereignis-Tage oder Schriftgrößen bündeln.
+- Offene Entscheidungen: Link-Import für Rezepte (CORS-Dienst)? Skilltree Dead Hang/Hollow nach außen? Mahlzeit im Mengen-Fenster beim Einplanen wählbar?
+- Vorschau: `tools/serve.py` (Port 8000) startet VS Code; nie aus Claudes Sitzung starten. App NICHT vom Homescreen löschen (Daten weg).
 - Nicht committet: nur dieses Log.
 
 ## Offen / Ideen
+- UX-Scan offen: 12–13 Schriftgrößen auf ≤ 8 Stufen bündeln, 5 Schriftgewichte; Bilanz-Licht `fshine` läuft endlos (Akku); Planen hat zwei Schalter-Ebenen (Training/Essen + Reiter).
+- Sehr lange Wörter (Griechischer, Naturjoghurt) werden in 4er-Kacheln nach Silben getrennt; ggf. Icon-Platz nur in Zeile 1 freihalten.
+- Trainings-Kacheln „Blackr…“ (Woche) noch abgeschnitten statt eingepasst.
 - Essen planen weiter an Essen angleichen: Mahlzeit-Karte in Planen klappt noch als Fenster auf (Essen: in der Zeile); Mahlzeit beim Einplanen aus einer Kachel = übliche (`mealFor`), im Mengen-Fenster nicht wählbar.
 - Gerichte bearbeiten: Zutatenmenge noch in g (Einheit nur in der Ansicht `fingHtml` und beim Hinzufügen über das Mengen-Fenster).
 - iPhone-Test offen: siehe Stand oben.
@@ -47,7 +37,7 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Menüleiste: ernst und modern, aber mit etwas mehr Charakter – weiter abstimmen.
 - Woche ziehen ändert den aktiven Plan auch rückwirkend (vergangene Kalendersymbole/Serie können sich verschieben) – ggf. Änderung ab heute als neuer Planstand.
 - Einkaufsliste: Packungspreise geschätzt (Discounter); Obst/Gemüse ohne Packung über €/kg; eigene Preise je Lebensmittel optional.
-- Kalender: Bänder (Urlaub/Krank) brauchen noch eine eigene Zeile über der Woche; „volle Woche“ zählt nur geplante Tage.
+- Kalender: „volle Woche“ zählt nur geplante Tage.
 - Nächste Runde: Tag/Woche Essen kopieren („wie letzte Woche“) + Planen Schritt 4: Vorschläge „fehlt noch“ (Protein je kcal, passt in den Rest, oft gegessen).
 - Planen Schritt 5: Event (kcal reservieren) ordentlich umsetzen; Cheatday ohne Sonderregel, Urlaub/Krank bleiben.
 - Planen Schritt 6: „Was habe ich“ nur abgeleitet (abgehakt = könnte da sein), keine Pflege.
@@ -64,6 +54,26 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+### 2026-10-30 – Planen: Kalender belohnend, Einkauf neu; Essen: Mehrzahl, Zutat-Übersicht, Gericht in Gramm
+- Kalender: trainierte Tage als Glas-Band (Verlauf, Lichtkante, Kontur), Serie ab 3 Tagen: Licht läuft beim Öffnen einmal durch (`--si`), Zahl als Plakette `.pcs` am Ende; volle Woche Gold mit kurzem Aufleuchten. Tausch = Farbstrich unten `.tsl` (Paarfarbe, kein Buchstabe, Workout-Symbol bleibt). Urlaub/Krank = Kontur-Kapsel um die Tage (`.off .os/.oe`), Symbol am ersten Tag, keine Band-Zeile mehr (`.pcb`/`.pc2-bd` entfernt). Klasse `sk` war belegt (90-medien) → `srk`.
+- Planen › Essen: Einkauf als eigener Knopf neben den Reitern (`.pgtw`, wie Gerichte neben der Suche); Kategorie-Leiste behält die Wischposition (`data-kx`, snapshot/hydrate); Kacheln ohne Herkunft in der Farbe ihrer Art (`--tq` = `fTone`).
+- Namen überall (Klasse `fit` aus `fitCls`): `fitNames` wählt 100/88/78 %, Trennung nur an Leerzeichen/Bindestrich, Zahl+Einheit zusammen, sonst Silbentrennung; auch im Fenster (MutationObserver, gebündelt) und nach dem Laden der Schrift.
+- Planen ohne Einblendungen unten: Bestätigungen nur Vibration, Rückgängig-Knopf im Kopf der Tageskarte; Fehler/Hinweise (close, bolt, check) bleiben. „Neue Übung frei“ steht in der Glocke statt unten.
+- Einkauf: Zeile = Bedarf → Kauf (`need`, `a`), Preis rechts, bei mehreren „à“ je Packung/Stück; aufgeklappt je Tag eine Zeile (Mahlzeiten als Symbole, Gerichte zusammengefasst) + Rest. Summe zählt abgehakt mit. Nach links wischen = „Zuhause“ (`food.sh['x:'+key]`, `shKx`), dort zurückholbar.
+- Essen: Mehrzahl `fPl`/`fCnt` (Tüten, Filets, Eier, Pizzen, kleine/große, „2× 9er-Box“). Zutat im Gericht antippen = Kurzübersicht kcal/P/F/KH darunter (`ui.fingx`), Menge rechtsbündig; kein Wechsel ins Mengen-Fenster mehr. Gericht: Gramm unter den Portionen eintippbar (`#fdg`) → Portionen = g / Portionsgewicht.
+
+### 2026-10-30 – Demo: nur noch Voll + Leer
+- `demoData`: „Voll“ (`mid`) enthält jetzt alle Datenformen: 6 Trainingstage (Lauf alle 2 Wochen, einmaliger Test), 2 Wochenpläne mit Zeitstrahl, Urlaub (vorbei/kommend), Krank, Ausnahmen (ausgesetzt, Tausch, ersetzt + zusätzlich), Gerichte mit Schritten/fester Mahlzeit/Gewürz, eigenes Lebensmittel mit Marke/Barcode, Schnell-Eintrag, Geplantes für 7 Tage, Vorlagen (Mahlzeit, Tag), Wasser, Einkauf abgehakt. „Leer“ wie bisher. Gold/Gerissen/Neu entfallen (Smoke: 2 Szenarien).
+- Fehler aus der letzten Runde behoben: `.pmn` war mit den alten Planen-Mahlzeitkacheln gelöscht, wird aber von der Woche-Kachel genutzt (Text lief über).
+
+### 2026-10-30 – UX-Review Essen/Planen, Aufräumen
+- Neu: Skill `ux-review` (Heuristiken + Kernaufgaben + Konsistenz), Messung `node tools/ux-scan.js` (unslop-Audit `tools/unslop-audit.js`, Tippziele, Schriftgrößen, Screenshots `tools/out/ux-*`). Quellen in `.claude/skills/README.md`.
+- Routine „Damir unslop-Skill prüfen“ (täglich 9:00, Cloud, nur Websuche): meldet, sobald Damir Sokolovskys eigener Skill erscheint → dann mit Emil-Skills ein Design-Setup bauen.
+- Planen › Essen: Einkauf ist 4. Reiter (Wagen-Symbol, Liste direkt im Bereich statt Fenster; `openShop`/`data-pshop` entfernt), Kopf nur noch „In Essen öffnen“ + Schalter.
+- Mahlzeit-Kacheln in Planen wie in Essen (×Anzahl, kcal, Kategorie-Kreise; leer nur Symbol). Kachel-Symbol in Planen › Häufig = Herkunft (zuletzt/häufig/Uhrzeit), in Kategorien = Art.
+- Namen in Kacheln: `fitNames` misst das längste Wort nach dem Rendern und verkleinert (keine Trennung mitten im Wort); passt es auch bei 66 % nicht, normale Größe mit Silbentrennung. Fehler in `fitCls` behoben (längstes Wort bekam die schwächste Stufe).
+- Zahlen überall `tabular-nums` (kein Springen), Makro-Balken mit größerer Tippfläche (::after).
 
 ### 2026-10-30 – Kalender 3 Stufen mit Trainings-Flächen, Essen-Icons, Liter, Zutaten, Einkauf in Kaufgrößen
 - Kalender wieder Woche / 3 / 5 Wochen. Trainiert = Fläche (`.done`), Tage in Folge als Band (`.jl/.jr`), volle Woche (alles Geplante erledigt) in Gold (`.pc2-r.full`). Ring wie Essen-Leiste (`dayFood`, gemeinsam). Tauschpaare: ⇄ + Buchstabe in Paarfarbe. Urlaub/Krank in EINER Reihe: gleiche Art verschmilzt (`offK`), Überschneidung = geteiltes Stück (oben gold, unten rot).

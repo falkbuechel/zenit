@@ -101,7 +101,7 @@
 
 .stmap { position: relative; height: 64vh; min-height: 380px; margin-top: 8px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--r22); background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--ac) 14%, var(--s1)), var(--s1) 75%); touch-action: none; }
 .stcan { position: absolute; top: 0; left: 0; width: 1400px; height: 1400px; transform-origin: 0 0; }
-.stcan > svg { position: absolute; inset: 0; }
+.stcan > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .stcan .sct { opacity: .08; stroke: var(--s1); stroke-width: 4; }
 .stl2 { position: absolute; font-family: var(--f-display); font-size: 46px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; opacity: .35; transform: translate(-50%, -50%); pointer-events: none; }
 .stk { position: absolute; top: 10px; left: 10px; display: grid; grid-template-columns: auto auto; align-items: baseline; gap: 0 6px; padding: 8px 10px; border-radius: var(--r12); background: color-mix(in srgb, var(--s1) 88%, transparent); pointer-events: none; }

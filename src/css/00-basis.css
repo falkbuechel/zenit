@@ -109,7 +109,8 @@ button { cursor: pointer; touch-action: manipulation; transition: transform .14s
 .page { padding-top: 4px; padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
 /* Nur #app scrollt (nicht die Seite): Leisten oben/unten stehen fest, kein Gummiband, kurze Seiten scrollen nicht. Kein Zoom per Geste */
 html, body { height: 100%; overflow: hidden; overscroll-behavior: none; touch-action: pan-x pan-y; }
-html { height: 100vh; height: 100lvh; }
+/* Skalierung: build.py rechnet px in rem um, 1rem = 16px auf dem iPhone 13 (390 breit); andere Breiten wachsen mit (320–430, darüber fest). PX (groß) bleibt Pixel */
+html { height: 100vh; height: 100lvh; font-size: clamp(13.13PX, calc(100vw / 24.375), 17.64PX); }
 #app { position: fixed; inset: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-top: env(safe-area-inset-top, 0px); }
 #app::-webkit-scrollbar { display: none; }
 input, textarea { -webkit-user-select: text; user-select: text; }

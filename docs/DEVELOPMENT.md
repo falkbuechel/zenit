@@ -32,6 +32,7 @@ tools/
   hook-check.py       Claude-Hook nach Edit/Write an src/ oder public/: check.py --fast
   hook-context.py     Claude-Hook am Antwortende: Hinweis „/handoff, dann /clear“ ab 200k Kontext
   smoke.js            Rauchtest: 2 Demo-Szenarien (Voll, Leer) x 5 Tabs + Ansichten/Dialoge, Screenshots -> tools/out/
+  fit.js              Gerätegrößen: alle Ansichten auf 8 iPhone-Größen, meldet, was schlechter ist als auf dem iPhone 13 (raus, abgeschnitten, Umbruch, Überlappen)
   compare.js          Pixelvergleich vieler Ansichten (hell/dunkel) gegen einen Git-Stand: beim Aufräumen muss alles gleich bleiben
   make-icons.js       Icons aus SVG -> public/ (Playwright)
 .github/workflows/pages.yml   Push auf main -> check + smoke -> GitHub Pages
@@ -45,6 +46,7 @@ docs/                 DEVELOPMENT.md, DEVELOPMENT_LOG.md, Notes.md
 - Neue JS-Funktionen in die passende Datei; Code, der beim Laden läuft (z. B. `GORDER.forEach`), braucht alles Vorherige → Reihenfolge beachten.
 - CSS: Regel in die Datei des Bereichs; Media-Queries direkt hinter ihre Grundregeln in derselben Datei, globale in `90-medien.css`.
 - Hosting: GitHub Pages https://falkbuechel.github.io/zenit/ (öffentliches Repo). Adresse nicht wechseln, localStorage hängt an ihr.
+- Skalierung: Bezug iPhone 13 (390 breit). CSS in px schreiben, `build.py` macht daraus rem; `html` font-size wächst mit der Breite (320–430). Pixel bleiben: ≤ 2px, `@media`, `PX` groß. Größen aus JS (Inline-Styles) in rem (Wert/16) oder gemessen.
 - Aussehen: Einstellungen › Auto/Hell/Dunkel (`themeSet`, localStorage `zenit.theme`, setzt `data-theme` an `<html>` und `theme-color`).
 - Version: `build.py` setzt `window.ZENIT_V` (Commit · Datum, `+` = lokale ungesicherte Änderungen), sichtbar unten im Zahnrad-Menü.
 - Service-Worker-Cache heißt `zenit-v2` (`public/sw.js`). Netz zuerst, daher kein Versions-Bump für neue Builds nötig; nur erhöhen, wenn sich die Dateiliste `FILES` ändert.

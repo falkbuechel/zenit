@@ -1,4 +1,4 @@
-/* Zuletzt: globale Media-Queries (weniger Bewegung, kleine Bildschirme). Müssen nach allen Bereichen stehen, sonst überschreiben spätere Regeln sie */
+/* Zuletzt: globale Media-Queries (weniger Bewegung). Müssen nach allen Bereichen stehen, sonst überschreiben spätere Regeln sie. Kleine Bildschirme: keine eigenen Regeln, alles wächst mit (rem, siehe html in 00-basis.css) */
 @media (prefers-reduced-motion: reduce) {
   .fresh .rise { animation-name: fade; }
 .status.last, .pill.next, .wd.today i, .tchip, .bar > i::after, .tchip::after { animation: none; }
@@ -6,4 +6,3 @@
   .fresh .pc2.done.srk::after, .fresh .pc2-r.full .pc2.done::before, .fresh .pcs { animation: none; }
   .sheet, .toast { transition-duration: .01ms; }
 }
-@media (max-width: 380px) { .sk b { font-size: 64px; }  .pill { width: 52px; } .step { grid-template-columns: 56px 1fr 56px; } }

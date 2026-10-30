@@ -29,6 +29,7 @@
 - Hook nach jedem Edit: `tools/check.py --fast` (Syntax, Duplikate, Manifest). Still bei Erfolg.
 - Vor dem Commit: `/check` oder Agent `tester` (Haiku, meldet nur Fehler). Vor größeren Commits: Agent `reviewer` (Sonnet).
 - Playwright: Chromium für Klick/Touch, WebKit nur für Layout. Messen statt Screenshot-Runden.
+- Gerätegrößen: Bauen und Testen nur fürs iPhone 13 (390, px). Skalierung läuft automatisch, `fit.js` steckt in `/check` und meldet nur Funde. Breite Layouts (`PANER`, `80-breit.css`, `smoke.js --wide`) nur an Meilensteinen anfassen (ein Tab fertig umgebaut), nicht bei jeder Änderung; neue Abschnitte landen breit von selbst links.
 - Aufräumen: danach `node tools/compare.js` → „Alles gleich“ (dynamische Klassen wie `'g' + k` erkennt kein Scan).
 - Push auf `main` = live auf Falks iPhone (die Action prüft vorher). Nach dem Push nicht auf den Deploy warten.
 - Commits: Deutsch, ein kurzer Satz, was sich für die App ändert.

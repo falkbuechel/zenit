@@ -235,7 +235,7 @@
     if (t.closest('[data-plsr]')) { openFsearch(); return true; }
     if (t.closest('[data-plq]')) { openQuick(null); return true; }
     if ((el = t.closest('[data-fpe]'))) { if (fswMoved) { fswMoved = false; return true; } planEat(el.dataset.fpe); return true; }
-    if ((el = t.closest('[data-pgo]'))) { ui.pd = +el.dataset.pgo; ui.ca = ui.pd; ui.pft = 'e'; goTab('tage'); return true; }
+    if ((el = t.closest('[data-pgo]'))) { ui.pd = +el.dataset.pgo; ui.ca = ui.pd; ui.pgt = 'e'; goTab('tage'); return true; }
     if (t.closest('[data-fquick]')) { openQuick(null, ui.fq.trim(), 's'); return true; }
     if ((el = t.closest('[data-fqx]'))) { var qfr = ui.sheet.from; openPick(el.dataset.fqx); ui.sheet.from = qfr; fpPaint(); return true; }
     if ((el = t.closest('[data-fqu]'))) {

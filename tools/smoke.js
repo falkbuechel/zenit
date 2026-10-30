@@ -10,7 +10,7 @@ const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const SCEN = ['mid', 'empty'];
 const TABS = ['heute', 'tage', 'food', 'fort', 'profil'];
 // Je Tab: Schalter, von denen jeweils jeder Wert einmal angeklickt wird (alle harmlos, nichts löscht)
-const TOGGLES = ['[data-xr]', '[data-xm]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-pft]', '[data-pdb]', '[data-fsd]', '[data-fwa]', '[data-hsel]', '[data-col]', '[data-cf2]', '[data-cg]', '[data-pstat]', '[data-srng]', '[data-sall]', '[data-kmon]', '[data-lcf]', '[data-msel]', '[data-fstk]'];
+const TOGGLES = ['[data-xr]', '[data-xm]', '[data-cday]', '[data-cnav]', '[data-cmode]', '[data-pdb]', '[data-fsd]', '[data-fwa]', '[data-hsel]', '[data-col]', '[data-cf2]', '[data-cg]', '[data-pstat]', '[data-srng]', '[data-sall]', '[data-kmon]', '[data-lcf]', '[data-msel]', '[data-fstk]'];
 const NOANIM = '*, *::before, *::after { animation: none !important; transition: none !important; }';
 
 async function scenario(b, sc, errs) {
@@ -62,12 +62,12 @@ async function scenario(b, sc, errs) {
       await ed(); await click('[data-pmode="repl"]'); await click('[data-preplx]'); await ed(); await click('[data-pmode="repl"]');
       await ed(); await click('[data-pmode="skip"]'); await ed(); await click('[data-pmode="skip"]'); await ed(); await click('[data-pmode="add"]'); await click('[data-paddx]');
       await pz(); await click('[data-pmode="vac"]'); await click('[data-poff="3"]'); await shot('tage-urlaub');
-      await pz(); await click('[data-pmode="vac"]'); await closeSheet(); await click('[data-pft="e"]');
+      await pz(); await click('[data-pmode="vac"]'); await closeSheet(); await click('[data-pgt="e"]');
       // Essen planen (Kachel einplanen, Gericht antippen = übliche Mahlzeit), Einkaufsliste: Zeitraum, abhaken
       await click('[data-pml]'); await click('[data-pla]'); await closeSheet(); await click('[data-pfd]'); await shot('tage-essen');
       // Vorlagen: Tag speichern, einplanen, Löschmodus, zurück zu Gerichten
-      await click('[data-pgt="v"]'); await click('[data-ptpd]'); await click('[data-ptp]'); await shot('tage-vorlagen'); await click('[data-ptpx]'); await click('[data-ptp]'); await click('[data-pgt="g"]'); await click('[data-pws="4"]');
-      await click('[data-pgt="s"]'); await click('[data-shn="3"]'); await click('[data-shk]'); await shot('tage-einkauf'); await click('[data-pgt="e"]'); await click('[data-pft="t"]');
+      await click('[data-pgt="v"]'); await click('[data-ptpd]'); await click('[data-ptp]'); await shot('tage-vorlagen'); await click('[data-ptpx]'); await click('[data-ptp]'); await click('[data-pgt="g"]');
+      await click('[data-pgt="s"]'); await click('[data-shn="3"]'); await click('[data-shk]'); await shot('tage-einkauf'); await click('[data-pgt="w"]');
       if (await click('[data-pnts]')) await closeSheet();
       await click('[data-ptt="v"]'); await shot('tage-tage'); await click('[data-ptt="w"]');
     }

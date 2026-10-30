@@ -6,8 +6,8 @@ const S = path.join(__dirname, 'out'), AUD = fs.readFileSync(path.join(__dirname
 const URL_ = pathToFileURL(path.join(__dirname, '..', 'dist', 'index.html')).href;
 const VIEWS = [
   ['essen', ['#tabs [data-tab="food"]']],
-  ['plan-training', ['#tabs [data-tab="tage"]', '[data-pft="t"]']],
-  ['plan-essen', ['[data-pft="e"]', '[data-pgt="e"]']],
+  ['plan-training', ['#tabs [data-tab="tage"]']],
+  ['plan-essen', ['[data-pgt="e"]']],
   ['plan-vorlagen', ['[data-pgt="v"]']],
   ['plan-gerichte', ['[data-pgt="g"]']],
   ['plan-einkauf', ['[data-pgt="s"]']],

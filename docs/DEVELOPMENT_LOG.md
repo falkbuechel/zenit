@@ -2,28 +2,26 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-31 Planen neu angeordnet (wie Essen, aber eigenes Leitelement)
+- Falk: eigenmächtige Stil-Versuche (Heute A/B/C, harte Kanten) waren nicht gut; er will leiten. Farben bleiben, es ging um Anordnung und Verwendung. Essen ist im Kern fertig (Restpunkte unter Offen).
+- Weg mit Entwürfen (Screenshots aus der echten App, `#view` ersetzt): erst B „wie Essen“ gewählt, Kalender soll bleiben, aber ohne Überlappungen und im Essen-Stil; Unterscheidung durch Anordnung, nicht durch Farbe.
+- Kalender: Zellen wie die Essen-Tagesleiste, drei feste Zeilen (Wochentag | Zahl mit Ring | EIN Zeichen `.pci`): trainiert = Haken im Punkt, Tage in Folge als Kette, volle Woche gold; sonst Urlaub/Krank, Tausch (Paarfarbe), ausgesetzt, geplant (+n). Band, Plakette, Tausch-Strich, Kapsel, Ausnahme-Punkt entfallen. Serie (Flamme, `streakInfo`) im Kopf; Tag ändern wandert zur Tagesüberschrift.
+- Tag: Karte `.pday` führt mit dem Training (Zeilen, Name groß, Minuten, Übungsliste klappt auf), darunter kcal als schmale Zeile; dann Überschrift des Tags (`.pdm2`, Knöpfe: Rückgängig, In Essen öffnen, Workout dazu, Tag ändern) und die vier Mahlzeiten. Schalter Training/Essen (`ui.pft`) und „Training starten“ raus.
+- Ablage: Reiter Workouts | Essen | Gerichte | Vorlagen + Einkauf (`ui.pgt`, Standard `w`); vergangene Tage: Essen-Reiter verweisen auf Essen.
+- Wochenraster (`pWeekHtml`, `.pws`/`.pwsc`-Ziehen) entfernt; Wochentage jetzt im Workout-Fenster (`.pe-wd`, `data-pwd` → `weekSet`). Drop für Essen: `.pdm2 .pml`.
+
 ## 2026-10-29 Bypass-Modus mit Sicherheitsnetz
 - Falk arbeitet mit „Bypass permissions“ (keine Rückfragen). Schutz über PreToolUse-Hook `tools/hook-guard.py` (greift auch im Bypass) + deny-Regeln (zusätzlich: Zugangsdaten ~/.ssh, gh, .git-credentials, .npmrc nicht lesen). `settings.local.json` von Einmal-Freigaben geleert.
 - Gesperrtes braucht Falk selbst im Terminal. Regeln sind Textmuster: neue Fälle in `RULES` ergänzen und mit Beispielbefehlen testen.
 
-## 2026-10-30 Versuch Neu/Alt, Maskottchen-Gorilla
-- Falk: freie Hand für Heute/Plan, alles hinter Schalter; später gemeinsam auswählen, was bleibt. Name „Zenit“ und Farben dürfen sich noch ändern.
-- Varianten statt Neu/Alt: Zahnrad › Alt | A Labor | B Arena (dunkle Bühne, Neon in Stufenfarbe) | C Poster (Streifen, schräg, Stufenname groß); `EXPV` + `data-exp="a|b|c"`. Planen (alle Varianten): Tageskarte, Blöcke, Filter mit harter Kante und versetztem Schatten.
-- Blender: Subdivision nach dem Remesh gegen die Treppen war viel zu langsam (> 10 Min), wieder raus; besser Voxel feiner oder Normalen per Datatransfer.
-- Schalter: Zahnrad › Neu | Alt (`EXP`, `expSet`, localStorage `zenit.exp`, `data-exp` an `<html>`). Neue CSS-Regeln mit `[data-exp]`-Präfix, Daten unverändert.
-- Heute (Neu): Bühne als Trainings-Labor (Raster, harte Kante, versetzte Schatten), Knöpfe mit Druck-Schatten, Fortschritt gestreift, Partner-Spruch über dem Maskottchen (`MSAY`, `mSay`: go/run/done/risk/rest, wechselt täglich).
-- `gorilla(mood, tr)`: SVG-Platzhalter (kantig, cel-shaded), Stufen: ab 2 Bandagen, ab 3 Silber, ab 4 Muskelnähte, ab 5 Aura. Falk: zu grob/vektorhaft, nur Platzhalter.
-- Charakter-Design: Prompts für Gemini (ohne Namen von Stilen/Werken), Ergebnis: Berggorilla, Tierbau (lange Arme, kurze Beine, aufrichten zum Training), Stirnband in Stufenfarbe, Kreide-Hände, Gipfel-Silberrücken, Kerbe im Ohr, Narbe. Essen bestimmt Laune/Energie, nicht Körperfett.
-- Blender 5.2 (Steam: `C:\zGameLauncher\Steam\steamapps\common\Blender\blender.exe`, immer mit `--factory-startup`, sonst Addon-Fehler): `art/gorilla/gorilla.py` baut Blockout aus Muskel-Ellipsoiden, Voxel-Remesh, Toon-Ramp + Inverted-Hull-Kontur, Kletterseil-Gürtel; Masse je Stufe. Renders `sheet-stark.png`, `stufen.png`. Offen: Treppen im Schatten (Normalen nach Remesh, ggf. Datatransfer von Original-Ellipsoiden oder höhere Auflösung), Gesicht/Hände detaillieren, Posen.
-
-## Stand 2026-10-30 (Abend)
-- Gebaut und gepusht: Skalierung auf alle iPhones (7fb8c14, 63d9018), breite Geräte mit Leiste links/zwei Bereichen/Seitenfeld (8542a2b), Arbeitsregel Gerätegrößen in CLAUDE.md (68a3ddc).
-- Falk testet am iPhone: sieht alles aus wie vorher (Bezug iPhone 13)? Plus offene Tests der Vorrunde: Kalender (Band, Serie, Gold-Woche, Tausch-Strich, Urlaub/Krank-Kontur), Einkauf, Namen in Kacheln, Zutat antippen, Gericht-Gramm. Optional: Laptop/iPad im Browser.
-- Nächster Schritt: Falks Rückmeldung; dann Plan kompakter/cleaner machen (Falk: „noch lange nicht wie vorgestellt“) oder erste Stil-Versuche im Heute-Tab.
-- Breite Layouts nur an Meilensteinen nachziehen (Regel in CLAUDE.md).
-- Offene Entscheidungen: Link-Import für Rezepte (CORS-Dienst)? Skilltree Dead Hang/Hollow nach außen? Mahlzeit im Mengen-Fenster beim Einplanen wählbar?
+## Stand 2026-10-31
+- Gerade: Planen neu angeordnet (siehe oben), Falk testet am iPhone. Heute-Varianten A/B/C (Zahnrad) noch drin, harte Kanten in Planen entfernt.
+- Falk testet: Planen (Kalender-Zeichen, Kette/Gold, Tageskarte, Mahlzeiten, Ablage, Ziehen auf Tag/Mahlzeit, Wochentage im Workout-Fenster, Tag ändern/Tauschen).
+- Nächster Schritt: Falks Rückmeldung zu Planen einarbeiten; dann Heute (geleitet, mit Entwürfen) und Essen-Restpunkte; Gorilla verfeinern.
+- Breit (iPad quer/Laptop) für Planen nicht nachgezogen: `PANER` tage = `.pday, .pdm2`, Rest links.
+- Offene Entscheidungen: App-Name/Farbe (darf sich ändern); Maskottchen-Wahl beim Start (3 Tiere, kleiner XP-Buff) erst später; Link-Import Rezepte; Skilltree Dead Hang/Hollow.
 - Vorschau: `tools/serve.py` (Port 8000) startet VS Code; nie aus Claudes Sitzung starten. App NICHT vom Homescreen löschen (Daten weg).
-- Nicht committet: nur dieses Log.
+- Nicht committet: nichts (nach dem Push).
 
 ## Offen / Ideen
 - Breit: Heute noch einspaltig (mit dem Heute-Stil aufteilen); Seitenfeld fest 420 breit statt exakt der rechte Bereich; echte Touch-Laptops ungetestet.
@@ -52,7 +50,9 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Heute: weiterer Umbau der Startseite; Bergpfad-Belohnungen / Tages-Drops, Tagesaufgaben, Saison; Vorwoche-Vergleich ist aus Heute raus (neuen Platz finden)
 - Serie: zu langweilig, beim Redesign aufwerten
 - Effekte und Funken („brutal“, Dopamin) später einbauen
-- Maskottchen: echte Illustration mit Stufen (ComfyUI), ersetzt den SVG-Platzhalter `mascot()`
+- Maskottchen: Blender-Renders je Stufe/Stimmung (WebP) ersetzen `gorilla()`/`mascot()`; später 2 weitere Tiere (Ausdauer, Beweglichkeit) mit Wahl beim Start und kleinem XP-Buff; Essen beeinflusst Laune/Energie, nicht Körperfett.
+- Gorilla-3D: Treppen im Schatten nach Voxel-Remesh (Subdivision zu langsam, Blender stürzt ab) → feineres Voxel oder Normalen per Datatransfer.
+- Variante C: großer Zustandsname hinter dem Gorilla im Test nicht sichtbar.
 - Statistik-Detailansichten schlanker (Training sehr lang)
 - Icons / Text reduzieren in Heute, Essen, Verlauf, Profil
 - Weitere anstehende Termine im Kalender (z. B. Körpermaße monatlich, wie das Wiegen)
@@ -60,6 +60,16 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+## 2026-10-30 Versuch (a19da35, 029bd37): Heute-Varianten, Maskottchen-Gorilla
+- Falk: freie Hand für Heute/Plan, alles hinter Schalter; später gemeinsam auswählen, was bleibt. Name „Zenit“ und Farben dürfen sich noch ändern.
+- Varianten statt Neu/Alt: Zahnrad › Alt | A Labor | B Arena (dunkle Bühne, Neon in Stufenfarbe) | C Poster (Streifen, schräg, Stufenname groß); `EXPV` + `data-exp="a|b|c"`. Planen (alle Varianten): Tageskarte, Blöcke, Filter mit harter Kante und versetztem Schatten.
+- Blender: Subdivision nach dem Remesh gegen die Treppen war viel zu langsam (> 10 Min), wieder raus; besser Voxel feiner oder Normalen per Datatransfer.
+- Schalter: `EXPV`/`EXP`, `expSet`, localStorage `zenit.exp` ('0' = alt), `data-exp` an `<html>`. Neue CSS-Regeln mit `[data-exp]`-Präfix, Daten unverändert.
+- Heute (Neu): Bühne als Trainings-Labor (Raster, harte Kante, versetzte Schatten), Knöpfe mit Druck-Schatten, Fortschritt gestreift, Partner-Spruch über dem Maskottchen (`MSAY`, `mSay`: go/run/done/risk/rest, wechselt täglich).
+- `gorilla(mood, tr)`: SVG-Platzhalter (kantig, cel-shaded), Stufen: ab 2 Bandagen, ab 3 Silber, ab 4 Muskelnähte, ab 5 Aura. Falk: zu grob/vektorhaft, nur Platzhalter.
+- Charakter-Design: Prompts für Gemini (ohne Namen von Stilen/Werken), Ergebnis: Berggorilla, Tierbau (lange Arme, kurze Beine, aufrichten zum Training), Stirnband in Stufenfarbe, Kreide-Hände, Gipfel-Silberrücken, Kerbe im Ohr, Narbe. Essen bestimmt Laune/Energie, nicht Körperfett.
+- Blender 5.2 (Steam: `C:\zGameLauncher\Steam\steamapps\common\Blender\blender.exe`, immer mit `--factory-startup`, sonst Addon-Fehler): `art/gorilla/gorilla.py` baut Blockout aus Muskel-Ellipsoiden, Voxel-Remesh, Toon-Ramp + Inverted-Hull-Kontur, Kletterseil-Gürtel; Masse je Stufe. Renders `sheet-stark.png`, `stufen.png`. Offen: Treppen im Schatten (Normalen nach Remesh, ggf. Datatransfer von Original-Ellipsoiden oder höhere Auflösung), Gesicht/Hände detaillieren, Posen.
 
 ## 2026-10-30 Breite Geräte (iPad quer, Laptop)
 - Größenklassen wie Apple/Material, gemessen in iPhone-13-Maß (Pixel / Skalierung): `c` < 600, `m` < 840, `e` ab 840 (`szSet`, `data-sz` an `<html>`, Wechsel beim Drehen/Fenstergröße → `render`).

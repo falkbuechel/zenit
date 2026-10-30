@@ -74,7 +74,7 @@
     if (h.dataset.sz === z) return false; h.dataset.sz = z; return true;
   }
   // Breit: Abschnitte des Tabs auf zwei Bereiche verteilen, links Übersicht, rechts das Gewählte (PANER). Ohne Treffer bleibt eine Fläche (80-breit.css)
-  var PANER = { tage: '.pday', food: '.fact2, .ftl', fort: '.mchips, .minf', profil: '.pstg' };
+  var PANER = { tage: '.pday, .pdm2', food: '.fact2, .ftl', fort: '.mchips, .minf', profil: '.pstg' };
   function paneSplit(v) {
     var q = PANER[ui.tab], ks = [].slice.call(v.children);
     if (document.documentElement.dataset.sz !== 'e' || !q || !ks.some(function (el) { return el.matches(q); })) return;

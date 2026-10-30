@@ -16,7 +16,7 @@ const NOANIM = '*, *::before, *::after { animation: none !important; transition:
 // Ansichten: Tab, optional Klicks nacheinander (Bereich, Fenster). Fenster werden danach geschlossen
 const VIEWS = [['heute'], ['heute', '[data-arena]'], ['heute', '[data-zoom]'],
   ['food'], ['food', '[data-ftile="0"]'], ['food', '[data-fsearch]'], ['food', '[data-fwao]'], ['food', '[data-fgoal]'], ['food', '[data-fdishes]'], ['food', '[data-fquick]'],
-  ['tage'], ['tage', '[data-pchg]'], ['tage', '[data-pdedit]'], ['tage', '[data-pedit]'], ['tage', '[data-ptt="v"]'], ['tage', '[data-pft="e"]'], ['tage', '[data-pft="e"]', '[data-pgt="v"]'], ['tage', '[data-pft="e"]', '[data-pgt="s"]'],
+  ['tage'], ['tage', '[data-pchg]'], ['tage', '[data-pdedit]'], ['tage', '[data-pedit]'], ['tage', '[data-pgt="e"]'], ['tage', '[data-pgt="v"]'], ['tage', '[data-pgt="s"]'],
   ['fort'], ['fort', '[data-col="mu"]'], ['fort', '[data-col="sk"]'], ['fort', '[data-cardo]'],
   ['profil'], ['profil', '[data-pstat="tr"]'], ['profil', '[data-pstat="er"]'], ['profil', '[data-set]']];
 

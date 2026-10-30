@@ -244,9 +244,8 @@
   var fsT = null;
   // iOS: beim Ziehen nicht scrollen. Kacheln (Essen-Vorschläge, Planen-Kacheln) in jede Richtung, Einträge nur senkrecht
   document.addEventListener('touchstart', function (ev) {
-    var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm)' + (ui.sheet ? '' : ', .ptv[data-ptd], .fti[data-pfd], .pwsc, .fti[data-ptp]'));
+    var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm)' + (ui.sheet ? '' : ', .ptv[data-ptd], .fti[data-pfd], .fti[data-ptp]'));
     fsT = el ? { x: ev.touches[0].clientX, y: ev.touches[0].clientY, v: null, tile: !el.classList.contains('fcpi') } : null;
-    // Workouts in der Woche (.pwsc) zählen als Kachel: in jede Richtung ziehbar
   }, { passive: true });
   document.addEventListener('touchmove', function (ev) {
     if (!fsT) return; var dx = ev.touches[0].clientX - fsT.x, dy = ev.touches[0].clientY - fsT.y;

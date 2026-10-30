@@ -3,6 +3,5 @@
   .fresh .rise { animation-name: fade; }
 .status.last, .pill.next, .wd.today i, .tchip, .bar > i::after, .tchip::after { animation: none; }
 .fresh .draw { animation-name: fade; }
-  .fresh .pc2.done.srk::after, .fresh .pc2-r.full .pc2.done::before, .fresh .pcs { animation: none; }
   .sheet, .toast { transition-duration: .01ms; }
 }

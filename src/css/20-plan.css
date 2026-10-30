@@ -80,11 +80,10 @@
 .pc2 .ics .ic { width: 15px; height: 15px; }
 .pc2.past b { color: var(--ink3); }
 /* Heute wie in Essen: dezente warme Pille, Zahl fett (der kcal-Ring bleibt frei) */
-.pc2.today { background: color-mix(in srgb, var(--gold) 13%, transparent); }
+.pc2.today:not(.done) { background: color-mix(in srgb, var(--gold) 13%, transparent); }
 .pc2.today b { color: var(--ink); font-weight: 800; }
 .pc2.sel { background: var(--s2); box-shadow: inset 0 0 0 1px var(--line); }
 /* Heute/gewählt in einer Urlaubs-/Krank-Reihe: das Band bleibt durchgehend, darin eine runde Fläche (gewählt im kräftigeren Ton der Reihenfarbe) */
-.pc2 .dn { width: 13px; height: 13px; margin-top: -2px; color: var(--ac); }
 .pc2-g.in-r { animation: pcin-r .2s var(--ease); } .pc2-g.in-l { animation: pcin-l .2s var(--ease); } .pc2-g.in-m { animation: pcin-m .2s var(--ease); }
 @keyframes pcin-r { from { opacity: 0; transform: translateX(28px); } }
 @keyframes pcin-l { from { opacity: 0; transform: translateX(-28px); } }
@@ -102,6 +101,16 @@
 .pcb { --oc: var(--gold); display: flex; align-items: center; justify-content: center; gap: 4px; min-width: 0; height: 18px; margin: 0 2px; padding: 0 6px; overflow: hidden; border: 0; border-radius: 9px;
   background: color-mix(in srgb, var(--oc) 16%, transparent); color: color-mix(in srgb, var(--oc) 75%, var(--ink)); font: inherit; font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; cursor: pointer; }
 .pcb.sick { --oc: var(--danger); }
+.pcb.sick.vac { background: linear-gradient(color-mix(in srgb, var(--gold) 22%, transparent) 50%, color-mix(in srgb, var(--danger) 18%, transparent) 50%); }
+/* Trainiert: Fläche, Tage in Folge als ein Band; volle Woche in Gold */
+.pc2.done { background: color-mix(in srgb, var(--ac) 22%, transparent); }
+.pc2.done.jl { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.pc2.done.jr { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.pc2.done.sel { background: color-mix(in srgb, var(--ac) 34%, transparent); }
+.pc2-r.full .pc2.done { background: color-mix(in srgb, var(--gold) 24%, transparent); }
+.pc2-r.full .pc2.done.sel { background: color-mix(in srgb, var(--gold) 36%, transparent); }
+.pc2 .ics em.tsw { display: flex; align-items: center; gap: 1px; color: var(--sc); }
+.pc2 .ics em.tsw i { font: 800 10px/1 var(--f-mono); font-style: normal; }
 .pcb.cl { margin-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; }
 .pcb.cr { margin-right: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; }
 .pcb .ic { flex: none; width: 12px; height: 12px; }
@@ -300,7 +309,16 @@ button.pdb-h:active { background: var(--s2); }
 .ptl2.drop { outline: 2px dashed var(--danger); outline-offset: 4px; border-radius: var(--r12); }
 .ptl2 { margin-top: 2px; }
 /* Essen planen: kleiner Schalter Gerichte | Vorlagen über den Kacheln */
-.seg.pgt { grid-template-columns: none; grid-auto-flow: column; width: max-content; margin: 0 0 4px; }
+.seg.pgt { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 1fr; width: 100%; margin: 0 0 6px; }
+/* Planen › Essen: Kategorien waagerecht wischbar */
+.pfcb { display: flex; gap: 6px; margin: 0 -16px 8px; padding: 2px 16px; overflow-x: auto; scrollbar-width: none; }
+.pfcb::-webkit-scrollbar { display: none; }
+/* Gericht-Karten hochziehen (wie Kacheln): kein Scrollen auf den Karten */
+.pwks .fdg { touch-action: none; }
+.pwks .fdcb { touch-action: none; }
+.pfcb button { flex: none; display: inline-flex; align-items: center; gap: 5px; min-height: 34px; padding: 0 12px; border: 1px solid var(--line); border-radius: 17px; background: var(--s1); color: var(--ink2); font: inherit; font-size: 13px; font-weight: 700; }
+.pfcb button .ic { width: 15px; height: 15px; color: var(--cc); }
+.pfcb button[aria-pressed="true"] { border-color: var(--cc); background: color-mix(in srgb, var(--cc) 14%, var(--s1)); color: var(--ink); }
 .seg.pgt button { min-height: 32px; padding: 0 14px; font-size: 13px; }
 /* Vorlagen-Kacheln: Mahlzeit in ihrer Farbe (wie Vorschläge), Tag neutral; neue/Löschen gestrichelt mit Symbol; Löschmodus rot umrandet */
 .fti.tpd { --tq: var(--ink2); }
@@ -311,6 +329,10 @@ button.pdb-h:active { background: var(--s2); }
 .fti.tpl { box-shadow: 3px -3px 0 -1px var(--s1), 3px -3px 0 0 color-mix(in srgb, var(--mc, var(--line)) 50%, var(--line)), var(--hs); }
 .fti.tdel { box-shadow: 0 0 0 1.5px var(--danger); }
 .fti.tdel .ftq { color: var(--danger); }
+.tplg { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; margin: 6px 2px 0; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); }
+.tplg .ic { width: 14px; height: 14px; }
+.fti .tpk { display: flex; gap: 2px; font: 700 9.5px/1 var(--f-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink3); }
+.fti .tpk .ic { width: 11px; height: 11px; }
 .tplh { grid-column: 1 / -1; display: flex; gap: 8px; margin: 4px 2px; font-size: 13px; line-height: 1.4; }
 .tplh .ic { flex: none; width: 18px; height: 18px; margin-top: 1px; }
 .ptv.pnew { place-items: center; border: 1px dashed var(--line); background: transparent; box-shadow: none; color: var(--ink3); }

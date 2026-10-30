@@ -35,9 +35,9 @@
     var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy, m = sMode; sMode = '';
     if (m === 'sheet') { var sh = $('sheet'); sh.style.transition = ''; sh.style.transform = ''; if (sheetDy > 90) closeSheet(); return; }
     if (m === 'cal' || m === 'fds') {
-      // Kalender senkrecht: nach unten = 5 Wochen, nach oben = Woche. Aufklappen nur, wenn die Seite oben steht (sonst war es ein Scrollen)
+      // Kalender senkrecht: nach unten = eine Stufe mehr (Woche → 3 → 5 Wochen), nach oben = eine weniger. Aufklappen nur, wenn die Seite oben steht (sonst war es ein Scrollen)
       var lv = ui.cm || 0;
-      if (m === 'cal' && calLock === 'y' && Math.abs(dy) > 40 && (dy > 0 ? !lv && $('app').scrollTop <= 0 : lv)) { calMon(dy > 0 ? 1 : 0); return; }
+      if (m === 'cal' && calLock === 'y' && Math.abs(dy) > 40 && (dy > 0 ? lv < 2 && $('app').scrollTop <= 0 : lv > 0)) { calMon(lv + (dy > 0 ? 1 : -1)); return; }
       if (calLock !== 'x') return;
       var fast = Math.abs(dx) / Math.max(1, Date.now() - st0) > 0.35, cg = document.querySelector(m === 'cal' ? '.pc2-g' : '.fds');
       if ((Math.abs(dx) > 50 || fast) && (m === 'cal' ? calMove : fdsMove)(dx < 0 ? 1 : -1)) return;

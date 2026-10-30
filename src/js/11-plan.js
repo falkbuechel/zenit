@@ -49,16 +49,16 @@
     return o;
   }
   function calMove(dir) {
-    // Woche: 7 Tage weiter, 5 Wochen: 4 Wochen. Grenzen: 6 Monate zurück, 6 voraus
+    // Woche: 7 Tage weiter, 3 Wochen: 3 Wochen, 5 Wochen: 4 Wochen. Grenzen: 6 Monate zurück, 6 voraus
     var today = dayIdx(Date.now()), a = ui.ca == null ? today : ui.ca;
-    var n = a + dir * (ui.cm ? 28 : 7);
+    var n = a + dir * [7, 21, 28][ui.cm || 0];
     if (n < today - 183 || n > today + 183) return false;
     ui.ca = n; ui.cdir = dir; ui.fresh = false; render(); return true;
   }
   function calMon(lv) {
-    // 0 = Woche, 1 = 5 Wochen; der Kalender gleitet von der alten zur neuen Höhe
+    // 0 = Woche, 1 = 3 Wochen, 2 = 5 Wochen; der Kalender gleitet von der alten zur neuen Höhe
     var c0 = document.querySelector('.pcal2'), h0 = c0 ? c0.offsetHeight : 0;
-    ui.cm = lv ? 1 : 0; ui.ca = ui.pd == null ? dayIdx(Date.now()) : ui.pd; ui.cmx = true; ui.fresh = false; render(); buzz(4);
+    ui.cm = Math.max(0, Math.min(2, lv)); ui.ca = ui.pd == null ? dayIdx(Date.now()) : ui.pd; ui.cmx = true; ui.fresh = false; render(); buzz(4);
     var c = document.querySelector('.pcal2'); if (!c || !h0 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var h1 = c.offsetHeight; c.style.height = h0 + 'px'; c.style.overflow = 'hidden'; void c.offsetHeight;
     c.style.transition = 'height .38s var(--drawer)'; c.style.height = h1 + 'px';
@@ -121,36 +121,38 @@
     // Kein Titel (wie Essen): der Bereich ergibt sich aus der unteren Leiste
     var h = '';
 
-    // Kalender ruhig: Woche Mo–So oder 5 Wochen (Woche des Tags in der Mitte). Je Tag: Zahl mit Essen-Ring (Anteil vom kcal-Ziel) und EIN Zeichen:
-    // vergangen = Haken (trainiert) bzw. blasser Punkt (verpasst), sonst das erste Training (+n bei mehreren); Ausnahme = kleiner Punkt an der Zahl.
-    // Urlaub/Krank als Band über den Tagen jeder Woche, Überschneidungen in eigenen Reihen
-    var q = new Date(a * 864e5), from, to;
-    if (ui.cm) { from = a - wdOf(a) - 14; to = from + 34; } else { from = a - wdOf(a); to = from + 6; }
+    // Kalender: Woche Mo–So, 3 oder 5 Wochen (Woche des Tags in der Mitte). Je Tag: Zahl mit Essen-Ring (wie die Essen-Leiste, dayFood) und EIN Zeichen.
+    // Trainiert = Fläche gefärbt, Tage in Folge laufen als ein Band zusammen; volle Woche (alles Geplante bis Sonntag erledigt) = Band in Gold.
+    // Zeichen: künftig das erste Training (+n), vergangen verpasst = blasser Punkt, Tausch = ⇄ mit Buchstabe in der Farbe des Paars; andere Ausnahme = Punkt an der Zahl.
+    // Urlaub/Krank als Band über der Woche in EINER Reihe: gleiche Art verschmilzt, Überschneidung = geteiltes Stück (oben Urlaub, unten Krank)
+    var q = new Date(a * 864e5), w0 = a - wdOf(a), from = w0 - [0, 7, 14][ui.cm || 0], to = from + [7, 21, 35][ui.cm || 0] - 1;
     var title = q.toLocaleDateString('de-DE', { month: 'long', timeZone: 'UTC' });
-    var rows = '', swp = ui.pmode === 'swap';
+    var rows = '', swp = ui.pmode === 'swap', pairs = [];
+    for (k = from; k <= to; k++) { var fw = ovF(k).w; if (fw !== undefined && pairs.indexOf(Math.min(k, fw)) < 0) pairs.push(Math.min(k, fw)); }
+    pairs.sort(function (x, y) { return x - y; });
+    function offK(x) { return (P.off || []).filter(function (o) { return o.a <= x && o.b >= x; }).map(function (o) { return o.k; }).filter(function (v, i, r) { return r.indexOf(v) === i; }).sort().join(' '); }
     for (var r0 = from; r0 <= to; r0 += 7) {
-      var cells = '', lanes = [], bands = '';
-      (P.off || []).filter(function (o) { return o.b >= r0 && o.a <= r0 + 6; }).sort(function (x, y) { return x.a - y.a; }).forEach(function (o) {
-        var s0 = Math.max(o.a, r0), e0 = Math.min(o.b, r0 + 6), ln = 0; while (lanes[ln] != null && lanes[ln] >= s0) ln++; lanes[ln] = e0;
-        bands += '<button class="pcb ' + o.k + (o.a < r0 ? ' cl' : '') + (o.b > r0 + 6 ? ' cr' : '') + '" data-cday="' + s0 + '" style="grid-column:' + (s0 - r0 + 1) + ' / ' + (e0 - r0 + 2) + ';grid-row:' + (ln + 1) + '" aria-label="' + (o.k === 'vac' ? 'Urlaub' : 'Krank') + ' ' + fmtShort(o.a) + ' – ' + fmtShort(o.b) + '">' +
-          ic(o.k === 'vac' ? 'beach' : 'sick') + (e0 - s0 >= 1 ? '<span>' + (o.k === 'vac' ? 'Urlaub' : 'Krank') + '</span>' : '') + '</button>';
-      });
+      var cells = '', bands = '', due = 0, hit = 0;
+      for (k = r0; k < r0 + 7; k++) { var dk = offK(k); if (!dk || dk === offK(k - 1) && k > r0) continue; var e0 = k; while (e0 < r0 + 6 && offK(e0 + 1) === dk) e0++;
+        var two = dk.indexOf(' ') > 0, nm = dk === 'vac' ? 'Urlaub' : dk === 'sick' ? 'Krank' : '';
+        bands += '<button class="pcb ' + dk + (offK(k - 1) ? ' cl' : '') + (offK(e0 + 1) ? ' cr' : '') + '" data-cday="' + k + '" style="grid-column:' + (k - r0 + 1) + ' / ' + (e0 - r0 + 2) + '" aria-label="' + (two ? 'Urlaub und Krank' : nm) + '">' +
+          (two ? '' : ic(dk === 'vac' ? 'beach' : 'sick') + (e0 > k ? '<span>' + nm + '</span>' : '')) + '</button>'; }
       for (k = r0; k < r0 + 7; k++) {
-        var ds = schedFor(k), tr = d.byDay[k], fk = ovF(k), pk = swp ? (swapOk(sd, k, today) ? ' pick' : ' nop') : '';
-        var fs = k <= today ? foodSum(k) : planSum(k), fq = fs.items.length ? fs.k / foodGoal(k).k : 0;
-        var fr = dayRing(fq, k > today, k > today ? '' : fq > 1.1 ? ' over' : fq >= 0.85 ? ' ok' : '');
-        var ex = !offAt(k) && (fk.s || fk.w !== undefined || fk.r || fk.a), sg = '';
-        if (tr) sg = ic('check', 'dn');
-        else if (ds.length) sg = '<em class="' + (k < today ? 'ms' : '') + '" style="--pc:var(' + PCOL[ds[0].c] + ')">' + ic(dIcon(ds[0])) + '</em>' + (ds.length > 1 && k >= today ? '<small>+' + (ds.length - 1) + '</small>' : '');
-        cells += '<button class="pc2' + pk + (k === today ? ' today' : '') + (k === sd ? ' sel' : '') + (k < today ? ' past' : '') + (tr ? ' done' : '') + (ex ? ' exc' : '') + '" data-cday="' + k + '" aria-label="' + fmtDayL(k) + '">' +
-          (ui.cm ? '' : '<small>' + WDN[wdOf(k)].slice(0, 2) + '</small>') + '<b>' + fr + new Date(k * 864e5).getUTCDate() + '</b><span class="ics">' + sg + '</span></button>';
+        var ds = schedFor(k), tr = d.byDay[k], fk = ovF(k), pk = swp ? (swapOk(sd, k, today) ? ' pick' : ' nop') : '', sg = '';
+        if (ds.length) { due++; if (tr) hit++; }
+        var pi = fk.w !== undefined ? pairs.indexOf(Math.min(k, fk.w)) : -1, ex = !offAt(k) && pi < 0 && (fk.s || fk.r || fk.a);
+        if (pi >= 0) sg = '<em class="tsw" style="--sc:var(' + ['--g-cardio', '--g-core', '--g-pull', '--g-kh'][pi % 4] + ')">' + ic('swap') + '<i>' + 'ABCDEFGH'[pi % 8] + '</i></em>';
+        else if (ds.length && !tr) sg = '<em class="' + (k < today ? 'ms' : '') + '" style="--pc:var(' + PCOL[ds[0].c] + ')">' + ic(dIcon(ds[0])) + '</em>' + (ds.length > 1 && k >= today ? '<small>+' + (ds.length - 1) + '</small>' : '');
+        var tp = tr && k > r0 && d.byDay[k - 1], tn = tr && k < r0 + 6 && d.byDay[k + 1];
+        cells += '<button class="pc2' + pk + (k === today ? ' today' : '') + (k === sd ? ' sel' : '') + (k < today ? ' past' : '') + (tr ? ' done' + (tp ? ' jl' : '') + (tn ? ' jr' : '') : '') + (ex ? ' exc' : '') + '" data-cday="' + k + '" aria-label="' + fmtDayL(k) + (tr ? ', trainiert' : '') + '">' +
+          (ui.cm ? '' : '<small>' + WDN[wdOf(k)].slice(0, 2) + '</small>') + '<b>' + dayFood(k, today) + new Date(k * 864e5).getUTCDate() + '</b><span class="ics">' + sg + '</span></button>';
       }
-      rows += '<div class="pc2-r">' + (bands ? '<div class="pc2-bd">' + bands + '</div>' : '') + '<div class="pc2-c">' + cells + '</div></div>';
+      rows += '<div class="pc2-r' + (due && hit === due ? ' full' : '') + '">' + (bands ? '<div class="pc2-bd">' + bands + '</div>' : '') + '<div class="pc2-c">' + cells + '</div></div>';
     }
     // Kopf: Monat links (antippen = 5 Wochen auf/zu), rechts Glocke (Zu tun) und Tag ändern (Urlaub, Krank, Tauschen, Aussetzen …)
     var nts0 = todo.length, evS =offAt(sd) || ovF(sd).s || ovF(sd).w !== undefined || ovF(sd).r || ovF(sd).a;
     h += '<section class="pcal2 rise' + (ui.cm ? ' mon' : '') + '" style="--i:1"><div class="pc2-h">' +
-      '<button class="pc2-t" data-cmode="1" aria-expanded="' + !!ui.cm + '" aria-label="' + (ui.cm ? 'Woche zeigen' : '5 Wochen zeigen') + '"><b>' + title + '</b><small>' + q.getUTCFullYear() + '</small>' + ic('chev') + '</button>' +
+      '<button class="pc2-t" data-cmode="1" aria-expanded="' + (ui.cm === 2) + '" aria-label="' + ['3 Wochen zeigen', '5 Wochen zeigen', 'Woche zeigen'][ui.cm || 0] + '"><b>' + title + '</b><small>' + q.getUTCFullYear() + '</small>' + ic('chev') + '</button>' +
       (nts0 ? '<button class="x pd-n" data-pnts="1" aria-label="' + nts0 + ' Hinweise">' + ic('bell') + '<i>' + nts0 + '</i></button>' : '') +
       '<button class="x pc2-ev' + (evS ? ' on' : '') + '" data-pdedit="1" aria-label="Tag ändern: Urlaub, Krank, Tauschen, Aussetzen">' + ic('calev') + '</button></div>' +
       (ui.cm ? '<div class="pc2-w">' + WDN.map(function (n) { return '<span>' + n + '</span>'; }).join('') + '</div>' : '') +
@@ -221,13 +223,21 @@
       // Essen: Reiter Essen | Vorlagen | Gerichte (Essen vorgewählt). Essen = häufige Lebensmittel, Gerichte = alle Gerichte (zuletzt gegessene zuerst, gestrichelt „Neu“);
       // hochziehen auf eine Mahlzeit = dort einplanen, antippen = Menge wählen (übliche Mahlzeit). Vorlagen = gespeicherte Mahlzeiten (auf eine Mahlzeit ziehen) und Tage (auf die Tageskarte); antippen = wie gespeichert
       var pg = ui.pgt || 'e', tg0 = '<div class="seg pgt">' + [['e', 'Essen'], ['v', 'Vorlagen'], ['g', 'Gerichte']].map(function (x) { return '<button data-pgt="' + x[0] + '" aria-pressed="' + (pg === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>', tl = '';
-      if (pg === 'e') tl = fTiles().filter(function (x) { return !/^d/.test(x.i); }).map(function (x) { return fTile({ i: x.i, g: x.g }, 'data-pfd="' + x.i + '|' + x.g + '"'); }).join('');
-      else if (pg === 'g') {
-        var lt = {}; foodState().e.forEach(function (x) { if (x.r && /^d/.test(x.r.i)) lt[x.r.i] = Math.max(lt[x.r.i] || 0, x.t); });
-        tl = foodState().d.slice().sort(function (x, y) { return (lt[y.id] || 0) - (lt[x.id] || 0); }).map(function (x) { return fTile({ i: x.id, g: 1 }, 'data-pfd="' + x.id + '|1"'); }).join('') +
-          '<button class="fti tplnew" data-fde="new" aria-label="Neues Gericht">' + ic('plus') + '<small>Neues<br>Gericht</small></button>';
+      // Essen: Kategorie-Leiste wie in der Suche (Häufig, dann FCATS, Eigene), darunter alle Lebensmittel der Kategorie in ihrer üblichen Menge (Einheit)
+      var st0 = foodState(), fc = ui.pfc || 'h', cb = '', wrap = 'ftl';
+      if (pg === 'e') {
+        cb = '<div class="pfcb" data-noswipe="1">' + [['h', 'Häufig']].concat(FCATS.map(function (c) { return [c[0], c[1]]; }), st0.o.length ? [['u', 'Eigene']] : []).map(function (c) {
+          return '<button data-pfc="' + c[0] + '" aria-pressed="' + (fc === c[0]) + '" style="--cc:' + (c[0] === 'h' ? 'var(--ac)' : CCOL[c[0]] || CCOL.x) + '">' + ic(c[0] === 'h' ? 'star' : (CATI[c[0]] || CATI.x)[0]) + c[1] + '</button>'; }).join('') + '</div>';
+        var its = fc === 'h' ? fTiles().filter(function (x) { return !/^d/.test(x.i); }) : st0.o.concat(FOODS).filter(function (x) { return (fc === 'u' ? /^u/.test(x.id) && !x.cat : x.cat === fc) && !x.vh; })
+          .map(function (x) { var cu = fUnit(x); return { i: x.id, g: cu ? cu[1] : x.d || (x.u && x.u[0] ? x.u[0][1] : x.ml ? 250 : 100) }; });
+        tl = its.map(function (x) { return fTile({ i: x.i, g: x.g }, 'data-pfd="' + x.i + '|' + x.g + '"'); }).join('');
+      } else if (pg === 'g') {
+        // Gerichte wie im Gerichte-Menü (Karten), nur einplanen; anlegen und bearbeiten in Essen
+        var lt = {}; st0.e.forEach(function (x) { if (x.r && /^d/.test(x.r.i)) lt[x.r.i] = Math.max(lt[x.r.i] || 0, x.t); }); wrap = 'fdg';
+        tl = st0.d.slice().sort(function (x, y) { return (lt[y.id] || 0) - (lt[x.id] || 0); }).map(function (x) { return fDishCard(x, 'data-pfd="' + x.id + '|1"'); }).join('') ||
+          '<p class="muted tplh">' + ic('pot') + 'Noch keine Gerichte. Anlegen in Essen › Gerichte.</p>';
       } else tl = tplTiles(sd);
-      h += '<section class="pwks rise" style="--i:3">' + tg0 + '<div class="ftl" data-noswipe="1">' + tl + '</div></section>';
+      h += '<section class="pwks rise" style="--i:3">' + tg0 + cb + '<div class="' + wrap + '" data-noswipe="1">' + tl + '</div></section>';
     }
 
     if (ux) h += '<button class="agn gold pux rise" style="--i:5" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>';
@@ -239,10 +249,15 @@
     // Kacheln: Mahlzeit-Vorlagen in der Farbe ihrer Mahlzeit, Tages-Vorlagen neutral mit Kalender-Symbol; dazu gestrichelt „Tag als Vorlage“ (wenn der Tag geplant ist).
     // Im Löschmodus (Mülleimer-Kachel) löscht Antippen eine Vorlage
     var tp = foodState().tp, del = ui.tpdel, dayHas = planSum(sd).items.some(function (o) { return o.x.r; });
-    return tp.map(function (t) {
-      return '<button class="fti q-m tpl' + (t.k === 'm' ? ' m-' + t.mk : ' tpd') + (del ? ' tdel' : '') + '" data-ptp="' + t.id + '" aria-label="Vorlage ' + esc(t.n) + (del ? ' löschen' : '') + '"><i class="ftq">' + ic(del ? 'close' : t.k === 'm' ? MEALI[t.mk] : 'cal') + '</i>' +
+    // Getrennt in „Ganze Tage“ und „Mahlzeiten“; Tages-Kachel zeigt die enthaltenen Mahlzeiten als Symbole, Mahlzeit-Kachel den Namen der Mahlzeit
+    function tile(t) {
+      var mks = t.k === 'd' ? MEALS.filter(function (m) { return t.it.some(function (q) { return q.mk === m[1]; }); }) : [];
+      return '<button class="fti q-m tpl' + (t.k === 'm' ? ' m-' + t.mk : ' tpd') + (del ? ' tdel' : '') + '" data-ptp="' + t.id + '" aria-label="' + (t.k === 'd' ? 'Tages' : 'Mahlzeit') + '-Vorlage ' + esc(t.n) + (del ? ' löschen' : '') + '"><i class="ftq">' + ic(del ? 'close' : t.k === 'm' ? MEALI[t.mk] : 'cal') + '</i>' +
+        '<small class="tpk">' + (t.k === 'd' ? mks.map(function (m) { return ic(MEALI[m[1]]); }).join('') : MEALS.filter(function (m) { return m[1] === t.mk; })[0][2]) + '</small>' +
         '<b class="' + fitCls(t.n, 8) + '">' + esc(t.n) + '</b><span class="ftv"><span>' + tplKcal(t) + '</span><small>' + t.it.length + '×</small></span></button>';
-    }).join('') + (dayHas && !del ? '<button class="fti tplnew" data-ptpms="1" aria-label="Eine geplante Mahlzeit als Vorlage speichern">' + ic('plus') + '<small>Mahlzeit<br>speichern</small></button>' +
+    }
+    var td = tp.filter(function (t) { return t.k === 'd'; }), tm = tp.filter(function (t) { return t.k !== 'd'; });
+    return (td.length ? '<p class="tplg">' + ic('cal') + 'Ganze Tage</p>' + td.map(tile).join('') : '') + (tm.length ? '<p class="tplg">' + ic('food') + 'Mahlzeiten</p>' + tm.map(tile).join('') : '') + (dayHas && !del ? '<button class="fti tplnew" data-ptpms="1" aria-label="Eine geplante Mahlzeit als Vorlage speichern">' + ic('plus') + '<small>Mahlzeit<br>speichern</small></button>' +
         '<button class="fti tplnew" data-ptpd="1" aria-label="Diesen Tag als Vorlage speichern">' + ic('plus') + '<small>Tag<br>speichern</small></button>' : '') +
       (tp.length ? '<button class="fti tplnew" data-ptpx="1" aria-label="' + (del ? 'Fertig' : 'Vorlagen löschen') + '">' + ic(del ? 'check' : 'trash') + '</button>' : '') +
       (!tp.length && !dayHas ? '<p class="muted tplh">' + ic('cards') + 'Vorlagen sind ganze Mahlzeiten oder Tage zum Wiederholen (Gerichte sind Rezepte). Plane zuerst eine Mahlzeit, dann „Als Vorlage speichern“.</p>' : '');
@@ -344,7 +359,7 @@
   // Gericht/Lebensmittel → Mahlzeit der Tageskarte = dort einplanen. Ziel = nächstes im Umkreis von 40 px, es leuchtet
   var pdg = null;
   document.addEventListener('pointerdown', function (ev) {
-    var el = ui.tab === 'tage' && !ui.sheet && !ui.tpdel && ev.target.closest && ev.target.closest('.ptv[data-ptd], .fti[data-pfd], .pwsc, .fti[data-ptp]');
+    var el = ui.tab === 'tage' && !ui.sheet && !ui.tpdel && ev.target.closest && ev.target.closest('.ptv[data-ptd], .fti[data-pfd], .fdcb[data-pfd], .pwsc, .fti[data-ptp]');
     // Vorlage: Mahlzeit-Vorlage zielt wie ein Gericht auf Mahlzeiten (food), Tages-Vorlage auf die Tageskarte (dtp)
     var tpo = el && el.dataset.ptp ? foodState().tp.filter(function (x) { return x.id === el.dataset.ptp; })[0] : null;
     pdg = el ? { el: el, x: ev.clientX, y: ev.clientY, on: false, tg: null, food: !!el.dataset.pfd || !!(tpo && tpo.k === 'm'), dtp: !!(tpo && tpo.k === 'd'), tpo: tpo, chip: !!el.dataset.pwsc } : null;
@@ -421,6 +436,7 @@
     if ((el = t.closest('[data-pws]'))) { var pw = dayIdx(Date.now()) + (+el.dataset.pws) - wdOf(dayIdx(Date.now())); if (pw !== pDaySel()) { ui.pd = pw; ui.ca = pw; ui.pdx = true; } ui.fresh = false; render(); return true; }
     // Kachel antippen = Menge wählen (wie in Essen), hochziehen = sofort einplanen
     if ((el = t.closest('[data-pfd]'))) { var pq = el.dataset.pfd.split('|'); openPick(pq[0], +pq[1]); ui.fplan = { d: pDaySel(), mk: mealFor(pq[0]), pg: 1 }; ui.fday = dayIdx(Date.now()) - pDaySel(); ui.plEdit = null; fpPaint(); return true; }
+    if ((el = t.closest('[data-pfc]'))) { ui.pfc = el.dataset.pfc; ui.fresh = false; render(); buzz(4); return true; }
     if ((el = t.closest('[data-pgt]'))) { ui.pgt = el.dataset.pgt; ui.tpdel = false; ui.fresh = false; render(); buzz(4); return true; }
     if ((el = t.closest('[data-ptp]'))) {
       var tp0 = foodState().tp, tpi = tp0.map(function (x) { return x.id; }).indexOf(el.dataset.ptp); if (tpi < 0) return true;
@@ -443,7 +459,7 @@
       // Monat bleibt beim Wählen offen (zu über den Monatsnamen oder nach oben wischen)
       if (cd !== s0) { ui.pd = cd; ui.pdx = true; ui.pmode = null; } ui.fresh = false; render(); return true;
     }
-    if (t.closest('[data-cmode]')) { calMon(ui.cm ? 0 : 1); return true; }
+    if (t.closest('[data-cmode]')) { calMon(((ui.cm || 0) + 1) % 3); return true; }
     if ((el = t.closest('[data-pft]'))) { ui.pft = el.dataset.pft; ui.fresh = false; render(); buzz(4); return true; }
     if (t.closest('[data-pdedit]')) { ui.pmode = null; ui.sheet = { pday: true }; sheetOpen(pdayHtml()); return true; }
     if (t.closest('[data-pnts]')) { openNts(); return true; }

@@ -95,6 +95,12 @@
   }
   function fN(x) { return String(Math.round(x * 10) / 10).replace('.', ','); }
   // Kreis um eine Tageszahl (Essen-Tagesleiste und Planen-Kalender): q = Anteil vom kcal-Ziel als dünner Ring; geplant (fu) kühl und blasser; st = ok/over/low
+  // Essen-Ring eines Tages (Essen-Leiste und Kalender gleich): grün = Protein fast erreicht und kcal im Rahmen, orange = deutlich zu wenig, rot = über 110 %, künftig = geplant kühl
+  function dayFood(di, today) {
+    var fu = di > today, sm = fu ? planSum(di) : foodSum(di), gd = foodGoal(di), kq = sm.k / gd.k;
+    var st = fu || !sm.items.length ? '' : kq > 1.1 ? ' over' : sm.p >= gd.p * 0.9 && kq >= 0.85 ? ' ok' : di < today && (sm.p < gd.p * 0.6 || kq < 0.6) ? ' low' : '';
+    return dayRing(sm.items.length ? kq : 0, fu, st);
+  }
   function dayRing(q, fu, st) { return q ? '<i class="dr' + (fu ? ' pl' : '') + (st || '') + '" style="--p:' + Math.min(1, q).toFixed(3) + '" aria-hidden="true"></i>' : ''; }
   // Gewählter Tag (Leiste oben, letzte 7 Tage); Wasserziel 35 ml je kg in 250-ml-Schritten
   function fExp(di) {
@@ -175,9 +181,9 @@
     // Tagesleiste: 7 Tage, heute in der Mitte (wischen = 7 Tage zurück/vor). Dünner Ring um die Zahl = kcal vom Ziel (wie im Kalender, dayRing; grün = Protein
     // fast erreicht und kcal im Rahmen, orange = deutlich zu wenig, rot = über 110 %), geplant kühl. Künftige Tage nur zur Ansicht, antippen öffnet den Tag in Planen
     var ds = '', pe = today + 3 - fPg() * 7; for (var i = 6; i >= 0; i--) {
-      var di = pe - i, fu = di > today, sm = fu ? planSum(di) : foodSum(di), gd = foodGoal(di), kq = sm.k / gd.k, st = fu ? '' : !sm.items.length ? '' : kq > 1.1 ? ' over' : sm.p >= gd.p * 0.9 && kq >= 0.85 ? ' ok' : di < today && (sm.p < gd.p * 0.6 || kq < 0.6) ? ' low' : '';
+      var di = pe - i, fu = di > today, sm = fu ? planSum(di) : foodSum(di);
       var gc = di < today ? ' past' : di === today ? ' today' : ' fut';
-      ds += '<button class="fdd' + (di === sd ? ' sel' : '') + gc + (fu && sm.items.length ? ' pl' : '') + '" ' + (fu ? 'data-pgo' : 'data-fsd') + '="' + di + '" aria-label="' + esc(fmtDayL(di)) + (fu ? ', in Planen' : '') + '"><small>' + WDN[wdOf(di)].slice(0, 2) + '</small><b>' + dayRing(sm.items.length ? kq : 0, fu, st) + new Date(di * 864e5).getUTCDate() + '</b></button>';
+      ds += '<button class="fdd' + (di === sd ? ' sel' : '') + gc + (fu && sm.items.length ? ' pl' : '') + '" ' + (fu ? 'data-pgo' : 'data-fsd') + '="' + di + '" aria-label="' + esc(fmtDayL(di)) + (fu ? ', in Planen' : '') + '"><small>' + WDN[wdOf(di)].slice(0, 2) + '</small><b>' + dayFood(di, today) + new Date(di * 864e5).getUTCDate() + '</b></button>';
     }
     h += '<div class="fdw rise" style="--i:0">' + (ui.fmon ? '<b class="fmo">' + esc(ui.fmon) + '</b>' : '') + '<nav class="fds' + (ui.fdir ? (ui.fdir > 0 ? ' in-r' : ' in-l') : '') + '">' + ds + '</nav></div>';
     ui.fmon = ''; ui.fdir = 0;
@@ -215,14 +221,17 @@
   // Vorschlag-Kachel: Name (lange Wörter kleiner, fitCls), unten kcal groß und Protein; Gruppe als Farbkante oben und Symbol oben rechts
   function fTile(x, attr, cls) {
     var it = fItem(x.i), v = fNut(it, x.g), mk = mealOf(Date.now())[1], q = { r: ['clock', 'zuletzt'], f: ['star', 'häufig'], m: [MEALI[mk], 'zur Uhrzeit'] }[x.q], nm = fEn(it);
-    return '<button class="fti' + (x.q ? ' q-' + x.q : '') + (x.q === 'm' ? ' m-' + mk : '') + (cls || '') + '" ' + attr + ' aria-label="' + esc(nm + ', ' + fAmt(it, x.g) + (q ? ', ' + q[1] : '')) + '"><i class="ftq">' + ic(q ? q[0] : 'plus') + '</i>' +
+    return '<button class="fti' + (x.q ? ' q-' + x.q : '') + (x.q === 'm' ? ' m-' + mk : '') + (cls || '') + '" ' + attr + ' aria-label="' + esc(nm + ', ' + fAmt(it, x.g) + (q ? ', ' + q[1] : ''))
+      + '"><i class="ftq"' + (q ? '' : ' style="color:' + fTone(x.i, it.dish ? 'dish' : it.cat || (/^u/.test(x.i) ? 'u' : 'x')) + '"') + '>' + ic(q ? q[0] : it.dish ? 'pot' : fIco(x.i, it.cat || (/^u/.test(x.i) ? 'u' : 'x'))) + '</i>' +
       '<b class="' + fitCls(nm, 8) + '">' + esc(nm) + '</b><span class="ftv"><span>' + Math.round(v.k) + '</span><small style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + Math.round(v.p) + '</small></span></button>';
   }
   // Kategorien: Icon und kurzer Name (Suche, Gegessen); Schlüssel wie FCATS, dazu Eigene, Gerichte, Schnell, Sonstiges
   var CATI = { g: ['bread', 'Brot'], m: ['milk', 'Milch'], e: ['steak', 'Fleisch'], h: ['bean', 'Bohnen'], v: ['carrot', 'Gemüse'], o: ['snack', 'Obst'], n: ['nut', 'Nüsse'], s: ['candy', 'Süßes'], d: ['glass', 'Getränke'],
     f: ['burger', 'Fast Food'], r: ['food', 'Restaurant'], u: ['user', 'Eigene'], dish: ['pot', 'Gerichte'], q: ['bolt', 'Schnell'], x: ['food', 'Sonstiges'] };
   // Icon je Lebensmittel: eigenes, wo die Unterart nicht genau passt, sonst das der Unterart (FSUB), sonst der Kategorie
-  var FICO = { garnel: 'shrimp', sushi: 'fish', orange: 'citrus', ernmus: 'jar', avoc: 'leaf', toast: 'sandw', cwurst: 'sausage', ppudd: 'cup', mc_pom: 'fries', pommes: 'fries' };
+  var FICO = { apfel: 'apple', karotte: 'carrot', trauben: 'grapes', erdb: 'straw', beeren: 'berry', kiwi: 'kiwi', brok: 'broc', papr: 'pepper', gurke: 'cucum', zucch: 'cucum', zwieb: 'onion', champ: 'mush', mais: 'corn', erbsen: 'peas',
+    salat: 'lettuce', spinat: 'leaf', vaneis: 'icecr', olivoel: 'oil', rapsoel: 'oil', ei: 'egg', eiklar: 'egg', honig: 'jar', marm: 'jar', nusscr: 'jar', bowl: 'bowl', lachs: 'fish', seela: 'fish', thun: 'can',
+    garnel: 'shrimp', sushi: 'fish', orange: 'citrus', ernmus: 'jar', avoc: 'avo', toast: 'sandw', cwurst: 'sausage', ppudd: 'cup', mc_pom: 'fries', pommes: 'fries' };
   function fSb(id) { var it = id && (FOODB[id] || (/^u/.test(id) ? fOwn(id) : null)); return it && it.sb && FSUBK[it.sb] ? FSUBK[it.sb] : null; }
   function fIco(id, ck) { var s = fSb(id); return FICO[id] || (s ? s[3] : (CATI[ck] || CATI.x)[0]); }
   // Farbton der Unterart: Kategoriefarbe abwechselnd heller/dunkler gemischt (je Index in der Kategorie), damit Abschnitte unterscheidbar bleiben
@@ -321,13 +330,14 @@
   var NREL = { g: ['c', 'fb', 'p'], m: ['p', 'f', 'su'], e: ['p', 'f', 'c'], h: ['p', 'fb', 'c'], v: ['c', 'fb', 'su'], o: ['su', 'fb', 'c'], n: ['f', 'p', 'fb'], s: ['su', 'f', 'c'], d: ['su', 'c', 'p'], f: ['f', 'p', 'c'], r: ['p', 'f', 'c'], x: ['p', 'f', 'c'] };
   // Farbe je Hauptkategorie (Gerichte-Karten)
   var CCOL = { g: '#c9a227', m: '#5b8fd6', e: '#c0573e', h: '#9a7b4f', v: 'var(--ac)', o: '#e0a24a', n: '#a0703c', s: 'var(--g-core)', d: 'var(--g-cardio)', f: 'var(--g-push)', r: 'var(--g-mob)', x: 'var(--line)' };
-  function fDishCard(x) {
+  function fDishCard(x, attr) {
     // Gericht-Karte: Farbe und Icon der Zutat-Kategorie mit den meisten kcal, dazu die Symbole seiner Mahlzeiten; kcal und Makro-Leiste je Portion.
     // Antippen = Menge wählen (dort auch bearbeiten), nach rechts wischen = 1 Portion sofort
     var t = dishTot(x), ck = {}, top = 'x', ms = dishMeals(x);
     x.ing.forEach(function (q) { var it = q.i && FOODB[q.i], c = it ? it.cat : 'x'; ck[c] = (ck[c] || 0) + (+q.a || 0) * (+q.k || 0) / 100; if (c !== 'x' && (top === 'x' || ck[c] > ck[top])) top = c; });
-    return '<div class="fdc" style="--dc:' + (CCOL[top] || CCOL.x) + '"><button class="fdcb" data-fpick="' + x.id + '" data-fdsw="' + x.id + '"><i class="fdci">' + ic((CATI[top] || CATI.x)[0]) + ms.map(function (m) { return ic(MEALI[m]); }).join('') + '</i><b>' + esc(x.n) + '</b>' +
-      '<i class="fdck">' + Math.round(t.pk) + '<small>kcal</small></i><small class="f100">' + [['p', t.pp], ['f', t.pf], ['c', t.pc]].map(function (q) { return '<i style="--nc:var(' + NCOL[q[0]] + ')" aria-label="' + NSH[q[0]] + '">' + ic(NIC[q[0]]) + Math.round(q[1]) + '</i>'; }).join('') + '</small></button></div>';
+    return '<div class="fdc" style="--dc:' + (CCOL[top] || CCOL.x) + '"><button class="fdcb" ' + (typeof attr === 'string' ? attr : 'data-fpick="' + x.id + '" data-fdsw="' + x.id + '"') + '><i class="fdci">' + ic((CATI[top] || CATI.x)[0]) + ms.map(function (m) { return ic(MEALI[m]); }).join('') + '</i><b>' + esc(x.n) + '</b>' +
+      '<i class="fdck">' + Math.round(t.pk) + '<small>kcal</small></i><small class="f100">'
+        + [['p', t.pp], ['f', t.pf], ['c', t.pc]].map(function (q) { return '<i style="--nc:var(' + NCOL[q[0]] + ')" aria-label="' + NSH[q[0]] + '">' + ic(NIC[q[0]]) + Math.round(q[1]) + '</i>'; }).join('') + (dishG(x.id) ? '<i class="fdcg">' + Math.round(dishG(x.id) / 5) * 5 + ' g</i>' : '') + '</small></button></div>';
   }
   function dishMeals(x) {
     // Mahlzeiten eines Gerichts: fest gewählt (x.m), sonst die, zu der es meist gegessen wird

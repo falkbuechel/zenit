@@ -62,10 +62,26 @@
   var SHP = { g: 2.5, m: 4, e: 10, h: 4, v: 3, o: 3.5, n: 14, s: 9, d: 1.2, f: 8, r: 12, u: 6, x: 6 };
   var SHPI = { hafer: 1.3, reis_r: 2, nud_r: 1.5, vknud: 2, kart: 1.2, mquark: 2.5, skyr: 3.3, joghurt: 2, whey: 25, ei: 4.5, eiklar: 5, haehn: 10, rhack: 9, lachs: 25, thun: 12, garnel: 22,
     tofu: 8, olivoel: 9, rapsoel: 3, butter: 9, parm: 20, banane: 1.5, apfel: 2.5, beeren: 5, mandeln: 14, ernmus: 8, hafmil: 1.2, sojmil: 1.5, cola: 1, colaz: 1, bier: 2, osaft: 1.8 };
+  // Kaufgrößen (Richtwerte Discounter): id: Packung, Menge g/ml, Preis €. Gekauft wird in ganzen Packungen; ohne Eintrag: Stück einzeln (Preis über €/kg), sonst auf 100 g
+  var SHB = {}; ('hafer Packung 500 0.89|muesli Packung 750 2.49|cornfl Packung 375 1.79|reis_r Packung 1000 1.99|nud_r Packung 500 0.99|vknud Packung 500 1.29|kart Netz 2000 2.49|quinoa Packung 400 2.99|cous Packung 500 1.49|' +
+    'vkbrot Brot 500 1.79|mischbr Brot 750 1.99|toast Packung 500 1.29|wrap Packung 370 1.49|reisw Packung 100 0.99|milch15 Tüte 1000 1.09|milch35 Tüte 1000 1.19|milch03 Tüte 1000 1.05|hafmil Packung 1000 1.49|sojmil Packung 1000 1.69|' +
+    'skyr Becher 450 1.79|mquark Becher 500 1.29|quark20 Becher 500 1.49|quark40 Becher 500 1.59|joghurt Becher 500 0.99|joghurt35 Becher 500 1.09|joghurt01 Becher 500 0.99|grjog Becher 500 1.99|grjog2 Becher 500 2.19|huette Becher 200 0.99|' +
+    'gouda Packung 400 3.29|goudal Packung 250 2.29|mozz Kugel 125 0.79|mozzl Kugel 125 0.85|feta Packung 200 1.49|fetal Packung 200 1.59|parm Stück 150 2.99|butter Stück 250 2.39|halbf Becher 250 1.69|sahne Becher 200 0.89|sahnel Packung 200 0.69|' +
+    'frisch Packung 200 1.09|frischl Packung 200 1.15|whey Dose 1000 24.90|ppudd Becher 200 0.99|ei 10er 600 3.29|eiklar Flasche 500 2.99|haehn Packung 600 6.99|pute Packung 400 5.49|rhack Packung 500 5.49|rhack5 Packung 400 4.99|' +
+    'steak Stück 250 6.99|schwf Stück 500 6.49|kschin Packung 200 1.99|salami Packung 100 1.49|salamil Packung 100 1.59|lachs Packung 250 4.99|thun Dose 130 1.49|garnel Packung 250 4.49|seela Packung 400 3.99|linsen_r Packung 500 1.79|' +
+    'kicher Dose 240 0.89|kidney Dose 250 0.79|tofu Packung 400 2.49|edam Beutel 500 2.49|hummus Becher 200 1.69|brok Stück 500 1.49|papr Stück 150 0.79|gurke Stück 400 0.69|karotte Beutel 1000 1.09|zucch Stück 250 0.69|' +
+    'spinat Packung 450 1.29|salat Kopf 300 0.99|zwieb Netz 1000 1.29|champ Schale 400 1.99|mais Dose 285 0.99|erbsen Beutel 750 1.49|avoc Stück 200 0.99|beeren Beutel 300 2.49|erdb Schale 500 2.99|trauben Schale 500 2.49|' +
+    'datteln Packung 200 1.99|mandeln Packung 200 2.79|walnuss Packung 200 2.99|erdnuss Packung 200 1.49|ernmus Glas 350 2.99|cashew Packung 200 2.99|leins Packung 500 1.49|chia Packung 200 2.49|olivoel Flasche 750 7.99|rapsoel Flasche 1000 2.29|' +
+    'zbschok Tafel 100 1.19|mschok Tafel 100 0.99|priegel Riegel 45 1.49|chips Tüte 175 1.49|gummi Tüte 200 0.99|honig Glas 500 3.99|marm Glas 450 1.79|nusscr Glas 400 2.49|vaneis Packung 500 2.49|osaft Flasche 1000 1.79|' +
+    'cola Flasche 1500 1.49|colaz Flasche 1500 1.49|bier Flasche 500 0.89|bieraf Flasche 500 0.89|pizza Stück 350 2.29|lasag Packung 400 2.49').split('|').forEach(function (r) { var q = r.split(' '); SHB[q[0]] = [q[1], +q[2], +q[3]]; });
+  // Gekocht kauft man roh: [roh, Faktor]
+  var SHRAW = { reis_g: ['reis_r', 0.4], nud_g: ['nud_r', 0.45], linsen_g: ['linsen_r', 0.45] };
   function shopList(n) {
     var st = foodState(), t = dayIdx(Date.now()), m = {}, l = [];
     function put(id, nm, g, src) {
-      var it = id && fItem(id), key = it ? id : ('n:' + fnorm(nm)).slice(0, 40); if (!(g > 0)) return;
+      // Gekochtes als roh; Restaurant und Fast Food kauft man nicht (außer es gibt eine Kaufgröße, z. B. TK-Pizza)
+      if (SHRAW[id]) { g *= SHRAW[id][1]; id = SHRAW[id][0]; }
+      var it = id && fItem(id), key = it ? id : ('n:' + fnorm(nm)).slice(0, 40); if (!(g > 0) || it && (it.cat === 'f' || it.cat === 'r') && !SHB[id]) return;
       if (!m[key]) { m[key] = { key: key, id: it ? id : '', it: it, n: it ? fEn(it) : nm, g: 0, src: [], c: it && !it.dish ? (CATI[it.cat] ? it.cat : /^u/.test(id) ? 'u' : 'x') : 'x' }; l.push(m[key]); }
       m[key].g += g; m[key].src.push(src);
     }
@@ -77,12 +93,13 @@
       else put(x.r.i, x.n, x.r.g, { d: x.d, mk: x.mk, g: x.r.g });
     });
     l.forEach(function (o) {
-      // Packung: größte Portion der Liste (Becher, Dose …), außer Stück/Scheibe → Stück zählen; sonst Gramm
-      var u = o.it && o.it.u || [], pk = u.filter(function (q) { return /Becher|Dose|Packung|Flasche|Glas|Beutel|Tafel|Netz|Bund|Kopf/.test(q[0]); }).sort(function (a, b) { return b[1] - a[1]; })[0], pc = u.filter(function (q) { return /Stück/.test(q[0]); })[0];
-      var q = pk || pc, cnt = q ? Math.max(1, Math.ceil(o.g / q[1] - 0.05)) : 0, ml = o.it && o.it.ml ? ' ml' : ' g';
-      o.bg = q ? cnt * q[1] : Math.ceil(o.g / 50) * 50;
-      o.a = q ? cnt + (pk ? ' × ' + q[0] + ' (' + q[1] + ml + ')' : ' ' + q[0]) : o.bg + ml;
-      o.eur = o.bg / 1000 * (SHPI[o.id] || SHP[o.c] || SHP.x);
+      // Kaufgröße: Packung aus SHB (ganze Packungen, Preis je Packung); sonst Stück einzeln, sonst auf 100 g – Preis dann über €/kg
+      var pk = SHB[o.id], u = o.it && o.it.u || [], pc = !pk && u.filter(function (q) { return /^Stück/.test(q[0]); })[0], ml = o.it && o.it.ml ? ' ml' : ' g';
+      var sz = function (v) { return v >= 1000 ? fN(v / 1000) + (ml === ' ml' ? ' l' : ' kg') : v + ml; };
+      if (pk) { var cnt = Math.max(1, Math.ceil(o.g / pk[1] - 0.05)); o.bg = cnt * pk[1]; o.eur = cnt * pk[2]; o.a = pk[0] === 'Stück' ? cnt + ' Stück' : cnt + '× ' + pk[0] + (/^\d+er$/.test(pk[0]) ? '' : ' ' + sz(pk[1])); }
+      else if (pc) { var pn = Math.max(1, Math.ceil(o.g / pc[1] - 0.1)); o.bg = pn * pc[1]; o.a = pn + ' Stück'; }
+      else { o.bg = Math.ceil(o.g / 100) * 100; o.a = sz(o.bg); }
+      if (!pk) o.eur = o.bg / 1000 * (SHPI[o.id] || SHP[o.c] || SHP.x);
       o.ok = st.sh[o.key] != null;
     });
     return l;
@@ -228,8 +245,11 @@
     if ((el = t.closest('[data-fpick]'))) { if (ui.fdgno && Date.now() - ui.fdgno < 400) return true; var from =ui.sheet && (ui.sheet.fsearch || ui.sheet.fdishes) ? (ui.sheet.fsearch ? 's' : 'd') : null; openPick(el.dataset.fpick); ui.sheet.from = from; fpPaint(); return true; }
     if (t.closest('[data-fback]')) {
       if (ui.sheet && (ui.sheet.dishImp || (ui.sheet.fsearch && ui.ingm))) ingBack();
+      else if (ui.sheet && ui.sheet.from === 'i' && ui.fingb) { var fb0 = ui.fingb; ui.fingb = null; openPick(fb0.i, fb0.a); ui.sheet.from = fb0.from; ui.fingo = true; fpPaint(); }
       else if (ui.sheet && ui.sheet.from === 'o') openOwn(ui.odraft.id, null, ui.odraft); else if (ui.sheet && ui.sheet.from === 'd') openDishes();
       else { var q0 = ui.fq; openFsearch(true); ui.fq = q0 || ''; $('fq').value = ui.fq; fresSet(); } return true; }
+    // Zutat im Gericht antippen: ihre Werte in der Menge des Gerichts; Zurück führt ins Gericht
+    if ((el = t.closest('[data-fing]'))) { var fg = el.dataset.fing.split('|'); ui.fingb = { i: ui.fpick.i, a: ui.fpick.a, from: ui.sheet && ui.sheet.from }; openPick(fg[0], +fg[1] || null); ui.sheet.from = 'i'; fpPaint(); return true; }
     if ((el = t.closest('[data-fvar]'))) { ui.fpick.i = el.dataset.fvar; fpPaint(); return true; }
     if ((el = t.closest('[data-foff]'))) { var ox = ui.fon && ui.fon.r[+el.dataset.foff]; if (ox) pickFrom(offSave(ox)); return true; }
     if ((el = t.closest('[data-fscan]'))) { if (el.dataset.fscan === 'own') { ui.odraft = ownDraft(); ui.odraft.id = ui.sheet.fown; openScan('own'); } else { if (el.dataset.fscan === 'go') openFsearch(); openScan(); } return true; }

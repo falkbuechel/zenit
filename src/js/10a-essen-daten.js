@@ -22,10 +22,10 @@
     ['toast', 'Toastbrot', 260, 8, 4, 47, 3, 4, 'Scheibe:25'],
     ['wrap', 'Tortilla Wrap', 300, 8, 7, 50, 3, 2, 'Stück:60'],
     ['reisw', 'Reiswaffel', 385, 8, 3, 80, 4, 0.5, 'Stück:8'],
-    ['milch15', 'Milch 1,5 %', 47, 3.4, 1.5, 4.9, 0, 4.9, 'Glas:200'],
-    ['milch35', 'Milch 3,5 %', 64, 3.3, 3.5, 4.8, 0, 4.8, 'Glas:200'],
-    ['hafmil', 'Haferdrink', 45, 0.5, 1.5, 6.5, 0.8, 4, 'Glas:200'],
-    ['sojmil', 'Sojadrink ungesüßt', 33, 3.3, 1.8, 0.7, 0.5, 0.3, 'Glas:200'],
+    ['milch15', 'Milch 1,5 %', 47, 3.4, 1.5, 4.9, 0, 4.9, 'Glas:200|Tüte:1000'],
+    ['milch35', 'Milch 3,5 %', 64, 3.3, 3.5, 4.8, 0, 4.8, 'Glas:200|Tüte:1000'],
+    ['hafmil', 'Haferdrink', 45, 0.5, 1.5, 6.5, 0.8, 4, 'Glas:200|Packung:1000'],
+    ['sojmil', 'Sojadrink ungesüßt', 33, 3.3, 1.8, 0.7, 0.5, 0.3, 'Glas:200|Packung:1000'],
     ['skyr', 'Skyr', 63, 11, 0.2, 4, 0, 4, 'Portion:150|*Becher:500'],
     ['mquark', 'Magerquark', 67, 12, 0.3, 4, 0, 4, 'Becher:250'],
     ['quark40', 'Quark 40 %', 140, 11, 8, 3, 0, 3, 'Becher:250'],
@@ -99,8 +99,8 @@
     ['marm', 'Marmelade', 250, 0.3, 0.1, 60, 1, 55, 'TL:15'],
     ['nusscr', 'Nuss-Nougat-Creme', 540, 6, 31, 58, 3.5, 57, 'TL:15'],
     ['vaneis', 'Vanilleeis', 200, 3.5, 11, 22, 0, 20, 'Kugel:60'],
-    ['osaft', 'Orangensaft', 45, 0.7, 0.2, 9, 0.2, 8.5, 'Glas:200'],
-    ['cola', 'Cola', 42, 0, 0, 10.6, 0, 10.6, 'Dose:330'],
+    ['osaft', 'Orangensaft', 45, 0.7, 0.2, 9, 0.2, 8.5, 'Glas:200|Flasche:1000'],
+    ['cola', 'Cola', 42, 0, 0, 10.6, 0, 10.6, 'Dose:330|Flasche:1500'],
     ['bier', 'Bier', 42, 0.5, 0, 3, 0, 0, 'Flasche:500|Flasche 0,33:330'],
     ['pizza', 'Pizza Margherita', 230, 10, 8, 29, 2, 3, 'Pizza:350'],
     ['doener', 'Döner', 215, 12, 10, 19, 1.5, 2, 'Stück:350'],
@@ -108,7 +108,7 @@
     ['pommes', 'Pommes', 290, 3.4, 15, 35, 3, 0.5, 'Portion:150'],
     ['lasag', 'Lasagne', 160, 8, 8, 13, 1, 2.5, 'Portion:350'],
     // Varianten (Light, Fettstufen) und Fast Food; Fast Food je Verkaufsportion nach Herstellerangaben (gerundet, über Nährwert-Datenbanken), ~ = Grundeinheit
-    ['milch03', 'Milch 0,3 %', 35, 3.4, 0.3, 4.9, 0, 4.9, 'Glas:200'],
+    ['milch03', 'Milch 0,3 %', 35, 3.4, 0.3, 4.9, 0, 4.9, 'Glas:200|Tüte:1000'],
     ['quark20', 'Quark 20 %', 109, 12.5, 5, 3, 0, 3, 'Becher:250'],
     ['joghurt35', 'Naturjoghurt 3,5 %', 65, 3.5, 3.5, 4.5, 0, 4.5, 'Portion:150|*Becher:500'],
     ['joghurt01', 'Joghurt 0,1 %', 37, 4.3, 0.1, 4.6, 0, 4.6, 'Portion:150|*Becher:500'],
@@ -176,9 +176,9 @@
     ['e', 'eei', 'Eier', 'egg', 'ei eiklar'], ['e', 'egf', 'Geflügel', 'np', 'haehn pute'], ['e', 'efl', 'Fleisch', 'steak', 'rhack rhack5 steak schwf'], ['e', 'ewu', 'Wurst & Schinken', 'sausage', 'kschin salami salamil'],
     ['e', 'efi', 'Fisch & Meer', 'fish', 'lachs thun seela garnel'],
     ['h', 'hhu', 'Hülsenfrüchte', 'bean', 'linsen_r linsen_g kicher kidney edam'], ['h', 'hto', 'Tofu', 'tofu', 'tofu'], ['h', 'hau', 'Aufstrich', 'jar', 'hummus'],
-    ['v', 'vgr', 'Grün', 'leaf', 'brok spinat salat zucch gurke erbsen'], ['v', 'vfr', 'Fruchtgemüse', 'tomato', 'papr tomate avoc mais'], ['v', 'vwu', 'Wurzel, Zwiebel & Pilz', 'carrot', 'karotte zwieb champ'],
-    ['o', 'oap', 'Äpfel & Kiwi', 'snack', 'apfel kiwi'], ['o', 'obe', 'Beeren & Trauben', 'grapes', 'beeren erdb trauben'], ['o', 'osu', 'Südfrüchte', 'banana', 'banane orange datteln'],
-    ['n', 'nnu', 'Nüsse', 'nut', 'mandeln walnuss erdnuss cashew ernmus'], ['n', 'nsa', 'Samen', 'seed', 'leins chia'], ['n', 'noe', 'Öl', 'drop', 'olivoel rapsoel'],
+    ['v', 'vgr', 'Grün', 'broc', 'brok spinat salat zucch gurke erbsen'], ['v', 'vfr', 'Fruchtgemüse', 'tomato', 'papr tomate avoc mais'], ['v', 'vwu', 'Wurzel, Zwiebel & Pilz', 'onion', 'karotte zwieb champ'],
+    ['o', 'oap', 'Äpfel & Kiwi', 'apple', 'apfel kiwi'], ['o', 'obe', 'Beeren & Trauben', 'berry', 'beeren erdb trauben'], ['o', 'osu', 'Südfrüchte', 'banana', 'banane orange datteln'],
+    ['n', 'nnu', 'Nüsse', 'nut', 'mandeln walnuss erdnuss cashew ernmus'], ['n', 'nsa', 'Samen', 'seed', 'leins chia'], ['n', 'noe', 'Öl', 'oil', 'olivoel rapsoel'],
     ['s', 'ssc', 'Schokolade', 'choc', 'zbschok mschok'], ['s', 'sri', 'Riegel', 'bar', 'priegel'], ['s', 'ssa', 'Chips', 'chips', 'chips'], ['s', 'sgu', 'Gummi & Eis', 'candy', 'gummi vaneis'], ['s', 'sau', 'Aufstrich', 'jar', 'honig marm nusscr'],
     ['d', 'dsa', 'Saft', 'glass', 'osaft'], ['d', 'dso', 'Softdrinks', 'can', 'cola colaz'], ['d', 'dbi', 'Bier', 'beer', 'bier bieraf'],
     ['f', 'fbu', 'Burger', 'burger', 'mc_bigmac mc_cheese mc_hamb bk_whop'], ['f', 'fsa', 'Sandwich', 'sandw', 'mc_chick sub_chick'], ['f', 'fch', 'Chicken', 'np', 'mc_nug kfc_strip'], ['f', 'fpo', 'Pommes', 'fries', 'mc_pom'],
@@ -225,6 +225,8 @@
     // Gerichte in Viertel-Portionen: ¼ ½ ¾ als Zeichen, sonst Zahl mit bis zu zwei Stellen
     if (it.dish) { var fr = { 0.25: '¼', 0.5: '½', 0.75: '¾' }, w = Math.floor(a), q = Math.round((a - w) * 100) / 100; return (fr[q] ? (w ? w + ' ' : '') + fr[q] : fN2(a)) + (a === 1 ? ' Portion' : ' Portionen'); }
     var best = null, cu = fUnit(it);
+    // Getränke ab ½ Liter in Litern, wenn glatt (0,5 l, 1 l, 1,5 l)
+    if (!grams && it.ml && a >= 500 && a % 250 === 0) return fN(a / 1000) + ' l';
     if (!grams && cu) { var cn = a / cu[1]; if (cn >= 0.25 && cn <= 20 && Math.abs(cn * 4 - Math.round(cn * 4)) < 0.02) return fHalf(cn) + ' ' + fPl(cu[0], cn); }
     if (!grams) it.u.forEach(function (u) { var n = a / u[1]; if (n >= 0.5 && n <= 12 && Math.abs(n * 2 - Math.round(n * 2)) < 0.01 && (!best || n < best[0])) best = [n, u[0]]; });
     return best ? fHalf(best[0]) + ' ' + fPl(best[1], best[0]) : Math.round(a) + (it.ml ? ' ml' : ' g');

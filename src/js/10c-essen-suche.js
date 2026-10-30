@@ -134,6 +134,8 @@
     if (it.dish) ch = [[0.5], [0.75], [1], [1.5], [2]];
     else if (it.pc) ch = (it.u.length > 1 ? it.u.slice(it.ub ? 1 : 0).map(function (u) { return [u[1]]; }) : []).concat([1, 2, 3, 4].map(function (n) { return [b0[1] * n]; }));
     // Zählbar (Stück, Glas, EL …): Vielfache der Einheit, kleine Einheiten ab 1, sonst ab ½
+    // Getränke: ½ · 1 · 2 Glas, dann ½ Liter und die Packung (Tüte, Flasche)
+    else if (cu && it.ml) ch = [[cu[1] / 2], [cu[1]], [cu[1] * 2]].concat(cu[1] * 2 === 500 ? [] : [[500]], it.u.filter(function (u) { return u[1] > 400 && u[1] !== 500 && u[1] !== cu[1] * 2; }).map(function (u) { return [u[1]]; }));
     else if (cu) ch = (cu[1] <= 30 ? [1, 2, 3, 4, 5] : [0.5, 1, 2, 3, 4]).map(function (n) { return [cu[1] * n]; });
     else if (it.u.length) ch = it.u.map(function (u) { return [u[1]]; }).concat([[b0[1] * 2], [b0[1] * 3]], it.u[1] ? [[it.u[1][1] * 2]] : [], [[b0[1] * 4]]);
     else if (it.ml) ch = [[200, 1], [250, 1], [330, 1], [500, 1], [750, 1]];
@@ -142,9 +144,11 @@
     ch = ch.filter(function (x, i, a) { return !a.slice(0, i).some(function (y) { return Math.abs(y[0] - x[0]) < Math.max(y[0], x[0]) * 0.15; }); });
     if (last && !ch.slice(0, 4).some(function (y) { return y[0] === last.g; })) ch = ch.slice(0, 4).sort(function (a, b) { return a[0] - b[0]; }).concat([[last.g, 0, 1]]);
     else ch = ch.slice(0, 5).sort(function (a, b) { return a[0] - b[0]; });
-    var sub = it.dish ? 'Gericht · je Portion' : (it.b ? it.b + ' · ' : '') + (cu ? '1 ' + cu[0] + (it.pc ? '' : ' · ' + cu[1] + ' ' + un) + ' = ' + Math.round(it.k * cu[1] / 100) + ' kcal' : '100 ' + un + ' = ' + Math.round(it.k) + ' kcal');
-    // Zählbar: groß die Einheit („2 Stück“, wischbar), darunter klein die Gramm zum Tippen; Fast Food nur die Einheit
-    var amt = it.pc ? '<label class="fpcn"><b id="fpcn">' + fAmt(it, pk.a) + '</b></label>' : cu ? '<div class="fpcn fpcu"><b id="fpcn">' + fAmt(it, pk.a) + '</b><label class="fag"><input id="fa" type="number" inputmode="decimal" min="0" step="' + fStep(it) + '" value="' + pk.a + '" aria-label="Menge in ' + un + '"><span>' + un + '</span></label></div>' :
+    var dg = it.dish ? dishG(pk.i) : 0;
+    var sub = it.dish ? 'Gericht' + (dg ? ' · 1 Portion ≈ ' + Math.round(dg / 5) * 5 + ' g' : ' · je Portion') : (it.b ? it.b + ' · ' : '') + (cu ? '1 ' + cu[0] + (it.pc ? '' : ' · ' + cu[1] + ' ' + un) + ' = ' + Math.round(it.k * cu[1] / 100) + ' kcal' : '100 ' + un + ' = ' + Math.round(it.k) + ' kcal');
+    // Zählbar: groß die Einheit („2 Stück“, wischbar), darunter klein die Gramm zum Tippen; Fast Food nur die Einheit; Gericht: Portionen, darunter das Gewicht aus den Zutaten
+    var amt = dg ? '<div class="fpcn fpcu"><b id="fpcn">' + fAmt(it, pk.a) + '</b><small id="fpcg">≈ ' + Math.round(dg * pk.a / 5) * 5 + ' g</small></div>'
+      : it.pc ? '<label class="fpcn"><b id="fpcn">' + fAmt(it, pk.a) + '</b></label>' : cu ? '<div class="fpcn fpcu"><b id="fpcn">' + fAmt(it, pk.a) + '</b><label class="fag"><input id="fa" type="number" inputmode="decimal" min="0" step="' + fStep(it) + '" value="' + pk.a + '" aria-label="Menge in ' + un + '"><span>' + un + '</span></label></div>' :
       '<label><input id="fa" type="number" inputmode="decimal" min="0" step="' + fStep(it) + '" value="' + pk.a + '" aria-label="Menge"><span>' + (it.dish ? 'Port.' : un) + '</span></label>';
     // Kopf: Marke wählen (eingebaute Lebensmittel) und Barcode direkt neben dem Schließen
     // Gericht: statt Barcode (hat keinen) der Zutaten-Knopf; an = Zutaten für die gewählte Portion statt der Nährwert-Kacheln
@@ -211,9 +215,12 @@
     var pk = ui.fpick, it = fItem(pk.i); if (!it) return;
     if ($('ftot')) $('ftot').innerHTML = ftotHtml(fNut(it, pk.a)); if ($('ffit')) $('ffit').textContent = ffitHtml();
     var pc = $('fpcn'); if (pc) pc.textContent = fAmt(it, pk.a);
+    var pg = $('fpcg'); if (pg) pg.textContent = '≈ ' + Math.round(dishG(pk.i) * pk.a / 5) * 5 + ' g';
     document.querySelectorAll('[data-famt]').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.famt === pk.a)); });
     if ($('fing')) $('fing').innerHTML = fingHtml(pk.i, pk.a);
   }
+  // Gewicht einer Portion eines Gerichts (Summe der Zutatenmengen / Portionen), 0 = unbekannt
+  function dishG(id) { var dd = fDish(id); var g = dd ? dd.ing.reduce(function (a, q) { return a + (+q.a || 0); }, 0) / Math.max(1, +dd.por || 1) : 0; return g >= 5 ? g : 0; }
   function fingHtml(id, por) {
     // Zutaten eines Gerichts für die gewählte Portionenzahl (zum Kochen) als Chips in der Farbe ihrer Kategorie: Icon, Name, Menge (gerundet auf 5 g); darunter die Nährwerte
     var dd = fDish(id); if (!dd || !dd.ing.length) return '';
@@ -222,8 +229,11 @@
       // Ohne Menge (Gewürze, „nach Belieben“): n. B. statt Gramm
       var g = (+q.a || 0) * f, src = q.i && (FOODB[q.i] || fOwn(q.i)), ck = src && src.cat ? src.cat : q.i && /^u/.test(q.i) ? 'u' : 'x';
       // Zählbare Zutat in ihrer Einheit („2 Stück“), wenn es auf ½ Einheit ungefähr aufgeht
-      var cu = src && fUnit(src), cn = cu ? Math.round(g / cu[1] * 2) / 2 : 0, am = cn && Math.abs(cn * cu[1] - g) <= g * 0.15 ? fAmt(src, cn * cu[1]) : g < 20 ? Math.round(g) : Math.round(g / 5) * 5;
-      return '<span style="--cc:' + fTone(q.i, ck) + '">' + ic(fIco(q.i, ck)) + '<b' + (String(q.n || '').length > 13 ? ' class="l"' : '') + '>' + esc(q.n || 'Zutat') + '</b>' + (g > 0 ? '<em>' + am + '</em>' : '<em class="nb">n. B.</em>') + '</span>';
+      // Zwei Zeilen: Name oben (lang = kleiner), Menge darunter; mit Quelle antippbar = Werte dieser Zutat (Mengen-Fenster, Zurück = Gericht)
+      var cu = src && fUnit(src), cn = cu ? Math.round(g / cu[1] * 2) / 2 : 0, gr = g < 20 ? Math.round(g) : Math.round(g / 5) * 5;
+      var am = cn && Math.abs(cn * cu[1] - g) <= g * 0.15 ? fAmt(src, cn * cu[1]) : gr + (src && src.ml ? ' ml' : ' g');
+      return '<' + (src ? 'button data-fing="' + q.i + '|' + gr + '"' : 'span') + ' style="--cc:' + fTone(q.i, ck) + '">' + ic(fIco(q.i, ck)) + '<span><b' + (String(q.n || '').length > 16 ? ' class="l"' : '') + '>' + esc(q.n || 'Zutat') + '</b>' +
+        (g > 0 ? '<em>' + am + '</em>' : '<em class="nb">n. B.</em>') + '</span></' + (src ? 'button' : 'span') + '>';
     }).join('') + '<div class="dgp">' + ['k', 'p', 'f', 'c'].map(function (k) { return '<span style="--nc:var(' + NCOL[k] + ')">' + ic(NIC[k]) + '<b>' + Math.round(v[k] || 0) + '</b></span>'; }).join('') + '</div>';
   }
   function fstpHtml(id, ed) {

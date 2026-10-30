@@ -44,6 +44,15 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+### 2026-10-30 – Kalender 3 Stufen mit Trainings-Flächen, Essen-Icons, Liter, Zutaten, Einkauf in Kaufgrößen
+- Kalender wieder Woche / 3 / 5 Wochen. Trainiert = Fläche (`.done`), Tage in Folge als Band (`.jl/.jr`), volle Woche (alles Geplante erledigt) in Gold (`.pc2-r.full`). Ring wie Essen-Leiste (`dayFood`, gemeinsam). Tauschpaare: ⇄ + Buchstabe in Paarfarbe. Urlaub/Krank in EINER Reihe: gleiche Art verschmilzt (`offK`), Überschneidung = geteiltes Stück (oben gold, unten rot).
+- Icons: 15 neue (apple, straw, berry, kiwi, broc, pepper, cucum, onion, mush, corn, peas, avo, lettuce, icecr, oil), `FICO` erweitert, Unterarten-Icons angepasst. Kacheln ohne Herkunft zeigen das Lebensmittel-Icon statt Plus.
+- Getränke: Milch/Drinks mit Tüte/Packung 1 l, Saft Flasche 1 l, Cola Flasche 1,5 l; `fAmt` zeigt ab 0,5 l glatt in Litern; Pillen ½ · 1 · 2 Glas · 0,5 l · Packung.
+- Zutaten im Gericht: zweizeilig (Name, Menge in Einheit), antippen = Mengen-Fenster der Zutat (`data-fing`, Zurück über `ui.fingb`). Fehler: CSS hängte „ g“ an jede Menge (auch „2 Stück“).
+- Gericht: Portionsgewicht `dishG` im Mengen-Fenster („1 Portion ≈ 400 g“) und auf der Gericht-Karte.
+- Planen › Essen: Reiter volle Breite; Essen = Kategorie-Leiste (Häufig, FCATS, Eigene; `ui.pfc`) mit allen Lebensmitteln in ihrer Einheit; Gerichte = Karten wie Gerichte-Menü, nur einplanen; Vorlagen getrennt in „Ganze Tage“ (Mahlzeit-Symbole) und „Mahlzeiten“.
+- Einkauf: `SHB` Kaufgrößen + Packungspreise (~100 Lebensmittel), gekocht → roh (`SHRAW`), Restaurant/Fast Food raus.
+
 ### 2026-10-30 – Mengen in Einheiten, ruhiger Kalender, Training ohne Vorlagen-Reiter
 - Mengen „Einheit zuerst“: `fUnit(it)` = vorgewählte bzw. erste zählbare Portion (`FCOUNT`: Stück, Scheibe, Glas, Becher, Dose, EL, TL …, ≤ 400 g), `fStep` = ½ Einheit (EL/TL ganze), sonst 5/10/25 g nach üblicher Menge, Getränke 50 ml. Mengen-Fenster: Einheit groß („1½ Stück“, wischbar 18 px/Schritt), Gramm klein als `#fa` zum Tippen; Pillen ½·1·2·3·4 (kleine Einheiten 1–5). ± und Wischen rasten aufs Raster. `fAmt` zeigt Einheit (auch in Planen/Einkauf-Zeilen), `fPl` Mehrzahl („2 Scheiben“), `fHalf` ¼ ½ ¾. Zutaten-Chips im Gericht in Einheit, wenn auf ½ ungefähr aufgeht. Daten bleiben in Gramm.
 - Kalender: nur Woche Mo–So (`ui.cm` 0) oder 5 Wochen (1); je Tag Zahl mit Essen-Ring + EIN Zeichen (Haken / blasser Punkt verpasst / erstes Training +n); Ausnahme = Punkt an der Zahl (`.exc`). Urlaub/Krank als Band `.pcb` über den Tagen jeder Woche, Überschneidungen in eigenen Reihen. Tausch-Farben (`SWC`), Waage-, Urlaub-Zeichen und eingerahmte Tage entfernt.

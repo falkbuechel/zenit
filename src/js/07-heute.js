@@ -37,15 +37,25 @@
       '<div class="hm-b' + (d.warm[today] ? ' got' : '') + '" data-warm="1" role="button" tabindex="0" aria-label="Aufwärmen"><i>' + ic(d.warm[today] ? 'check' : 'sun') + '</i><small>Warm</small></div></div>' +
       '<div class="hm-side r"><div class="hm-b" data-zoom="1" role="button" tabindex="0" aria-label="Bergpfad"><i>' + ic('peak') + '</i><small>Pfad</small></div>' +
       '<button class="hm-b" data-swap="1" aria-label="Heute ändern"><i>' + ic('swap') + '</i><small>Ändern</small></button></div>' +
-      '<div class="hm-hero"' + (cur ? ' data-arena="1" role="button" tabindex="0" aria-label="Training öffnen"' : '') + '>' + mascot(mood, tr) + '</div>' +
+      '<div class="hm-hero"' + (cur ? ' data-arena="1" role="button" tabindex="0" aria-label="Training öffnen"' : '') + '>' + (EXP ? '<p class="hm-say">' + esc(mSay(today, rest ? 'rest' : all ? 'done' : nd ? 'run' : ss.mode === 'last' ? 'risk' : 'go', nd, L.length, nx)) + '</p>' : '') + mascot(mood, tr) + '</div>' +
       '<div class="hm-plan"><b>' + esc(rest ? 'Heute frei' : tname) + '</b><small>' + (cur ? L.length + ' Übungen' + (mins ? ' · ~' + mins + ' Min' : '') : rest ? (nx ? 'Weiter: ' + esc(nx) : 'Erholung zählt') : 'Heute keine Übungen') + '</small>' +
       (cur ? '<i class="hm-pb"><i style="--p:' + (nd / L.length).toFixed(3) + '"></i></i>' : '') + '</div>' +
       (cur ? '<button class="btn primary big hm-go" data-arena="1">' + ic(all ? 'check' : 'play') + (all ? 'Erledigt · ansehen' : nd ? 'Weiter trainieren · ' + nd + '/' + L.length : 'Training starten') + '</button>'
         : '<button class="btn big hm-go" data-swap="1">' + ic('swap') + (rest ? 'Trotzdem trainieren' : 'Training wählen') + '</button>') + '</section>';
   }
+  // Versuch: Partner-Spruch über dem Maskottchen, je Zustand ein paar Varianten, wechselt täglich
+  var MSAY = {
+    go: ['Ich zähl mit. Los.', 'Heute holen wir uns XP.', 'Bereit, wenn du es bist.', 'Ein Satz, dann rollt es.'],
+    run: ['Weiter. Noch {r}.', 'Gut drin. {r} fehlen.', 'Nicht abreißen lassen: {r} noch.'],
+    done: ['Stark. Das war es für heute.', 'Erledigt. Ich bin stolz.', 'Sauber. Jetzt essen und schlafen.'],
+    risk: ['Serie wackelt. Ein Satz rettet sie.', 'Kurz rein, Serie halten.'],
+    rest: ['Ruhetag. Muskeln wachsen jetzt.', 'Heute Pause. {n} wartet.']
+  };
+  function mSay(today, k, nd, n, nx) { var o = MSAY[k]; return o[today % o.length].replace('{r}', n - nd).replace('{n}', nx || 'Morgen'); }
   // Maskottchen (Platzhalter bis zur Illustration): Stimmung idle | happy | sleep | cheer, Stirnband in der Farbe der Titel-Stufe, wird mit der Stufe etwas größer
   var MTC = ['#8fa39a', '#8fa39a', '#5b8fd6', '#a374d8', '#ffc94a', '#57c7b8'];
   function mascot(mood, tr) {
+    if (EXP) return gorilla(mood, tr);
     var eyes = mood === 'sleep' ? '<path d="M40 63q6 4 12 0M68 63q6 4 12 0" class="ln"/>' : mood === 'happy' || mood === 'cheer' ? '<path d="M40 65q6-8 12 0M68 65q6-8 12 0" class="ln"/>' :
       '<circle cx="46" cy="62" r="5.5" class="ey"/><circle cx="74" cy="62" r="5.5" class="ey"/><circle cx="48" cy="60" r="1.8" fill="#fff"/><circle cx="76" cy="60" r="1.8" fill="#fff"/>';
     var mouth = mood === 'sleep' ? '<ellipse cx="60" cy="80" rx="3" ry="2.5" class="ey"/>' : mood === 'idle' ? '<path d="M53 78q7 6 14 0" class="ln"/>' : '<path d="M49 75q11 16 22 0z" class="ey"/>';
@@ -56,6 +66,51 @@
       '<path d="M60 18c32 0 44 28 44 58s-18 42-44 42-44-12-44-42 12-58 44-58z" fill="url(#zmg)"/><ellipse cx="60" cy="90" rx="26" ry="19" fill="#fff" opacity=".18"/>' +
       '<rect x="19" y="38" width="82" height="9" rx="4.5" fill="var(--mt)"/><path d="M98 42l12-6-2 12z" fill="var(--mt)"/>' + eyes + mouth +
       (mood === 'sleep' ? '<text x="92" y="24" class="zz">z</text><text x="102" y="12" class="zz">z</text>' : '') + '</g></svg>';
+  }
+  // Versuch: Berg-Gorilla, kantig und cel-shaded (Vorlage fürs 3D-Modell). Linke Körperhälfte als Punkte, rechte gespiegelt.
+  // Stufen: ab 2 Handbandagen, ab 3 Silber an den Schultern, ab 4 leuchtende Muskelnähte, ab 5 Aura
+  function gorilla(mood, tr) {
+    function P(a, c) { return '<polygon class="' + c + '" points="' + a.map(function (p) { return p.join(','); }).join(' ') + '"/>'; }
+    function M(a) { return a.map(function (p) { return [200 - p[0], p[1]]; }); }
+    function B(a, c) { return P(a, c) + P(M(a), c); }
+    var up = mood === 'cheer', h = '';
+    if (tr >= 5) h += '<g class="g-au">' + [0, 1, 2, 3, 4, 5, 6, 7].map(function (k) { return '<polygon points="100,104 ' + (100 + 120 * Math.cos(k * .785 - .2)).toFixed(0) + ',' + (104 + 120 * Math.sin(k * .785 - .2)).toFixed(0) + ' ' + (100 + 120 * Math.cos(k * .785 + .12)).toFixed(0) + ',' + (104 + 120 * Math.sin(k * .785 + .12)).toFixed(0) + '"/>'; }).join('') + '</g>';
+    h += '<ellipse cx="100" cy="207" rx="72" ry="7" class="sh"/><g class="bd">';
+    // Beine, Füße
+    h += B([[68, 148], [96, 150], [94, 182], [90, 199], [64, 201], [60, 184]], 'g-f') + B([[85, 152], [96, 150], [94, 182], [90, 199], [84, 199]], 'g-fs') +
+      B([[54, 195], [92, 195], [97, 207], [49, 208]], 'g-s');
+    // Rumpf, Nacken
+    h += P([[38, 66], [100, 58], [162, 66], [152, 108], [138, 150], [62, 150], [48, 108]], 'g-f') + P([[126, 112], [152, 108], [138, 150], [108, 150]], 'g-fs') +
+      P([[54, 66], [78, 38], [122, 38], [146, 66], [100, 60]], 'g-f');
+    // Brust, Bauch
+    h += B([[66, 72], [99, 76], [99, 100], [84, 108], [64, 98], [60, 82]], 'g-sp') + B([[64, 98], [84, 108], [99, 100], [99, 105], [84, 113], [66, 104]], 'g-ss') +
+      P([[83, 112], [117, 112], [113, 146], [87, 146]], 'g-sp') + P([[106, 112], [117, 112], [113, 146], [104, 146]], 'g-ss') +
+      '<path class="g-ln" d="M100 113V145M85 124H115M86 135H114"/>';
+    // Arme: hängend (Fäuste fast am Boden) oder beim Jubeln hochgerissen
+    var arm = up ? [[[36, 62], [40, 88], [8, 86], [0, 66]], [[0, 72], [24, 76], [28, 40], [20, 24], [-2, 28], [-8, 52]], [[-8, 4], [26, 4], [32, 22], [24, 30], [-4, 30], [-12, 18]], [[-5, 30], [27, 30], [27, 35], [-5, 35]]]
+      : [[[22, 92], [50, 96], [46, 128], [24, 128]], [[14, 122], [50, 122], [58, 156], [48, 174], [16, 172], [8, 150]], [[10, 170], [52, 170], [58, 190], [48, 202], [16, 202], [6, 188]], [[12, 164], [54, 164], [55, 169], [11, 169]]];
+    h += B(arm[0], 'g-f') + B(arm[1], 'g-f') + B(up ? [[14, 74], [24, 76], [28, 40], [20, 24], [16, 30]] : [[40, 124], [50, 122], [58, 156], [48, 174], [42, 172]], 'g-fs') +
+      B(up ? [[-8, 52], [-16, 44], [-6, 42]] : [[8, 140], [-1, 134], [6, 150]], 'g-f') + B(arm[2], 'g-s') + B(up ? [[-8, 8], [10, 6], [4, 18], [-10, 16]] : [[10, 176], [30, 172], [24, 186], [8, 186]], 'g-ch') +
+      (up ? '' : '<path class="g-ln" d="M14 184H54M146 184H186"/>') + (tr >= 2 ? B(arm[3], 'g-wr') : '');
+    // Schultern
+    h += B([[18, 74], [36, 54], [64, 58], [66, 80], [52, 98], [30, 100]], 'g-fl') + B([[18, 74], [6, 68], [14, 84]], 'g-fl') +
+      (tr >= 3 ? B([[24, 70], [38, 57], [60, 61], [50, 70], [34, 77]], 'g-ag') : '');
+    if (tr >= 4) h += '<path class="g-sm" d="M60 82 66 72 99 76M99 76 134 72 140 82M64 98 84 108 99 100 116 108 136 98M83 112 87 146M117 112 113 146M30 100 52 98 66 80M170 100 148 98 134 80"/>';
+    // Kopf: kleiner Scheitelkamm, Ohren (rechts gekerbt), Gesicht, Brauenwulst, Narbe durch die linke Braue
+    h += P([[72, 38], [80, 18], [92, 10], [100, 0], [108, 10], [120, 18], [128, 38], [128, 54], [114, 66], [86, 66], [72, 54]], 'g-f') +
+      P([[68, 40], [74, 36], [76, 50], [70, 50]], 'g-s') + P([[132, 40], [126, 36], [124, 50], [130, 50], [131, 46], [128, 44]], 'g-s') +
+      P([[80, 34], [120, 34], [124, 48], [114, 63], [86, 63], [76, 48]], 'g-s') + P([[110, 48], [124, 48], [114, 63], [104, 63]], 'g-ss');
+    var hp = mood === 'happy' || up, sl = mood === 'sleep';
+    h += P(hp ? [[76, 30], [124, 30], [122, 36], [110, 34], [100, 37], [90, 34], [78, 36]] : [[76, 30], [124, 30], [122, 40], [110, 37], [100, 41], [90, 37], [78, 40]], 'g-fs');
+    h += sl ? '<path class="g-ln" d="M86 45q5 3 10 0M104 45q5 3 10 0"/>' : hp ? '<path class="g-ln b" d="M86 46q5-5 10 0M104 46q5-5 10 0"/>' :
+      '<ellipse cx="91" cy="44.5" rx="4.6" ry="3.8" class="g-ey"/><ellipse cx="109" cy="44.5" rx="4.6" ry="3.8" class="g-ey"/><circle cx="92" cy="45" r="2.3" class="g-pu"/><circle cx="110" cy="45" r="2.3" class="g-pu"/><circle cx="92.8" cy="44" r=".8" fill="#fff"/><circle cx="110.8" cy="44" r=".8" fill="#fff"/>';
+    h += '<path class="g-sc" d="M107 31 113 43"/>' + P([[93, 48], [107, 48], [105, 54], [95, 54]], 'g-ss') + '<path class="g-ln" d="M97 52h.1M103 52h.1"/>';
+    h += sl ? '<ellipse cx="100" cy="59" rx="3" ry="2" class="g-pu"/>' : hp ? P([[88, 56], [112, 56], [107, 63], [93, 63]], 'g-mo') + '<rect x="91" y="56" width="18" height="2.6" fill="#f1f3ee"/>' : '<path class="g-ln" d="M90 58q10 3 20-2"/>';
+    // Stirnband in Stufenfarbe, Enden wehen
+    h += '<g class="g-hb">' + P([[73, 24], [127, 24], [128, 31], [72, 31]], 'g-band') + '<polygon class="g-band g-tail" points="126,25 156,13 150,23 168,21 147,31 126,31"/></g>';
+    if (up) h += '<g class="g-dust">' + B([[-18, 0], [-10, -8], [-4, -2], [-12, 4]], 'g-ch') + B([[30, -6], [38, -12], [40, -2]], 'g-ch') + B([[6, -12], [12, -20], [16, -12]], 'g-ch') + '</g>';
+    if (sl) h += '<text x="140" y="14" class="zz">z</text><text x="154" y="0" class="zz">z</text>';
+    return '<svg class="masc gor ' + mood + '" viewBox="-26 -24 252 240" style="--mt:' + MTC[tr] + ';--ms:' + (0.9 + tr * 0.03).toFixed(2) + '" aria-hidden="true">' + h + '</g></svg>';
   }
   function arenaHtml(d, today, L, cur, dn, tname, nd) {
     // Arena (Vollbild beim Trainieren): kleine Karte oben (wischen = andere Übung), darunter der Zähler für den nächsten Satz.

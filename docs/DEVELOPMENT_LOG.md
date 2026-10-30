@@ -2,37 +2,31 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
-## 2026-10-30 Breite Geräte (iPad quer, Laptop)
-- Größenklassen wie Apple/Material, gemessen in iPhone-13-Maß (Pixel / Skalierung): `c` < 600, `m` < 840, `e` ab 840 (`szSet`, `data-sz` an `<html>`, Wechsel beim Drehen/Fenstergröße → `render`).
-- Falk gewählt: Leiste links (m, e), feste Zweiteilung (e: Plan Kalender+Workouts | Tag; Essen Bilanz+Mahlzeiten | Suche+Kacheln; Muskeln Figur | Liste; Profil Kopf | Statistik; Karten als 2er-Raster, Skilltree volle Breite, Heute schmal mittig), Fenster als Seitenfeld rechts (volle Höhe, kein Ziehen).
-- Umsetzung: `paneSplit` verschiebt nach dem Rendern die Abschnitte in zwei `.pn` (`PANER` je Tab); CSS in `src/css/80-breit.css`.
-- iPad hochkant bleibt kompakt (1,4×, wie großes iPhone). Laptop 1440×900: Plan und Essen ohne Scrollen.
-- Prüfung: `fit.js` mit iPad hochkant/quer + Laptop (0 Funde), `smoke.js --wide` fehlerfrei. Echte Touch-Laptops ungetestet (nur Nachbildung).
-- Aufräumen: `viewDetail` (12-sammlung.js) wird nie erreicht, `ui.sel` wird nirgends gesetzt (Karten öffnen per `data-cardo` im Fenster).
-- Offen: Heute breit noch einspaltig (kommt mit dem Heute-Stil); Seitenfeld rechts deckt den rechten Bereich ab, Breite fest 420 statt exakt der Bereich.
-
-## 2026-10-30 Gleiches Bild auf allen iPhones
-- Bezug iPhone 13 (390 breit). CSS bleibt in px; `build.py` (`rem()`) rechnet beim Bauen px → rem, `html` font-size = 100vw/24.375, begrenzt auf 320–430 Breite (Faktor 0,82–1,10). Bleiben Pixel: ≤ 2px (Linien), `@media`-Bedingungen, `PX` groß geschrieben (Konvention wie postcss-pxtorem).
-- Breiter als 430 (iPad, Rechner): wächst weiter, solange die Höhe reicht (`min(100vw/24.375, 100lvh/52.75, 24PX)`, = 390×844 eingepasst, max 1,5×). iPad hochkant 1,4×, iPad Pro 1,5×, iPad quer/Rechner 1,1×. Dadurch auch 16 Pro Max voll 1,128× statt 1,10×.
-- Auf 390 pixelgleich (`compare.js` nur Kantenglättung). `@media (max-width: 380px)` entfernt (nicht mehr nötig). Querformat bleibt gesperrt (`.rot`).
-- Skilltree: Knoten-/Beschriftungs-Positionen aus JS jetzt in rem (`stPos`), `stBox` in echten Pixeln; sonst wuchsen Knoten, Abstände nicht.
-- Neu `tools/fit.js`: alle Ansichten auf 8 iPhone-Größen (SE bis 16 Pro Max) messen, meldet nur, was schlechter ist als auf dem iPhone 13 (ragt raus, abgeschnitten, gekürzt, mehr Zeilen, Text überlappt in derselben Ebene). Vorher 111 Funde (u. a. Urlaub/Krank auf 375 abgeschnitten, Gerichte überlappt, Kategorienamen auf Pro Max gekürzt), jetzt 0. In `/check`.
-- Regel: Neue Größen in JS-Inline-Styles in rem (Wert/16) oder messen, nie feste px für Layout.
-
 ## 2026-10-29 Bypass-Modus mit Sicherheitsnetz
 - Falk arbeitet mit „Bypass permissions“ (keine Rückfragen). Schutz über PreToolUse-Hook `tools/hook-guard.py` (greift auch im Bypass) + deny-Regeln (zusätzlich: Zugangsdaten ~/.ssh, gh, .git-credentials, .npmrc nicht lesen). `settings.local.json` von Einmal-Freigaben geleert.
 - Gesperrtes braucht Falk selbst im Terminal. Regeln sind Textmuster: neue Fälle in `RULES` ergänzen und mit Beispielbefehlen testen.
 
-## Stand 2026-10-30 (Nacht)
-- Zuletzt gepusht: 390191d (UX-Review, Einkauf-Reiter), c873049 (Demo Voll/Leer), 34c304b (Kalender Glas-Band/Serie/Kapsel, Einkauf neu, Namen-System, Zutat-Übersicht, Gericht in g).
-- Falk testet am iPhone: Kalender (Band, Licht/Serie-Zahl, Gold-Woche, Tausch-Strich, Urlaub/Krank-Kontur), Einkauf (Wischen nach Zuhause, à-Preis, Rest), Namen in Kacheln, Zutat antippen, Gericht-Gramm. Demo vorher neu laden (Zahnrad › Testdaten › Voll).
-- Routine „Damir unslop-Skill prüfen“ täglich 9:00 (claude.ai/code/routines); wenn verfügbar: mit Emil-Skills + `ux-review` ein Design-Setup bauen.
-- Nächster Schritt: Falks Rückmeldung; dann offene Runde Essen kopieren / Fehlt-noch-Vorschläge / Ereignis-Tage oder Schriftgrößen bündeln.
+## 2026-10-30 Versuch Neu/Alt, Maskottchen-Gorilla
+- Falk: freie Hand für Heute/Plan, alles hinter Schalter; später gemeinsam auswählen, was bleibt. Name „Zenit“ und Farben dürfen sich noch ändern.
+- Schalter: Zahnrad › Neu | Alt (`EXP`, `expSet`, localStorage `zenit.exp`, `data-exp` an `<html>`). Neue CSS-Regeln mit `[data-exp]`-Präfix, Daten unverändert.
+- Heute (Neu): Bühne als Trainings-Labor (Raster, harte Kante, versetzte Schatten), Knöpfe mit Druck-Schatten, Fortschritt gestreift, Partner-Spruch über dem Maskottchen (`MSAY`, `mSay`: go/run/done/risk/rest, wechselt täglich).
+- `gorilla(mood, tr)`: SVG-Platzhalter (kantig, cel-shaded), Stufen: ab 2 Bandagen, ab 3 Silber, ab 4 Muskelnähte, ab 5 Aura. Falk: zu grob/vektorhaft, nur Platzhalter.
+- Charakter-Design: Prompts für Gemini (ohne Namen von Stilen/Werken), Ergebnis: Berggorilla, Tierbau (lange Arme, kurze Beine, aufrichten zum Training), Stirnband in Stufenfarbe, Kreide-Hände, Gipfel-Silberrücken, Kerbe im Ohr, Narbe. Essen bestimmt Laune/Energie, nicht Körperfett.
+- Blender 5.2 (Steam: `C:\zGameLauncher\Steam\steamapps\common\Blender\blender.exe`, immer mit `--factory-startup`, sonst Addon-Fehler): `art/gorilla/gorilla.py` baut Blockout aus Muskel-Ellipsoiden, Voxel-Remesh, Toon-Ramp + Inverted-Hull-Kontur, Kletterseil-Gürtel; Masse je Stufe. Renders `sheet-stark.png`, `stufen.png`. Offen: Treppen im Schatten (Normalen nach Remesh, ggf. Datatransfer von Original-Ellipsoiden oder höhere Auflösung), Gesicht/Hände detaillieren, Posen.
+
+## Stand 2026-10-30 (Abend)
+- Gebaut und gepusht: Skalierung auf alle iPhones (7fb8c14, 63d9018), breite Geräte mit Leiste links/zwei Bereichen/Seitenfeld (8542a2b), Arbeitsregel Gerätegrößen in CLAUDE.md (68a3ddc).
+- Falk testet am iPhone: sieht alles aus wie vorher (Bezug iPhone 13)? Plus offene Tests der Vorrunde: Kalender (Band, Serie, Gold-Woche, Tausch-Strich, Urlaub/Krank-Kontur), Einkauf, Namen in Kacheln, Zutat antippen, Gericht-Gramm. Optional: Laptop/iPad im Browser.
+- Nächster Schritt: Falks Rückmeldung; dann Plan kompakter/cleaner machen (Falk: „noch lange nicht wie vorgestellt“) oder erste Stil-Versuche im Heute-Tab.
+- Breite Layouts nur an Meilensteinen nachziehen (Regel in CLAUDE.md).
 - Offene Entscheidungen: Link-Import für Rezepte (CORS-Dienst)? Skilltree Dead Hang/Hollow nach außen? Mahlzeit im Mengen-Fenster beim Einplanen wählbar?
 - Vorschau: `tools/serve.py` (Port 8000) startet VS Code; nie aus Claudes Sitzung starten. App NICHT vom Homescreen löschen (Daten weg).
 - Nicht committet: nur dieses Log.
 
 ## Offen / Ideen
+- Breit: Heute noch einspaltig (mit dem Heute-Stil aufteilen); Seitenfeld fest 420 breit statt exakt der rechte Bereich; echte Touch-Laptops ungetestet.
+- Aufräumen: `viewDetail` (12-sammlung.js) wird nie erreicht (`ui.sel` nie gesetzt).
+- Falks Eindruck: Essen stark, später mehr Charakter (nicht flach); Plan noch nicht kompakt/clean genug.
 - UX-Scan offen: 12–13 Schriftgrößen auf ≤ 8 Stufen bündeln, 5 Schriftgewichte; Bilanz-Licht `fshine` läuft endlos (Akku); Planen hat zwei Schalter-Ebenen (Training/Essen + Reiter).
 - Sehr lange Wörter (Griechischer, Naturjoghurt) werden in 4er-Kacheln nach Silben getrennt; ggf. Icon-Platz nur in Zeile 1 freihalten.
 - Trainings-Kacheln „Blackr…“ (Woche) noch abgeschnitten statt eingepasst.
@@ -64,6 +58,21 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+## 2026-10-30 Breite Geräte (iPad quer, Laptop)
+- Größenklassen wie Apple/Material, gemessen in iPhone-13-Maß (Pixel / Skalierung): `c` < 600, `m` < 840, `e` ab 840 (`szSet`, `data-sz` an `<html>`, Wechsel beim Drehen/Fenstergröße → `render`).
+- Falk gewählt: Leiste links (m, e), feste Zweiteilung (e: Plan Kalender+Workouts | Tag; Essen Bilanz+Mahlzeiten | Suche+Kacheln; Muskeln Figur | Liste; Profil Kopf | Statistik; Karten als 2er-Raster, Skilltree volle Breite, Heute schmal mittig), Fenster als Seitenfeld rechts (volle Höhe, kein Ziehen).
+- Umsetzung: `paneSplit` verschiebt nach dem Rendern die Abschnitte in zwei `.pn` (`PANER` je Tab); CSS in `src/css/80-breit.css`.
+- iPad hochkant bleibt kompakt (1,4×, wie großes iPhone). Laptop 1440×900: Plan und Essen ohne Scrollen.
+- Prüfung: `fit.js` mit iPad hochkant/quer + Laptop (0 Funde), `smoke.js --wide` fehlerfrei. Echte Touch-Laptops ungetestet (nur Nachbildung).
+
+## 2026-10-30 Gleiches Bild auf allen iPhones
+- Bezug iPhone 13 (390 breit). CSS bleibt in px; `build.py` (`rem()`) rechnet beim Bauen px → rem, `html` font-size = 100vw/24.375, begrenzt auf 320–430 Breite (Faktor 0,82–1,10). Bleiben Pixel: ≤ 2px (Linien), `@media`-Bedingungen, `PX` groß geschrieben (Konvention wie postcss-pxtorem).
+- Breiter als 430 (iPad, Rechner): wächst weiter, solange die Höhe reicht (`min(100vw/24.375, 100lvh/52.75, 24PX)`, = 390×844 eingepasst, max 1,5×). iPad hochkant 1,4×, iPad Pro 1,5×, iPad quer/Rechner 1,1×. Dadurch auch 16 Pro Max voll 1,128× statt 1,10×.
+- Auf 390 pixelgleich (`compare.js` nur Kantenglättung). `@media (max-width: 380px)` entfernt (nicht mehr nötig). Querformat bleibt gesperrt (`.rot`).
+- Skilltree: Knoten-/Beschriftungs-Positionen aus JS jetzt in rem (`stPos`), `stBox` in echten Pixeln; sonst wuchsen Knoten, Abstände nicht.
+- Neu `tools/fit.js`: alle Ansichten auf 8 iPhone-Größen (SE bis 16 Pro Max) messen, meldet nur, was schlechter ist als auf dem iPhone 13 (ragt raus, abgeschnitten, gekürzt, mehr Zeilen, Text überlappt in derselben Ebene). Vorher 111 Funde (u. a. Urlaub/Krank auf 375 abgeschnitten, Gerichte überlappt, Kategorienamen auf Pro Max gekürzt), jetzt 0. In `/check`.
+- Regel: Neue Größen in JS-Inline-Styles in rem (Wert/16) oder messen, nie feste px für Layout.
 
 ### 2026-10-30 – Planen: Kalender belohnend, Einkauf neu; Essen: Mehrzahl, Zutat-Übersicht, Gericht in Gramm
 - Kalender: trainierte Tage als Glas-Band (Verlauf, Lichtkante, Kontur), Serie ab 3 Tagen: Licht läuft beim Öffnen einmal durch (`--si`), Zahl als Plakette `.pcs` am Ende; volle Woche Gold mit kurzem Aufleuchten. Tausch = Farbstrich unten `.tsl` (Paarfarbe, kein Buchstabe, Workout-Symbol bleibt). Urlaub/Krank = Kontur-Kapsel um die Tage (`.off .os/.oe`), Symbol am ersten Tag, keine Band-Zeile mehr (`.pcb`/`.pc2-bd` entfernt). Klasse `sk` war belegt (90-medien) → `srk`.

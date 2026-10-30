@@ -274,6 +274,25 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 .hm-pb { display: block; width: 60%; height: 6px; margin-top: 4px; overflow: hidden; border-radius: 3px; background: var(--s3); }
 .hm-pb > i { display: block; width: calc(var(--p) * 100%); height: 100%; background: var(--ac); }
 .hm-go { grid-column: 1 / -1; min-height: 64px; border-radius: var(--r20); font-size: 19px; }
+/* Versuch (data-exp): Bühne wie ein Trainings-Labor, harte Kanten und versetzte Schatten, Gorilla groß mit Sprechblase */
+[data-exp] .hm-bg { border: 2px solid var(--ink); border-radius: 18px; background: linear-gradient(color-mix(in srgb, var(--ink) 7%, transparent) 1px, transparent 1px) 0 0 / 100% 22px, linear-gradient(90deg, color-mix(in srgb, var(--ink) 7%, transparent) 1px, transparent 1px) 0 0 / 22px 100%, radial-gradient(110% 80% at 50% 10%, color-mix(in srgb, var(--pt) 20%, var(--s2)), var(--s1) 70%); box-shadow: 5px 5px 0 var(--ink); }
+[data-exp] .hm-bg::before { content: "● " attr(data-tag); color: var(--pt); }
+[data-exp] .hm-glow { background: radial-gradient(circle, color-mix(in srgb, var(--pt) 30%, transparent), transparent 62%); }
+[data-exp] .hm-hero { position: relative; place-items: end center; padding: 0 0 2%; }
+[data-exp] .hm-hero .masc { width: min(76vw, 300px); margin-bottom: -4px; }
+.hm-say { position: absolute; top: 34px; left: 50%; max-width: 92%; margin: 0; padding: 8px 12px; border: 2px solid var(--ink); border-radius: 14px 14px 14px 4px; background: var(--s1); box-shadow: 3px 3px 0 var(--ink); font-size: 14px; font-weight: 800; line-height: 1.2; text-align: center; white-space: nowrap; transform: translateX(-50%) rotate(-2deg); animation: saypop .5s .2s cubic-bezier(.3, 1.6, .5, 1) both; }
+@keyframes saypop { from { opacity: 0; transform: translateX(-50%) scale(.6) rotate(-8deg); } }
+[data-exp] .hm-b > i { border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+[data-exp] .hm-b:active > i { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+[data-exp] .hm-lv, [data-exp] .hm-st { border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+[data-exp] .hm-lv > i { border-radius: 10px; transform: rotate(-4deg); background: var(--pt); color: #0b0d0b; box-shadow: none; }
+[data-exp] .hm-xp { height: 8px; border: 1.5px solid var(--ink); border-radius: 2px; }
+[data-exp] .hm-xp > i { background: var(--pt); }
+[data-exp] .hm-plan b { font-size: 34px; letter-spacing: .02em; }
+[data-exp] .hm-pb { height: 10px; border: 2px solid var(--ink); border-radius: 3px; }
+[data-exp] .hm-pb > i { background: repeating-linear-gradient(-45deg, var(--pt) 0 8px, color-mix(in srgb, var(--pt) 70%, #000) 8px 16px); }
+[data-exp] .hm-go { border: 2px solid var(--ink); border-radius: 16px; box-shadow: 0 6px 0 var(--ink); text-transform: uppercase; letter-spacing: .06em; font-weight: 900; }
+[data-exp] .hm-go:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ink); }
 /* Maskottchen-Grafik: atmet (leichtes Wippen), Größe wächst mit der Titel-Stufe (--ms) */
 .masc { display: block; overflow: visible; }
 .masc .bd { transform-origin: 60px 118px; transform: scale(var(--ms, 1)); animation: mbob 2.6s ease-in-out infinite; }
@@ -287,6 +306,31 @@ body.arm .toast { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 @keyframes mbob { 50% { transform: scale(var(--ms, 1)) translateY(-3px) scaleY(1.02); } }
 @keyframes mjump { 0%, 100% { transform: scale(var(--ms, 1)); } 40% { transform: scale(var(--ms, 1)) translateY(-10px); } }
 @media (prefers-reduced-motion: reduce) { .masc .bd, .arm-v { animation: none; } }
+/* Versuch: Berg-Gorilla (gorilla()), harte Cel-Schatten, dunkle Kontur, feste Farben in Hell und Dunkel */
+.masc.gor .bd { transform-origin: 100px 207px; }
+.masc.gor polygon { stroke: #0b0d0b; stroke-width: 2.4; stroke-linejoin: round; }
+.masc.gor .g-f { fill: #2c332e; }
+.masc.gor .g-fl { fill: #3b443d; }
+.masc.gor .g-fs, .masc.gor .g-ss, .masc.gor .g-fl, .masc.gor .g-sp { stroke: none; }
+.masc.gor .g-fs { fill: #191e1a; }
+.masc.gor .g-s, .masc.gor .g-sp { fill: #87948a; }
+.masc.gor .g-ss { fill: #6b776e; }
+.masc.gor .g-ag { fill: #a9b5ac; stroke: none; }
+.masc.gor .g-ch { fill: #f2f4ef; stroke: none; opacity: .85; }
+.masc.gor .g-wr { fill: #e6eae3; stroke-width: 1.6; }
+.masc.gor .g-band { fill: var(--mt); stroke-width: 2; }
+.masc.gor .g-tail { transform-origin: 126px 28px; animation: gtail 1.8s ease-in-out infinite; }
+.masc.gor .g-ln { fill: none; stroke: #0b0d0b; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.masc.gor .g-ln.b { stroke-width: 3; }
+.masc.gor .g-ey { fill: #f1f3ee; stroke: #0b0d0b; stroke-width: 1.4; }
+.masc.gor .g-pu, .masc.gor .g-mo { fill: #0b0d0b; }
+.masc.gor .g-sc { stroke: #c4cec6; stroke-width: 1.6; stroke-linecap: round; }
+.masc.gor .g-sm { fill: none; stroke: var(--mt); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: .9; filter: drop-shadow(0 0 3px var(--mt)); }
+.masc.gor .g-au polygon { fill: var(--mt); stroke: none; opacity: .14; }
+.masc.gor .g-au { transform-origin: 100px 104px; animation: rays 24s linear infinite; }
+.masc.gor .g-dust { animation: gdust 1.1s ease-out infinite; transform-origin: 100px 0; }
+@keyframes gtail { 50% { transform: rotate(-9deg) skewX(-8deg); } }
+@keyframes gdust { 0% { opacity: 0; transform: scale(.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: scale(1.25) translateY(-6px); } }
 .arm-s .hc.inr { animation: slr .3s var(--ease) both; }
 .arm-s .hc.inl { animation: sll .3s var(--ease) both; }
 /* Arena-Karte: quer und flach, damit der Zähler Platz hat */

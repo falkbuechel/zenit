@@ -117,14 +117,15 @@
     var today = dayIdx(now), P = plan();
     var NT = ui.nts || [], dur = durEst(), sd = ui.pd == null ? today : ui.pd, a = ui.ca == null ? today : ui.ca, k, ft = ui.pft || 't';
     function nt(x) { return NT.filter(function (n) { return n.k === x; })[0]; }
-    var todo = ['st', 'tr', 'wg', 'f0', 'fp'].map(nt).filter(Boolean), wk = nt('wk'), ux = nt('ux');
+    // Hinweise (auch neue Übungen frei) stehen gesammelt hinter der Glocke, nicht unten auf der Seite
+    var todo = ['st', 'tr', 'wg', 'f0', 'fp', 'ux'].map(nt).filter(Boolean), wk = nt('wk');
     // Kein Titel (wie Essen): der Bereich ergibt sich aus der unteren Leiste
     var h = '';
 
     // Kalender: Woche Mo–So, 3 oder 5 Wochen (Woche des Tags in der Mitte). Je Tag: Zahl mit Essen-Ring (wie die Essen-Leiste, dayFood) und EIN Zeichen.
     // Trainiert = Fläche gefärbt, Tage in Folge laufen als ein Band zusammen; volle Woche (alles Geplante bis Sonntag erledigt) = Band in Gold.
-    // Zeichen: künftig das erste Training (+n), vergangen verpasst = blasser Punkt, Tausch = ⇄ mit Buchstabe in der Farbe des Paars; andere Ausnahme = Punkt an der Zahl.
-    // Urlaub/Krank als Band über der Woche in EINER Reihe: gleiche Art verschmilzt, Überschneidung = geteiltes Stück (oben Urlaub, unten Krank)
+    // Zeichen: künftig das erste Training (+n), vergangen verpasst = blass, Tausch = Farbstrich unten in der Farbe des Paars; andere Ausnahme = Punkt an der Zahl.
+    // Urlaub/Krank als Kontur-Kapsel um die Tage (Gold/Rot), ohne eigene Zeile
     var q = new Date(a * 864e5), w0 = a - wdOf(a), from = w0 - [0, 7, 14][ui.cm || 0], to = from + [7, 21, 35][ui.cm || 0] - 1;
     var title = q.toLocaleDateString('de-DE', { month: 'long', timeZone: 'UTC' });
     var rows = '', swp = ui.pmode === 'swap', pairs = [];
@@ -132,22 +133,26 @@
     pairs.sort(function (x, y) { return x - y; });
     function offK(x) { return (P.off || []).filter(function (o) { return o.a <= x && o.b >= x; }).map(function (o) { return o.k; }).filter(function (v, i, r) { return r.indexOf(v) === i; }).sort().join(' '); }
     for (var r0 = from; r0 <= to; r0 += 7) {
-      var cells = '', bands = '', due = 0, hit = 0;
-      for (k = r0; k < r0 + 7; k++) { var dk = offK(k); if (!dk || dk === offK(k - 1) && k > r0) continue; var e0 = k; while (e0 < r0 + 6 && offK(e0 + 1) === dk) e0++;
-        var two = dk.indexOf(' ') > 0, nm = dk === 'vac' ? 'Urlaub' : dk === 'sick' ? 'Krank' : '';
-        bands += '<button class="pcb ' + dk + (offK(k - 1) ? ' cl' : '') + (offK(e0 + 1) ? ' cr' : '') + '" data-cday="' + k + '" style="grid-column:' + (k - r0 + 1) + ' / ' + (e0 - r0 + 2) + '" aria-label="' + (two ? 'Urlaub und Krank' : nm) + '">' +
-          (two ? '' : ic(dk === 'vac' ? 'beach' : 'sick') + (e0 > k ? '<span>' + nm + '</span>' : '')) + '</button>'; }
+      var cells = '', due = 0, hit = 0;
       for (k = r0; k < r0 + 7; k++) {
-        var ds = schedFor(k), tr = d.byDay[k], fk = ovF(k), pk = swp ? (swapOk(sd, k, today) ? ' pick' : ' nop') : '', sg = '';
+        var ds = schedFor(k), tr = d.byDay[k], fk = ovF(k), pk = swp ? (swapOk(sd, k, today) ? ' pick' : ' nop') : '', sg = '', dk = offK(k);
         if (ds.length) { due++; if (tr) hit++; }
-        var pi = fk.w !== undefined ? pairs.indexOf(Math.min(k, fk.w)) : -1, ex = !offAt(k) && pi < 0 && (fk.s || fk.r || fk.a);
-        if (pi >= 0) sg = '<em class="tsw" style="--sc:var(' + ['--g-cardio', '--g-core', '--g-pull', '--g-kh'][pi % 4] + ')">' + ic('swap') + '<i>' + 'ABCDEFGH'[pi % 8] + '</i></em>';
+        var pi = fk.w !== undefined ? pairs.indexOf(Math.min(k, fk.w)) : -1, ex = !dk && pi < 0 && (fk.s || fk.r || fk.a);
+        // Urlaub/Krank: Kontur-Kapsel um die Tage (Anfang/Ende je Zeile), Symbol am ersten Tag
+        var os = dk && (k === r0 || offK(k - 1) !== dk), oe = dk && (k === r0 + 6 || offK(k + 1) !== dk);
+        if (dk && os) sg = '<em style="--pc:var(' + (dk.indexOf('sick') >= 0 ? '--danger' : '--gold') + ')">' + ic(dk === 'vac' ? 'beach' : 'sick') + '</em>';
         else if (ds.length && !tr) sg = '<em class="' + (k < today ? 'ms' : '') + '" style="--pc:var(' + PCOL[ds[0].c] + ')">' + ic(dIcon(ds[0])) + '</em>' + (ds.length > 1 && k >= today ? '<small>+' + (ds.length - 1) + '</small>' : '');
-        var tp = tr && k > r0 && d.byDay[k - 1], tn = tr && k < r0 + 6 && d.byDay[k + 1];
-        cells += '<button class="pc2' + pk + (k === today ? ' today' : '') + (k === sd ? ' sel' : '') + (k < today ? ' past' : '') + (tr ? ' done' + (tp ? ' jl' : '') + (tn ? ' jr' : '') : '') + (ex ? ' exc' : '') + '" data-cday="' + k + '" aria-label="' + fmtDayL(k) + (tr ? ', trainiert' : '') + '">' +
-          (ui.cm ? '' : '<small>' + WDN[wdOf(k)].slice(0, 2) + '</small>') + '<b>' + dayFood(k, today) + new Date(k * 864e5).getUTCDate() + '</b><span class="ics">' + sg + '</span></button>';
+        // Tausch: Farbstrich unten, beide Tage eines Paars in derselben Farbe
+        if (pi >= 0) sg += '<i class="tsl" style="--sc:var(' + ['--g-cardio', '--g-core', '--g-pull', '--g-kh'][pi % 4] + ')"></i>';
+        // Trainiert: Glas-Band; Tage in Folge (auch über die Zeile) = Serie, ab 3 läuft beim Öffnen ein Licht durch, am Ende die Zahl
+        var tp = tr && k > r0 && d.byDay[k - 1], tn = tr && k < r0 + 6 && d.byDay[k + 1], sn = 0;
+        var sf = 0; if (tr) { while (d.byDay[k - sn - 1]) sn++; sn++; while (d.byDay[k + sf + 1]) sf++; }
+        var se = tr && sn >= 3 && !d.byDay[k + 1] ? '<i class="pcs">' + sn + '</i>' : '';
+        cells += '<button class="pc2' + pk + (k === today ? ' today' : '') + (k === sd ? ' sel' : '') + (k < today ? ' past' : '') + (tr ? ' done' + (tp ? ' jl' : '') + (tn ? ' jr' : '') + (sn + sf >= 3 ? ' srk' : '') : '') + (ex ? ' exc' : '') +
+          (dk ? ' off ' + dk + (os ? ' os' : '') + (oe ? ' oe' : '') : '') + '" data-cday="' + k + '"' + (tr ? ' style="--si:' + Math.min(sn, 9) + '"' : '') + ' aria-label="' + fmtDayL(k) + (tr ? ', trainiert' : '') + (dk === 'vac' ? ', Urlaub' : dk ? ', krank' : '') + '">' +
+          (ui.cm ? '' : '<small>' + WDN[wdOf(k)].slice(0, 2) + '</small>') + '<b>' + dayFood(k, today) + new Date(k * 864e5).getUTCDate() + '</b><span class="ics">' + sg + '</span>' + se + '</button>';
       }
-      rows += '<div class="pc2-r' + (due && hit === due ? ' full' : '') + '">' + (bands ? '<div class="pc2-bd">' + bands + '</div>' : '') + '<div class="pc2-c">' + cells + '</div></div>';
+      rows += '<div class="pc2-r' + (due && hit === due ? ' full' : '') + '"><div class="pc2-c">' + cells + '</div></div>';
     }
     // Kopf: Monat links (antippen = 5 Wochen auf/zu), rechts Glocke (Zu tun) und Tag ändern (Urlaub, Krank, Tauschen, Aussetzen …)
     var nts0 = todo.length, evS =offAt(sd) || ovF(sd).s || ovF(sd).w !== undefined || ovF(sd).r || ovF(sd).a;
@@ -165,7 +170,7 @@
     if (ft === 'd') ft = 't';
     // Kurzer Tagesname, damit Umschalter und Knöpfe in eine Zeile passen
     var dq = new Date(sd * 864e5), dh = sd === today ? 'Heute' : sd === today + 1 ? 'Morgen' : sd === today - 1 ? 'Gestern' : WDN[wdOf(sd)].slice(0, 2) + ' ' + dq.getUTCDate() + '.' + (dq.getUTCMonth() + 1) + '.';
-    c += '<div class="pd-h"><b aria-label="' + esc(dayHead(sd)) + '">' + dh + '</b>' + (ft === 'e' ? (sd <= today ? '<button class="x" data-pfo="' + sd + '" aria-label="In Essen öffnen">' + ic('open') + '</button>' : '') : '') +
+    c += '<div class="pd-h"><b aria-label="' + esc(dayHead(sd)) + '">' + dh + '</b>' + (ui.undo && ui.undo.charAt(0) === '#' ? '<button class="x" data-undo="1" aria-label="Rückgängig">' + ic('undo') + '</button>' : '') + (ft === 'e' ? (sd <= today ? '<button class="x" data-pfo="' + sd + '" aria-label="In Essen öffnen">' + ic('open') + '</button>' : '') : '') +
       '<span class="pft" role="group" aria-label="Ansicht">' + [['t', 'dumb', 'Training'], ['e', 'food', 'Essen']].map(function (x) { return '<button data-pft="' + x[0] + '" aria-pressed="' + (ft === x[0]) + '" aria-label="' + x[2] + '">' + ic(x[1]) + '</button>'; }).join('') + '</span></div>';
     if (swp) c += '<p class="pdh">' + ic('swap') + 'Tag im Kalender wählen<button class="x" data-pmode="swap" aria-label="Tauschen abbrechen">' + ic('close') + '</button></p>';
     if (ft === 't') {
@@ -222,13 +227,13 @@
     } else if (sd >= today) {
       // Essen: Reiter Essen | Vorlagen | Gerichte | Einkauf (Essen vorgewählt). Essen = häufige Lebensmittel, Gerichte = alle Gerichte (zuletzt gegessene zuerst, gestrichelt „Neu“);
       // hochziehen auf eine Mahlzeit = dort einplanen, antippen = Menge wählen (übliche Mahlzeit). Vorlagen = gespeicherte Mahlzeiten (auf eine Mahlzeit ziehen) und Tage (auf die Tageskarte); antippen = wie gespeichert
-      // Einkauf = Einkaufsliste (shopHtml) direkt im Bereich, Reiter als Symbol
-      var pg = ui.pgt || 'e', tl = '', tg0 = '<div class="seg pgt">' + [['e', 'Essen'], ['v', 'Vorlagen'], ['g', 'Gerichte'], ['s', '', 'cart']].map(function (x) {
-        return '<button data-pgt="' + x[0] + '" aria-pressed="' + (pg === x[0]) + '"' + (x[2] ? ' aria-label="Einkauf">' + ic(x[2]) : '>' + x[1]) + '</button>'; }).join('') + '</div>';
+      // Einkauf = Einkaufsliste (shopHtml) direkt im Bereich; Knopf mit Wagen getrennt neben den Reitern (wie Gerichte neben der Suche in Essen)
+      var pg = ui.pgt || 'e', tl = '', tg0 = '<div class="pgtw"><div class="seg pgt">' + [['e', 'Essen'], ['v', 'Vorlagen'], ['g', 'Gerichte']].map(function (x) {
+        return '<button data-pgt="' + x[0] + '" aria-pressed="' + (pg === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div><button class="fdsb" data-pgt="s" aria-pressed="' + (pg === 's') + '" aria-label="Einkauf">' + ic('cart') + '</button></div>';
       // Essen: Kategorie-Leiste wie in der Suche (Häufig, dann FCATS, Eigene), darunter alle Lebensmittel der Kategorie in ihrer üblichen Menge (Einheit)
       var st0 = foodState(), fc = ui.pfc || 'h', cb = '', wrap = 'ftl';
       if (pg === 'e') {
-        cb = '<div class="pfcb" data-noswipe="1">' + [['h', 'Häufig']].concat(FCATS.map(function (c) { return [c[0], c[1]]; }), st0.o.length ? [['u', 'Eigene']] : []).map(function (c) {
+        cb = '<div class="pfcb" data-noswipe="1" data-kx="pfc">' + [['h', 'Häufig']].concat(FCATS.map(function (c) { return [c[0], c[1]]; }), st0.o.length ? [['u', 'Eigene']] : []).map(function (c) {
           return '<button data-pfc="' + c[0] + '" aria-pressed="' + (fc === c[0]) + '" style="--cc:' + (c[0] === 'h' ? 'var(--ac)' : CCOL[c[0]] || CCOL.x) + '">' + ic(c[0] === 'h' ? 'star' : (CATI[c[0]] || CATI.x)[0]) + c[1] + '</button>'; }).join('') + '</div>';
         var its = fc === 'h' ? fTiles().filter(function (x) { return !/^d/.test(x.i); }) : st0.o.concat(FOODS).filter(function (x) { return (fc === 'u' ? /^u/.test(x.id) && !x.cat : x.cat === fc) && !x.vh; })
           .map(function (x) { var cu = fUnit(x); return { i: x.id, g: cu ? cu[1] : x.d || (x.u && x.u[0] ? x.u[0][1] : x.ml ? 250 : 100) }; });
@@ -243,7 +248,6 @@
       h += '<section class="pwks rise" style="--i:3">' + tg0 + cb + '<div class="' + wrap + '" data-noswipe="1">' + tl + '</div></section>';
     }
 
-    if (ux) h += '<button class="agn gold pux rise" style="--i:5" data-nt="ux">' + ic('lock') + '<span>' + esc(ux.t) + '</span></button>';
     return h;
   }
   // ---------- Essen-Vorlagen (food.tp): [{id, n, k: 'm' (Mahlzeit, mk) | 'd' (Tag), it: [{i, g, mk?}]}]
@@ -320,7 +324,7 @@
     return shHead('calev', 'Tag ändern', dayHead(sd)) + dayEdit(plan(), sd, schedFor(sd), today);
   }
   function openNts() {
-    var today = dayIdx(Date.now()), NT = ui.nts || [], lw = lastW(), todo = ['st', 'tr', 'wg', 'f0', 'fp'].map(function (x) { return NT.filter(function (n) { return n.k === x; })[0]; }).filter(Boolean), sd = ui.pd == null ? today : ui.pd;
+    var today = dayIdx(Date.now()), NT = ui.nts || [], lw = lastW(), todo = ['st', 'tr', 'wg', 'f0', 'fp', 'ux'].map(function (x) { return NT.filter(function (n) { return n.k === x; })[0]; }).filter(Boolean), sd = ui.pd == null ? today : ui.pd;
     ui.sheet = { pnts: true };
     // Glocke sitzt im Kalenderkopf und zählt die Aufgaben von heute, also immer heute zeigen
     sheetOpen(shHead('bell', 'Zu tun', dayHead(today)) + '<div class="todo open"><div class="agx"><div>' +

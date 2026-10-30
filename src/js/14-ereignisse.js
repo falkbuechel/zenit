@@ -124,6 +124,7 @@
     if (t.id === 'fq') { ui.fq = t.value; fresSet(); clearTimeout(fonT); fonT = setTimeout(fonSearch, 450); }
     if (/^f-/.test(t.id || '') && ui.fqd) quickRead();
     if (t.id === 'fa' && ui.fpick) { var fa = parseFloat(t.value); if (fa > 0) { ui.fpick.a = fa; fpickUpd(); } }
+    if (t.id === 'fdg' && ui.fpick) { var gw = parseFloat(t.value), dg0 = dishG(ui.fpick.i); if (gw > 0 && dg0) { ui.fpick.a = Math.round(gw / dg0 * 100) / 100; fpickUpd(); } }
     if (ui.dd && /^(dd|di)-/.test(t.id)) { readDraft(); var tt = $('dd-tot'); if (tt) tt.innerHTML = dishTotHtml(dishTot(ui.dd)); }
   });
   function arvSet(v) {

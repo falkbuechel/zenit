@@ -62,5 +62,10 @@
   loadLocal();
   sessLoad();
   render();
+  // Fenster werden an vielen Stellen neu gefüllt: Namen dort nach jeder Änderung einpassen
+  // Die eigenen Änderungen von fitNames (Messelement, Leerzeichen) danach verwerfen, sonst ruft der Beobachter sich selbst auf
+  // gebündelt (120 ms), damit Tippen in der Suche nicht bei jedem Zeichen misst
+  if (window.MutationObserver) { var fitT, fitMo = new MutationObserver(function () { clearTimeout(fitT); fitT = setTimeout(function () { fitNames($('sheet')); fitMo.takeRecords(); }, 120); }); fitMo.observe($('sheet'), { childList: true, subtree: true }); }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitNames($('view')); });
   sessUi();
   initStore();

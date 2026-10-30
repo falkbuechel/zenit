@@ -115,6 +115,7 @@
     return '<div class="seg fvs" style="grid-template-columns: repeat(' + it.vg.length + ', 1fr)">' + it.vg.map(function (v) { return '<button data-fvar="' + v[0] + '" aria-pressed="' + (v[0] === id) + '">' + v[1] + '</button>'; }).join('') + '</div>';
   }
   function openPick(id, a, edit) {
+    ui.fingx = null;
     var it = fItem(id); if (!it) return;
     ui.sheet = { fpick: true }; ui.fstpo = false; ui.fpick = { i: id, a: a != null ? a : it.dish ? 1 : it.d || (it.u.length ? it.u[it.ub && it.u[1] ? 1 : 0][1] : 100), edit: edit };
     sheetOpen(fpickHtml(), true); $('sheet').classList.add('fp'); if (it.dish && ui.fingo) fpPaint();
@@ -147,7 +148,8 @@
     var dg = it.dish ? dishG(pk.i) : 0;
     var sub = it.dish ? 'Gericht' + (dg ? ' · 1 Portion ≈ ' + Math.round(dg / 5) * 5 + ' g' : ' · je Portion') : (it.b ? it.b + ' · ' : '') + (cu ? '1 ' + cu[0] + (it.pc ? '' : ' · ' + cu[1] + ' ' + un) + ' = ' + Math.round(it.k * cu[1] / 100) + ' kcal' : '100 ' + un + ' = ' + Math.round(it.k) + ' kcal');
     // Zählbar: groß die Einheit („2 Stück“, wischbar), darunter klein die Gramm zum Tippen; Fast Food nur die Einheit; Gericht: Portionen, darunter das Gewicht aus den Zutaten
-    var amt = dg ? '<div class="fpcn fpcu"><b id="fpcn">' + fAmt(it, pk.a) + '</b><small id="fpcg">≈ ' + Math.round(dg * pk.a / 5) * 5 + ' g</small></div>'
+    // Gericht gewogen: Gramm darunter sind eintippbar und rechnen in Portionen um (Werte folgen)
+    var amt = dg ? '<div class="fpcn fpcu"><b id="fpcn">' + fAmt(it, pk.a) + '</b><label class="fag"><input id="fdg" type="number" inputmode="numeric" min="0" step="10" value="' + Math.round(dg * pk.a / 5) * 5 + '" aria-label="Gewogen in g"><span>g</span></label></div>'
       : it.pc ? '<label class="fpcn"><b id="fpcn">' + fAmt(it, pk.a) + '</b></label>' : cu ? '<div class="fpcn fpcu"><b id="fpcn">' + fAmt(it, pk.a) + '</b><label class="fag"><input id="fa" type="number" inputmode="decimal" min="0" step="' + fStep(it) + '" value="' + pk.a + '" aria-label="Menge in ' + un + '"><span>' + un + '</span></label></div>' :
       '<label><input id="fa" type="number" inputmode="decimal" min="0" step="' + fStep(it) + '" value="' + pk.a + '" aria-label="Menge"><span>' + (it.dish ? 'Port.' : un) + '</span></label>';
     // Kopf: Marke wählen (eingebaute Lebensmittel) und Barcode direkt neben dem Schließen
@@ -215,7 +217,7 @@
     var pk = ui.fpick, it = fItem(pk.i); if (!it) return;
     if ($('ftot')) $('ftot').innerHTML = ftotHtml(fNut(it, pk.a)); if ($('ffit')) $('ffit').textContent = ffitHtml();
     var pc = $('fpcn'); if (pc) pc.textContent = fAmt(it, pk.a);
-    var pg = $('fpcg'); if (pg) pg.textContent = '≈ ' + Math.round(dishG(pk.i) * pk.a / 5) * 5 + ' g';
+    var pg = $('fdg'); if (pg && document.activeElement !== pg) pg.value = Math.round(dishG(pk.i) * pk.a / 5) * 5;
     document.querySelectorAll('[data-famt]').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.famt === pk.a)); });
     if ($('fing')) $('fing').innerHTML = fingHtml(pk.i, pk.a);
   }
@@ -225,15 +227,16 @@
     // Zutaten eines Gerichts für die gewählte Portionenzahl (zum Kochen) als Chips in der Farbe ihrer Kategorie: Icon, Name, Menge (gerundet auf 5 g); darunter die Nährwerte
     var dd = fDish(id); if (!dd || !dd.ing.length) return '';
     var f = por / Math.max(1, +dd.por || 1), v = fNut(fItem(id), por);
-    return dd.ing.filter(function (q) { return q.n || +q.a > 0; }).map(function (q) {
+    return dd.ing.filter(function (q) { return q.n || +q.a > 0; }).map(function (q, qi) {
       // Ohne Menge (Gewürze, „nach Belieben“): n. B. statt Gramm
       var g = (+q.a || 0) * f, src = q.i && (FOODB[q.i] || fOwn(q.i)), ck = src && src.cat ? src.cat : q.i && /^u/.test(q.i) ? 'u' : 'x';
       // Zählbare Zutat in ihrer Einheit („2 Stück“), wenn es auf ½ Einheit ungefähr aufgeht
-      // Zwei Zeilen: Name oben (lang = kleiner), Menge darunter; mit Quelle antippbar = Werte dieser Zutat (Mengen-Fenster, Zurück = Gericht)
+      // Name links (lang = kleiner), Menge rechts; mit Menge antippbar = Kurzübersicht der Werte dieser Zutat in der Zeile darunter (volle Breite)
       var cu = src && fUnit(src), cn = cu ? Math.round(g / cu[1] * 2) / 2 : 0, gr = g < 20 ? Math.round(g) : Math.round(g / 5) * 5;
-      var am = cn && Math.abs(cn * cu[1] - g) <= g * 0.15 ? fAmt(src, cn * cu[1]) : gr + (src && src.ml ? ' ml' : ' g');
-      return '<' + (src ? 'button data-fing="' + q.i + '|' + gr + '"' : 'span') + ' style="--cc:' + fTone(q.i, ck) + '">' + ic(fIco(q.i, ck)) + '<span><b' + (String(q.n || '').length > 16 ? ' class="l"' : '') + '>' + esc(q.n || 'Zutat') + '</b>' +
-        (g > 0 ? '<em>' + am + '</em>' : '<em class="nb">n. B.</em>') + '</span></' + (src ? 'button' : 'span') + '>';
+      var am = cn && Math.abs(cn * cu[1] - g) <= g * 0.15 ? fAmt(src, cn * cu[1]) : gr + (src && src.ml ? ' ml' : ' g'), tap = g > 0, op = tap && ui.fingx === qi;
+      return '<' + (tap ? 'button data-fing="' + qi + '" aria-expanded="' + op + '"' : 'span') + ' style="--cc:' + fTone(q.i, ck) + '">' + ic(fIco(q.i, ck)) + '<b class="' + fitCls(q.n || 'Zutat', 12) + '">' + esc(q.n || 'Zutat') + '</b>' +
+        (g > 0 ? '<em>' + am + '</em>' : '<em class="nb">n. B.</em>') + '</' + (tap ? 'button' : 'span') + '>' +
+        (op ? '<div class="dgp fiq" style="--cc:' + fTone(q.i, ck) + '">' + ['k', 'p', 'f', 'c'].map(function (k) { return '<span style="--nc:var(' + NCOL[k] + ')">' + ic(NIC[k]) + '<b>' + Math.round((+q[k] || 0) * g / 100) + '</b></span>'; }).join('') + '</div>' : '');
     }).join('') + '<div class="dgp">' + ['k', 'p', 'f', 'c'].map(function (k) { return '<span style="--nc:var(' + NCOL[k] + ')">' + ic(NIC[k]) + '<b>' + Math.round(v[k] || 0) + '</b></span>'; }).join('') + '</div>';
   }
   function fstpHtml(id, ed) {

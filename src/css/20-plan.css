@@ -89,25 +89,34 @@
 .pc2.past .ics em { opacity: .4; }
 .pc2-g { touch-action: pan-y; will-change: transform; }
 .pc2-r + .pc2-r { margin-top: 2px; }
-/* Urlaub/Krank: Band über den Tagen, abgeschnitten am Wochenrand gerade */
-.pc2-bd { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); row-gap: 2px; margin: 3px 0 1px; }
-.pcb { --oc: var(--gold); display: flex; align-items: center; justify-content: center; gap: 4px; min-width: 0; height: 18px; margin: 0 2px; padding: 0 6px; overflow: hidden; border: 0; border-radius: 9px;
-  background: color-mix(in srgb, var(--oc) 16%, transparent); color: color-mix(in srgb, var(--oc) 75%, var(--ink)); font: inherit; font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; cursor: pointer; }
-.pcb.sick { --oc: var(--danger); }
-.pcb.sick.vac { background: linear-gradient(color-mix(in srgb, var(--gold) 22%, transparent) 50%, color-mix(in srgb, var(--danger) 18%, transparent) 50%); }
-/* Trainiert: Fläche, Tage in Folge als ein Band; volle Woche in Gold */
-.pc2.done { background: color-mix(in srgb, var(--ac) 22%, transparent); }
+/* Trainiert: Glas-Band (Verlauf, Lichtkante oben, Kontur mit Schein), Tage in Folge als ein Band; volle Woche in Gold (blitzt beim Öffnen auf) */
+.pc2.done { --bc: var(--ac); background: linear-gradient(180deg, color-mix(in srgb, var(--bc) 32%, transparent), color-mix(in srgb, var(--bc) 14%, transparent)); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 50%, transparent); }
+.pc2.done::before { content: ""; position: absolute; inset: 0; z-index: 0; border: 1.5px solid color-mix(in srgb, var(--bc) 60%, transparent); border-radius: inherit; pointer-events: none; }
 .pc2.done.jl { border-top-left-radius: 0; border-bottom-left-radius: 0; }
 .pc2.done.jr { border-top-right-radius: 0; border-bottom-right-radius: 0; }
-.pc2.done.sel { background: color-mix(in srgb, var(--ac) 34%, transparent); }
-.pc2-r.full .pc2.done { background: color-mix(in srgb, var(--gold) 24%, transparent); }
-.pc2-r.full .pc2.done.sel { background: color-mix(in srgb, var(--gold) 36%, transparent); }
-.pc2 .ics em.tsw { display: flex; align-items: center; gap: 1px; color: var(--sc); }
-.pc2 .ics em.tsw i { font: 800 10px/1 var(--f-mono); font-style: normal; }
-.pcb.cl { margin-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; }
-.pcb.cr { margin-right: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; }
-.pcb .ic { flex: none; width: 12px; height: 12px; }
-.pcb span { overflow: hidden; text-overflow: ellipsis; }
+.pc2.done.jl::before { border-left: 0; }
+.pc2.done.jr::before { border-right: 0; }
+.pc2.done.sel { background: linear-gradient(180deg, color-mix(in srgb, var(--bc) 46%, transparent), color-mix(in srgb, var(--bc) 24%, transparent)); }
+.pc2-r.full .pc2.done { --bc: var(--gold); }
+.fresh .pc2-r.full .pc2.done::before { animation: pcgold 1.1s ease-out .45s both; }
+@keyframes pcgold { 35% { box-shadow: inset 0 0 12px color-mix(in srgb, var(--gold) 80%, transparent); } }
+/* Serie ab 3 Tagen: Licht läuft beim Öffnen einmal durch das Band (Verzögerung je Tag --si), am Ende die Zahl als Plakette */
+.pc2.done.srk::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; background: linear-gradient(100deg, transparent 35%, color-mix(in srgb, #fff 70%, transparent) 50%, transparent 65%) no-repeat; background-size: 250% 100%; }
+.fresh .pc2.done.srk::after { animation: pcsh .6s ease-out calc(.3s + var(--si, 1) * 80ms) both; }
+@keyframes pcsh { from { opacity: 1; background-position: 150% 0; } to { opacity: 1; background-position: -50% 0; } }
+.pcs { position: absolute; top: 1px; right: 1px; z-index: 1; min-width: 15px; height: 15px; padding: 0 3px; border-radius: 8px; background: var(--bc); color: #fff; font: 800 9px/15px var(--f-mono); font-style: normal;
+  box-shadow: 0 0 8px color-mix(in srgb, var(--bc) 70%, transparent), inset 0 1px 0 color-mix(in srgb, #fff 40%, transparent); }
+.fresh .pcs { animation: fpop .5s cubic-bezier(.2, 1.6, .4, 1) calc(.5s + var(--si, 1) * 80ms) both; }
+/* Tausch: Farbstrich unten, Paar = gleiche Farbe */
+.tsl { position: absolute; bottom: 1px; left: 50%; width: 14px; height: 3px; margin-left: -7px; border-radius: 2px; background: var(--sc); }
+/* Urlaub/Krank: Kontur-Kapsel um die Tage (Gold/Rot), rund nur an Anfang und Ende je Zeile */
+.pc2.off { --oc: var(--gold); border-radius: 0; }
+.pc2.off.sick { --oc: var(--danger); }
+.pc2.off::before { content: ""; position: absolute; inset: 1px 0; border: 1.5px solid color-mix(in srgb, var(--oc) 65%, transparent); border-right: 0; border-left: 0; border-radius: inherit; pointer-events: none; }
+.pc2.off.os { border-top-left-radius: var(--r12); border-bottom-left-radius: var(--r12); }
+.pc2.off.oe { border-top-right-radius: var(--r12); border-bottom-right-radius: var(--r12); }
+.pc2.off.os::before { border-left: 1.5px solid color-mix(in srgb, var(--oc) 65%, transparent); }
+.pc2.off.oe::before { border-right: 1.5px solid color-mix(in srgb, var(--oc) 65%, transparent); }
 .pc2-n { display: flex; align-items: center; gap: 6px; margin: 6px 4px 0; font-size: 12px; font-weight: 700; color: var(--flame); }
 .pc2-n .ic { width: 14px; height: 14px; }
 /* Tageskarte */
@@ -302,8 +311,10 @@ button.pdb-h:active { background: var(--s2); }
 .pmn { display: -webkit-box; overflow: hidden; font-size: 10.5px; line-height: 1.2; color: var(--ink2); -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
 .ptl2.drop { outline: 2px dashed var(--danger); outline-offset: 4px; border-radius: var(--r12); }
 .ptl2 { margin-top: 2px; }
-/* Essen planen: kleiner Schalter Gerichte | Vorlagen über den Kacheln */
-.seg.pgt { grid-template-columns: repeat(3, 1fr) 48px; width: 100%; margin: 0 0 6px; }
+/* Essen planen: Reiter Essen | Vorlagen | Gerichte, daneben der Einkauf-Knopf (wie Gerichte neben der Suche) */
+.pgtw { display: grid; grid-template-columns: minmax(0, 1fr) 58px; gap: 8px; margin: 0 0 6px; }
+.pgtw .fdsb[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+.seg.pgt { grid-template-columns: repeat(3, 1fr); width: 100%; margin: 0; }
 /* Planen › Essen: Kategorien waagerecht wischbar */
 .pfcb { display: flex; gap: 6px; margin: 0 -16px 8px; padding: 2px 16px; overflow-x: auto; scrollbar-width: none; }
 .pfcb::-webkit-scrollbar { display: none; }
@@ -346,7 +357,6 @@ button.pdb-h:active { background: var(--s2); }
 .pwas > .ic { width: 16px; height: 16px; }
 .pwas s { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: var(--r99); border: 1px dashed var(--line); color: var(--ink3); text-decoration: line-through; }
 .pwas s .ic { width: 14px; height: 14px; color: var(--pc, var(--ink3)); opacity: .6; }
-.pux { justify-self: start; margin-top: 10px; }
 /* Anstehend: Wiegen an einem künftigen Tag, schon vorher erledigbar */
 .pup { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; width: 100%; min-height: 50px; padding: 8px 12px; border: 1px dashed var(--line); border-radius: var(--r12); background: transparent; color: var(--ink); font: inherit; text-align: left; transition: background-color .16s var(--ease); }
 .pup:active { background: var(--s2); }

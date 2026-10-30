@@ -226,6 +226,8 @@
     var t = $('toast');
     // Essen: Rückgängig steht als Knopf in der Kopfzeile, daher keine Einblendung (außer Erfolgen wie dem Proteinziel); bei offenem Fenster ist der Knopf verdeckt, dann bleibt sie
     if (withUndo && ui.tab === 'food' && !ui.sheet && ui.undo && ui.undo.charAt(0) === '#') { if (icon !== 'trophy') return; withUndo = false; }
+    // Planen: Bestätigungen ohne Einblendung (Aufleuchten/Vibration, Rückgängig als Knopf im Kopf der Tageskarte); Fehler und Hinweise (close, bolt, check) bleiben
+    if (ui.tab === 'tage' && !ui.sheet && ['trophy', 'close', 'bolt', 'check'].indexOf(icon) < 0) { buzz(6); return; }
     // act: [data-Attribut, Icon, Beschriftung] = ein Knopf für einen Folgeschritt (z. B. Schnell-Eintrag merken)
     t.innerHTML = ic(icon || 'bolt') + '<span>' + esc(msg) + '</span>' + (withUndo ? '<button class="tundo" data-undo aria-label="Rückgängig">' + ic('undo') + '</button>' : '') +
       (act ? '<button class="tundo tact" data-' + act[0] + '="1" aria-label="' + esc(act[2]) + '">' + ic(act[1]) + '</button>' : '');

@@ -6,19 +6,29 @@
   // viel zu lang: nur leicht kleiner und mit Silbentrennung auf zwei Zeilen (lesbarer als winzige Schrift)
   function fitCls(s, n) {
     s = String(s); n = n || 10; var w = s.split(/[\s\-\/]+/).reduce(function (a, x) { return Math.max(a, x.length); }, 0);
-    if (s.length > n * 2.6) return 'tf3';
-    return w > n * 1.3 ? 'tf3' : w > n * 1.12 || s.length > n * 2.2 ? 'tf2' : w > n || s.length > n * 1.8 ? 'tf1' : '';
+    // Klasse fit: fitNames misst nach dem Zeichnen nach; tf1–3 ist nur die Schätzung davor (kein Springen)
+    if (s.length > n * 2.6) return 'fit tf3';
+    return 'fit' + (w > n * 1.3 ? ' tf3' : w > n * 1.12 || s.length > n * 2.2 ? ' tf2' : w > n || s.length > n * 1.8 ? ' tf1' : '');
   }
-  // Namen in Kacheln: nach dem Zeichnen messen und verkleinern, bis jedes Wort in die Zeile passt (keine Trennung mitten im Wort)
+  // Namen (Klasse fit): drei Stufen 100 / 88 / 78 %. Gewählt wird die größte, bei der jedes Wort in eine Zeile passt und der Name
+  // nicht abgeschnitten wird (Zeilenzahl der Regel). Getrennt wird nur an Leerzeichen und Bindestrich; passt ein Wort selbst bei 78 % nicht: Silbentrennung
   function fitNames(root) {
-    (root || document).querySelectorAll('.fti b').forEach(function (b) {
-      var cs = getComputedStyle(b), av = b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), f = parseFloat(cs.getPropertyValue('--tf')) || 1;
-      var m = document.createElement('span'); m.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap';
-      m.textContent = b.textContent.split(/[\s\-\/]+/).reduce(function (a, x) { return x.length > a.length ? x : a; }, ''); b.appendChild(m);
+    var S = [1, 0.88, 0.78];
+    (root || document).querySelectorAll('.fit').forEach(function (b) {
+      // Zahl und Einheit bleiben zusammen (1,5 %, 500 g)
+      var nu = /(\d)[ \t]+(%|g\b|ml\b|kg\b|l\b)/g; if (!b.children.length && nu.test(b.textContent)) b.textContent = b.textContent.replace(nu, '$1' + String.fromCharCode(160) + '$2');
+      b.style.setProperty('--tf', '1'); b.style.webkitHyphens = b.style.hyphens = '';
+      var cs = getComputedStyle(b), av = b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight); if (av <= 0) return;
+      // breitestes Wort: alle Wörter untereinander in einem unsichtbaren Element
+      var m = document.createElement('span'); m.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;display:block;width:auto';
+      m.textContent = b.textContent.trim().split(/[ \t\n]+/).join('\n').replace(/-/g, '-\n'); b.appendChild(m);
       var w = m.offsetWidth; b.removeChild(m);
-      // Passt das Wort auch klein nicht (Hähnchenbrust): normale Größe, Silbentrennung
-      var r = Math.floor(f * av / w * 50) / 50;
-      if (w > av && av > 0) { if (r >= 0.66) b.style.setProperty('--tf', r.toFixed(2)); else b.style.webkitHyphens = b.style.hyphens = 'auto'; }
+      for (var i = 0; i < S.length; i++) {
+        if (w * S[i] > av - 2) continue;
+        b.style.setProperty('--tf', S[i]);
+        if (b.scrollHeight <= b.clientHeight + 1 && b.scrollWidth <= b.clientWidth + 1) return;
+      }
+      b.style.setProperty('--tf', S[2]); if (w * S[2] > av - 2) b.style.webkitHyphens = b.style.hyphens = 'auto';
     });
   }
   function fmtDate(ms) { return new Date(ms).toLocaleDateString('de-DE', { day: 'numeric', month: 'short' }); }

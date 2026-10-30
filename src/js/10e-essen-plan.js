@@ -96,11 +96,14 @@
       // Kaufgröße: Packung aus SHB (ganze Packungen, Preis je Packung); sonst Stück einzeln, sonst auf 100 g – Preis dann über €/kg
       var pk = SHB[o.id], u = o.it && o.it.u || [], pc = !pk && u.filter(function (q) { return /^Stück/.test(q[0]); })[0], ml = o.it && o.it.ml ? ' ml' : ' g';
       var sz = function (v) { return v >= 1000 ? fN(v / 1000) + (ml === ' ml' ? ' l' : ' kg') : v + ml; };
-      if (pk) { var cnt = Math.max(1, Math.ceil(o.g / pk[1] - 0.05)); o.bg = cnt * pk[1]; o.eur = cnt * pk[2]; o.a = pk[0] === 'Stück' ? cnt + ' Stück' : cnt + '× ' + pk[0] + (/^\d+er$/.test(pk[0]) ? '' : ' ' + sz(pk[1])); }
-      else if (pc) { var pn = Math.max(1, Math.ceil(o.g / pc[1] - 0.1)); o.bg = pn * pc[1]; o.a = pn + ' Stück'; }
+      // need = Bedarf, a = Kauf, pe = Preis je Packung/Stück (nur bei mehr als einer)
+      var cnt = 1;
+      if (pk) { cnt = Math.max(1, Math.ceil(o.g / pk[1] - 0.05)); o.bg = cnt * pk[1]; o.eur = cnt * pk[2]; o.a = pk[0] === 'Stück' ? cnt + ' Stück' : cnt + '× ' + pk[0] + (/^\d+er$/.test(pk[0]) ? '' : ' ' + sz(pk[1])); }
+      else if (pc) { cnt = Math.max(1, Math.ceil(o.g / pc[1] - 0.1)); o.bg = cnt * pc[1]; o.a = cnt + ' Stück'; }
       else { o.bg = Math.ceil(o.g / 100) * 100; o.a = sz(o.bg); }
       if (!pk) o.eur = o.bg / 1000 * (SHPI[o.id] || SHP[o.c] || SHP.x);
-      o.ok = st.sh[o.key] != null;
+      o.pe = cnt > 1 ? o.eur / cnt : 0; o.need = sz(Math.round(o.g));
+      o.ok = st.sh[o.key] != null; o.gone = st.sh[shKx(o.key)] != null;
     });
     return l;
   }
@@ -111,32 +114,60 @@
     return mx || 7;
   }
   function eur(v) { return v.toFixed(2).replace('.', ',') + ' €'; }
+  // Aus der Liste gewischt („habe ich noch“): eigener Schlüssel in food.sh, vergessen wie abgehakt nach 14 Tagen
+  function shKx(key) { return ('x:' + key).slice(0, 40); }
   function shopHtml() {
     var n = shopN(), t = dayIdx(Date.now()), l = shopList(n), co = Object.keys(CATI), h = '';
-    var open = l.filter(function (o) { return !o.ok; }), done = l.filter(function (o) { return o.ok; }), sum = open.reduce(function (a, o) { return a + o.eur; }, 0);
-    // Zeile: Haken links (abhaken), Mitte antippen = wofür (Tag · Mahlzeit · Gericht · Menge), rechts Preis
+    var all = l.filter(function (o) { return !o.gone; }), open = all.filter(function (o) { return !o.ok; }), done = all.filter(function (o) { return o.ok; }), gone = l.filter(function (o) { return o.gone; });
+    // Preis = alles, was gekauft wird (abgehakt bleibt drin, damit die Summe beim Einkaufen nicht sinkt)
+    var sum = all.reduce(function (a, o) { return a + o.eur; }, 0), un = function (o) { return o.it && o.it.ml ? ' ml' : ' g'; };
+    // Zeile: Haken links (abhaken), Mitte antippen = wofür, nach links wischen = „habe ich noch“; darunter Bedarf → Kauf, rechts Preis (und je Stück bei mehreren)
     function row(o) {
-      var op = ui.shx === o.key, ck = o.it ? (o.it.dish ? 'dish' : o.c) : 'x';
-      return '<div class="shr' + (o.ok ? ' ok' : '') + (op ? ' open' : '') + '" style="--cc:' + (CCOL[o.c] || CCOL.x) + '"><button class="shc" data-shk="' + esc(o.key) + '" aria-pressed="' + o.ok + '" aria-label="' + esc(o.n) + (o.ok ? ' wieder offen' : ' abhaken') + '">' + (o.ok ? ic('check') : '') + '</button>' +
-        '<button class="shm" data-shx="' + esc(o.key) + '" aria-expanded="' + op + '"><i class="fsc" style="color:' + (o.id ? fTone(o.id, ck) : 'var(--ink3)') + '">' + ic(o.id ? fIco(o.id, ck) : 'food') + '</i><span><b>' + esc(o.n) + '</b><small>' + esc(o.a) + '</small></span><em>≈ ' + eur(o.eur) + '</em></button>' +
-        (op ? '<div class="shw">' + o.src.map(function (q) {
-          return '<p class="m-' + q.mk + '">' + ic(MEALI[q.mk]) + '<span>' + (q.d === t ? 'Heute' : q.d === t + 1 ? 'Morgen' : WDN[wdOf(q.d)].slice(0, 2) + ' ' + fmtShort(q.d)) + (q.n ? ' · ' + esc(q.n) : '') + '</span><small>' + Math.round(q.g) + (o.it && o.it.ml ? ' ml' : ' g') + '</small></p>';
-        }).join('') + '</div>' : '') + '</div>';
+      var op = ui.shx === o.key, ck = o.it ? (o.it.dish ? 'dish' : o.c) : 'x', dy = {}, ds = [];
+      // Aufgeklappt: je Tag eine Zeile (Mahlzeiten als Symbole, Gerichte als Namen, Menge zusammen), zuletzt der Rest der Packung
+      o.src.forEach(function (q) { var y = dy[q.d]; if (!y) { y = dy[q.d] = { d: q.d, g: 0, mk: [], n: [] }; ds.push(y); } y.g += q.g; if (y.mk.indexOf(q.mk) < 0) y.mk.push(q.mk); if (q.n && y.n.indexOf(q.n) < 0) y.n.push(q.n); });
+      ds.sort(function (a, b) { return a.d - b.d; });
+      var rest = Math.round(o.bg - o.g);
+      return '<div class="shr' + (o.ok ? ' ok' : '') + (o.gone ? ' gone' : '') + (op ? ' open' : '') + '"' + (o.gone ? '' : ' data-shrow="' + esc(o.key) + '"') + ' style="--cc:' + (CCOL[o.c] || CCOL.x) + '">' +
+        (o.gone ? '<button class="shc" data-shk="' + esc(shKx(o.key)) + '" aria-label="' + esc(o.n) + ' wieder auf die Liste">' + ic('undo') + '</button>'
+          : '<button class="shc" data-shk="' + esc(o.key) + '" aria-pressed="' + o.ok + '" aria-label="' + esc(o.n) + (o.ok ? ' wieder offen' : ' abhaken') + '">' + (o.ok ? ic('check') : '') + '</button>') +
+        '<button class="shm" data-shx="' + esc(o.key) + '" aria-expanded="' + op + '"><i class="fsc" style="color:' + (o.id ? fTone(o.id, ck) : 'var(--ink3)') + '">' + ic(o.id ? fIco(o.id, ck) : 'food') + '</i><span><b>' + esc(o.n) + '</b><small>' +
+        esc(o.need === o.a ? o.a : o.need + ' → ' + o.a) + '</small></span><em><b>≈ ' + eur(o.eur) + '</b>' + (o.pe ? '<small>à ' + eur(o.pe) + '</small>' : '') + '</em></button>' +
+        (op ? '<div class="shw">' + ds.map(function (y) {
+          return '<p class="m-' + y.mk[0] + '"><i class="shmk">' + y.mk.map(function (k) { return '<i class="m-' + k + '">' + ic(MEALI[k]) + '</i>'; }).join('') + '</i><span>' + (y.d === t ? 'Heute' : y.d === t + 1 ? 'Morgen' : WDN[wdOf(y.d)].slice(0, 2) + ' ' + fmtShort(y.d)) +
+            (y.n.length ? ' · ' + esc(y.n.join(', ')) : '') + '</span><small>' + Math.round(y.g) + un(o) + '</small></p>';
+        }).join('') + (rest > 0 ? '<p class="shrs"><i class="shmk"></i><span>Rest</span><small>' + rest + un(o) + '</small></p>' : '') + '</div>' : '') + '</div>';
     }
     co.forEach(function (c) {
       var g = open.filter(function (o) { return o.c === c; }); if (!g.length) return;
       h += '<h3 class="shh" style="--cc:' + (CCOL[c] || CCOL.x) + '">' + ic(CATI[c][0]) + esc(CATI[c][1]) + '<small>' + g.length + '</small></h3>' + g.map(row).join('');
     });
     if (done.length) h += '<h3 class="shh">' + ic('check') + 'Im Wagen<small>' + done.length + '</small></h3>' + done.map(row).join('');
+    if (gone.length) h += '<h3 class="shh">' + ic('jar') + 'Zuhause<small>' + gone.length + '</small></h3>' + gone.map(row).join('');
     // Zeitraum: Tage ab heute zum Antippen (bis einschließlich), dazu 2 Wochen; gewählt = alle Tage bis zum Ende
     var days = [1, 2, 3, 4, 5, 6, 7].map(function (k) { return [k, k === 1 ? 'Heute' : WDN[wdOf(t + k - 1)].slice(0, 2)]; }).concat([[14, '2 Wo']]);
     return '<div class="shd" role="group" aria-label="Zeitraum">' + days.map(function (x) { var on = x[0] === 14 ? n === 14 : n < 14 && x[0] <= n; return '<button data-shn="' + x[0] + '" aria-pressed="' + on + '"' + (n === x[0] ? ' class="end"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div>' +
       (l.length ? '<div class="shs"><span><b>' + open.length + '</b><small>offen</small></span><span><b>≈ ' + eur(sum) + '</b><small>Richtwert</small></span><button class="x" data-shsh="1" aria-label="Liste teilen">' + ic('share') + '</button></div>' : '') +
-      '<div class="shl">' + (h || '<p class="muted">Nichts geplant. In Planen › Essen Mahlzeiten einplanen.</p>') + '</div>';
+      '<div class="shl" data-noswipe="1">' + (h || '<p class="muted">Nichts geplant. In Planen › Essen Mahlzeiten einplanen.</p>') + '</div>';
   }
+  // Einkaufszeile nach links wischen (ab 90 px) = „habe ich noch“ → Abschnitt Zuhause; senkrecht bleibt Scrollen
+  var shSw = false, shP = null;
+  document.addEventListener('pointerdown', function (ev) { var r = ev.target.closest && ev.target.closest('.shr[data-shrow]'); shP = r ? { r: r, x: ev.clientX, y: ev.clientY, dx: 0, on: false } : null; });
+  document.addEventListener('pointermove', function (ev) {
+    if (!shP) return; var dx = ev.clientX - shP.x, dy = ev.clientY - shP.y;
+    if (!shP.on) { if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { shP = null; return; } if (dx > -10) return; shP.on = true; }
+    shP.dx = Math.min(0, dx); shP.r.style.transform = 'translateX(' + shP.dx + 'px)'; shP.r.classList.toggle('arm', shP.dx < -90);
+  });
+  document.addEventListener('pointerup', function () {
+    if (!shP) return; var p = shP; shP = null; if (!p.on) return;
+    shSw = true; setTimeout(function () { shSw = false; }, 350);
+    if (p.dx < -90) { foodState().sh[shKx(p.r.dataset.shrow)] = dayIdx(Date.now()); persist(); buzz([10, 30, 10]); render(); }
+    else p.r.style.transform = '';
+  });
+  document.addEventListener('pointercancel', function () { if (shP) { shP.r.style.transform = ''; shP = null; } });
   function shopShare() {
     // Offene Einträge als Text (Notizen, Nachrichten): nach Kategorie, Menge dahinter; ohne Teilen-Dialog in die Zwischenablage
-    var n = shopN(), t = dayIdx(Date.now()), l = shopList(n).filter(function (o) { return !o.ok; }), txt = 'Einkauf bis ' + dayHead(t + n - 1) + '\n';
+    var n = shopN(), t = dayIdx(Date.now()), l = shopList(n).filter(function (o) { return !o.ok && !o.gone; }), txt = 'Einkauf bis ' + dayHead(t + n - 1) + '\n';
     Object.keys(CATI).forEach(function (c) { var g = l.filter(function (o) { return o.c === c; }); if (g.length) txt += '\n' + CATI[c][1] + '\n' + g.map(function (o) { return '- ' + o.n + ': ' + o.a; }).join('\n') + '\n'; });
     if (navigator.share) { navigator.share({ title: 'Einkauf', text: txt }).catch(function () {}); return; }
     if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { toast('Liste kopiert', 'check'); }, function () { toast('Kopieren ging nicht', 'close'); });
@@ -187,9 +218,9 @@
     if ((el = t.closest('[data-pla]'))) { var pa = el.dataset.pla.split('|'); buzz(8); foodRef(pa[0], +pa[1]); return true; }
     if ((el = t.closest('[data-plx]'))) { fUndo(); foodState().pl.splice(+el.dataset.plx, 1); persist(); ui.fresh = false; render(); openPlanMeal(ui.fplan.d, ui.fplan.mk); buzz(6); return true; }
     if ((el = t.closest('[data-shn]'))) { ui.shn = +el.dataset.shn; render(); buzz(4); return true; }
-    if ((el = t.closest('[data-shx]'))) { ui.shx = ui.shx === el.dataset.shx ? null : el.dataset.shx; render(); buzz(4); return true; }
+    if ((el = t.closest('[data-shx]'))) { if (shSw) { shSw = false; return true; } ui.shx = ui.shx === el.dataset.shx ? null : el.dataset.shx; render(); buzz(4); return true; }
     if (t.closest('[data-shsh]')) { shopShare(); return true; }
-    if ((el = t.closest('[data-shk]'))) { var shk = el.dataset.shk; if (st.sh[shk] != null) delete st.sh[shk]; else st.sh[shk] = dayIdx(Date.now()); persist(); render(); buzz(6); return true; }
+    if ((el = t.closest('[data-shk]'))) { if (shSw) { shSw = false; return true; } var shk = el.dataset.shk; if (st.sh[shk] != null) delete st.sh[shk]; else st.sh[shk] = dayIdx(Date.now()); persist(); render(); buzz(6); return true; }
     if (t.closest('[data-fingo]')) { ui.fingo = !ui.fingo; ui.fstpo = false; $('sheet').classList.remove('full'); fpPaint(); buzz(4); return true; }
     // Schritte: Fenster geht ganz auf (.full), die Schritte erscheinen unter den Zutaten
     if (t.closest('[data-fstp]')) { fstpTog(!ui.fstpo); return true; }
@@ -242,11 +273,10 @@
     if ((el = t.closest('[data-fpick]'))) { if (ui.fdgno && Date.now() - ui.fdgno < 400) return true; var from =ui.sheet && (ui.sheet.fsearch || ui.sheet.fdishes) ? (ui.sheet.fsearch ? 's' : 'd') : null; openPick(el.dataset.fpick); ui.sheet.from = from; fpPaint(); return true; }
     if (t.closest('[data-fback]')) {
       if (ui.sheet && (ui.sheet.dishImp || (ui.sheet.fsearch && ui.ingm))) ingBack();
-      else if (ui.sheet && ui.sheet.from === 'i' && ui.fingb) { var fb0 = ui.fingb; ui.fingb = null; openPick(fb0.i, fb0.a); ui.sheet.from = fb0.from; ui.fingo = true; fpPaint(); }
       else if (ui.sheet && ui.sheet.from === 'o') openOwn(ui.odraft.id, null, ui.odraft); else if (ui.sheet && ui.sheet.from === 'd') openDishes();
       else { var q0 = ui.fq; openFsearch(true); ui.fq = q0 || ''; $('fq').value = ui.fq; fresSet(); } return true; }
-    // Zutat im Gericht antippen: ihre Werte in der Menge des Gerichts; Zurück führt ins Gericht
-    if ((el = t.closest('[data-fing]'))) { var fg = el.dataset.fing.split('|'); ui.fingb = { i: ui.fpick.i, a: ui.fpick.a, from: ui.sheet && ui.sheet.from }; openPick(fg[0], +fg[1] || null); ui.sheet.from = 'i'; fpPaint(); return true; }
+    // Zutat im Gericht antippen: Kurzübersicht ihrer Werte in dieser Menge auf/zu (kein Wechsel ins Mengen-Fenster)
+    if ((el = t.closest('[data-fing]'))) { ui.fingx = ui.fingx === +el.dataset.fing ? null : +el.dataset.fing; $('fing').innerHTML = fingHtml(ui.fpick.i, ui.fpick.a); buzz(4); return true; }
     if ((el = t.closest('[data-fvar]'))) { ui.fpick.i = el.dataset.fvar; fpPaint(); return true; }
     if ((el = t.closest('[data-foff]'))) { var ox = ui.fon && ui.fon.r[+el.dataset.foff]; if (ox) pickFrom(offSave(ox)); return true; }
     if ((el = t.closest('[data-fscan]'))) { if (el.dataset.fscan === 'own') { ui.odraft = ownDraft(); ui.odraft.id = ui.sheet.fown; openScan('own'); } else { if (el.dataset.fscan === 'go') openFsearch(); openScan(); } return true; }

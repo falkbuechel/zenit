@@ -227,12 +227,18 @@
     var best = null, cu = fUnit(it);
     // Getränke ab ½ Liter in Litern, wenn glatt (0,5 l, 1 l, 1,5 l)
     if (!grams && it.ml && a >= 500 && a % 250 === 0) return fN(a / 1000) + ' l';
-    if (!grams && cu) { var cn = a / cu[1]; if (cn >= 0.25 && cn <= 20 && Math.abs(cn * 4 - Math.round(cn * 4)) < 0.02) return fHalf(cn) + ' ' + fPl(cu[0], cn); }
+    if (!grams && cu) { var cn = a / cu[1]; if (cn >= 0.25 && cn <= 20 && Math.abs(cn * 4 - Math.round(cn * 4)) < 0.02) return fCnt(cn, cu[0]); }
     if (!grams) it.u.forEach(function (u) { var n = a / u[1]; if (n >= 0.5 && n <= 12 && Math.abs(n * 2 - Math.round(n * 2)) < 0.01 && (!best || n < best[0])) best = [n, u[0]]; });
-    return best ? fHalf(best[0]) + ' ' + fPl(best[1], best[0]) : Math.round(a) + (it.ml ? ' ml' : ' g');
+    return best ? fCnt(best[0], best[1]) : Math.round(a) + (it.ml ? ' ml' : ' g');
   }
-  // Mehrzahl der weiblichen Portionsnamen („2 Scheiben“, „3 Portionen“); Glas, Stück, EL bleiben
-  function fPl(nm, n) { return n > 1 ? nm.replace(/^(Portion|Packung)/, '$1en').replace(/^(Scheibe|Schale|Dose|Flasche|Kugel|Rippe|Hälfte)/, '$1n') : nm; }
+  // Mehrzahl der Portionsnamen („2 Scheiben“, „3 Portionen“, „2 Eier“, „2 große“); Glas, Stück, EL, Becher, Riegel bleiben
+  function fPl(nm, n) {
+    if (!(n > 1)) return nm;
+    return nm.replace(/^(Portion|Packung)/, '$1en').replace(/^(Scheibe|Schale|Dose|Flasche|Kugel|Rippe|Hälfte|Tüte|Tasse|Schnitte|Tafel)/, '$1n').replace(/^(klein|groß|mittel)(?![a-zäöü])/, '$1e')
+      .replace(/^Ei$/, 'Eier').replace(/^Pizza/, 'Pizzen').replace(/^(Filet|Bowl|Sub|~Strip|~Nugget)/, '$1s');
+  }
+  // Anzahl + Einheit; Namen mit Zahl vorn (9er-Box, 8 Stück) als „2× 9er-Box“
+  function fCnt(n, nm) { return fHalf(n) + (/^\d/.test(nm) ? '× ' + nm : ' ' + fPl(nm, n)); }
   function fHalf(n) { var w = Math.floor(n + 0.01), q = Math.round((n - w) * 4) / 4, fr = { 0.25: '¼', 0.5: '½', 0.75: '¾' }; return fr[q] ? (w ? w : '') + fr[q] : fN(n); }
   // Haupteinheit zum Zählen (Stück, Glas, Scheibe, EL …): vorgewählte Portion, sonst die erste zählbare; große Packungen (> 400 g) und Teller/Portion zählen in Gramm
   var FCOUNT = /^(Stück|Scheibe|Glas|Becher|Dose|Filet|Kugel|Riegel|Ei|Rippe|Flasche|Packung|Hälfte|EL|TL|Messlöffel)/;

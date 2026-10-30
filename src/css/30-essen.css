@@ -416,7 +416,6 @@
 .fpcn b { font-family: var(--f-display); font-size: 24px; font-weight: 900; text-align: center; }
 .fpcu { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .fpcu b { font-size: 28px; }
-.fpcu small { font: 600 14px/1 var(--f-mono); color: var(--ink3); }
 .fstep .fag input { max-width: 70px; font-size: 16px; font-weight: 700; color: var(--ink3); border-bottom-width: 1px; }
 .fstep .fag span { font-size: 13px; }
 /* Tagesleiste: wischbar (7 Tage zurück/vor), neuer Monat erscheint kurz darüber */
@@ -554,16 +553,17 @@
 /* Pflichtfelder fehlen: Eintragen grau (Tippen sagt, was fehlt) */
 .fpgo .btn.off { opacity: .4; box-shadow: none; }
 /* Zutaten (über den Listen-Knopf im Kopf) statt der Nährwert-Kacheln: Chips zu zweit je Zeile in der Farbe ihrer Kategorie (Kante links), passen sich der Portion an */
-.fing { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; animation: fade .18s var(--ease); }
+.fing { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 6px; animation: fade .18s var(--ease); }
 .fing > :is(span, button) { display: flex; align-items: center; gap: 8px; min-width: 0; min-height: 44px; padding: 5px 8px; border: 1px solid var(--line); border-radius: var(--r10);
   background: linear-gradient(90deg, color-mix(in srgb, var(--cc) 12%, var(--s1)), var(--s1) 60%); box-shadow: inset 2px 0 0 var(--cc); color: var(--ink); font: inherit; font-size: 13px; text-align: left; }
 .fing > button:active { background: color-mix(in srgb, var(--cc) 18%, var(--s1)); }
 .fing > :is(span, button) > .ic { flex: none; width: 16px; height: 16px; color: var(--cc); }
-.fing > :is(span, button) > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-/* Name passt sich an: kurz in einer Zeile, lang kleiner und bis zwei Zeilen statt abgeschnitten */
-.fing b { min-width: 0; overflow: hidden; font-weight: 600; line-height: 1.15; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-.fing b.l { font-size: 11.5px; }
-.fing em { overflow: hidden; font: 600 11.5px/1.1 var(--f-mono); font-style: normal; color: var(--ink2); white-space: nowrap; text-overflow: ellipsis; }
+/* Name links (passt sich an, fitNames: bis zwei Zeilen), Menge rechtsbündig */
+.fing b { flex: 1; min-width: 0; overflow: hidden; font-size: calc(13px * var(--tf, 1)); font-weight: 600; line-height: 1.15; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.fing em { flex: none; max-width: 48%; margin-left: auto; overflow: hidden; font: 600 11.5px/1.1 var(--f-mono); font-style: normal; color: var(--ink2); white-space: nowrap; text-overflow: ellipsis; text-align: right; }
+/* Kurzübersicht einer Zutat: volle Breite unter ihrer Zeile, der Nachbar bleibt daneben (dense) */
+.fing > button[aria-expanded="true"] { background: color-mix(in srgb, var(--cc) 18%, var(--s1)); }
+.fing .fiq { grid-column: 1 / -1; justify-content: center; gap: 16px; padding: 6px 0; border-radius: var(--r10); background: color-mix(in srgb, var(--cc) 8%, transparent); }
 .fing em.nb { color: var(--ink3); }
 .fing .dgp { grid-column: 1 / -1; justify-content: center; gap: 16px; margin-top: 4px; }
 /* Schritte: zu blendet der Anfang nach unten aus (Fade = es geht weiter), Tippen/Wischen öffnet; auf läuft die Liste ganz aus */
@@ -600,7 +600,11 @@
 .shh { display: flex; align-items: center; gap: 6px; margin: 10px 0 0; font: 700 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); }
 .shh .ic { width: 15px; height: 15px; color: var(--cc, var(--ink3)); }
 .shh small { margin-left: auto; font-size: 11px; color: var(--ink3); }
-.shr { display: grid; grid-template-columns: 44px minmax(0, 1fr); border: 1px solid var(--line); border-left: 3px solid var(--cc, var(--line)); border-radius: var(--r12); background: var(--s1); box-shadow: var(--hs); }
+.shr { display: grid; grid-template-columns: 44px minmax(0, 1fr); border: 1px solid var(--line); border-left: 3px solid var(--cc, var(--line)); border-radius: var(--r12); background: var(--s1); box-shadow: var(--hs);
+  touch-action: pan-y; transition: transform .2s var(--ease), box-shadow .15s; }
+.shr.arm { box-shadow: inset -3px 0 0 var(--ac), var(--hs); }
+.shr.gone { opacity: .55; box-shadow: none; }
+.shr.gone .shc::before { border-style: dashed; }
 .shc { display: grid; place-items: center; min-height: 50px; padding: 0; border: 0; background: transparent; color: var(--on); }
 .shc::before { content: ""; grid-area: 1 / 1; width: 22px; height: 22px; border: 2px solid var(--ink3); border-radius: 50%; }
 .shc .ic { grid-area: 1 / 1; z-index: 1; width: 14px; height: 14px; }
@@ -608,7 +612,12 @@
 .shm > span { display: grid; flex: 1; min-width: 0; line-height: 1.15; }
 .shm b { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
 .shm small { font-family: var(--f-mono); font-size: 11.5px; color: var(--ink2); }
-.shm em { flex: none; font: 600 12px/1 var(--f-mono); font-style: normal; color: var(--ink3); }
+.shm em { flex: none; display: grid; justify-items: end; gap: 3px; font: 600 12px/1 var(--f-mono); font-style: normal; color: var(--ink3); }
+.shm em b { font-size: 12px; font-weight: 600; color: var(--ink2); }
+.shm em small { font-size: 10px; }
+.shmk { display: flex; flex: none; width: 30px; }
+.shmk i { display: grid; color: var(--mc); }
+.shrs { color: var(--ink3); }
 .shw { grid-column: 1 / -1; display: grid; gap: 2px; margin: 0 10px 10px 44px; padding-top: 6px; border-top: 1px dashed var(--line); }
 .shw p { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12.5px; color: var(--ink2); }
 .shw p .ic { flex: none; width: 14px; height: 14px; color: var(--mc); }

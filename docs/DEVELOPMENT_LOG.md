@@ -2,6 +2,14 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-30 – Planen: Kalender belohnend, Einkauf neu; Essen: Mehrzahl, Zutat-Übersicht, Gericht in Gramm
+- Kalender: trainierte Tage als Glas-Band (Verlauf, Lichtkante, Kontur), Serie ab 3 Tagen: Licht läuft beim Öffnen einmal durch (`--si`), Zahl als Plakette `.pcs` am Ende; volle Woche Gold mit kurzem Aufleuchten. Tausch = Farbstrich unten `.tsl` (Paarfarbe, kein Buchstabe, Workout-Symbol bleibt). Urlaub/Krank = Kontur-Kapsel um die Tage (`.off .os/.oe`), Symbol am ersten Tag, keine Band-Zeile mehr (`.pcb`/`.pc2-bd` entfernt). Klasse `sk` war belegt (90-medien) → `srk`.
+- Planen › Essen: Einkauf als eigener Knopf neben den Reitern (`.pgtw`, wie Gerichte neben der Suche); Kategorie-Leiste behält die Wischposition (`data-kx`, snapshot/hydrate); Kacheln ohne Herkunft in der Farbe ihrer Art (`--tq` = `fTone`).
+- Namen überall (Klasse `fit` aus `fitCls`): `fitNames` wählt 100/88/78 %, Trennung nur an Leerzeichen/Bindestrich, Zahl+Einheit zusammen, sonst Silbentrennung; auch im Fenster (MutationObserver, gebündelt) und nach dem Laden der Schrift.
+- Planen ohne Einblendungen unten: Bestätigungen nur Vibration, Rückgängig-Knopf im Kopf der Tageskarte; Fehler/Hinweise (close, bolt, check) bleiben. „Neue Übung frei“ steht in der Glocke statt unten.
+- Einkauf: Zeile = Bedarf → Kauf (`need`, `a`), Preis rechts, bei mehreren „à“ je Packung/Stück; aufgeklappt je Tag eine Zeile (Mahlzeiten als Symbole, Gerichte zusammengefasst) + Rest. Summe zählt abgehakt mit. Nach links wischen = „Zuhause“ (`food.sh['x:'+key]`, `shKx`), dort zurückholbar.
+- Essen: Mehrzahl `fPl`/`fCnt` (Tüten, Filets, Eier, Pizzen, kleine/große, „2× 9er-Box“). Zutat im Gericht antippen = Kurzübersicht kcal/P/F/KH darunter (`ui.fingx`), Menge rechtsbündig; kein Wechsel ins Mengen-Fenster mehr. Gericht: Gramm unter den Portionen eintippbar (`#fdg`) → Portionen = g / Portionsgewicht.
+
 ## 2026-10-30 – Demo: nur noch Voll + Leer
 - `demoData`: „Voll“ (`mid`) enthält jetzt alle Datenformen: 6 Trainingstage (Lauf alle 2 Wochen, einmaliger Test), 2 Wochenpläne mit Zeitstrahl, Urlaub (vorbei/kommend), Krank, Ausnahmen (ausgesetzt, Tausch, ersetzt + zusätzlich), Gerichte mit Schritten/fester Mahlzeit/Gewürz, eigenes Lebensmittel mit Marke/Barcode, Schnell-Eintrag, Geplantes für 7 Tage, Vorlagen (Mahlzeit, Tag), Wasser, Einkauf abgehakt. „Leer“ wie bisher. Gold/Gerissen/Neu entfallen (Smoke: 2 Szenarien).
 - Fehler aus der letzten Runde behoben: `.pmn` war mit den alten Planen-Mahlzeitkacheln gelöscht, wird aber von der Woche-Kachel genutzt (Text lief über).

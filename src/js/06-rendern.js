@@ -1,8 +1,10 @@
   // ---------- Rendern
   function snapshot() {
-    var m = { p: {}, n: {} };
+    var m = { p: {}, n: {}, x: {} };
     document.querySelectorAll('[data-k]').forEach(function (el) { m.p[el.dataset.k] = +el.dataset.p; });
     document.querySelectorAll('[data-nk]').forEach(function (el) { m.n[el.dataset.nk] = +el.dataset.n; });
+    // Waagerecht gewischte Leisten (data-kx) behalten ihre Position beim Neuzeichnen
+    document.querySelectorAll('[data-kx]').forEach(function (el) { m.x[el.dataset.kx] = el.scrollLeft; });
     return m;
   }
   function countUp(el, from, to) {
@@ -14,6 +16,7 @@
     })(t0);
   }
   function hydrate(snap, fresh) {
+    document.querySelectorAll('[data-kx]').forEach(function (el) { if (snap.x[el.dataset.kx]) el.scrollLeft = snap.x[el.dataset.kx]; });
     document.querySelectorAll('[data-k]').forEach(function (el) {
       var to = +el.dataset.p, from = fresh ? 0 : snap.p[el.dataset.k];
       if (from === undefined || from === to) return;

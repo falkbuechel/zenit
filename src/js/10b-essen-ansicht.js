@@ -221,8 +221,10 @@
   // Vorschlag-Kachel: Name (lange Wörter kleiner, fitCls), unten kcal groß und Protein; Gruppe als Farbkante oben und Symbol oben rechts
   function fTile(x, attr, cls) {
     var it = fItem(x.i), v = fNut(it, x.g), mk = mealOf(Date.now())[1], q = { r: ['clock', 'zuletzt'], f: ['star', 'häufig'], m: [MEALI[mk], 'zur Uhrzeit'] }[x.q], nm = fEn(it);
-    return '<button class="fti' + (x.q ? ' q-' + x.q : '') + (x.q === 'm' ? ' m-' + mk : '') + (cls || '') + '" ' + attr + ' aria-label="' + esc(nm + ', ' + fAmt(it, x.g) + (q ? ', ' + q[1] : ''))
-      + '"><i class="ftq"' + (q ? '' : ' style="color:' + fTone(x.i, it.dish ? 'dish' : it.cat || (/^u/.test(x.i) ? 'u' : 'x')) + '"') + '>' + ic(q ? q[0] : it.dish ? 'pot' : fIco(x.i, it.cat || (/^u/.test(x.i) ? 'u' : 'x'))) + '</i>' +
+    // Ohne Herkunft: Kante, Verlauf und Symbol im Ton der Art (wie die Kategorie-Farben in Essen)
+    var ck = it.dish ? 'dish' : it.cat || (/^u/.test(x.i) ? 'u' : 'x'), tn = q ? '' : fTone(x.i, ck);
+    return '<button class="fti' + (x.q ? ' q-' + x.q : '') + (x.q === 'm' ? ' m-' + mk : '') + (cls || '') + '" ' + attr + (tn ? ' style="--tq:' + tn + '"' : '') + ' aria-label="' + esc(nm + ', ' + fAmt(it, x.g) + (q ? ', ' + q[1] : ''))
+      + '"><i class="ftq"' + (q ? '' : ' style="color:' + tn + '"') + '>' + ic(q ? q[0] : it.dish ? 'pot' : fIco(x.i, ck)) + '</i>' +
       '<b class="' + fitCls(nm, 8) + '">' + esc(nm) + '</b><span class="ftv"><span>' + Math.round(v.k) + '</span><small style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + Math.round(v.p) + '</small></span></button>';
   }
   // Kategorien: Icon und kurzer Name (Suche, Gegessen); Schlüssel wie FCATS, dazu Eigene, Gerichte, Schnell, Sonstiges

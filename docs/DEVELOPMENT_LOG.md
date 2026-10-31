@@ -14,6 +14,11 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Vorschau: `tools/serve.py` (Port 8000) startet VS Code; nie aus Claudes Sitzung starten. App NICHT vom Homescreen löschen (Daten weg).
 - Nicht committet: nur dieses Log.
 
+## 2026-10-31 Training-Tab (Variante A „Tag im Fokus“)
+- Falk gewählt: A (Kalender oben, Tageskarte mit Tag-Aktionen, Workouts unten) + Workout-Symbol im Kalender.
+- Tab heißt „Training“ (Symbol bleibt Kalender). Kalenderzelle: Wochentag, Zahl klein (`.pcd`), Kreis mit Workout-Symbol (voll = trainiert, hell = geplant); Essen-Ring raus.
+- Tageskarte `.pday`: Kopf `.pdt` (Datum, Rückgängig), Training, unten Tag ändern als Symbol-Leiste `.pda` (Tauschen, Aussetzen, Ersetzen, Dazu, Urlaub, Krank), Auswahl darunter. Fenster „Tag ändern“ (`pdayHtml`, `data-pdedit`), „Workout an diesem Tag“ (`data-padd`/`data-pxa`) und Abschnitt `.pdm2` entfernt.
+
 ## 2026-10-31 Essen planen wandert nach Essen, Planen nur noch Training
 - Entscheidung (Falk): nach Bereich trennen statt nach Zeit. Essen plant künftige Tage selbst, Planen wird später zum Training-Tab im Essen-Aufbau; Heute bleibt der einzige Ort mit beidem.
 - Tagesleiste: Woche Mo–So (`fWk`, `fPg` in Wochen), Griff `.fdgx`/`data-fdx` oder runterziehen klappt die nächste Woche auf (`ui.fdx`, `fdxSet`), hochziehen zu.

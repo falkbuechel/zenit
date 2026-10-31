@@ -48,34 +48,36 @@
 .pc2-w, .pc2-c { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .pc2-w span { padding: 6px 0 4px; text-align: center; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); }
 /* Feste Zeilen (Wochentag, Zahl, Symbole, Haken): jede Zelle und jede Woche gleich hoch, nichts springt beim Wischen */
-.pc2 { position: relative; display: grid; grid-template-rows: 12px 34px; justify-items: center; align-items: center; gap: 3px; padding: 4px 0; border: 0; border-radius: var(--r12); background: transparent; color: var(--ink); font: inherit; -webkit-user-select: none; user-select: none; transition: background-color .16s var(--ease); }
+.pc2 { position: relative; display: grid; grid-template-rows: 12px 12px 28px; justify-items: center; align-items: center; gap: 3px; padding: 4px 0; border: 0; border-radius: var(--r12); background: transparent; color: var(--ink); font: inherit; -webkit-user-select: none; user-select: none; transition: background-color .16s var(--ease); }
 .pc2:active { background: var(--s2); }
-.pc2 b { position: relative; z-index: 0; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; font-family: var(--f-mono); font-size: 14px; font-weight: 600; }
+.pc2 b { position: relative; z-index: 0; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; }
+.pc2 b .ic { width: 16px; height: 16px; color: var(--pc, var(--ink2)); }
+/* Tageszahl klein über dem Kreis */
+.pcd { font: 600 11px/1 var(--f-mono); font-style: normal; color: var(--ink2); }
 /* Wochenleiste: Wochentag über der Zahl (der Monat hat dafür die Kopfzeile) */
 .pc2 > small { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink3); }
 .pc2.today > small { color: color-mix(in srgb, var(--gold) 80%, var(--ink)); font-weight: 800; }
-/* Essen-Ring um die Tageszahl: Anteil vom kcal-Ziel, grün im Rahmen, rot drüber */
 /* Wochenleiste: Meldungen neben der Zahl statt über dem Wochentag */
-.pcal2.mon .pc2 { grid-template-rows: 34px; }
+.pcal2.mon .pc2 { grid-template-rows: 12px 28px; }
 /* Kopf rechts: Serie (Flamme + Tage), Glocke */
 .pc2-h > .pd-n { order: 1; }
 .pc2-s { display: inline-flex; align-items: center; gap: 3px; margin-right: 6px; font: 800 13px var(--f-mono); color: var(--flame); }
 .pc2-s .ic { width: 14px; height: 14px; }
-.pc2-ev.on { color: var(--ac); }
-.pc2.past b { color: var(--ink3); }
-/* Heute wie in Essen: dezente warme Pille, Zahl fett (der kcal-Ring bleibt frei) */
+.pc2.past .pcd { color: var(--ink3); }
+/* Heute wie in Essen: dezente warme Pille, Zahl fett */
 .pc2.today:not(.pser) { background: color-mix(in srgb, var(--gold) 13%, transparent); }
-.pc2.today b { color: var(--ink); font-weight: 800; }
+.pc2.today .pcd { color: var(--ink); font-weight: 800; }
 .pc2.sel { box-shadow: inset 0 0 0 1.5px var(--ink2); }
 /* Künftige Tage kühl wie in der Essen-Leiste */
 .pc2.fut { --cool: color-mix(in srgb, var(--g-cardio) 70%, var(--ink3)); }
-.pc2.fut > small, .pc2.fut b { color: var(--cool); }
+.pc2.fut > small, .pc2.fut .pcd { color: var(--cool); }
 .pc2-g.in-r { animation: pcin-r .2s var(--ease); } .pc2-g.in-l { animation: pcin-l .2s var(--ease); } .pc2-g.in-m { animation: pcin-m .2s var(--ease); }
 @keyframes pcin-r { from { opacity: 0; transform: translateX(28px); } }
 @keyframes pcin-l { from { opacity: 0; transform: translateX(-28px); } }
 @keyframes pcin-m { from { opacity: 0; transform: translateY(-6px); } }
-/* Kreis: voll = trainiert, hell in der Workout-Farbe = geplant; der Essen-Ring (.dr) bleibt außen */
-.pc2 b.dn { background: var(--ac); color: #fff; font-weight: 800; }
+/* Kreis: voll = trainiert, hell in der Workout-Farbe = geplant */
+.pc2 b.dn { background: var(--ac); }
+.pc2 b.dn .ic { color: #fff; }
 .pc2 b.pl { background: color-mix(in srgb, var(--pc) 22%, transparent); color: var(--ink); }
 .pcx { position: absolute; top: 4px; right: 5px; width: 7px; height: 7px; border-radius: 50%; background: var(--sc); }
 .pcn { position: absolute; top: 3px; right: 3px; font: 800 9px/1 var(--f-mono); font-style: normal; color: var(--ink3); }
@@ -156,17 +158,18 @@ button.pdb-h:active { background: var(--s2); }
 .pdr.ok > .ic { color: var(--ac); }
 .pdr.ok span { color: var(--ink2); }
 .pdr small { font-family: var(--f-mono); font-size: 11px; line-height: 1.3; color: var(--ink3); text-align: right; }
-/* Tag ändern: Kacheln mit Farbkante oben (--ec) wie Gerichte/Workouts; Training vier schmal, Abwesend zwei breit; darunter die zweite Ebene */
-.pda { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-.pda.pdo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* Tag ändern: eine Leiste aus Symbol-Knöpfen mit Farbkante oben (--ec); aktiv = Ton der Farbe und Punkt; darunter die zweite Ebene */
+.pda { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
 .pda button {
-  position: relative; display: grid; justify-items: start; align-content: space-between; gap: 6px; min-height: 62px; padding: 9px 10px 8px; border-radius: var(--r12); border: 1px solid var(--line); border-top: 3px solid var(--ec);
-  background: linear-gradient(170deg, color-mix(in srgb, var(--ec) 9%, var(--s1)), var(--s1) 70%); box-shadow: none; color: var(--ink); font: inherit; font-size: 12px; font-weight: 700; text-align: left; transition: transform .14s var(--ease), background-color .16s var(--ease);
+  position: relative; display: grid; place-items: center; min-height: 44px; padding: 0; border-radius: var(--r12); border: 1px solid var(--line); border-top: 3px solid var(--ec);
+  background: linear-gradient(170deg, color-mix(in srgb, var(--ec) 9%, var(--s1)), var(--s1) 70%); box-shadow: none; color: var(--ink); font: inherit; transition: transform .14s var(--ease), background-color .16s var(--ease);
 }
-.pda.pdo button { grid-template-columns: auto 1fr; align-items: center; min-height: 52px; font-size: 14px; }
 .pda button:active { transform: scale(.96); }
 .pda button .ic { width: 20px; height: 20px; color: var(--ec); }
-.pda button .pdk { position: absolute; top: 6px; right: 7px; width: 14px; height: 14px; }
+.pda button .pdk { position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--ec); }
+/* Kopf der Tageskarte: Datum, rechts Rückgängig */
+.pdt { display: flex; align-items: center; justify-content: space-between; min-height: 30px; margin: 0; font-size: 15px; font-weight: 800; }
+.pdt .x { width: 34px; height: 34px; margin: -4px -6px -4px 0; color: var(--ink2); }
 .pda button[aria-pressed="true"] { border-color: var(--ec); background: color-mix(in srgb, var(--ec) 22%, var(--s1)); }
 .pdm { animation: fade .15s var(--ease); }
 .pdur button:active { transform: scale(.98); }
@@ -291,9 +294,3 @@ button.pdb-h:active { background: var(--s2); }
 .pup small { display: block; font-size: 12px; color: var(--ink3); }
 .pup .chv { width: 14px; height: 14px; color: var(--ink3); }
 /* Überschrift des gewählten Tags unter der Tageskarte (wie in Essen), Knöpfe rechts hinter der Linie, darunter die vier Mahlzeiten */
-.pdm2 { margin-top: 12px; }
-.pdm2 .sec-h::after { order: 1; }
-.pdhk { order: 2; display: flex; gap: 2px; margin-right: -6px; }
-.pdhk .x { width: 34px; height: 34px; color: var(--ink2); }
-.pdhk .x .ic { width: 19px; height: 19px; }
-.pdm2.in-d { animation: fade .15s var(--ease); }

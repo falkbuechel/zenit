@@ -74,7 +74,7 @@
     if (h.dataset.sz === z) return false; h.dataset.sz = z; return true;
   }
   // Breit: Abschnitte des Tabs auf zwei Bereiche verteilen, links Übersicht, rechts das Gewählte (PANER). Ohne Treffer bleibt eine Fläche (80-breit.css)
-  var PANER = { tage: '.pday, .pdm2', food: '.fact2, .ftl', fort: '.mchips, .minf', profil: '.pstg' };
+  var PANER = { tage: '.pday', food: '.fact2, .ftl', fort: '.mchips, .minf', profil: '.pstg' };
   function paneSplit(v) {
     var q = PANER[ui.tab], ks = [].slice.call(v.children);
     if (document.documentElement.dataset.sz !== 'e' || !q || !ks.some(function (el) { return el.matches(q); })) return;
@@ -94,7 +94,7 @@
     document.documentElement.setAttribute('data-tier', tr);
     $('hudw').classList.add('nohud');
     // Jeder Bereich hat seine Farbe (--bc): aktives Symbol und Punkt leuchten darin
-    var T = [['tage', 'Plan', 'cal', '--g-cardio'], ['food', 'Essen', 'food', '--g-push'], ['heute', 'Heute', 'dumb', '--ac'], ['fort', 'Sammlung', 'gem', '--gold'], ['profil', 'Profil', 'user', '--g-kh']];
+    var T = [['tage', 'Training', 'cal', '--g-cardio'], ['food', 'Essen', 'food', '--g-push'], ['heute', 'Heute', 'dumb', '--ac'], ['fort', 'Sammlung', 'gem', '--gold'], ['profil', 'Profil', 'user', '--g-kh']];
     var tb = $('tabs');
     if (!tb.querySelector('.ind')) tb.innerHTML = '<i class="ind" aria-hidden="true"></i>' + T.map(function (t) { return '<button data-tab="' + t[0] + '" aria-label="' + t[1] + '" style="--bc:var(' + t[3] + ')">' + ic(t[2]) + '</button>'; }).join('');
     Array.prototype.forEach.call(tb.querySelectorAll('button'), function (bt) { if (bt.dataset.tab === ui.tab) bt.setAttribute('aria-current', 'page'); else bt.removeAttribute('aria-current'); });

@@ -61,7 +61,6 @@
   $('rot').innerHTML = ic('rot') + '<b>Hochkant halten</b>';
   $('brand').innerHTML = ic('peak') + '<span>Zenit</span>' + (DEMO ? '<button class="demo-b" data-act="opensettings">Demo</button>' : '');
   if (themeGet()) themeSet(themeGet());
-  expSet(EXPV || '0');
   loadLocal();
   sessLoad();
   render();

@@ -155,9 +155,7 @@
     var h = '<div class="grab"></div><div class="sh-h"><span class="gi">' + ic('gear') + '</span><div class="nm"><b>Einstellungen</b><small>Timer und Daten</small></div><button class="x" data-sheet-close aria-label="Schließen">' + ic('close') + '</button></div>';
     h += '<section class="sec"><h2 class="sec-h">' + ic('clock') + 'Einstellungen</h2><button class="sw" data-act="resttoggle" aria-pressed="' + restOn + '"><span>Pausen-Timer</span><i></i></button>' +
       // Aussehen: Auto folgt dem iPhone, sonst fest hell oder dunkel
-      '<div class="seg thm">' + [['', 'Auto', 'sun'], ['light', 'Hell', 'sun'], ['dark', 'Dunkel', 'moon']].map(function (o) { return '<button data-thm="' + o[0] + '" aria-pressed="' + (themeGet() === o[0]) + '">' + (o[0] ? ic(o[2]) : '') + o[1] + '</button>'; }).join('') + '</div>' +
-      // Versuch: neue Gestaltung (Heute, Plan) gegen die alte; nur Ansicht, Daten bleiben gleich
-      '<div class="seg thm">' + [['0', 'Alt'], ['a', 'A Labor'], ['b', 'B Arena'], ['c', 'C Poster']].map(function (o) { return '<button data-expv="' + o[0] + '" aria-pressed="' + ((EXPV || '0') === o[0]) + '">' + o[1] + '</button>'; }).join('') + '</div></section>';
+      '<div class="seg thm">' + [['', 'Auto', 'sun'], ['light', 'Hell', 'sun'], ['dark', 'Dunkel', 'moon']].map(function (o) { return '<button data-thm="' + o[0] + '" aria-pressed="' + (themeGet() === o[0]) + '">' + (o[0] ? ic(o[2]) : '') + o[1] + '</button>'; }).join('') + '</div></section>';
     h += '<section class="sec"><h2 class="sec-h">' + ic('data') + 'Daten<small>' + (store === 'cloud' ? 'im Artifact gespeichert' : 'nur in diesem Browser') + '</small></h2>';
     if (sync) h += '<p class="hint">' + esc(sync) + '</p>';
     if (!window.claude && !DEMO) { var lb = 0; try { lb = +localStorage.getItem('zenit.lastBackup') || 0; } catch (e) { /* egal */ } h += '<p class="hint">' + (lb ? 'Letztes Backup: ' + (daysSince(lb) === 0 ? 'heute' : 'vor ' + daysSince(lb) + ' Tagen') : 'Noch kein Backup. Sichere die Datei in „Dateien“ oder iCloud.') + '</p>'; }
@@ -174,13 +172,6 @@
     try { if (v) localStorage.setItem('zenit.theme', v); else localStorage.removeItem('zenit.theme'); } catch (e) { /* egal */ }
     var r = document.documentElement; if (v) r.dataset.theme = v; else r.removeAttribute('data-theme');
     var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(r).getPropertyValue('--bg').trim() || '#0d0f0c';
-  }
-  // Versuch Neu/Alt: localStorage zenit.exp ('0' = alt), data-exp an <html> schaltet das CSS
-  // Varianten: '0' alt, 'a' Labor, 'b' Arena, 'c' Poster (data-exp="a|b|c")
-  var EXPV = (function () { try { var v = localStorage.getItem('zenit.exp'); return v === '0' ? '' : v && v !== '1' ? v : 'a'; } catch (e) { return 'a'; } })(), EXP = !!EXPV;
-  function expSet(v) {
-    EXPV = v === '0' ? '' : v; EXP = !!EXPV; try { localStorage.setItem('zenit.exp', v); } catch (e) { /* egal */ }
-    var r = document.documentElement; if (EXP) r.setAttribute('data-exp', EXPV); else r.removeAttribute('data-exp');
   }
   function openSettings() { ui.sheet = { settings: true }; $('sheet').className = 'sheet tall'; $('sheet').innerHTML = setHtml(); $('shade').classList.add('open'); $('sheet').classList.add('open'); }
 

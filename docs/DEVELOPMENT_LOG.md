@@ -2,17 +2,24 @@
 
 Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offene Ideen. Stabile Referenz (Aufbau, Datenformen) steht in `DEVELOPMENT.md`.
 
+## 2026-10-31 Heute: nur noch Variante B Arena, Maskottchen-Pipeline vorbereitet
+- Design-Schalter (Zahnrad › Alt/A/B/C, `EXPV`/`EXP`/`expSet`, `data-exp`, `zenit.exp`) entfernt; B fest. CSS-Präfix `[data-exp]` → `.hm` (gleiche Spezifität), A+B-Regeln für `.hm-bg`/`.hm-go` zusammengelegt, C und runder Platzhalter-Blob raus; `gorilla()` heißt jetzt `mascot()`. compare.js gegen HEAD mit `zenit.exp='b'`: alles gleich.
+- Bewusst gleich gelassen: `.hm-st.last` roter Rand und `.hm-b.got` Goldrand werden von den `.hm`-Regeln überdeckt (war in A/B schon so).
+- ComfyUI-Pipeline: Plan, Modelle, Lizenzen in `art/comfy/downloads.md`; Sammelordner `G:\03_AI\Zenit-Downloads`, Download per `art/comfy/download-1-bilder.cmd` (Falk startet; hook-guard sperrt Netz). Phase B: TRELLIS.2 + Pixal3D nativ in ComfyUI (int8), beide testen. ComfyUI-Desktop-Konfig zeigt auf alte Pfade (`G:\AI_Generation`, `G:\Comfy-Desktop`), Falk korrigiert.
+- Offen für die Prompts: Stil, Stufen × Stimmungen, ganze Figur oder Brustbild.
+
 ## 2026-10-29 Bypass-Modus mit Sicherheitsnetz
 - Falk arbeitet mit „Bypass permissions“ (keine Rückfragen). Schutz über PreToolUse-Hook `tools/hook-guard.py` (greift auch im Bypass) + deny-Regeln (zusätzlich: Zugangsdaten ~/.ssh, gh, .git-credentials, .npmrc nicht lesen). `settings.local.json` von Einmal-Freigaben geleert.
 - Gesperrtes braucht Falk selbst im Terminal. Regeln sind Textmuster: neue Fälle in `RULES` ergänzen und mit Beispielbefehlen testen.
 
-## Stand 2026-10-31 (Abend)
-- Gerade: Essen-Prüfrunde 3 gepusht (4ffa3fc, 92b4671, 4a7bbc0): Tagesleiste, später planen, Nährwert gegessen/geplant, Fenster Geplant/Gerichte/Menüs/Einkauf neu.
-- Falk testet am iPhone: geplante Mahlzeit in der Zeile (Chips, Gegessen, Als Menü), Gerichte/Menüs-Kacheln + „+“ im Kopf, Neues Menü, Einkauf (Kopfkarte, Wischen rot/blau, Haken bis zum geplanten Tag). Alte Einkaufshaken sind nach dem Update einmal wieder offen.
-- Nächster Schritt: Rückmeldung einarbeiten; danach Unslop-Skill nach `.claude/skills/unslop/` (ohne Video/Bild-Teile, Quelle in README), mit ux-review/Emil-Skills abgleichen, Setup-Inventur.
-- Frage an Falk: Toast im Training-Tab freischalten?
-- Offene Entscheidungen: Heute-Richtung; App-Name/Farbe; Maskottchen-Wahl später; Link-Import Rezepte; Skilltree Dead Hang/Hollow.
-- Vorschau: `tools/serve.py` (Port 8000) startet VS Code; nie aus Claudes Sitzung starten. App NICHT vom Homescreen löschen (Daten weg).
+## Stand 2026-10-31 (Nacht)
+- Gerade gepusht: fd927b3 (Fenster-Sprung beim Wechsel behoben, Übergänge flüssiger, Tag-Kachel mit Streifen), cad6ef2 (Reiter Gerichte | Mahlzeiten | Tage, Nährwerte als Liste, Einkauf-Kopf einzeilig).
+- Falk testet am iPhone: Fensterwechsel/Höhen-Gleiten (jetzt per transform), Tab-Wechsel-Gefühl, neue Reiterzeile, Nährwert-Liste, Einkauf-Kopf, „Speichern als Mahlzeit“.
+- Falls Tab-Wechsel noch hängen: `derive()` zwischenspeichern (Schlüssel: logs, state.u, Tag, plan) – Mutationen ohne persist vorher prüfen.
+- Tokens (Analyse 31.10.): 70 % Cache-Lesen, Kosten ≈ Schritte × Kontextlänge; letzte 24 h lokal nicht höher als sonst (13 vs. 16–27 an Spitzentagen). Gegenmittel: pro Thema eine Sitzung, nach jedem Push /handoff + /clear, Bilder nur zur Abnahme.
+- Nächster Schritt: Rückmeldung einarbeiten; danach Unslop-Skill, Setup-Inventur. Frage an Falk offen: Toast im Training-Tab?
+- Offene Entscheidungen: Heute-Richtung; App-Name/Farbe; Maskottchen; Link-Import Rezepte; Skilltree Dead Hang/Hollow.
+- Vorschau: `tools/serve.py` nie aus Claudes Sitzung starten. App NICHT vom Homescreen löschen (Daten weg).
 - Nicht committet: nur dieses Log.
 
 ## Offen / Ideen
@@ -20,7 +27,8 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Breit: Heute noch einspaltig (mit dem Heute-Stil aufteilen); Seitenfeld fest 420 breit statt exakt der rechte Bereich; echte Touch-Laptops ungetestet.
 - Aufräumen: `viewDetail` (12-sammlung.js) wird nie erreicht (`ui.sel` nie gesetzt).
 - Falks Eindruck: Essen stark (im Kern fertig), später mehr Charakter (nicht flach). Unterschied zu Essen über Anordnung, nicht über Farbe.
-- UX-Scan offen: 12–13 Schriftgrößen auf ≤ 8 Stufen bündeln, 5 Schriftgewichte; Bilanz-Licht `fshine` läuft endlos (Akku).
+- UX-Scan offen: 12–13 Schriftgrößen auf ≤ 8 Stufen bündeln, 5 Schriftgewichte; Bilanz-Licht `fshine` läuft endlos (Akku; pausiert nur bei offenem Fenster).
+- Gerichte-Fenster: Reiter-Pille und „Alle“-Filter sind beide schwarz gefüllt – ggf. Reiter anders hervorheben, falls Falk es verwechselt.
 - Sehr lange Wörter (Griechischer, Naturjoghurt) werden in 4er-Kacheln nach Silben getrennt; ggf. Icon-Platz nur in Zeile 1 freihalten.
 - Trainings-Kacheln „Blackr…“ (Woche) noch abgeschnitten statt eingepasst.
 - Unslop-Skill von Damir ist da (github.com/heydamir/unslop, CC BY 4.0) – nach der Essen-Runde ins Design-Setup; Routine „Damir unslop-Skill prüfen“ abschalten.

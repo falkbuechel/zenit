@@ -37,7 +37,7 @@
       '<div class="hm-b' + (d.warm[today] ? ' got' : '') + '" data-warm="1" role="button" tabindex="0" aria-label="Aufwärmen"><i>' + ic(d.warm[today] ? 'check' : 'sun') + '</i><small>Warm</small></div></div>' +
       '<div class="hm-side r"><div class="hm-b" data-zoom="1" role="button" tabindex="0" aria-label="Bergpfad"><i>' + ic('peak') + '</i><small>Pfad</small></div>' +
       '<button class="hm-b" data-swap="1" aria-label="Heute ändern"><i>' + ic('swap') + '</i><small>Ändern</small></button></div>' +
-      '<div class="hm-hero"' + (cur ? ' data-arena="1" role="button" tabindex="0" aria-label="Training öffnen"' : '') + '>' + (EXP ? '<p class="hm-say">' + esc(mSay(today, rest ? 'rest' : all ? 'done' : nd ? 'run' : ss.mode === 'last' ? 'risk' : 'go', nd, L.length, nx)) + '</p>' : '') + mascot(mood, tr) + '</div>' +
+      '<div class="hm-hero"' + (cur ? ' data-arena="1" role="button" tabindex="0" aria-label="Training öffnen"' : '') + '>' + '<p class="hm-say">' + esc(mSay(today, rest ? 'rest' : all ? 'done' : nd ? 'run' : ss.mode === 'last' ? 'risk' : 'go', nd, L.length, nx)) + '</p>' + mascot(mood, tr) + '</div>' +
       '<div class="hm-plan"><b>' + esc(rest ? 'Heute frei' : tname) + '</b><small>' + (cur ? L.length + ' Übungen' + (mins ? ' · ~' + mins + ' Min' : '') : rest ? (nx ? 'Weiter: ' + esc(nx) : 'Erholung zählt') : 'Heute keine Übungen') + '</small>' +
       (cur ? '<i class="hm-pb"><i style="--p:' + (nd / L.length).toFixed(3) + '"></i></i>' : '') + '</div>' +
       (cur ? '<button class="btn primary big hm-go" data-arena="1">' + ic(all ? 'check' : 'play') + (all ? 'Erledigt · ansehen' : nd ? 'Weiter trainieren · ' + nd + '/' + L.length : 'Training starten') + '</button>'
@@ -52,24 +52,11 @@
     rest: ['Ruhetag. Muskeln wachsen jetzt.', 'Heute Pause. {n} wartet.']
   };
   function mSay(today, k, nd, n, nx) { var o = MSAY[k]; return o[today % o.length].replace('{r}', n - nd).replace('{n}', nx || 'Morgen'); }
-  // Maskottchen (Platzhalter bis zur Illustration): Stimmung idle | happy | sleep | cheer, Stirnband in der Farbe der Titel-Stufe, wird mit der Stufe etwas größer
+  // Maskottchen (Platzhalter bis zu den Renders): Berg-Gorilla, kantig und cel-shaded. Linke Körperhälfte als Punkte, rechte gespiegelt.
+  // Stimmung idle | happy | sleep | cheer, Stirnband in der Farbe der Titel-Stufe, wird mit der Stufe etwas größer
+  // Stufen: ab 2 Handbandagen, ab 3 Silber an den Schultern, ab 4 leuchtende Muskelnähte, ab 5 Aura
   var MTC = ['#8fa39a', '#8fa39a', '#5b8fd6', '#a374d8', '#ffc94a', '#57c7b8'];
   function mascot(mood, tr) {
-    if (EXP) return gorilla(mood, tr);
-    var eyes = mood === 'sleep' ? '<path d="M40 63q6 4 12 0M68 63q6 4 12 0" class="ln"/>' : mood === 'happy' || mood === 'cheer' ? '<path d="M40 65q6-8 12 0M68 65q6-8 12 0" class="ln"/>' :
-      '<circle cx="46" cy="62" r="5.5" class="ey"/><circle cx="74" cy="62" r="5.5" class="ey"/><circle cx="48" cy="60" r="1.8" fill="#fff"/><circle cx="76" cy="60" r="1.8" fill="#fff"/>';
-    var mouth = mood === 'sleep' ? '<ellipse cx="60" cy="80" rx="3" ry="2.5" class="ey"/>' : mood === 'idle' ? '<path d="M53 78q7 6 14 0" class="ln"/>' : '<path d="M49 75q11 16 22 0z" class="ey"/>';
-    var arms = mood === 'cheer' ? '<path d="M22 70 8 44M98 70l14-26" class="ar"/>' : '<path d="M20 82 10 96M100 82l10 14" class="ar"/>';
-    return '<svg class="masc ' + mood + '" viewBox="0 0 120 130" style="--mt:' + MTC[tr] + ';--ms:' + (0.86 + tr * 0.04).toFixed(2) + '" aria-hidden="true">' +
-      '<defs><linearGradient id="zmg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9c793"/><stop offset="1" stop-color="#4f7338"/></linearGradient></defs>' +
-      '<ellipse cx="60" cy="123" rx="34" ry="5" class="sh"/><g class="bd">' + arms +
-      '<path d="M60 18c32 0 44 28 44 58s-18 42-44 42-44-12-44-42 12-58 44-58z" fill="url(#zmg)"/><ellipse cx="60" cy="90" rx="26" ry="19" fill="#fff" opacity=".18"/>' +
-      '<rect x="19" y="38" width="82" height="9" rx="4.5" fill="var(--mt)"/><path d="M98 42l12-6-2 12z" fill="var(--mt)"/>' + eyes + mouth +
-      (mood === 'sleep' ? '<text x="92" y="24" class="zz">z</text><text x="102" y="12" class="zz">z</text>' : '') + '</g></svg>';
-  }
-  // Versuch: Berg-Gorilla, kantig und cel-shaded (Vorlage fürs 3D-Modell). Linke Körperhälfte als Punkte, rechte gespiegelt.
-  // Stufen: ab 2 Handbandagen, ab 3 Silber an den Schultern, ab 4 leuchtende Muskelnähte, ab 5 Aura
-  function gorilla(mood, tr) {
     function P(a, c) { return '<polygon class="' + c + '" points="' + a.map(function (p) { return p.join(','); }).join(' ') + '"/>'; }
     function M(a) { return a.map(function (p) { return [200 - p[0], p[1]]; }); }
     function B(a, c) { return P(a, c) + P(M(a), c); }

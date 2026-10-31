@@ -85,7 +85,6 @@
     if ((el = t.closest('[data-muso]'))) { ui.sheet = { mus: el.dataset.muso }; sheetOpen(musSheet(derive(state.logs), el.dataset.muso), true); return; }
     if ((el = t.closest('[data-cdet]'))) { closeSheet(); ui.tab = 'fort'; ui.sel = el.dataset.cdet; ui.fresh = true; render(); $('app').scrollTo(0, 0); return; }
     if (t.closest('[data-undo]')) { undo(); return; }
-    if ((el = t.closest('[data-expv]'))) { expSet(el.dataset.expv); $('sheet').innerHTML = setHtml(); render(); buzz(4); return; }
     if ((el = t.closest('[data-thm]'))) { themeSet(el.dataset.thm); $('sheet').innerHTML = setHtml(); buzz(4); return; }
     if ((el = t.closest('[data-rest]'))) { if (el.dataset.rest === 'skip') stopRest(); else addRest(el.dataset.rest === 'sub' ? -15 : 15); return; }
     if ((el = t.closest('[data-xr]'))) { ui.xr = el.dataset.xr; ui.pt = null; ui.fresh = true; render(); return; }

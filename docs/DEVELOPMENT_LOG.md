@@ -23,7 +23,6 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - UX-Scan offen: 12–13 Schriftgrößen auf ≤ 8 Stufen bündeln, 5 Schriftgewichte; Bilanz-Licht `fshine` läuft endlos (Akku).
 - Sehr lange Wörter (Griechischer, Naturjoghurt) werden in 4er-Kacheln nach Silben getrennt; ggf. Icon-Platz nur in Zeile 1 freihalten.
 - Trainings-Kacheln „Blackr…“ (Woche) noch abgeschnitten statt eingepasst.
-- Essen: geplante Mahlzeit öffnen neu denken (Falk: noch offen) – Fenster vs. in der Zeile wie Gegessenes, auch gemischt gegessen + geplant.
 - Unslop-Skill von Damir ist da (github.com/heydamir/unslop, CC BY 4.0) – nach der Essen-Runde ins Design-Setup; Routine „Damir unslop-Skill prüfen“ abschalten.
 - Gerichte bearbeiten: Zutatenmenge noch in g (Einheit nur in der Ansicht `fingHtml` und beim Hinzufügen über das Mengen-Fenster).
 - iPhone-Test offen: siehe Stand oben.
@@ -54,6 +53,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+## 2026-10-31 Essen-Fenster im Stil der Essen-Ansicht (Falk gewählt)
+- Geplante Mahlzeit klappt in der Zeile auf wie Gegessenes (`fMealPl`, `fPlChips`: Teile hohl mit Uhr, antippen = Mengen-Fenster im Planen-Modus mit Mahlzeit und Löschen `data-plx`; heute „Gegessen“ = `planEat`; „Als Menü“). Leere Mahlzeit an künftigen Tagen = Suche mit dieser Mahlzeit. Fenster „… planen“ (`openPlanMeal`, `tplRowHtml`, `openTplDay` und Handler) entfernt.
+- Gerichte und Menüs gleich: Filter (Menüs + „Tag“, `ui.tmf`), Abschnitte je Mahlzeit mit 4er-Kacheln (`savedTile`: Mahlzeitfarbe, kcal, Protein), Tage breit; + im Kopf (Gericht `data-fde="new"`, Menü `data-tpadd`), Mülleimer im Kopf für Menüs. `fDishCard` + CSS `.fdc/.fdcb/.fdnew/.fdg` entfernt. `.sheet .ftl` erlaubt Scrollen (`.ftl` hat sonst `touch-action: none` fürs Hochziehen).
+- Neues Menü (`openTplNew`): Tagesleiste ±3, 4 Mahlzeiten + „Ganzer Tag“ (Gegessenes + Geplantes, `tplItems`), Teile als Zeile, Name vorgeschlagen, Speichern → Menüs mit diesem Filter.
+- Einkauf: Kopfkarte (offen · im Wagen, Preis, Fortschritt, Zeitraum-Pille `data-shp` → Tage, Teilen), Zeilen einzeilig (Haken, Icon, Name, Kauf, Preis; antippen = Bedarf + wofür), „Im Wagen“/„Zuhause“ eingeklappt (`data-shg`).
+- Fehler beim Entfernen: Ausschneiden „bis zur nächsten Funktion“ nahm Tabellen (`SHP`, `SHB`, `SHRAW`) und Kommentare zwischen Funktionen mit → aus HEAD zurückgeholt. Merke: nur bis zur schließenden Klammer der Funktion schneiden.
 
 ## 2026-10-31 Essen: zweite Rückmeldung
 - Später geplant ohne Schalter: leere Mahlzeit antippen wählt sie vor (`data-femk` → `ui.fdmk`, `whenFor`); spätere Mahlzeit ohne selbst gesetzte Uhrzeit (`ftm.dataset.chg`) = geplant (`mkLater`, `fplnSync` auch nach `openPick`/`fpPaint`); Kachel/Gericht auf spätere Mahlzeit gezogen = geplant. `closeSheet` setzt `ui.fdmk` zurück.

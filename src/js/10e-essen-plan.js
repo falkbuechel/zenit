@@ -9,7 +9,7 @@
       // Planen: als geplanter Eintrag (Tag, Mahlzeit) speichern, zurück zur Mahlzeit (aus einer Kachel unter der Tageskarte: Fenster zu, wie in Essen)
       // Geplanten Eintrag ändern (ui.plEdit = Index in food.pl) oder neu einplanen. Mahlzeit aus dem Fenster, sonst fplMk
       var fp = ui.fplan, pe = ui.plEdit, pl = foodState().pl; fUndo(); x.d = fp.d; x.mk = sho && $('fmk').value || fplMk(x.r ? x.r.i : ''); ui.fdmk = null; ui.fday = 0; if (pe != null && pl[pe]) pl[pe] = x; else pl.push(x);
-      persist(); ui.fresh = false; render(); toast((pe != null ? 'Geändert · ' : 'Geplant · ') + Math.round(x.k) + ' kcal · ' + MEALS.filter(function (m) { return m[1] === x.mk; })[0][2], 'cal', true); if (fp.pg) closeSheet(true); else openPlanMeal(fp.d, x.mk); return;
+      persist(); ui.fresh = false; render(); toast((pe != null ? 'Geändert · ' : 'Geplant · ') + Math.round(x.k) + ' kcal · ' + MEALS.filter(function (m) { return m[1] === x.mk; })[0][2], 'cal', true); closeSheet(true); return;
     }
     var st = foodState(), today = dayIdx(Date.now()), before = foodSum(today).p, goal = foodGoal(today).p;
     // Uhrzeit aus dem Fenster (falls vorhanden) auf den Tag des Eintrags setzen
@@ -31,36 +31,6 @@
     var v = fNut(it, a), x = { n: fEn(it).slice(0, 30) };
     NK.forEach(function (k) { if (v[k] != null) x[k] = k === 'k' ? Math.round(v.k) : Math.round(v[k] * 10) / 10; });
     x.r = { i: id, g: Math.round(a * 100) / 100 }; foodPush(x, editIdx);
-  }
-  function openPlanMeal(d, mk, keep) {
-    // Mahlzeit planen (aus Planen): oben die Summe der Mahlzeit (kcal, Protein) und das Geplante (Icon im Ton, Menge; antippen = ändern, Kreuz = entfernen),
-    // darunter „Als Mahlzeit-Vorlage speichern“ (mit Namen); dann Gerichte dieser Mahlzeit und häufige Lebensmittel (antippen = einplanen), Suchen und Schnell im Plan-Modus
-    var m = MEALS.filter(function (x) { return x[1] === mk; })[0], st = foodState(), ps = planSum(d).items.filter(function (o) { return o.x.mk === mk; }), seen = {};
-    var tl = st.d.slice().sort(function (a, b) { return (dishMeals(b).indexOf(mk) >= 0) - (dishMeals(a).indexOf(mk) >= 0); }).slice(0, 4).map(function (x) { return { i: x.id, g: 1 }; }).concat(fTiles())
-      .filter(function (x) { if (seen[x.i] || !fItem(x.i)) return false; seen[x.i] = 1; return true; }).slice(0, 8);
-    if (!keep) { ui.tpnm = false; ui.tpok = ''; }
-    ui.fplan = { d: d, mk: mk }; ui.fday = dayIdx(Date.now()) - d; ui.sheet = { plmeal: true }; ui.plEdit = null;
-    var kc = Math.round(ps.reduce(function (a, o) { return a + (o.x.k || 0); }, 0)), pc = Math.round(ps.reduce(function (a, o) { return a + (o.x.p || 0); }, 0));
-    sheetOpen(shHead(MEALI[mk], m[2] + ' planen', dayHead(d)) +
-      (ps.length ? '<div class="fplh m-' + mk + '"><b>' + kc + '<small>kcal</small></b><em style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + pc + '<small>g</small></em><small>' + ps.length + (ps.length === 1 ? ' Teil' : ' Teile') + '</small></div>' +
-        '<div class="fpl">' + ps.map(function (o) {
-          var id = o.x.r && o.x.r.i, it = id && fItem(id), ck = it ? (it.dish ? 'dish' : it.cat || (/^u/.test(id) ? 'u' : 'x')) : 'q';
-          // Antippen = Menge ändern (nur mit Quelle), Kreuz = entfernen
-          return '<div class="fplr m-' + mk + '"><i class="fsc" style="color:' + (it ? fTone(id, ck) : 'var(--gold)') + '">' + ic(it ? (it.dish ? 'pot' : fIco(id, ck)) : 'bolt') + '</i><span' + (it ? ' data-ple="' + o.i + '" role="button"' : '') + '><b>' + esc(o.x.n || 'Mahlzeit') + '</b><small>' + (it ? fAmt(it, o.x.r.g) : 'Schnell') + '</small></span>' +
-            '<em>' + Math.round(o.x.k) + '<i>kcal</i></em><button class="x" data-plx="' + o.i + '" aria-label="Entfernen">' + ic('close') + '</button></div>';
-        }).join('') + '</div>' + tplRowHtml('m', ps, kc, m[2]) : '') +
-      '<div class="ftl fplt">' + tl.map(function (x) { return fTile({ i: x.i, g: x.g }, 'data-pla="' + x.i + '|' + x.g + '"'); }).join('') + '</div>' +
-      '<div class="fact2"><div class="fsrb"><button class="fsrq" data-plsr="1">' + ic('search') + '<span>Suchen …</span></button></div><button class="fdsb" data-plq="1" aria-label="Schnell">' + ic('bolt') + '</button></div>', true);
-  }
-  function tplRowHtml(k, ps, kc, label) {
-    // Vorlage speichern: eine Mahlzeit (k 'm') oder ein Tag (k 'd') aus mehreren Teilen zum Wiederholen – anders als ein Gericht (ein Rezept mit Zutaten und Portionen).
-    // Zu: klare Zeile; angetippt: Name (vorgeschlagen) + Speichern; danach Bestätigung
-    var pr = ps.filter(function (o) { return o.x.r; }), n = pr.length; if (!n) return '';
-    if (ui.tpok) return '<p class="tpsd">' + ic('check') + '<span>In Menüs gespeichert · <b>' + esc(ui.tpok) + '</b></span></p>';
-    var def = k === 'd' ? label : label + ' · ' + String(pr[0].x.n || '').split(' ')[0] + (n > 1 ? ' +' + (n - 1) : '');
-    if (ui.tpnm) return '<div class="tpsv on"><input id="tpn" class="fnm" type="text" maxlength="24" value="' + esc(def.slice(0, 24)) + '" aria-label="Name des Menüs"><button class="btn primary" data-ptpok="' + k + '">' + ic('check') + 'Speichern</button>' +
-      '<small>' + (k === 'd' ? 'Ganzer Tag' : 'Ganze Mahlzeit') + ' mit ' + n + ' Teilen – später mit einem Tipp einplanen. Kein Gericht (das ist ein Rezept mit Zutaten).</small></div>';
-    return '<button class="tpsv" data-ptpm="' + k + '"><i>' + ic('cards') + '</i><span><b>Als ' + (k === 'd' ? 'Tages' : 'Mahlzeit') + '-Menü speichern</b><small>' + n + ' Teile · ' + kc + ' kcal · zum Wiederholen</small></span>' + ic('chev') + '</button>';
   }
   // Einkaufsliste aus dem Geplanten (food.pl) ab heute für n Tage: Gerichte in Zutaten zerlegt, gleiche Lebensmittel zusammengezählt,
   // Menge aufgerundet auf Packung/Stück (Portionen der Liste), sonst auf 50 g/ml; nach Kategorie, abgehakt (food.sh) grau unten.
@@ -130,19 +100,19 @@
     var all = l.filter(function (o) { return !o.gone; }), open = all.filter(function (o) { return !o.ok; }), done = all.filter(function (o) { return o.ok; }), gone = l.filter(function (o) { return o.gone; });
     // Preis = alles, was gekauft wird (abgehakt bleibt drin, damit die Summe beim Einkaufen nicht sinkt)
     var sum = all.reduce(function (a, o) { return a + o.eur; }, 0), un = function (o) { return o.it && o.it.ml ? ' ml' : ' g'; };
-    // Zeile: Haken links (abhaken), Mitte antippen = wofür, nach links wischen = löschen, nach rechts = „habe ich noch“; darunter Bedarf → Kauf, rechts Preis (und je Stück bei mehreren)
+    // Zeile einzeilig: Haken (abhaken), Icon, Name, Kaufmenge, Preis; antippen = Bedarf und wofür darunter; nach links wischen = löschen, nach rechts = „habe ich noch“
     function row(o) {
       var op = ui.shx === o.key, ck = o.it ? (o.it.dish ? 'dish' : o.c) : 'x', dy = {}, ds = [];
-      // Aufgeklappt: je Tag eine Zeile (Mahlzeiten als Symbole, Gerichte als Namen, Menge zusammen), zuletzt der Rest der Packung
+      // Aufgeklappt: Bedarf → Kauf, je Tag eine Zeile (Mahlzeiten als Symbole, Gerichte als Namen, Menge zusammen), zuletzt der Rest der Packung
       o.src.forEach(function (q) { var y = dy[q.d]; if (!y) { y = dy[q.d] = { d: q.d, g: 0, mk: [], n: [] }; ds.push(y); } y.g += q.g; if (y.mk.indexOf(q.mk) < 0) y.mk.push(q.mk); if (q.n && y.n.indexOf(q.n) < 0) y.n.push(q.n); });
       ds.sort(function (a, b) { return a.d - b.d; });
       var rest = Math.round(o.bg - o.g);
       return '<div class="shr' + (o.ok ? ' ok' : '') + (o.gone ? ' gone' : '') + (op ? ' open' : '') + '"' + (o.gone ? '' : ' data-shrow="' + esc(o.key) + '" data-shl="' + o.last + '"') + ' style="--cc:' + (CCOL[o.c] || CCOL.x) + '">' +
         (o.gone ? '<button class="shc" data-shk="' + esc(shKx(o.key)) + '" aria-label="' + esc(o.n) + ' wieder auf die Liste">' + ic('undo') + '</button>'
           : '<button class="shc" data-shk="' + esc(o.key) + '" data-shl="' + o.last + '" aria-pressed="' + o.ok + '" aria-label="' + esc(o.n) + (o.ok ? ' wieder offen' : ' abhaken') + '">' + (o.ok ? ic('check') : '') + '</button>') +
-        '<button class="shm" data-shx="' + esc(o.key) + '" aria-expanded="' + op + '"><i class="fsc" style="color:' + (o.id ? fTone(o.id, ck) : 'var(--ink3)') + '">' + ic(o.id ? fIco(o.id, ck) : 'food') + '</i><span><b>' + esc(o.n) + '</b><small>' +
-        esc(o.need === o.a ? o.a : o.need + ' → ' + o.a) + '</small></span><em><b>≈ ' + eur(o.eur) + '</b>' + (o.pe ? '<small>à ' + eur(o.pe) + '</small>' : '') + '</em></button>' +
-        (op ? '<div class="shw">' + ds.map(function (y) {
+        '<button class="shm" data-shx="' + esc(o.key) + '" aria-expanded="' + op + '"><i class="fsc" style="color:' + (o.id ? fTone(o.id, ck) : 'var(--ink3)') + '">' + ic(o.id ? fIco(o.id, ck) : 'food') + '</i><b>' + esc(o.n) + '</b>' +
+        '<small>' + esc(o.a.replace(/^1× /, '')) + '</small><em>' + eur(o.eur).replace(' €', '') + '</em></button>' +
+        (op ? '<div class="shw"><p class="shbd"><span>Bedarf ' + esc(o.need) + (o.need === o.a ? '' : ' → ' + esc(o.a)) + '</span>' + (o.pe ? '<small>à ' + eur(o.pe) + '</small>' : '') + '</p>' + ds.map(function (y) {
           return '<p class="m-' + y.mk[0] + '"><i class="shmk">' + y.mk.map(function (k) { return '<i class="m-' + k + '">' + ic(MEALI[k]) + '</i>'; }).join('') + '</i><span>' + (y.d === t ? 'Heute' : y.d === t + 1 ? 'Morgen' : WDN[wdOf(y.d)].slice(0, 2) + ' ' + fmtShort(y.d)) +
             (y.n.length ? ' · ' + esc(y.n.join(', ')) : '') + '</span><small>' + Math.round(y.g) + un(o) + '</small></p>';
         }).join('') + (rest > 0 ? '<p class="shrs"><i class="shmk"></i><span>Rest</span><small>' + rest + un(o) + '</small></p>' : '') + '</div>' : '') + '</div>';
@@ -151,12 +121,15 @@
       var g = open.filter(function (o) { return o.c === c; }); if (!g.length) return;
       h += '<h3 class="shh" style="--cc:' + (CCOL[c] || CCOL.x) + '">' + ic(CATI[c][0]) + esc(CATI[c][1]) + '<small>' + g.length + '</small></h3>' + g.map(row).join('');
     });
-    if (done.length) h += '<h3 class="shh">' + ic('check') + 'Im Wagen<small>' + done.length + '</small></h3>' + done.map(row).join('');
-    if (gone.length) h += '<h3 class="shh">' + ic('jar') + 'Zuhause<small>' + gone.length + '</small></h3>' + gone.map(row).join('');
-    // Zeitraum: Tage ab heute zum Antippen (bis einschließlich), dazu 2 Wochen; gewählt = alle Tage bis zum Ende
-    var days = [1, 2, 3, 4, 5, 6, 7].map(function (k) { return [k, k === 1 ? 'Heute' : WDN[wdOf(t + k - 1)].slice(0, 2)]; }).concat([[14, '2 Wo']]);
-    return '<div class="shd" role="group" aria-label="Zeitraum">' + days.map(function (x) { var on = x[0] === 14 ? n === 14 : n < 14 && x[0] <= n; return '<button data-shn="' + x[0] + '" aria-pressed="' + on + '"' + (n === x[0] ? ' class="end"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div>' +
-      (l.length ? '<div class="shs"><span><b>' + open.length + '</b><small>offen</small></span><span><b>≈ ' + eur(sum) + '</b><small>Richtwert</small></span><button class="x" data-shsh="1" aria-label="Liste teilen">' + ic('share') + '</button></div>' : '') +
+    // Im Wagen und Zuhause unten, eingeklappt (Kopf antippen = auf/zu)
+    function fold(k, icn, nm, g) { var on = ui['shg' + k]; return g.length ? '<button class="shh shf" data-shg="' + k + '" aria-expanded="' + !!on + '">' + ic(icn) + nm + '<small>' + g.length + '</small>' + ic('chev') + '</button>' + (on ? g.map(row).join('') : '') : ''; }
+    h += fold('w', 'check', 'Im Wagen', done) + fold('z', 'jar', 'Zuhause', gone);
+    // Kopf als Karte: offen · im Wagen, Preis, Fortschritt; Zeitraum als Pille (antippen = Tage ab heute, dazu 2 Wochen), Teilen
+    var lab = n === 14 ? '2 Wochen' : n === 1 ? 'Heute' : 'bis ' + WDN[wdOf(t + n - 1)].slice(0, 2), days = [1, 2, 3, 4, 5, 6, 7].map(function (k) { return [k, k === 1 ? 'Heute' : WDN[wdOf(t + k - 1)].slice(0, 2)]; }).concat([[14, '2 Wo']]);
+    return '<div class="shk2"><div class="shk2t"><span><b>' + open.length + '</b> offen' + (done.length ? '<small> · ' + done.length + ' im Wagen</small>' : '') + '</span><b class="shk2e">≈ ' + eur(sum) + '</b></div>' +
+      '<i class="shk2b" style="--p:' + (all.length ? done.length / all.length : 0).toFixed(3) + '"></i>' +
+      '<div class="shk2r"><button class="shpp" data-shp="1" aria-expanded="' + !!ui.shpo + '">' + ic('cal') + lab + ic('chev') + '</button>' + (l.length ? '<button class="x" data-shsh="1" aria-label="Liste teilen">' + ic('share') + '</button>' : '') + '</div>' +
+      (ui.shpo ? '<div class="shd" role="group" aria-label="Zeitraum">' + days.map(function (x) { var on = x[0] === 14 ? n === 14 : n < 14 && x[0] <= n; return '<button data-shn="' + x[0] + '" aria-pressed="' + on + '"' + (n === x[0] ? ' class="end"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div>' : '') + '</div>' +
       '<div class="shl" data-noswipe="1">' + (h || '<p class="muted">Nichts geplant. Einen künftigen Tag oben wählen und einplanen.</p>') + '</div>';
   }
   function shopSheet() { return shHead('cart', 'Einkauf', 'Aus dem Geplanten') + '<div class="pshp">' + shopHtml() + '</div>'; }
@@ -165,22 +138,29 @@
   function openTpl() { ui.dtab = 'm'; openDishes(); }
   // ---------- Menüs (food.tp, im Code „Vorlagen“/tpl): [{id, n, k: 'm' (Mahlzeit, mk) | 'd' (Tag), it: [{i, g, mk?}]}]
   function tplKcal(t) { return Math.round(t.it.reduce(function (a, q) { var it = fItem(q.i); return a + (it ? fNut(it, q.g).k || 0 : 0); }, 0)); }
+  // Kachel für Gespeichertes (Gericht, Menü): Mahlzeitfarbe, Symbol oben rechts, Name, kcal groß und Protein
+  function savedTile(n, k, p, mk, icn, attr, cls) {
+    return '<button class="fti q-m svt' + (mk ? ' m-' + mk : ' tpd') + (cls || '') + '" ' + attr + ' aria-label="' + esc(n) + '"><i class="ftq">' + ic(icn) + '</i><b class="' + fitCls(n, 8) + '">' + esc(n) + '</b>' +
+      '<span class="ftv"><span>' + Math.round(k) + '</span><small style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + Math.round(p) + '</small></span></button>';
+  }
+  function tplNut(t) { return t.it.reduce(function (a, q) { var it = fItem(q.i), v = it ? fNut(it, q.g) : {}; a.k += v.k || 0; a.p += v.p || 0; return a; }, { k: 0, p: 0 }); }
   function tplTiles(sd) {
-    // Kacheln: Mahlzeit-Vorlagen in der Farbe ihrer Mahlzeit, Tages-Vorlagen neutral mit Kalender-Symbol; dazu gestrichelt „Tag als Vorlage“ (wenn der Tag geplant ist).
-    // Im Löschmodus (Mülleimer-Kachel) löscht Antippen eine Vorlage
-    var tp = foodState().tp, del = ui.tpdel, dayHas = planSum(sd).items.some(function (o) { return o.x.r; });
-    // Getrennt in „Ganze Tage“ und „Mahlzeiten“; Tages-Kachel zeigt die enthaltenen Mahlzeiten als Symbole, Mahlzeit-Kachel den Namen der Mahlzeit
+    // Menüs nach Mahlzeit (Filter ui.tmf: '' alle, Mahlzeit oder 'd' = ganze Tage): je Abschnitt 4er-Kacheln; Tage breit mit den Mahlzeit-Symbolen.
+    // Antippen = einplanen; im Löschmodus (Mülleimer im Kopf, ui.tpdel) = löschen
+    var tp = foodState().tp, del = ui.tpdel, f = ui.tmf || '';
+    if (!tp.length) return '<p class="muted tplh">' + ic('cards') + 'Menüs sind ganze Mahlzeiten oder Tage zum Wiederholen. Über + oben eine Mahlzeit oder einen Tag speichern.</p>';
     function tile(t) {
-      var mks = t.k === 'd' ? MEALS.filter(function (m) { return t.it.some(function (q) { return q.mk === m[1]; }); }) : [];
-      return '<button class="fti q-m tpl' + (t.k === 'm' ? ' m-' + t.mk : ' tpd') + (del ? ' tdel' : '') + '" data-ptp="' + t.id + '" aria-label="' + (t.k === 'd' ? 'Tages' : 'Mahlzeit') + '-Menü ' + esc(t.n) + (del ? ' löschen' : '') + '"><i class="ftq">' + ic(del ? 'close' : t.k === 'm' ? MEALI[t.mk] : 'cal') + '</i>' +
-        '<small class="tpk">' + (t.k === 'd' ? mks.map(function (m) { return ic(MEALI[m[1]]); }).join('') : MEALS.filter(function (m) { return m[1] === t.mk; })[0][2]) + '</small>' +
-        '<b class="' + fitCls(t.n, 8) + '">' + esc(t.n) + '</b><span class="ftv"><span>' + tplKcal(t) + '</span><small>' + t.it.length + '×</small></span></button>';
+      var v = tplNut(t), at = 'data-ptp="' + t.id + '"';
+      if (t.k === 'd') return '<button class="fti q-m svt tpd' + (del ? ' tdel' : '') + '" ' + at + ' aria-label="Tages-Menü ' + esc(t.n) + (del ? ' löschen' : '') + '"><i class="ftq">' + ic(del ? 'close' : 'cal') + '</i><b>' + esc(t.n) + '</b>' +
+        '<small class="tpk">' + MEALS.filter(function (m) { return t.it.some(function (q) { return q.mk === m[1]; }); }).map(function (m) { return '<i class="m-' + m[1] + '">' + ic(MEALI[m[1]]) + '</i>'; }).join('') + '</small>' +
+        '<span class="ftv"><span>' + Math.round(v.k) + '</span><small style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + Math.round(v.p) + '</small></span></button>';
+      return savedTile(t.n, v.k, v.p, t.mk, del ? 'close' : MEALI[t.mk], at, del ? ' tdel' : '');
     }
-    var td = tp.filter(function (t) { return t.k === 'd'; }), tm = tp.filter(function (t) { return t.k !== 'd'; });
-    return (td.length ? '<p class="tplg">' + ic('cal') + 'Ganze Tage</p>' + td.map(tile).join('') : '') + (tm.length ? '<p class="tplg">' + ic('food') + 'Mahlzeiten</p>' + tm.map(tile).join('') : '') + (dayHas && !del ? '<button class="fti tplnew" data-ptpms="1" aria-label="Eine geplante Mahlzeit als Menü speichern">' + ic('plus') + '<small>Mahlzeit<br>speichern</small></button>' +
-        '<button class="fti tplnew" data-ptpd="1" aria-label="Diesen Tag als Menü speichern">' + ic('plus') + '<small>Tag<br>speichern</small></button>' : '') +
-      (tp.length ? '<button class="fti tplnew" data-ptpx="1" aria-label="' + (del ? 'Fertig' : 'Menüs löschen') + '">' + ic(del ? 'check' : 'trash') + '</button>' : '') +
-      (!tp.length && !dayHas ? '<p class="muted tplh">' + ic('cards') + 'Menüs sind ganze Mahlzeiten oder Tage zum Wiederholen (Gerichte sind Rezepte). Plane zuerst eine Mahlzeit, dann „Als Menü speichern“.</p>' : '');
+    var h = '', sec = function (icn, nm, l, cls) { return l.length ? '<p class="tplg">' + ic(icn) + nm + '</p><div class="ftl' + (cls || '') + '">' + l.map(tile).join('') + '</div>' : ''; };
+    if (!f || f === 'd') h += sec('cal', 'Ganze Tage', tp.filter(function (t) { return t.k === 'd'; }), ' tpdw');
+    MEALS.forEach(function (m) { if (!f || f === m[1]) h += sec(MEALI[m[1]], m[2], tp.filter(function (t) { return t.k === 'm' && t.mk === m[1]; })); });
+    return '<div class="seg fdm tmf">' + [['', 'Alle']].concat(MEALS.map(function (m) { return [m[1], m[2]]; }), [['d', 'Tag']]).map(function (m) {
+      return '<button data-tmf="' + m[0] + '" aria-pressed="' + (f === m[0]) + '" aria-label="' + m[1] + '">' + (m[0] === '' ? 'Alle' : ic(m[0] === 'd' ? 'cal' : MEALI[m[0]])) + '</button>'; }).join('') + '</div>' + (h || '<p class="muted">Hier noch keine Menüs.</p>');
   }
   function tplAdd(t, di, mk) {
     // Vorlage einplanen: Mahlzeit-Vorlage in Mahlzeit mk (sonst ihre eigene), Tages-Vorlage mit den gespeicherten Mahlzeiten
@@ -191,23 +171,34 @@
     });
     persist(); ui.fresh = false; render(); buzz([10, 30, 10]); toast('Menü geplant · ' + tplKcal(t) + ' kcal', 'cal', true);
   }
+  // Teile eines Tags für ein Menü: Gegessenes und Geplantes mit Quelle, je mit Mahlzeit
+  function tplItems(di) {
+    return foodSum(di).items.map(function (o) { return { x: o.x, mk: mealOfE(o.x)[1] }; }).concat(planSum(di).items.map(function (o) { return { x: o.x, mk: o.x.mk }; })).filter(function (o) { return o.x.r && fItem(o.x.r.i); });
+  }
   function tplSave(k, di, mk, nm) {
-    // Geplantes eines Tags (k = 'd') oder einer Mahlzeit (k = 'm') als Vorlage speichern; Name selbst gewählt, sonst aus den ersten Einträgen. Gibt den Namen zurück
-    // Grenzen wie in cleanFood (40 Vorlagen, 30 Einträge), sonst ginge Überzähliges beim nächsten Laden still verloren
-    var l = planSum(di).items.filter(function (o) { return o.x.r && (k === 'd' || o.x.mk === mk); }).slice(0, 30); if (!l.length) return '';
+    // Gegessenes/Geplantes eines Tags (k = 'd') oder einer Mahlzeit (k = 'm') als Menü speichern; Name selbst gewählt, sonst aus den ersten Einträgen. Gibt den Namen zurück
+    // Grenzen wie in cleanFood (40 Menüs, 30 Einträge), sonst ginge Überzähliges beim nächsten Laden still verloren
+    var l = tplItems(di).filter(function (o) { return k === 'd' || o.mk === mk; }).slice(0, 30); if (!l.length) return '';
     if (foodState().tp.length >= 40) { toast('Höchstens 40 Menüs', 'bolt'); return ''; }
     var n = String(nm || '').trim() || (k === 'd' ? 'Tag ' + WDN[wdOf(di)] : l[0].x.n.split(' ')[0] + (l.length > 1 ? ' +' + (l.length - 1) : ''));
-    foodState().tp.push({ id: 't' + Date.now().toString(36), n: n.slice(0, 24), k: k, mk: k === 'm' ? mk : undefined, it: l.map(function (o) { var q = { i: o.x.r.i, g: o.x.r.g }; if (k === 'd') q.mk = o.x.mk; return q; }) });
+    foodState().tp.push({ id: 't' + Date.now().toString(36), n: n.slice(0, 24), k: k, mk: k === 'm' ? mk : undefined, it: l.map(function (o) { var q = { i: o.x.r.i, g: o.x.r.g }; if (k === 'd') q.mk = o.mk; return q; }) });
     persist(); buzz([10, 30, 10]); return n.slice(0, 24);
   }
-  function openTplDay(di, keep) {
-    // Tag als Vorlage: je Mahlzeit kurz, was geplant ist, darunter Name + Speichern (gleich offen)
-    var ps = planSum(di).items, kc = Math.round(ps.reduce(function (a, o) { return a + (o.x.k || 0); }, 0));
-    if (!keep) { ui.tpnm = true; ui.tpok = ''; } ui.sheet = { tpday: di };
-    sheetOpen(shHead('cal', 'Tag als Menü', dayHead(di)) + '<div class="tpdl">' + MEALS.map(function (m) {
-      var l = ps.filter(function (o) { return o.x.mk === m[1]; }); if (!l.length) return '';
-      return '<div class="m-' + m[1] + '">' + ic(MEALI[m[1]]) + '<span>' + l.map(function (o) { return esc(o.x.n); }).join(', ') + '</span><em>' + Math.round(l.reduce(function (a, o) { return a + o.x.k; }, 0)) + '</em></div>';
-    }).join('') + '</div>' + tplRowHtml('d', ps, kc, 'Tag ' + WDN[wdOf(di)]));
+  function openTplNew(di, mk) {
+    // Neues Menü: Tagesleiste (7 Tage um den gewählten), darunter die 4 Mahlzeiten und „Ganzer Tag“ (kcal aus Gegessenem + Geplantem), Name vorgeschlagen, Speichern
+    var t = dayIdx(Date.now()); di = Math.min(t + 70, di); ui.tpn = { d: di, mk: mk === undefined ? null : mk };
+    var sel = ui.tpn.mk, its = tplItems(di), w0 = di - 3, ds = '';
+    for (var i = 0; i < 7; i++) { var d = w0 + i; ds += '<button class="fdd' + (d === di ? ' sel' : '') + (d === t ? ' today' : d > t ? ' fut' : ' past') + '" data-tpnd="' + d + '"><small>' + WDN[wdOf(d)].slice(0, 2) + '</small><b>' + new Date(d * 864e5).getUTCDate() + '</b></button>'; }
+    var kc = function (l) { return Math.round(l.reduce(function (a, o) { return a + (o.x.k || 0); }, 0)); };
+    var tiles = MEALS.map(function (m) { var l = its.filter(function (o) { return o.mk === m[1]; });
+      return '<button class="fmc tpnm m-' + m[1] + (l.length ? '' : ' fme') + '" data-tpnm="' + m[1] + '" aria-pressed="' + (sel === m[1]) + '" aria-label="' + m[2] + '"' + (l.length ? '' : ' disabled') + '><span class="fmt">' + ic(MEALI[m[1]]) + (l.length ? '<small>×' + l.length + '</small>' : '') + '</span>' + (l.length ? '<b>' + kc(l) + '<em>kcal</em></b>' : '') + '</button>'; }).join('');
+    var pick = sel === 'd' ? its : its.filter(function (o) { return o.mk === sel; }), mn = sel && sel !== 'd' && MEALS.filter(function (m) { return m[1] === sel; })[0];
+    var def = sel === 'd' ? 'Tag ' + WDN[wdOf(di)] : pick.length ? mn[2] + ' · ' + String(pick[0].x.n || '').split(' ')[0] + (pick.length > 1 ? ' +' + (pick.length - 1) : '') : '';
+    ui.sheet = { tpnew: true };
+    sheetOpen(shHead('cards', 'Neues Menü', 'Mahlzeit oder Tag wählen') + '<nav class="fds tpnd">' + ds + '</nav>' +
+      '<div class="fchips fem tpnr">' + tiles + '</div><button class="tpnday" data-tpnm="d" aria-pressed="' + (sel === 'd') + '"' + (its.length ? '' : ' disabled') + '>' + ic('cal') + '<b>Ganzer Tag</b><small>' + its.length + ' Teile · ' + kc(its) + ' kcal</small></button>' +
+      (pick.length ? '<p class="tpnl">' + pick.map(function (o) { return esc(o.x.n || ''); }).join(' · ') + '</p><div class="tpsv on"><input id="tpn" class="fnm" type="text" maxlength="24" value="' + esc(def.slice(0, 24)) + '" aria-label="Name des Menüs"><button class="btn primary" data-tpns="1">' + ic('check') + 'Speichern</button></div>'
+        : '<p class="muted tpnl">' + (its.length ? 'Mahlzeit oder ganzen Tag antippen.' : 'An diesem Tag ist nichts gegessen oder geplant.') + '</p>'), true);
   }
   // Gelöscht („brauche ich nicht“): fällt aus der Liste, bis Neues danach geplant wird
   function shKd(key) { return ('d:' + key).slice(0, 40); }
@@ -255,7 +246,6 @@
     var fb = document.querySelector('#sheet [data-fback]'); if (fb) return foodClick(fb);
     if (ui.sheet.fsearch && ui.fcat && !ui.fq) { ui.fcat = ''; fresSet(); return true; }
     if (ui.sheet.dishEdit) { dishBack(ui.dd && ui.dd.id); return true; }
-    if (ui.fplan && !ui.fplan.pg && !ui.sheet.plmeal) { openPlanMeal(ui.fplan.d, ui.fplan.mk); return true; }
     return false;
   }
   function fstpTog(on) {
@@ -281,8 +271,13 @@
       readDraft(); var dm = ui.dd.m || [], on = dm.indexOf(el.dataset.ddm) < 0;
       ui.dd.m = MEALS.map(function (m) { return m[1]; }).filter(function (k) { return k === el.dataset.ddm ? on : dm.indexOf(k) >= 0; }); el.setAttribute('aria-pressed', String(on)); buzz(4); return true;
     }
-    if ((el = t.closest('[data-pml]'))) { if (fswMoved) { fswMoved = false; return true; } openPlanMeal(fSd(), el.dataset.pml); return true; }
     if (t.closest('[data-fdx]')) { fdxSet(!ui.fdx); return true; }
+    // Neues Menü: Tag wählen, Mahlzeit/Tag wählen, speichern (danach Menüs-Reiter mit diesem Filter)
+    if ((el = t.closest('[data-tpnd]'))) { openTplNew(+el.dataset.tpnd, null); buzz(4); return true; }
+    if ((el = t.closest('[data-tpnm]'))) { openTplNew(ui.tpn.d, el.dataset.tpnm); buzz(4); return true; }
+    if (t.closest('[data-tpns]')) { var tn0 = ui.tpn.mk === 'd' ? tplSave('d', ui.tpn.d, null, $('tpn').value) : tplSave('m', ui.tpn.d, ui.tpn.mk, $('tpn').value); if (tn0) { ui.dtab = 'm'; ui.tmf = ui.tpn.mk; openDishes(); toast('Menü gespeichert · ' + tn0, 'cards'); } return true; }
+    if ((el = t.closest('[data-tmf]'))) { ui.tmf = el.dataset.tmf; $('sheet').innerHTML = dishesHtml(); buzz(4); return true; }
+    if (t.closest('[data-tpadd]')) { ui.tpdel = false; openTplNew(Math.max(fSd(), dayIdx(Date.now())), null); return true; }
     if ((el = t.closest('[data-dtab]'))) { ui.dtab = el.dataset.dtab; ui.tpdel = false; $('sheet').innerHTML = dishesHtml(); buzz(4); return true; }
     if (t.closest('[data-fshop]')) { ui.sheet = { fshop: true }; sheetOpen(shopSheet(), true); return true; }
     // Vorlagen-Fenster: antippen = einplanen (Fenster zu), im Löschmodus löschen; „Tag/Mahlzeit speichern“ aus dem Geplanten des Tags
@@ -291,28 +286,23 @@
       if (ui.tpdel) { tp0.splice(tpi, 1); if (!tp0.length) ui.tpdel = false; persist(); openTpl(); buzz(8); return true; }
       closeSheet(true); tplAdd(tp0[tpi], fTplDay()); return true;
     }
-    if (t.closest('[data-ptpd]')) { openTplDay(fTplDay()); return true; }
-    if (t.closest('[data-ptpms]')) { var pm0 = planSum(fTplDay()).items.filter(function (o) { return o.x.r; })[0]; if (pm0) { ui.tpnm = true; ui.tpok = ''; openPlanMeal(fTplDay(), pm0.x.mk, true); } return true; }
     if (t.closest('[data-ptpx]')) { ui.tpdel = !ui.tpdel; openTpl(); buzz(4); return true; }
-    if ((el = t.closest('[data-pla]'))) { var pa = el.dataset.pla.split('|'); buzz(8); foodRef(pa[0], +pa[1]); return true; }
-    if ((el = t.closest('[data-plx]'))) { fUndo(); foodState().pl.splice(+el.dataset.plx, 1); persist(); ui.fresh = false; render(); openPlanMeal(ui.fplan.d, ui.fplan.mk); buzz(6); return true; }
-    if ((el = t.closest('[data-shn]'))) { ui.shn = +el.dataset.shn; render(); buzz(4); return true; }
+    // Geplanten Eintrag entfernen (Mengen-Fenster beim Ändern): Fenster zu, Rückgängig im Kopf
+    if ((el = t.closest('[data-plx]'))) { fUndo(); foodState().pl.splice(+el.dataset.plx, 1); persist(); closeSheet(true); ui.fresh = false; render(); toast('Entfernt', 'close', true); buzz(6); return true; }
+    // Geplanten Eintrag in der Zeile antippen: Mengen-Fenster im Planen-Modus (Menge, Mahlzeit, entfernen)
+    if ((el = t.closest('[data-fple]'))) { if (fswMoved) { fswMoved = false; return true; } var pe0 = +el.dataset.fple, po0 = st.pl[pe0]; if (!po0) return true;
+      if (po0.r && fItem(po0.r.i)) { openPick(po0.r.i, po0.r.g); ui.fplan = { d: po0.d, mk: po0.mk, pg: 1 }; ui.plEdit = pe0; fpPaint(); }
+      else { fUndo(); st.pl.splice(pe0, 1); persist(); ui.fresh = false; render(); toast('Entfernt', 'close', true); buzz(6); } return true; }
+    if ((el = t.closest('[data-ftpn]'))) { openTplNew(fSd(), el.dataset.ftpn); return true; }
+    if ((el = t.closest('[data-shn]'))) { ui.shn = +el.dataset.shn; ui.shpo = false; render(); buzz(4); return true; }
+    if (t.closest('[data-shp]')) { ui.shpo = !ui.shpo; render(); buzz(4); return true; }
+    if ((el = t.closest('[data-shg]'))) { var sg = 'shg' + el.dataset.shg; ui[sg] = !ui[sg]; render(); buzz(4); return true; }
     if ((el = t.closest('[data-shx]'))) { if (shSw) { shSw = false; return true; } ui.shx = ui.shx === el.dataset.shx ? null : el.dataset.shx; render(); buzz(4); return true; }
     if (t.closest('[data-shsh]')) { shopShare(); return true; }
     if ((el = t.closest('[data-shk]'))) { if (shSw) { shSw = false; return true; } var shk = el.dataset.shk; if (el.dataset.shl == null || st.sh[shk] != null && st.sh[shk] >= +el.dataset.shl) delete st.sh[shk]; else st.sh[shk] = +el.dataset.shl; persist(); render(); buzz(6); return true; }
     if (t.closest('[data-fingo]')) { ui.fingo = !ui.fingo; ui.fstpo = false; $('sheet').classList.remove('full'); fpPaint(); buzz(4); return true; }
     // Schritte: Fenster geht ganz auf (.full), die Schritte erscheinen unter den Zutaten
     if (t.closest('[data-fstp]')) { fstpTog(!ui.fstpo); return true; }
-    // Nach dem Speichern verschwindet der Knopf (kein zweites, gleiches Speichern)
-    // Vorlage speichern: erst Name zeigen, dann speichern; danach bleibt eine Bestätigung im Fenster
-    if ((el = t.closest('[data-ptpm]'))) { ui.tpnm = true; if (el.dataset.ptpm === 'd') openTplDay(ui.sheet.tpday, true); else openPlanMeal(ui.fplan.d, ui.fplan.mk, true); buzz(4); return true; }
-    if ((el = t.closest('[data-ptpok]'))) {
-      var tk = el.dataset.ptpok, tdi = tk === 'd' ? ui.sheet.tpday : ui.fplan.d, tn = tplSave(tk, tdi, tk === 'm' ? ui.fplan.mk : null, $('tpn').value); if (!tn) return true;
-      ui.tpnm = false; ui.tpok = tn; ui.fresh = false; render(); if (tk === 'd') openTplDay(tdi, true); else openPlanMeal(tdi, ui.fplan.mk, true); return true;
-    }
-    if ((el = t.closest('[data-ple]'))) { var po = foodState().pl[+el.dataset.ple]; if (po && po.r && fItem(po.r.i)) { var pfp = ui.fplan; openPick(po.r.i, po.r.g); ui.fplan = pfp; ui.plEdit = +el.dataset.ple; fpPaint(); } return true; }
-    if (t.closest('[data-plsr]')) { openFsearch(); return true; }
-    if (t.closest('[data-plq]')) { openQuick(null); return true; }
     if ((el = t.closest('[data-fpe]'))) { if (fswMoved) { fswMoved = false; return true; } planEat(el.dataset.fpe); return true; }
     if (t.closest('[data-fquick]')) { openQuick(null, ui.fq.trim(), 's'); return true; }
     if ((el = t.closest('[data-fqx]'))) { var qfr = ui.sheet.from; openPick(el.dataset.fqx); ui.sheet.from = qfr; fpPaint(); return true; }

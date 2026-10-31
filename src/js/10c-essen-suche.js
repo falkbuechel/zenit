@@ -174,6 +174,7 @@
       // Eintragen und (beim Ändern) Löschen teilen sich die Zeile: Löschen klein, rot, nur Mülleimer
       '<div class="fpgo"><button class="btn primary big" data-fpadd="1">' + ic('check') + '<span>' + (ui.ingm ? 'Hinzufügen' : ui.fplan ? (ui.plEdit != null ? 'Ändern' : 'Einplanen') : pk.edit != null ? 'Ändern' : 'Eintragen') + (ui.ingm ? '' : '<small id="ffit">' + ffitHtml() + '</small>') + '</span></button>' +
       (pk.edit != null ? '<button class="btn big fpdel" data-fdel="' + pk.edit + '" aria-label="Eintrag löschen">' + ic('trash') + '</button>' : '') +
+      (ui.fplan && ui.plEdit != null ? '<button class="btn big fpdel" data-plx="' + ui.plEdit + '" aria-label="Geplantes entfernen">' + ic('trash') + '</button>' : '') +
       (dEd ? '<button class="btn big fped" data-fde="' + pk.i + '" aria-label="Gericht bearbeiten">' + ic('edit') + '</button>' : '') + '</div>') +
       (ex ? '<div class="fsb fpx">' + ex + '</div>' : '');
   }
@@ -321,18 +322,27 @@
     ui.sheet = { fdishes: true }; if (!ui.fplan) ui.fday = fBack(); sheetOpen(dishesHtml(), true);
   }
   function dishesHtml() {
-    // Gespeichertes: Reiter Gerichte (Rezepte) | Menüs (ganze Mahlzeiten/Tage aus food.tp, ui.dtab 'm')
-    // Gerichte: Filter nach Mahlzeit (fest gewählt oder meist gegessen, dishMeals); Karten (antippen = Menge wählen und bearbeiten, nach rechts wischen = 1 Portion sofort,
-    // halten und ziehen = auf eine Mahlzeit), zuletzt gegessene zuerst; als letzte Kachel „Neues Gericht“
+    // Gespeichertes: Reiter Gerichte (Rezepte) | Menüs (ganze Mahlzeiten/Tage aus food.tp, ui.dtab 'm'); beide nach Mahlzeit in 4er-Kacheln, + im Kopf legt neu an.
+    // Gerichte: Filter nach Mahlzeit (fest gewählt oder meist gegessen, dishMeals; ohne = „Sonstige“); Kachel antippen = Menge wählen und bearbeiten,
+    // nach rechts wischen = 1 Portion sofort, halten und ziehen = auf eine Mahlzeit; zuletzt gegessene zuerst
     var st = foodState(), lt = {}, f = ui.dmf || '', mt = ui.dtab === 'm';
     var tabs = '<div class="seg fdtb">' + [['d', 'pot', 'Gerichte'], ['m', 'cards', 'Menüs']].map(function (q) { return '<button data-dtab="' + q[0] + '" aria-pressed="' + (mt === (q[0] === 'm')) + '">' + ic(q[1]) + q[2] + '</button>'; }).join('') + '</div>';
-    if (mt) { var di = fTplDay(); return shHead('cards', 'Menüs', 'Einplanen für ' + dayHead(di)) + tabs + '<div class="ftl">' + tplTiles(di) + '</div>'; }
+    var hb = function (h, x) { return h.replace('<button class="x" data-sheet-close', x + '<button class="x" data-sheet-close'); };
+    if (mt) {
+      var di = fTplDay(), tp = st.tp.length;
+      return hb(shHead('cards', 'Menüs', 'Einplanen für ' + dayHead(di)), (tp ? '<button class="x' + (ui.tpdel ? ' on' : '') + '" data-ptpx="1" aria-pressed="' + !!ui.tpdel + '" aria-label="Menüs löschen">' + ic(ui.tpdel ? 'check' : 'trash') + '</button>' : '') +
+        '<button class="x" data-tpadd="1" aria-label="Neues Menü">' + ic('plus') + '</button>') + tabs + tplTiles(di);
+    }
     st.e.forEach(function (x) { if (x.r && /^d/.test(x.r.i)) lt[x.r.i] = Math.max(lt[x.r.i] || 0, x.t); });
-    var l = st.d.filter(function (x) { return !f || dishMeals(x).indexOf(f) >= 0; }).sort(function (a, b) { return (lt[b.id] || 0) - (lt[a.id] || 0); });
-    return shHead('pot', 'Gerichte', st.d.length + (st.d.length === 1 ? ' Gericht' : ' Gerichte') + ' · je Portion') + tabs +
+    var l = st.d.slice().sort(function (a, b) { return (lt[b.id] || 0) - (lt[a.id] || 0); });
+    var tile = function (x) { var t = dishTot(x), ms = dishMeals(x); return savedTile(x.n, t.pk, t.pp, f || ms[0] || '', 'pot', 'data-fpick="' + x.id + '" data-fdsw="' + x.id + '"'); };
+    var sec = function (icn, nm, g) { return g.length ? '<p class="tplg">' + ic(icn) + nm + '</p><div class="ftl" data-noswipe="1">' + g.map(tile).join('') + '</div>' : ''; }, h = '';
+    MEALS.forEach(function (m) { if (!f || f === m[1]) h += sec(MEALI[m[1]], m[2], l.filter(function (x) { var ms = dishMeals(x); return f ? ms.indexOf(f) >= 0 : ms[0] === m[1]; })); });
+    if (!f) h += sec('pot', 'Sonstige', l.filter(function (x) { return !dishMeals(x).length; }));
+    return hb(shHead('pot', 'Gerichte', st.d.length + (st.d.length === 1 ? ' Gericht' : ' Gerichte') + ' · je Portion'), '<button class="x" data-fde="new" aria-label="Neues Gericht">' + ic('plus') + '</button>') + tabs +
       (st.d.length ? '<div class="seg fdm">' + [['', 'Alle']].concat(MEALS.map(function (m) { return [m[1], m[2]]; })).map(function (m) {
-        return '<button data-dmf="' + m[0] + '" aria-pressed="' + (f === m[0]) + '" aria-label="' + m[1] + '">' + (m[0] ? ic(MEALI[m[0]]) : 'Alle') + '</button>'; }).join('') + '</div>' : '') +
-      '<div class="fdg" data-noswipe="1">' + l.map(fDishCard).join('') + '<button class="fdnew" data-fde="new" aria-label="Neues Gericht">' + ic('plus') + '<small>Neu</small></button></div>';
+        return '<button data-dmf="' + m[0] + '" aria-pressed="' + (f === m[0]) + '" aria-label="' + m[1] + '">' + (m[0] ? ic(MEALI[m[0]]) : 'Alle') + '</button>'; }).join('') + '</div>' + (h || '<p class="muted">Hier noch keine Gerichte.</p>')
+        : '<p class="muted tplh">' + ic('pot') + 'Gerichte sind Rezepte mit Zutaten und Portionen. Über + oben anlegen oder ein Rezept einfügen.</p>');
   }
   // Gericht bearbeiten: Zutaten aus der Datenbank füllen alle Nährwerte, sonst kcal und Protein von Hand
   function libFind(name) {

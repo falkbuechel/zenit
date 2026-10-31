@@ -138,8 +138,6 @@
     ui.undo = null; persist(); stopRest();
     $('toast').className = 'toast';
     render();
-    // Offenes „Mahlzeit planen“ neu aufbauen, sonst zeigen die Zeilen alte Indizes in food.pl
-    if (ui.fplan && ui.sheet && ui.sheet.plmeal) openPlanMeal(ui.fplan.d, ui.fplan.mk);
   }
   // ---------- Gesamtuhr
   var SKEY = DEMO ? 'zenit.sess.demo' : 'zenit.sess', sess = null, sessI = null, sessArm = 0;

@@ -232,27 +232,14 @@
 .fdsb .ic { width: 22px; height: 22px; }
 .fdsb:active { transform: translateY(2px); box-shadow: none; }
 /* Gerichte-Fenster: Karten immer zu dritt je Zeile, gestrichelte Karte für ein neues Gericht */
-.fdg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
 /* Neues Gericht als gestrichelte Kachel im Raster (statt großem Knopf unten) */
-.fdnew { display: grid; place-items: center; align-content: center; gap: 4px; min-height: 104px; border: 1px solid var(--line); border-radius: var(--r14); background: color-mix(in srgb, var(--s1) 50%, transparent); color: var(--ink3); font: inherit; }
-.fdnew .ic { width: 24px; height: 24px; }
-.fdnew small { font: 700 11px/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; }
 /* Gericht-Karte: Farbe (--dc) und Icon der Hauptzutat-Kategorie, dazu Mahlzeit-Symbol; kcal groß, Makro-Leiste */
-.fdc { position: relative; min-width: 0; border: 1px solid var(--line); border-top: 3px solid var(--dc); border-radius: var(--r14); background: color-mix(in srgb, var(--dc) 7%, var(--s1)); }
-.fdcb { display: grid; gap: 5px; width: 100%; padding: 8px 8px 9px; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; transition: transform .2s var(--ease); touch-action: pan-y; }
 /* Name bis zwei Zeilen statt abgeschnitten */
-.fdcb b { display: -webkit-box; min-height: 2.3em; overflow: hidden; font-size: 12.5px; line-height: 1.15; overflow-wrap: anywhere; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-.fdci { display: flex; gap: 3px; font-style: normal; }
-.fdci .ic { width: 16px; height: 16px; color: var(--dc); }
-.fdci .ic + .ic { color: var(--ink3); }
-.fdck { font-family: var(--f-display); font-size: 20px; font-style: normal; font-weight: 900; line-height: 1; }
-.fdck small { margin-left: 3px; font-family: var(--f-mono); font-size: 10px; font-weight: 600; color: var(--ink3); }
 /* Werte je 100 g (Suche) bzw. je Portion (Gericht): klein in festen Spalten mit Nährwert-Icons */
 .f100 { display: flex; align-items: center; gap: 0; margin-top: 2px; font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
 .f100 i { display: inline-flex; align-items: center; gap: 2px; width: 46px; font-style: normal; color: var(--ink2); }
 .f100 .ic { flex: none; width: 12px; height: 12px; color: var(--nc); }
 .f100 em { font-style: normal; font-size: 10px; }
-.f100 i.fdcg { width: auto; margin-left: auto; color: var(--ink3); white-space: nowrap; }
 /* Suchzeile rechts: kcal der üblichen Menge, darunter die Menge */
 .fsk { display: grid; justify-items: end; flex: none; font-style: normal; }
 .fsk b { font-family: var(--f-display); font-size: 18px; font-weight: 900; }
@@ -276,6 +263,26 @@
 .seg.fdm .ic { width: 17px; height: 17px; }
 /* Gericht-Editor: Mahlzeiten (mehrere wählbar) */
 /* Reiter Gerichte | Menüs: schlank mit Unterstrich, damit er sich vom Mahlzeit-Filter darunter abhebt */
+/* Gespeichertes (Gerichte, Menüs) als 4er-Kacheln wie die Vorschläge; Gericht nach rechts wischen = 1 Portion */
+.fti.svt { touch-action: pan-y; transition: transform .2s var(--ease); }
+.fti.svt.arm { box-shadow: inset 3px 0 0 var(--ac), var(--hs); }
+.ftl.tpdw .fti { grid-column: span 2; }
+.sheet .ftl { touch-action: pan-y; }
+.seg.fdm.tmf { grid-template-columns: 1.4fr repeat(5, minmax(0, 1fr)); margin-bottom: 4px; }
+/* Geplante Mahlzeit in der Zeile: „Gegessen“ / „Als Menü“ als Aktion (gefüllt in Mahlzeitfarbe), Teile hohl */
+.fcpi.fpa { border: 1px solid color-mix(in srgb, var(--mc) 60%, var(--line)); background: color-mix(in srgb, var(--mc) 16%, var(--s1)); }
+.fcpi.fpa b .ic { color: var(--mc); }
+.fmz.fpm small .ic { width: 12px; height: 12px; }
+/* Neues Menü: Tagesleiste, 4 Mahlzeiten + ganzer Tag zum Wählen, Teile als Zeile, Name + Speichern */
+.tpnd { margin: 0 0 8px; }
+.tpnr { margin-bottom: 6px; }
+.fmc.tpnm[aria-pressed="true"], .tpnday[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--mc, var(--ink)); }
+.fmc.tpnm:disabled { opacity: .4; }
+.tpnday { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--r12); background: var(--s1); color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.tpnday .ic { width: 18px; height: 18px; color: var(--ink3); }
+.tpnday small { margin-left: auto; font: 600 11.5px/1 var(--f-mono); color: var(--ink3); }
+.tpnday:disabled { opacity: .4; }
+.tpnl { margin: 10px 2px 8px; font-size: 12.5px; line-height: 1.35; color: var(--ink2); }
 .seg.fdtb { margin: -4px 0 10px; padding: 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; }
 .seg.fdtb button { min-height: 38px; border-radius: 0; font-size: 14px; color: var(--ink3); }
 .seg.fdtb button[aria-pressed="true"] { background: transparent; color: var(--ink); box-shadow: inset 0 -2px 0 var(--ink); }
@@ -302,11 +309,7 @@
 .fcl.qsc button[aria-pressed="true"] { border-color: var(--cc); background: color-mix(in srgb, var(--cc) 16%, var(--s1)); }
 .fsbb.qss { margin: 10px 0; flex-wrap: wrap; overflow: visible; }
 /* Gericht nach rechts gewischt: bereit zum Eintragen */
-.fdcb.arm { box-shadow: inset 3px 0 0 var(--ac); }
 .btn.fpdup { flex: none; width: 58px; padding: 0; }
-.fdc .f100 { gap: 4px; }
-.fdc .f100 i { width: auto; font-size: 10px; }
-.fdc .f100 .ic { width: 11px; height: 11px; }
 /* Gegessen leer: Platzhalter je Mahlzeit als leicht vertieftes Fach (gefüllte Karten sind erhaben) – gleiche Form, Hauch der Mahlzeitfarbe, Symbol mittig; die Zeile bleibt gleich hoch */
 .fmc.fme {
   place-items: center; border-color: color-mix(in srgb, var(--mc) 22%, var(--line)); color: color-mix(in srgb, var(--mc) 70%, var(--ink3));
@@ -327,16 +330,6 @@
 .fdd.fut.pl b { color: var(--ink); }
 /* Mahlzeit planen (Fenster): Geplantes als Zeilen mit Entfernen, darunter Kacheln */
 /* Summe der Mahlzeit oben: kcal groß, Protein, Anzahl der Teile */
-.fplh { display: flex; align-items: baseline; gap: 12px; padding: 0 2px; }
-.fplh b { font-family: var(--f-display); font-size: 28px; font-weight: 900; line-height: 1; }
-.fplh b small, .fplh em small { margin-left: 3px; font-family: var(--f-mono); font-size: 11px; font-weight: 600; color: var(--ink3); }
-.fplh em { display: inline-flex; align-items: center; gap: 3px; font: 700 15px/1 var(--f-mono); font-style: normal; color: var(--nc); }
-.fplh em .ic { width: 15px; height: 15px; }
-.fplh > small { margin-left: auto; font-size: 12px; color: var(--ink3); }
-.fpl { display: grid; gap: 6px; }
-.fplr { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 8px; padding: 6px 6px 6px 8px; border: 1px solid color-mix(in srgb, var(--mc) 40%, var(--line)); border-radius: var(--r12); background: color-mix(in srgb, var(--mc) 7%, var(--s1)); }
-.fplr span { display: grid; min-width: 0; }
-.fplr span[data-ple] { cursor: pointer; }
 /* Vorlage speichern: eigene Zeile mit Stapel-Symbol (Vorlage = mehrere Teile, kein Gericht); offen = Name + Speichern; danach Bestätigung */
 .tpsv { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; width: 100%; padding: 9px 12px; border: 1px solid color-mix(in srgb, var(--ac) 45%, var(--line)); border-radius: var(--r12);
   background: color-mix(in srgb, var(--ac) 9%, var(--s1)); color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
@@ -350,19 +343,7 @@
 .tpsv.on .fnm { margin: 0; }
 .tpsv.on .btn { height: 46px; }
 .tpsv.on small { grid-column: 1 / -1; line-height: 1.35; }
-.tpsd { display: flex; align-items: center; gap: 8px; margin: 0; padding: 10px 12px; border-radius: var(--r12); background: color-mix(in srgb, var(--ac) 14%, var(--s1)); font-size: 13px; color: var(--ink); animation: fade .25s var(--ease); }
-.tpsd .ic { flex: none; width: 18px; height: 18px; color: var(--ac); }
 /* Tag als Vorlage: je Mahlzeit eine Zeile (Symbol in der Mahlzeitfarbe, Namen, kcal) */
-.tpdl { display: grid; gap: 4px; }
-.tpdl > div { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 8px 10px; border-radius: var(--r10); background: color-mix(in srgb, var(--mc) 9%, var(--s1)); font-size: 13px; }
-.tpdl .ic { width: 16px; height: 16px; color: var(--mc); }
-.tpdl span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.tpdl em { font: 600 12px/1 var(--f-mono); font-style: normal; color: var(--ink2); }
-.fplr b { overflow: hidden; font-size: 14px; white-space: nowrap; text-overflow: ellipsis; }
-.fplr small { font-size: 11px; color: var(--ink3); }
-.fplr em { font-family: var(--f-display); font-size: 20px; font-style: normal; font-weight: 900; }
-.fplr em i { margin-left: 3px; font-family: var(--f-mono); font-size: 10px; font-style: normal; font-weight: 600; color: var(--ink3); }
-.fplt { padding-top: 0; touch-action: auto; }
 /* „Wie gestern“ klein rechts in der Kopfzeile (die Linie steht davor) */
 /* Negativer Rand: der Knopf macht die Kopfzeile nicht höher (sonst springt sie) */
 .fcpy { order: 2; position: relative; display: inline-flex; align-items: center; gap: 4px; height: 22px; margin: -4px 0 -4px 8px; padding: 0 8px; border: 1px solid var(--line); border-radius: var(--r99);
@@ -607,16 +588,24 @@
 .shd button { min-height: 34px; padding: 0; border: 0; border-radius: 9px; background: transparent; color: var(--ink2); font: 700 11px/1 var(--f-mono); }
 .shd button[aria-pressed="true"] { background: color-mix(in srgb, var(--ac) 16%, transparent); color: var(--ink); }
 .shd button.end { background: var(--ink); color: var(--bg); }
-.shs { display: flex; align-items: center; gap: 18px; margin-top: 10px; padding: 0 2px 0 4px; }
-.shs span { display: grid; line-height: 1.05; }
-.shs b { font: 800 22px/1 var(--f-display); }
-.shs small { font-size: 11px; font-weight: 700; color: var(--ink3); }
-.shs .x { margin-left: auto; color: var(--ink2); }
-.shl { display: grid; gap: 6px; margin-top: 6px; }
+/* Kopf als Karte wie die Bilanz: offen · im Wagen, Preis, Fortschritt (abgehakt), Zeitraum-Pille + Teilen */
+.shk2 { display: grid; gap: 8px; padding: 12px 12px 10px; border: 1px solid var(--line); border-radius: var(--r14); background: var(--s1); box-shadow: var(--hs); }
+.shk2t { display: flex; align-items: baseline; gap: 8px; font-size: 13px; font-weight: 700; color: var(--ink2); }
+.shk2t > span > b { font: 900 26px/1 var(--f-display); color: var(--ink); }
+.shk2t small { font-size: 12px; color: var(--ink3); }
+.shk2e { margin-left: auto; font: 800 20px/1 var(--f-display); color: var(--ink); }
+.shk2b { display: block; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--ac) calc(var(--p) * 100%), var(--s3) 0); }
+.shk2r { display: flex; align-items: center; gap: 6px; }
+.shk2r .x { margin-left: auto; color: var(--ink2); }
+.shpp { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 10px; border: 1px solid var(--line); border-radius: var(--r99); background: var(--s2); color: var(--ink); font: 700 13px/1 var(--f-mono); cursor: pointer; }
+.shpp .ic { width: 15px; height: 15px; color: var(--ink3); }
+.shpp .ic:last-child { width: 12px; height: 12px; transform: rotate(90deg); transition: transform .2s var(--ease); }
+.shpp[aria-expanded="true"] .ic:last-child { transform: rotate(-90deg); }
+.shl { display: grid; gap: 4px; margin-top: 4px; }
 .shh { display: flex; align-items: center; gap: 6px; margin: 10px 0 0; font: 700 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); }
 .shh .ic { width: 15px; height: 15px; color: var(--cc, var(--ink3)); }
 .shh small { margin-left: auto; font-size: 11px; color: var(--ink3); }
-.shr { display: grid; grid-template-columns: 44px minmax(0, 1fr); border: 1px solid var(--line); border-left: 3px solid var(--cc, var(--line)); border-radius: var(--r12); background: var(--s1); box-shadow: var(--hs);
+.shr { display: grid; grid-template-columns: 40px minmax(0, 1fr); border: 1px solid var(--line); border-left: 3px solid var(--cc, var(--line)); border-radius: var(--r12); background: var(--s1); box-shadow: var(--hs);
   touch-action: pan-y; transition: transform .2s var(--ease), box-shadow .15s; }
 /* Wischen: Verlauf von der Seite, zu der gewischt wird (links rot = löschen, rechts blau = Zuhause), wird mit dem Weg kräftiger; ab der Schwelle Kante in der Farbe */
 .shr.drag { transition: none; }
@@ -631,20 +620,24 @@
 .shr.swr.arm { box-shadow: inset 3px 0 0 var(--swc), var(--hs); }
 .shr.gone { opacity: .55; box-shadow: none; }
 .shr.gone .shc::before { border-color: var(--g-cardio); }
-.shc { display: grid; place-items: center; min-height: 50px; padding: 0; border: 0; background: transparent; color: var(--on); }
+.shc { display: grid; place-items: center; min-height: 44px; padding: 0; border: 0; background: transparent; color: var(--on); }
 .shc::before { content: ""; grid-area: 1 / 1; width: 22px; height: 22px; border: 2px solid var(--ink3); border-radius: 50%; }
 .shc .ic { grid-area: 1 / 1; z-index: 1; width: 14px; height: 14px; }
 .shm { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 0 12px 0 0; border: 0; background: transparent; color: var(--ink); font: inherit; text-align: left; }
-.shm > span { display: grid; flex: 1; min-width: 0; line-height: 1.15; }
-.shm b { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
-.shm small { font-family: var(--f-mono); font-size: 11.5px; color: var(--ink2); }
-.shm em { flex: none; display: grid; justify-items: end; gap: 3px; font: 600 12px/1 var(--f-mono); font-style: normal; color: var(--ink3); }
-.shm em b { font-size: 12px; font-weight: 600; color: var(--ink2); }
-.shm em small { font-size: 10px; }
+.shm .fsc { flex: none; }
+.shm b { flex: 1; min-width: 0; overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.shm small { flex: none; max-width: 38%; overflow: hidden; font: 600 11.5px/1 var(--f-mono); color: var(--ink3); text-overflow: ellipsis; white-space: nowrap; }
+.shm em { flex: none; min-width: 38px; font: 700 12.5px/1 var(--f-mono); font-style: normal; color: var(--ink2); text-align: right; }
+/* Im Wagen / Zuhause: Kopf ist ein Knopf (auf/zu) */
+.shh.shf { width: 100%; margin-top: 12px; padding: 6px 0; border: 0; border-top: 1px solid var(--line); background: transparent; cursor: pointer; }
+.shh.shf .ic:last-child { width: 12px; height: 12px; transform: rotate(90deg); transition: transform .2s var(--ease); }
+.shh.shf[aria-expanded="true"] .ic:last-child { transform: rotate(-90deg); }
+.shh.shf small { margin-left: 4px; margin-right: auto; }
+.shbd { color: var(--ink); }
 .shmk { display: flex; flex: none; width: 30px; }
 .shmk i { display: grid; color: var(--mc); }
 .shrs { color: var(--ink3); }
-.shw { grid-column: 1 / -1; display: grid; gap: 2px; margin: 0 10px 10px 44px; padding-top: 6px; border-top: 1px solid var(--line); }
+.shw { grid-column: 1 / -1; display: grid; gap: 2px; margin: 0 10px 8px 40px; padding-top: 6px; border-top: 1px solid var(--line); }
 .shw p { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12.5px; color: var(--ink2); }
 .shw p .ic { flex: none; width: 14px; height: 14px; color: var(--mc); }
 .shw span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

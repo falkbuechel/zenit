@@ -172,7 +172,7 @@
   // Wischen: Vorschlag nach oben ziehen = sofort eintragen (Menge wie angezeigt), Eintrag nach unten ziehen = löschen (mit Rückgängig).
   // Waagerecht bleibt Scrollen der Reihe; ein Wischen löst kein Antippen aus
   var fsw = null, fswMoved = false;
-  document.addEventListener('pointerdown', function (ev) { var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm)'); fswMoved = false; fsw = el ? { el: el, x: ev.clientX, y: ev.clientY, dy: 0, add: el.classList.contains('fti') } : null; });
+  document.addEventListener('pointerdown', function (ev) { var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm):not(.fpa)'); fswMoved = false; fsw = el ? { el: el, x: ev.clientX, y: ev.clientY, dy: 0, add: el.classList.contains('fti') } : null; });
   document.addEventListener('pointermove', function (ev) {
     if (!fsw) return; var dx = ev.clientX - fsw.x, dy = ev.clientY - fsw.y;
     // Einträge: waagerecht = Reihe scrollen (Abbruch); Vorschläge dürfen auch schräg gezogen werden
@@ -243,9 +243,9 @@
     var g0 = fdg = { el: el, x: ev.clientX, y: ev.clientY, on: false, tg: null };
     g0.t = setTimeout(function () {
       if (fdg !== g0) return; g0.on = true; fdsw = null; buzz(8);
-      var r = el.getBoundingClientRect(), gh = el.cloneNode(true); gh.className = 'fdcb fdgh'; gh.removeAttribute('data-fpick'); gh.removeAttribute('data-fdsw');
+      var r = el.getBoundingClientRect(), gh = el.cloneNode(true); gh.className = el.className + ' fdgh'; gh.removeAttribute('data-fpick'); gh.removeAttribute('data-fdsw');
       // Farbe der Karte (Hauptzutat) roh übernehmen (z. B. „var(--g-pull)“), damit das Glas getönt ist
-      gh.style.cssText = 'left:' + r.left + 'px;top:' + r.top + 'px;width:' + r.width + 'px;height:' + r.height + 'px;--dc:' + (el.parentNode.style.getPropertyValue('--dc') || 'var(--ac)');
+      gh.style.cssText = 'left:' + r.left + 'px;top:' + r.top + 'px;width:' + r.width + 'px;height:' + r.height + 'px;--dc:' + (getComputedStyle(el).getPropertyValue('--mc').trim() || 'var(--ac)');
       document.body.appendChild(gh); g0.gh = gh; $('sheet').classList.add('peek'); $('shade').classList.add('peek');
     }, 170);
   });
@@ -274,7 +274,7 @@
   var fsT = null;
   // iOS: beim Ziehen nicht scrollen. Kacheln (Essen-Vorschläge, Planen-Kacheln) in jede Richtung, Einträge nur senkrecht
   document.addEventListener('touchstart', function (ev) {
-    var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm)' + (ui.sheet ? '' : ', .ptv[data-ptd]'));
+    var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm):not(.fpa)' + (ui.sheet ? '' : ', .ptv[data-ptd]'));
     fsT = el ? { x: ev.touches[0].clientX, y: ev.touches[0].clientY, v: null, tile: !el.classList.contains('fcpi') } : null;
   }, { passive: true });
   document.addEventListener('touchmove', function (ev) {

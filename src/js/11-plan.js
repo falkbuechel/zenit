@@ -187,60 +187,22 @@
     if (!sc.length && !off) c += '<div class="pdb rest"><div class="pdb-h"><span class="pdi">' + ic('snow') + '</span><span class="nm"><b>Frei</b><small>' + (kd === 'skip' ? 'Training ausgesetzt' : sd >= today ? 'Erholung' : 'Kein Training geplant') + '</small></span></div></div>';
     var extra = st ? Object.keys(st.ex).filter(function (id) { return !shown[id]; }) : [];
     if (extra.length) c += '<p class="agp">Außerdem: ' + extra.map(function (id) { return esc(EXB[id].n); }).join(' · ') + '</p>';
-    // Essen des Tags als eine Zeile: kcal (gegessen + geplant) und Protein, darunter EIN Balken (gegessen voll, geplant schraffiert)
-    var es = foodSum(sd), ps = planSum(sd), eg = foodGoal(sd), nowH = new Date().getHours() + new Date().getMinutes() / 60;
-    var kv = es.k + ps.k, pv0 = es.p + ps.p, kq = kv / (eg.k || 1);
-    c += '<div class="pfs"><div class="pfr2' + (kq > FLIM.k ? ' over' : kq >= 0.9 ? ' hit' : '') + '" style="--fc:var(' + NCOL.k + ')"><span><b>' + Math.round(kv) + '</b><small>/ ' + eg.k + ' kcal</small>' +
-      '<em style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + Math.round(pv0) + '<small>/' + eg.p + '</small></em></span>' +
-      '<i class="fbt"><i style="--p:' + Math.min(1, es.k / (eg.k || 1)).toFixed(3) + '"></i>' + fGh(es.k / (eg.k || 1), ps.k / (eg.k || 1)) + '</i></div></div>';
-    h += '<section class="pday dkc rise' + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
-    // Überschrift des Tags (wie „Freitag · Heute“ in Essen): Rückgängig, bis heute „In Essen öffnen“, Workout dazu, Tag ändern (Urlaub, Krank, Tauschen, Aussetzen …)
+    h +='<section class="pday dkc rise' + (ui.pfl === sd ? ' fl' : '') + (ui.pdx ? ' in-d' : '') + '" style="--i:2">' + c + '</section>';
+    // Überschrift des Tags (wie „Freitag · Heute“ in Essen): Rückgängig, Workout dazu, Tag ändern (Urlaub, Krank, Tauschen, Aussetzen …). Essen planen liegt in Essen
     var evS = off || fd.s || fd.w !== undefined || fd.r || fd.a, canX = sd >= today && !off && P.days.some(function (x) { return !sc.some(function (y) { return y.id === x.id; }); });
     h += '<section class="pdm2 rise' + (ui.pdx ? ' in-d' : '') + '" style="--i:3"><h2 class="sec-h">' + esc(dayHead(sd)) + '<span class="pdhk">' +
       (ui.undo && ui.undo.charAt(0) === '#' ? '<button class="x" data-undo="1" aria-label="Rückgängig">' + ic('undo') + '</button>' : '') +
-      (sd <= today ? '<button class="x" data-pfo="' + sd + '" aria-label="In Essen öffnen">' + ic('open') + '</button>' : '') +
       (canX ? '<button class="x" data-padd="1" aria-label="Workout an diesem Tag">' + ic('plus') + '</button>' : '') +
-      '<button class="x pc2-ev' + (evS ? ' on' : '') + '" data-pdedit="1" aria-label="Tag ändern: Urlaub, Krank, Tauschen, Aussetzen">' + ic('calev') + '</button></span></h2><div class="pml">' + MEALS.map(function (m) {
-      var ei = es.items.filter(function (o) { return mealOfE(o.x)[1] === m[1]; }), pi = ps.items.filter(function (o) { return o.x.mk === m[1]; }), kc = Math.round(ei.concat(pi).reduce(function (a, o) { return a + (o.x.k || 0); }, 0));
-      // Kachel wie in Essen (fMealCard): Symbol und Anzahl (gegessen + geplant), kcal groß, Kategorien als Kreise; leer: nur das Symbol.
-      // Planbar nur, was noch kommt: künftige Tage ganz, heute nur Mahlzeiten, deren Zeit noch nicht vorbei ist (antippen = planen, Kachel hineinziehen)
-      var canP = sd > today || (sd === today && nowH < m[0]), cls = ei.length ? '' : pi.length ? ' fpm' : ' fme', al = ei.concat(pi);
-      return '<button class="fmc m-' + m[1] + cls + '"' + (canP ? ' data-pml="' + m[1] + '"' : ' disabled') + ' aria-label="' + m[2] + (canP ? ' planen' : '') + '">' +
-        (al.length ? '<span class="fmt">' + ic(MEALI[m[1]]) + '<small>×' + al.length + '</small></span><b>' + kc + '<em>kcal</em></b><span class="fcs">' + fCats({ l: al }).slice(0, 3).map(function (q) { return '<i>' + ic(CATI[q.c][0]) + '</i>'; }).join('') + '</span>' : ic(MEALI[m[1]])) + '</button>';
-    }).join('') + '</div></section>';
+      '<button class="x pc2-ev' + (evS ? ' on' : '') + '" data-pdedit="1" aria-label="Tag ändern: Urlaub, Krank, Tauschen, Aussetzen">' + ic('calev') + '</button></span></h2></section>';
     ui.pfl = null; ui.pdx = false;
 
-    // Ablage wie unter der Suche in Essen: Reiter Workouts | Essen | Gerichte | Vorlagen, Einkauf als Knopf daneben.
-    // Workouts: antippen = bearbeiten (Wochentage, Rhythmus, Übungen), hochziehen auf Kalendertag oder Tageskarte = nur an diesem Datum.
-    // Essen/Gerichte: hochziehen auf eine Mahlzeit = dort einplanen, antippen = Menge wählen. Vorlagen: Mahlzeiten (auf eine Mahlzeit) und Tage (auf die Tageskarte)
-    var pg = ui.pgt || 'w', tl = '', wrap = 'ftl', st0 = foodState(), cb = '';
-    var tg0 = '<div class="pgtw"><div class="seg pgt">' + [['w', 'Workouts'], ['e', 'Essen'], ['g', 'Gerichte'], ['v', 'Vorlagen']].map(function (x) {
-      return '<button data-pgt="' + x[0] + '" aria-pressed="' + (pg === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div><button class="fdsb" data-pgt="s" aria-pressed="' + (pg === 's') + '" aria-label="Einkauf">' + ic('cart') + '</button></div>';
-    if (pg === 'w') {
-      wrap = 'ftl ptl2';
-      tl = P.days.map(function (x) {
-        var n = x.ex.filter(function (id) { return d.unlocked[id]; }).length;
-        return '<button class="ptv" data-pedit="' + x.id + '" data-ptd="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')" aria-label="' + esc(x.n) + ' bearbeiten, hochziehen auf einen Tag = zusätzlich"><i class="ptvi">' + ic(dIcon(x)) + '</i>' +
-          '<b class="' + fitCls(x.n, 8) + '">' + esc(x.n) + '</b><small>' + n + (dur[x.id] ? ' · ' + dur[x.id] + '′' : ' Üb.') + '</small></button>';
-      }).join('') + (P.days.length < 8 ? '<button class="fti tplnew" data-pnew="1" aria-label="Neues Workout">' + ic('plus') + '<small>Neues<br>Workout</small></button>' : '');
-    } else if (pg === 's') { tl = shopHtml(); wrap = 'pshp'; }
-    else if (sd < today) tl = '<p class="muted tplh">' + ic('food') + 'Vergangene Tage in Essen eintragen.</p>';
-    else if (pg === 'e') {
-      // Essen: Kategorie-Leiste wie in der Suche (Häufig, dann FCATS, Eigene), darunter alle Lebensmittel der Kategorie in ihrer üblichen Menge (Einheit)
-      var fc = ui.pfc || 'h';
-      cb = '<div class="pfcb" data-noswipe="1" data-kx="pfc">' + [['h', 'Häufig']].concat(FCATS.map(function (c) { return [c[0], c[1]]; }), st0.o.length ? [['u', 'Eigene']] : []).map(function (c) {
-        return '<button data-pfc="' + c[0] + '" aria-pressed="' + (fc === c[0]) + '" style="--cc:' + (c[0] === 'h' ? 'var(--ac)' : CCOL[c[0]] || CCOL.x) + '">' + ic(c[0] === 'h' ? 'star' : (CATI[c[0]] || CATI.x)[0]) + c[1] + '</button>'; }).join('') + '</div>';
-      var its = fc === 'h' ? fTiles().filter(function (x) { return !/^d/.test(x.i); }) : st0.o.concat(FOODS).filter(function (x) { return (fc === 'u' ? /^u/.test(x.id) && !x.cat : x.cat === fc) && !x.vh; })
-        .map(function (x) { var cu = fUnit(x); return { i: x.id, g: cu ? cu[1] : x.d || (x.u && x.u[0] ? x.u[0][1] : x.ml ? 250 : 100) }; });
-      // Häufig: Symbol = Herkunft (zuletzt, häufig, zur Uhrzeit) wie in Essen, in einer Kategorie = Art des Lebensmittels
-      tl = its.map(function (x) { return fTile({ i: x.i, g: x.g, q: x.q }, 'data-pfd="' + x.i + '|' + x.g + '"'); }).join('');
-    } else if (pg === 'g') {
-      // Gerichte wie im Gerichte-Menü (Karten), nur einplanen; anlegen und bearbeiten in Essen
-      var lt = {}; st0.e.forEach(function (x) { if (x.r && /^d/.test(x.r.i)) lt[x.r.i] = Math.max(lt[x.r.i] || 0, x.t); }); wrap = 'fdg';
-      tl = st0.d.slice().sort(function (x, y) { return (lt[y.id] || 0) - (lt[x.id] || 0); }).map(function (x) { return fDishCard(x, 'data-pfd="' + x.id + '|1"'); }).join('') ||
-        '<p class="muted tplh">' + ic('pot') + 'Noch keine Gerichte. Anlegen in Essen › Gerichte.</p>';
-    } else tl = tplTiles(sd);
-    h += '<section class="pwks rise" style="--i:4">' + tg0 + cb + '<div class="' + wrap + '" data-noswipe="1">' + tl + '</div></section>';
+    // Ablage: Workouts. Antippen = bearbeiten (Wochentage, Rhythmus, Übungen), hochziehen auf Kalendertag oder Tageskarte = nur an diesem Datum
+    var tl = P.days.map(function (x) {
+      var n = x.ex.filter(function (id) { return d.unlocked[id]; }).length;
+      return '<button class="ptv" data-pedit="' + x.id + '" data-ptd="' + x.id + '" style="--pc:var(' + PCOL[x.c] + ')" aria-label="' + esc(x.n) + ' bearbeiten, hochziehen auf einen Tag = zusätzlich"><i class="ptvi">' + ic(dIcon(x)) + '</i>' +
+        '<b class="' + fitCls(x.n, 8) + '">' + esc(x.n) + '</b><small>' + n + (dur[x.id] ? ' · ' + dur[x.id] + '′' : ' Üb.') + '</small></button>';
+    }).join('') + (P.days.length < 8 ? '<button class="fti tplnew" data-pnew="1" aria-label="Neues Workout">' + ic('plus') + '<small>Neues<br>Workout</small></button>' : '');
+    h += '<section class="pwks rise" style="--i:4"><div class="ftl ptl2" data-noswipe="1">' + tl + '</div></section>';
 
     return h;
   }
@@ -344,14 +306,12 @@
       '<input id="pe-q" class="pe-q" type="search" placeholder="Suchen" value="' + esc(ui.pq) + '" aria-label="Übung suchen"><div id="pe-list">' + peList(d, day) + '</div></section>';
     return h;
   }
-  // Planen: Kachel hochziehen wie in Essen (gläsern). Trainingstag → Kalendertag (ab heute, nicht im Urlaub) oder Tageskarte = dort zusätzlich;
-  // Gericht/Lebensmittel → Mahlzeit des Tags = dort einplanen. Ziel = nächstes im Umkreis von 40 px, es leuchtet
+  // Planen: Workout-Kachel hochziehen wie in Essen (gläsern) auf einen Kalendertag (ab heute, nicht im Urlaub) oder die Tageskarte = dort zusätzlich.
+  // Ziel = nächstes im Umkreis von 48 px, es leuchtet
   var pdg = null;
   document.addEventListener('pointerdown', function (ev) {
-    var el = ui.tab === 'tage' && !ui.sheet && !ui.tpdel && ev.target.closest && ev.target.closest('.ptv[data-ptd], .fti[data-pfd], .fdcb[data-pfd], .fti[data-ptp]');
-    // Vorlage: Mahlzeit-Vorlage zielt wie ein Gericht auf Mahlzeiten (food), Tages-Vorlage auf die Tageskarte (dtp)
-    var tpo = el && el.dataset.ptp ? foodState().tp.filter(function (x) { return x.id === el.dataset.ptp; })[0] : null;
-    pdg = el ? { el: el, x: ev.clientX, y: ev.clientY, on: false, tg: null, food: !!el.dataset.pfd || !!(tpo && tpo.k === 'm'), dtp: !!(tpo && tpo.k === 'd'), tpo: tpo } : null;
+    var el = ui.tab === 'tage' && !ui.sheet && ev.target.closest && ev.target.closest('.ptv[data-ptd]');
+    pdg = el ? { el: el, x: ev.clientX, y: ev.clientY, on: false, tg: null } : null;
   });
   document.addEventListener('pointermove', function (ev) {
     if (!pdg) return; var dx = ev.clientX - pdg.x, dy = ev.clientY - pdg.y;
@@ -359,13 +319,12 @@
     if (!pdg.on) { if (Math.sqrt(dx * dx + dy * dy) < 8) return; if (dy > 4) { pdg = null; return; } pdg.on = true; pdg.el.classList.add('glass'); pdg.el.style.pointerEvents = 'none'; }
     pdg.el.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
     var today = dayIdx(Date.now()), best = 48, tg = null;
-    // Tages-Vorlage hat nur die Tageskarte als Ziel (Rückfall unten), daher hier keine Kandidaten
-    (pdg.dtp ? [] : document.querySelectorAll(pdg.food ? '.pdm2 .pml .fmc[data-pml]' : '.pc2[data-cday]')).forEach(function (e) {
-      if (e.dataset.cday && (+e.dataset.cday < today || offAt(+e.dataset.cday))) return;
+    document.querySelectorAll('.pc2[data-cday]').forEach(function (e) {
+      if (+e.dataset.cday < today || offAt(+e.dataset.cday)) return;
       var r = e.getBoundingClientRect(), ax = Math.max(r.left - ev.clientX, 0, ev.clientX - r.right), ay = Math.max(r.top - ev.clientY, 0, ev.clientY - r.bottom), dd = Math.sqrt(ax * ax + ay * ay);
       if (dd < best) { best = dd; tg = e; }
     });
-    if (!tg && !pdg.food) { var pd = document.querySelector('.pday'), r2 = pd && pd.getBoundingClientRect(); if (r2 && ev.clientY > r2.top && ev.clientY < r2.bottom && pDaySel() >= today && !offAt(pDaySel())) tg = pd; }
+    if (!tg) { var pd = document.querySelector('.pday'), r2 = pd && pd.getBoundingClientRect(); if (r2 && ev.clientY > r2.top && ev.clientY < r2.bottom && pDaySel() >= today && !offAt(pDaySel())) tg = pd; }
     if (tg !== pdg.tg) { if (pdg.tg) pdg.tg.classList.remove('drop'); if (tg) { tg.classList.add('drop'); buzz(4); } pdg.tg = tg; }
     pdg.el.classList.toggle('arm', !!tg);
   });
@@ -374,8 +333,6 @@
     ui.pnoclick = Date.now(); p.el.style.pointerEvents = ''; p.el.classList.remove('glass', 'arm'); if (p.tg) p.tg.classList.remove('drop');
     // Abgebrochene Geste (iOS-Systemgeste, Anruf): nur zurück, nie eintragen
     if (ev && ev.type === 'pointercancel') p.tg = null;
-    if (p.tg && p.tpo) { tplAdd(p.tpo, pDaySel(), p.tg.dataset.pml); return; }
-    if (p.tg && p.food) { var q = p.el.dataset.pfd.split('|'); planFood(q[0], +q[1], pDaySel(), p.tg.dataset.pml); return; }
     if (p.tg) { planExtra(p.el.dataset.ptd, p.tg.dataset.cday != null ? +p.tg.dataset.cday : pDaySel()); return; }
     p.el.style.transition = 'transform .22s var(--ease)'; p.el.style.transform = '';
     setTimeout(function () { p.el.style.transition = ''; }, 230);
@@ -390,14 +347,6 @@
     delete fx.s; fx.a = (fx.a || []).concat([id]); ovSetF(di, fx); ui.pd = di; ui.pfl = di;
     persist(); ui.fresh = false; render(); buzz([10, 30, 10]); toast(pa.n + ' zusätzlich · ' + fmtShort(di), 'plus');
   }
-  function planFood(id, g, di, mk) {
-    // Lebensmittel/Gericht in eine Mahlzeit eines Tags einplanen (food.pl), ohne Fenster
-    var it = fItem(id); if (!it || !(g > 0)) return;
-    var v = fNut(it, g), x = { d: di, mk: mk, n: fEn(it).slice(0, 30) };
-    NK.forEach(function (k) { if (v[k] != null) x[k] = k === 'k' ? Math.round(v.k) : Math.round(v[k] * 10) / 10; });
-    x.r = { i: id, g: Math.round(g * 100) / 100 }; fUndo(); foodState().pl.push(x);
-    persist(); ui.fresh = false; render(); buzz([10, 30, 10]); toast('Geplant · ' + MEALS.filter(function (m) { return m[1] === mk; })[0][2], 'cal', true);
-  }
   function mealFor(id) {
     // Übliche Mahlzeit eines Lebensmittels/Gerichts: feste Mahlzeit des Gerichts, sonst die häufigste im Verlauf, sonst nach der Uhrzeit
     var dd = /^d/.test(id) && fDish(id); if (dd && dishMeals(dd).length) return dishMeals(dd)[0];
@@ -407,18 +356,6 @@
   function calClick(t) {
     var el, today = dayIdx(Date.now());
     if (ui.pnoclick && Date.now() - ui.pnoclick < 350 && t.closest('.ptv, .fti')) return true;
-    // Kachel antippen = Menge wählen (wie in Essen), hochziehen = sofort einplanen
-    if ((el = t.closest('[data-pfd]'))) { var pq = el.dataset.pfd.split('|'); openPick(pq[0], +pq[1]); ui.fplan = { d: pDaySel(), mk: mealFor(pq[0]), pg: 1 }; ui.fday = dayIdx(Date.now()) - pDaySel(); ui.plEdit = null; fpPaint(); return true; }
-    if ((el = t.closest('[data-pfc]'))) { ui.pfc = el.dataset.pfc; ui.fresh = false; render(); buzz(4); return true; }
-    if ((el = t.closest('[data-pgt]'))) { ui.pgt = el.dataset.pgt; ui.tpdel = false; ui.fresh = false; render(); buzz(4); return true; }
-    if ((el = t.closest('[data-ptp]'))) {
-      var tp0 = foodState().tp, tpi = tp0.map(function (x) { return x.id; }).indexOf(el.dataset.ptp); if (tpi < 0) return true;
-      if (ui.tpdel) { tp0.splice(tpi, 1); if (!tp0.length) ui.tpdel = false; persist(); ui.fresh = false; render(); buzz(8); return true; }
-      tplAdd(tp0[tpi], pDaySel()); return true;
-    }
-    if (t.closest('[data-ptpd]')) { openTplDay(pDaySel()); return true; }
-    if (t.closest('[data-ptpms]')) { var pm0 = planSum(pDaySel()).items.filter(function (o) { return o.x.r; })[0]; if (pm0) { ui.tpnm = true; ui.tpok = ''; openPlanMeal(pDaySel(), pm0.x.mk, true); } return true; }
-    if (t.closest('[data-ptpx]')) { ui.tpdel = !ui.tpdel; ui.fresh = false; render(); buzz(4); return true; }
     if ((el = t.closest('[data-cday]'))) {
       var cd = +el.dataset.cday, s0 = ui.pd == null ? today : ui.pd;
       if (ui.pmode === 'swap') {
@@ -435,7 +372,6 @@
     if (t.closest('[data-cmode]')) { calMon(((ui.cm || 0) + 1) % 3); return true; }
     if (t.closest('[data-pdedit]')) { ui.pmode = null; ui.sheet = { pday: true }; sheetOpen(pdayHtml()); return true; }
     if (t.closest('[data-pnts]')) { openNts(); return true; }
-    if ((el = t.closest('[data-pfo]'))) { ui.fsd = +el.dataset.pfo; goTab('food'); return true; }
     if (t.closest('[data-pnew]')) {
       // Neues Workout: leer (Eigener Tag) zuerst, dann die Vorlagen
       var pl0 = PRESETS.length - 1, po = [pl0].concat(PRESETS.slice(0, pl0).map(function (x, j) { return j; }));

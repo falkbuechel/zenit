@@ -2,8 +2,9 @@
     if (ui.fplan && editIdx == null) {
       // Planen: als geplanter Eintrag (Tag, Mahlzeit) speichern, zurück zur Mahlzeit (aus einer Kachel unter der Tageskarte: Fenster zu, wie in Essen)
       // Geplanten Eintrag ändern (ui.plEdit = Index in food.pl) oder neu einplanen
-      var fp = ui.fplan, pe = ui.plEdit, pl = foodState().pl; fUndo(); x.d = fp.d; x.mk = fp.mk; if (pe != null && pl[pe]) pl[pe] = x; else pl.push(x);
-      persist(); ui.fresh = false; render(); toast((pe != null ? 'Geändert · ' : 'Geplant · ') + Math.round(x.k) + ' kcal · ' + MEALS.filter(function (m) { return m[1] === fp.mk; })[0][2], 'cal', true); if (fp.pg) closeSheet(true); else openPlanMeal(fp.d, fp.mk); return;
+      // Ohne feste Mahlzeit (Essen, künftiger Tag): die, auf die abgelegt wurde, sonst die übliche
+      var fp = ui.fplan, pe = ui.plEdit, pl = foodState().pl; fUndo(); x.d = fp.d; x.mk = fp.mk || ui.fdmk || mealFor(x.r ? x.r.i : ''); ui.fdmk = null; ui.fday = 0; if (pe != null && pl[pe]) pl[pe] = x; else pl.push(x);
+      persist(); ui.fresh = false; render(); toast((pe != null ? 'Geändert · ' : 'Geplant · ') + Math.round(x.k) + ' kcal · ' + MEALS.filter(function (m) { return m[1] === x.mk; })[0][2], 'cal', true); if (fp.pg) closeSheet(true); else openPlanMeal(fp.d, fp.mk); return;
     }
     var st = foodState(), today = dayIdx(Date.now()), before = foodSum(today).p, goal = foodGoal(today).p;
     // Uhrzeit aus dem Fenster (falls vorhanden) auf den Tag des Eintrags setzen
@@ -148,8 +149,12 @@
     var days = [1, 2, 3, 4, 5, 6, 7].map(function (k) { return [k, k === 1 ? 'Heute' : WDN[wdOf(t + k - 1)].slice(0, 2)]; }).concat([[14, '2 Wo']]);
     return '<div class="shd" role="group" aria-label="Zeitraum">' + days.map(function (x) { var on = x[0] === 14 ? n === 14 : n < 14 && x[0] <= n; return '<button data-shn="' + x[0] + '" aria-pressed="' + on + '"' + (n === x[0] ? ' class="end"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div>' +
       (l.length ? '<div class="shs"><span><b>' + open.length + '</b><small>offen</small></span><span><b>≈ ' + eur(sum) + '</b><small>Richtwert</small></span><button class="x" data-shsh="1" aria-label="Liste teilen">' + ic('share') + '</button></div>' : '') +
-      '<div class="shl" data-noswipe="1">' + (h || '<p class="muted">Nichts geplant. In Planen › Essen Mahlzeiten einplanen.</p>') + '</div>';
+      '<div class="shl" data-noswipe="1">' + (h || '<p class="muted">Nichts geplant. Einen künftigen Tag oben wählen und einplanen.</p>') + '</div>';
   }
+  function shopSheet() { return shHead('cart', 'Einkauf', 'Aus dem Geplanten') + '<div class="pshp">' + shopHtml() + '</div>'; }
+  // Vorlagen gelten für den gewählten Tag, vergangene Tage planen heute
+  function fTplDay() { return Math.max(fSd(), dayIdx(Date.now())); }
+  function openTpl() { var di = fTplDay(); ui.sheet = { ftpl: true }; sheetOpen(shHead('cards', 'Vorlagen', dayHead(di)) + '<div class="ftl">' + tplTiles(di) + '</div>', true); }
   // Einkaufszeile nach links wischen (ab 90 px) = „habe ich noch“ → Abschnitt Zuhause; senkrecht bleibt Scrollen
   var shSw = false, shP = null;
   document.addEventListener('pointerdown', function (ev) { var r = ev.target.closest && ev.target.closest('.shr[data-shrow]'); shP = r ? { r: r, x: ev.clientX, y: ev.clientY, dx: 0, on: false } : null; });
@@ -214,7 +219,19 @@
       readDraft(); var dm = ui.dd.m || [], on = dm.indexOf(el.dataset.ddm) < 0;
       ui.dd.m = MEALS.map(function (m) { return m[1]; }).filter(function (k) { return k === el.dataset.ddm ? on : dm.indexOf(k) >= 0; }); el.setAttribute('aria-pressed', String(on)); buzz(4); return true;
     }
-    if ((el = t.closest('[data-pml]'))) { var pd0 = ui.pd == null ? dayIdx(Date.now()) : ui.pd; openPlanMeal(pd0, el.dataset.pml); return true; }
+    if ((el = t.closest('[data-pml]'))) { if (fswMoved) { fswMoved = false; return true; } openPlanMeal(fSd(), el.dataset.pml); return true; }
+    if (t.closest('[data-fdx]')) { fdxSet(!ui.fdx); return true; }
+    if (t.closest('[data-ftpl]')) { openTpl(); return true; }
+    if (t.closest('[data-fshop]')) { ui.sheet = { fshop: true }; sheetOpen(shopSheet(), true); return true; }
+    // Vorlagen-Fenster: antippen = einplanen (Fenster zu), im Löschmodus löschen; „Tag/Mahlzeit speichern“ aus dem Geplanten des Tags
+    if ((el = t.closest('[data-ptp]'))) {
+      var tp0 = st.tp, tpi = tp0.map(function (x) { return x.id; }).indexOf(el.dataset.ptp); if (tpi < 0) return true;
+      if (ui.tpdel) { tp0.splice(tpi, 1); if (!tp0.length) ui.tpdel = false; persist(); openTpl(); buzz(8); return true; }
+      closeSheet(true); tplAdd(tp0[tpi], fTplDay()); return true;
+    }
+    if (t.closest('[data-ptpd]')) { openTplDay(fTplDay()); return true; }
+    if (t.closest('[data-ptpms]')) { var pm0 = planSum(fTplDay()).items.filter(function (o) { return o.x.r; })[0]; if (pm0) { ui.tpnm = true; ui.tpok = ''; openPlanMeal(fTplDay(), pm0.x.mk, true); } return true; }
+    if (t.closest('[data-ptpx]')) { ui.tpdel = !ui.tpdel; openTpl(); buzz(4); return true; }
     if ((el = t.closest('[data-pla]'))) { var pa = el.dataset.pla.split('|'); buzz(8); foodRef(pa[0], +pa[1]); return true; }
     if ((el = t.closest('[data-plx]'))) { fUndo(); foodState().pl.splice(+el.dataset.plx, 1); persist(); ui.fresh = false; render(); openPlanMeal(ui.fplan.d, ui.fplan.mk); buzz(6); return true; }
     if ((el = t.closest('[data-shn]'))) { ui.shn = +el.dataset.shn; render(); buzz(4); return true; }

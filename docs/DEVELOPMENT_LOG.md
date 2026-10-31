@@ -14,6 +14,14 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Vorschau: `tools/serve.py` (Port 8000) startet VS Code; nie aus Claudes Sitzung starten. App NICHT vom Homescreen löschen (Daten weg).
 - Nicht committet: nur dieses Log.
 
+## 2026-10-31 Essen planen wandert nach Essen, Planen nur noch Training
+- Entscheidung (Falk): nach Bereich trennen statt nach Zeit. Essen plant künftige Tage selbst, Planen wird später zum Training-Tab im Essen-Aufbau; Heute bleibt der einzige Ort mit beidem.
+- Tagesleiste: Woche Mo–So (`fWk`, `fPg` in Wochen), Griff `.fdgx`/`data-fdx` oder runterziehen klappt die nächste Woche auf (`ui.fdx`, `fdxSet`), hochziehen zu.
+- Künftiger Tag: Suche („Einplanen …“), Kacheln (antippen, hochziehen auf Mahlzeit), Gerichte, Scan planen über `fBack()` → `ui.fplan {d, mk: null, pg: 1}`; `foodPush` nimmt Mahlzeit aus `ui.fdmk`, sonst `mealFor`. Mahlzeit antippen = Fenster „… planen“ (`data-pml`, ändern/entfernen/als Vorlage).
+- Neben Gerichte: Vorlagen (`data-ftpl`, `openTpl`, Tag = `fTplDay`) und Einkauf (`data-fshop`, `shopSheet`, `render` füllt das offene Fenster neu) als Fenster.
+- Planen: Essen-Reiter, Mahlzeiten, kcal-Zeile, „In Essen öffnen“, Ziehen von Essen/Vorlagen entfernt (`planFood`, `data-pfd/pfc/pgt/pfo`, CSS `.pml .pfs .pfr2 .pgtw .pgt .pfcb`). Ablage = nur Workouts.
+- Offen: heute für später planen (heute ist nur Eintragen; Geplantes von heute nur über einen künftigen Tag vorher); Vorlagen-Funktionen liegen noch in 11-plan.js.
+
 ## 2026-10-31 Essen: künftige Tage in Essen ansehen statt Sprung nach Planen
 - Tagesleiste: künftige Tage wählbar (`data-fsd`, `fSd` bis heute + 60), kein Link mehr nach Planen (`data-pgo` entfernt). Gewählter Tag wandert beim Wischen auch in die Zukunft mit.
 - Künftiger Tag nur Ansicht: Bilanz mit Geplantem als Schatten (`fExp` = 0), Mahlzeiten geplant ohne Antippen; kein Wasser, keine Suche/Kacheln, kein „Wie gestern“. Eintragen nur in Planen.

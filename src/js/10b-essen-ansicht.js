@@ -107,21 +107,23 @@
     // Erwarteter Anteil des Tagesziels: vergangene Tage 1, heute von 8 bis 20 Uhr linear 0 → 1
     var t = dayIdx(Date.now()); if (di < t) return 1; if (di > t) return 0; var n = new Date(); return Math.max(0, Math.min(1, (n.getHours() + n.getMinutes() / 60 - 8) / 12));
   }
-  function fSd() { var t = dayIdx(Date.now()); return ui.fsd != null && ui.fsd <= t + 60 && ui.fsd > t - 366 ? ui.fsd : t; }
-  // Tage zurück für neue Einträge: künftige Tage sind nur Ansicht, eingetragen wird dann heute
-  function fBack() { return Math.max(0, dayIdx(Date.now()) - fSd()); }
+  function fSd() { var t = dayIdx(Date.now()); return ui.fsd != null && ui.fsd <= t + 70 && ui.fsd > t - 366 ? ui.fsd : t; }
+  // Tage zurück für neue Einträge (ui.fday). An künftigen Tagen wird stattdessen eingeplant: ui.fplan ohne Mahlzeit (die kommt aus dem Ablegen, sonst mealFor)
+  function fBack() { var t = dayIdx(Date.now()), sd = fSd(); if (sd > t && !ui.fplan) ui.fplan = { d: sd, mk: null, pg: 1 }; return t - sd; }
   function fMon(di) { var q = new Date(di * 864e5); return q.toLocaleDateString('de-DE', q.getUTCFullYear() === new Date().getFullYear() ? { month: 'long', timeZone: 'UTC' } : { month: 'long', year: 'numeric', timeZone: 'UTC' }); }
-  // Seite der Tagesleiste: 0 = heute in der Mitte, positiv = Wochen zurück, negativ = Wochen voraus (ui.fpg, sonst aus dem gewählten Tag)
-  function fPg() { var t = dayIdx(Date.now()); return ui.fpg != null ? ui.fpg : Math.floor((t - fSd() + 3) / 7); }
+  // Seite der Tagesleiste in Wochen Mo–So: 0 = diese Woche, positiv = zurück, negativ = voraus (ui.fpg, sonst die Woche des gewählten Tags)
+  function fWk(di) { return di - wdOf(di); }
+  function fPg() { var t = dayIdx(Date.now()), sd = fSd(); return ui.fpg != null ? ui.fpg : ui.fdx && sd > t ? 0 : (fWk(t) - fWk(sd)) / 7; }
   function fdsMove(dir) {
-    // Tagesleiste wischen: 7 Tage zurück/vor (ein Jahr zurück, 8 Wochen voraus; künftige Tage nur Ansicht); der gewählte Tag wandert mit.
-    // Neuer Monat wird kurz eingeblendet
-    var t = dayIdx(Date.now()), pg = fPg(), np = pg - dir, e0 = t + 3 - pg * 7, e1 = t + 3 - np * 7;
-    if (np < -8 || e1 - 6 <= t - 366) return false;
-    var a = dir < 0 ? e0 - 6 : e0, b = dir < 0 ? e1 - 6 : e1; if (fMon(a) !== fMon(b)) ui.fmon = fMon(b);
-    var s0 = fSd(); if (s0 < e1 - 6 || s0 > e1) ui.fsd = Math.max(e1 - 6, Math.min(e1, s0 + dir * 7));
+    // Tagesleiste wischen: eine Woche zurück/vor (ein Jahr zurück, 8 Wochen voraus); der gewählte Tag wandert mit. Neuer Monat wird kurz eingeblendet
+    var t = dayIdx(Date.now()), pg = fPg(), np = pg - dir, a = fWk(t) - pg * 7, b = fWk(t) - np * 7, e = b + (ui.fdx ? 13 : 6);
+    if (np < -8 || e <= t - 366) return false;
+    if (fMon(a) !== fMon(b)) ui.fmon = fMon(b);
+    var s0 = fSd(); if (s0 < b || s0 > e) ui.fsd = Math.max(b, Math.min(e, s0 + dir * 7));
     ui.fpg = np; ui.fdir = dir; ui.fresh = false; buzz(4); render(); return true;
   }
+  // Zweite Woche auf/zu (runterziehen an der Leiste oder Griff darunter)
+  function fdxSet(on) { ui.fdx = on; ui.fresh = false; buzz(4); render(); }
   function waGoal(di) { var kg = wAt(di) || 75; return Math.max(1500, Math.min(4000, Math.round(kg * 35 / 250) * 250)); }
   // Wasser-Regler im Fenster (Skala) in 50-ml-Schritten: Antippen/Ziehen setzt den Wert direkt, Loslassen speichert
   var wsl = null;
@@ -180,14 +182,15 @@
     ui.ftiles = tl;
     // Keine Überschrift (wie in Spielen ergibt sich der Bereich aus der unteren Leiste); Ziele/Rechner im Profil
     var h = '';
-    // Tagesleiste: 7 Tage, heute in der Mitte (wischen = 7 Tage zurück/vor). Dünner Ring um die Zahl = kcal vom Ziel (wie im Kalender, dayRing; grün = Protein
-    // fast erreicht und kcal im Rahmen, orange = deutlich zu wenig, rot = über 110 %), geplant kühl. Künftige Tage nur zur Ansicht (Geplantes, eintragen erst am Tag)
-    var ds = '', pe = today + 3 - fPg() * 7; for (var i = 6; i >= 0; i--) {
-      var di = pe - i, fu = di > today, sm = fu ? planSum(di) : foodSum(di);
+    // Tagesleiste: Woche Mo–So, aufgeklappt (ui.fdx) mit der Woche danach (wischen = Wochen zurück/vor). Dünner Ring um die Zahl = kcal vom Ziel (wie im Kalender, dayRing;
+    // grün = Protein fast erreicht und kcal im Rahmen, orange = deutlich zu wenig, rot = über 110 %), geplant kühl. Künftige Tage: einplanen statt eintragen
+    var ds = '', w0 = fWk(today) - fPg() * 7; for (var i = 0; i < (ui.fdx ? 14 : 7); i++) {
+      var di = w0 + i, fu = di > today, sm = fu ? planSum(di) : foodSum(di);
       var gc = di < today ? ' past' : di === today ? ' today' : ' fut';
       ds += '<button class="fdd' + (di === sd ? ' sel' : '') + gc + (fu && sm.items.length ? ' pl' : '') + '" data-fsd="' + di + '" aria-label="' + esc(fmtDayL(di)) + '"><small>' + WDN[wdOf(di)].slice(0, 2) + '</small><b>' + dayFood(di, today) + new Date(di * 864e5).getUTCDate() + '</b></button>';
     }
-    h += '<div class="fdw rise" style="--i:0">' + (ui.fmon ? '<b class="fmo">' + esc(ui.fmon) + '</b>' : '') + '<nav class="fds' + (ui.fdir ? (ui.fdir > 0 ? ' in-r' : ' in-l') : '') + '">' + ds + '</nav></div>';
+    h += '<div class="fdw rise" style="--i:0">' + (ui.fmon ? '<b class="fmo">' + esc(ui.fmon) + '</b>' : '') + '<nav class="fds' + (ui.fdir ? (ui.fdir > 0 ? ' in-r' : ' in-l') : '') + '">' + ds + '</nav>' +
+      '<button class="fdgx" data-fdx="1" aria-expanded="' + !!ui.fdx + '" aria-label="' + (ui.fdx ? 'Eine Woche zeigen' : 'Zwei Wochen zeigen') + '"><i></i></button></div>';
     ui.fmon = ''; ui.fdir = 0;
     // Bilanz: kcal groß mit Balken, darunter Protein, Fett, Kohlenhydrate, Ballaststoffe, Zucker
     h += '<section class="fbal dkc rise" style="--i:1;--fsd:-' + (Date.now() % 9000) + 'ms"><div class="fbk' + (kp > FLIM.k ? ' over' : kp >= 0.9 ? ' hit' : ex >= 0.3 && kp < ex * 0.6 ? ' low' : '') + fAnim('k', kp > FLIM.k ? 'over' : kp >= 0.9 ? 'hit' : '', s.k) + '" data-fnut="k" role="button" tabindex="0"><b data-n="' + s.k + '" data-nk="fkv">' + s.k + '</b><span>/ ' + g.k + ' kcal</span>' +
@@ -208,15 +211,14 @@
       (ui.undo && ui.undo.charAt(0) === '#' ? '<button class="fcpy fund" data-undo="1" aria-label="Rückgängig">' + ic('undo') + '</button>' : '') + '</h2><div class="fchips' + (gm ? '' : ' fem') + (ui.fmx ? ' chg' : '') + '" data-noswipe="1">' + (gm ? fMeal(gm) : MEALS.map(function (m) {
         var q = gs.filter(function (x) { return x.m === m[1]; })[0], pi = pq.items.filter(function (o) { return o.x.mk === m[1]; });
         if (q) return fMealCard(q, pi.length);
-        if (pi.length) return '<button class="fmc fpm m-' + m[1] + '"' + (sf ? ' aria-label="' + m[2] + ' geplant"' : ' data-fpe="' + m[1] + '" aria-label="' + m[2] + ' geplant, antippen = gegessen"') + '><span class="fmt">' + ic(MEALI[m[1]]) + (sf ? '' : ic('check')) + '</span><b>' + Math.round(pi.reduce(function (a, o) { return a + o.x.k; }, 0)) + '<em>kcal</em></b><small>' + pi.length + ' geplant</small></button>';
-        return '<button class="fmc fme m-' + m[1] + '"' + (sf ? ' aria-label="' + m[2] + '"' : ' data-fsearch="1" aria-label="' + m[2] + ' eintragen"') + '>' + ic(MEALI[m[1]]) + '</button>';
+        // Künftiger Tag: Mahlzeit antippen = planen (Fenster mit Geplantem: ändern, entfernen, als Vorlage); heute: Geplantes antippen = gegessen
+        if (pi.length) return '<button class="fmc fpm m-' + m[1] + '"' + (sf ? ' data-pml="' + m[1] + '" aria-label="' + m[2] + ' geplant, ändern"' : ' data-fpe="' + m[1] + '" aria-label="' + m[2] + ' geplant, antippen = gegessen"') + '><span class="fmt">' + ic(MEALI[m[1]]) + (sf ? '' : ic('check')) + '</span><b>' + Math.round(pi.reduce(function (a, o) { return a + o.x.k; }, 0)) + '<em>kcal</em></b><small>' + pi.length + ' geplant</small></button>';
+        return '<button class="fmc fme m-' + m[1] + '"' + (sf ? ' data-pml="' + m[1] + '" aria-label="' + m[2] + ' planen"' : ' data-fsearch="1" aria-label="' + m[2] + ' eintragen"') + '>' + ic(MEALI[m[1]]) + '</button>';
       }).join('')) + '</div></section>';
-    if (sf) return h;
-    // Suchen als Feld-Optik (Lupe, blasser Text, Scan rechts), Gerichte als Icon-Knopf daneben
-    // Suchfeld-Optik: links Suchen, rechts im Feld direkt der Barcode-Scanner
-    h += '<div class="fact2 rise" style="--i:3"><div class="fsrb"><button class="fsrq" data-fsearch="1">' + ic('search') + '<span>Suchen …</span></button><button class="fsrs" data-fscan="go" aria-label="Barcode scannen">' + ic('scan') + '</button></div>' +
-      '<button class="fdsb" data-fdishes="1" aria-label="Gerichte">' + ic('pot') + '</button></div>';
-    // Vorschläge 4×2: zuletzt, häufig, typisch für die Uhrzeit (antippen = Menge wählen, nach oben ziehen = sofort eintragen)
+    // Suchen als Feld-Optik (Lupe, blasser Text, Scan rechts), daneben Gerichte, Vorlagen, Einkauf als Icon-Knöpfe
+    h += '<div class="fact2 rise" style="--i:3"><div class="fsrb"><button class="fsrq" data-fsearch="1">' + ic('search') + '<span>' + (sf ? 'Einplanen …' : 'Suchen …') + '</span></button><button class="fsrs" data-fscan="go" aria-label="Barcode scannen">' + ic('scan') + '</button></div>' +
+      '<button class="fdsb" data-fdishes="1" aria-label="Gerichte">' + ic('pot') + '</button><button class="fdsb" data-ftpl="1" aria-label="Vorlagen">' + ic('cards') + '</button><button class="fdsb" data-fshop="1" aria-label="Einkauf">' + ic('cart') + '</button></div>';
+    // Vorschläge 4×2: zuletzt, häufig, typisch für die Uhrzeit (antippen = Menge wählen, nach oben ziehen = sofort eintragen bzw. an künftigen Tagen einplanen)
     h += '<section class="ftl rise" style="--i:4" data-noswipe="1">' + tl.map(function (x, j) { return fTile(x, 'data-ftile="' + j + '"', ui.ftok === j ? ' done' : ''); }).join('') + '</section>';
     ui.ftok = null;
     return h;
@@ -318,7 +320,7 @@
   }
   function openFsearch(keep) {
     ui.sheet = { fsearch: true }; ui.fq = ''; ui.fcat = keep ? ui.fcat : ''; if (!keep) ui.ftab = 'c'; ui.fpick = null; if (!ui.fplan) ui.fday = fBack();
-    sheetOpen(shHead('search', ui.ingm ? 'Zutat' : 'Eintragen', ui.ingm ? 'Für das Gericht' : 'Lebensmittel oder Gericht suchen', !!ui.ingm) + '<div class="fqw"><input id="fq" class="fnm fq" type="search" placeholder="Suchen, z. B. Skyr" autocomplete="off" aria-label="Suchen"><button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button></div><div id="fres" class="fsr">' + fresHtml() + '</div>', true);
+    sheetOpen(shHead('search', ui.ingm ? 'Zutat' : ui.fplan ? 'Einplanen' : 'Eintragen', ui.ingm ? 'Für das Gericht' : 'Lebensmittel oder Gericht suchen', !!ui.ingm) + '<div class="fqw"><input id="fq" class="fnm fq" type="search" placeholder="Suchen, z. B. Skyr" autocomplete="off" aria-label="Suchen"><button class="x" data-fscan="1" aria-label="Barcode scannen">' + ic('scan') + '</button></div><div id="fres" class="fsr">' + fresHtml() + '</div>', true);
     $('sheet').classList.add('fs'); fresFit();
     setTimeout(function () { var i = $('fq'); if (i && !('ontouchstart' in window)) i.focus(); }, 350);
   }

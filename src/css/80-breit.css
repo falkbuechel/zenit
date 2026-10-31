@@ -19,7 +19,6 @@
 :root[data-sz="e"] .pn { min-width: 0; }
 :root[data-sz="e"] #view.tv-heute { max-width: 680px; }
 /* Planen links: Kategorie-Leiste bleibt in ihrem Bereich (am iPhone läuft sie bis an den Rand) */
-:root[data-sz="e"] #view.pns > .pwks .pfcb { margin: 0 0 8px; padding: 2px 0; }
 
 /* Fenster als Seitenfeld: volle Höhe rechts, Inhalt links bleibt sichtbar, kein Ziehen (15-start.js) */
 :root[data-sz="e"] .sheet { top: 0; left: auto; width: 420px; max-width: 45vw; height: auto; max-height: none; margin: 0; align-content: start; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; border-bottom: 1px solid var(--line); border-right: 0; border-radius: var(--r20) 0 0 var(--r20); padding-top: calc(16px + env(safe-area-inset-top, 0px)); transform: translateX(104%); }

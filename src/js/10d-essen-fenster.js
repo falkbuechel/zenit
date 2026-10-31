@@ -202,7 +202,7 @@
   });
   document.addEventListener('pointerup', function () {
     if (!fdsw) return; var f = fdsw; fdsw = null; f.el.style.transform = ''; f.el.classList.remove('arm');
-    if (f.dx > 60) { ui.fday = fBack(); buzz([10, 30, 10]); closeSheet(true); foodRef(f.el.dataset.fdsw, 1); }
+    if (f.dx > 60) { closeSheet(true); ui.fday = fBack(); buzz([10, 30, 10]); foodRef(f.el.dataset.fdsw, 1); }
   });
   document.addEventListener('pointercancel', function () { if (fdsw) { fdsw.el.style.transform = ''; fdsw.el.classList.remove('arm'); fdsw = null; } });
   // Gerichte-Fenster: Karte kurz halten (0,17 s), dann ziehen. Das Fenster gleitet nach unten weg (Kante bleibt), die Mahlzeiten oben leuchten;
@@ -244,7 +244,7 @@
   var fsT = null;
   // iOS: beim Ziehen nicht scrollen. Kacheln (Essen-Vorschläge, Planen-Kacheln) in jede Richtung, Einträge nur senkrecht
   document.addEventListener('touchstart', function (ev) {
-    var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm)' + (ui.sheet ? '' : ', .ptv[data-ptd], .fti[data-pfd], .fti[data-ptp]'));
+    var el = ev.target.closest && ev.target.closest('.fti[data-ftile], .fcpi:not(.fpm)' + (ui.sheet ? '' : ', .ptv[data-ptd]'));
     fsT = el ? { x: ev.touches[0].clientX, y: ev.touches[0].clientY, v: null, tile: !el.classList.contains('fcpi') } : null;
   }, { passive: true });
   document.addEventListener('touchmove', function (ev) {

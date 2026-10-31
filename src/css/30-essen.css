@@ -131,7 +131,10 @@
 /* Verlauf: blass am Anfang, volle Farbe in der Mitte, dunkel und satt an der Spitze */
 .fbt > i::after, .wsl > i::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, rgba(255, 255, 255, .3), rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, .28)); }
 .fbt > i::before, .wsl > i::before { content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 40%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .3), transparent); animation: fshim 4s ease-in-out infinite; }
-@keyframes fshim { 0%, 30% { left: -40%; } 100% { left: 110%; } }
+/* per transform statt left (kein Layout je Bild): 150 % des Balkens = 375 % des Glanzes */
+@keyframes fshim { 0%, 30% { transform: none; } 100% { transform: translateX(375%); } }
+/* Dauer-Effekte ruhen, solange ein Fenster offen ist (Hauptthread frei fürs Gleiten) */
+body:has(.sheet.open) .fbal::after, body:has(.sheet.open) .fbt > i::before, body:has(.sheet.open) .wsl > i::before { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .fbt > i::before, .wsl > i::before { animation: none; display: none; } }
 /* Jeder Wert hat seine eigene Farbe (--fc), auch im Ziel; Zustand zeigen Zahl und Animation (kcal: --fc in .fbk) */
 .fbm { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
@@ -198,7 +201,7 @@
 .fti.glass {
   z-index: 5; border-color: color-mix(in srgb, var(--tq) 55%, transparent); border-top-color: var(--tq);
   background: linear-gradient(150deg, color-mix(in srgb, var(--tq) 26%, transparent), color-mix(in srgb, var(--tq) 6%, transparent) 65%);
-  -webkit-backdrop-filter: blur(1.5px) saturate(1.3); backdrop-filter: blur(1.5px) saturate(1.3); box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--tq) 40%, #fff);
+  box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--tq) 40%, #fff);
 }
 .fti.glass.arm { box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--tq) 40%, #fff), 0 0 0 2px var(--tq); }
 /* Auf-/Zuklappen in der Mahlzeiten-Zeile: Karten und Gruppen blenden versetzt weich ein (leicht von rechts), auch die Einträge in einer Gruppe */
@@ -217,7 +220,7 @@
 .fcpi.arm { box-shadow: 0 0 0 2px var(--danger); }
 .fcpi.gone { opacity: 0 !important; transform: translateY(60px) !important; }
 /* Eintrag beim Wegziehen: Glas in der Mahlzeitfarbe, rote Kante, sobald scharf */
-.fcpi.glass { background: linear-gradient(150deg, color-mix(in srgb, var(--mc) 24%, transparent), color-mix(in srgb, var(--mc) 6%, transparent) 65%); -webkit-backdrop-filter: blur(1.5px); backdrop-filter: blur(1.5px); box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--mc) 40%, #fff); }
+.fcpi.glass { background: linear-gradient(150deg, color-mix(in srgb, var(--mc) 24%, transparent), color-mix(in srgb, var(--mc) 6%, transparent) 65%); box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--mc) 40%, #fff); }
 .fcpi.glass.arm { box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--mc) 40%, #fff), 0 0 0 1.5px var(--danger); }
 @keyframes ftok { 0% { background: color-mix(in srgb, var(--ac) 30%, var(--s1)); transform: scale(.96); } }
 /* Suchen als Eingabefeld-Optik (vertieft, blasser Text, Scanner im Feld ohne Trennung), Gerichte, Vorlagen, Einkauf daneben als erhabene Pillen (gleiche Form wie das Feld) */

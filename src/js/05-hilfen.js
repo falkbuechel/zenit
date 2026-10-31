@@ -12,24 +12,26 @@
   }
   // Namen (Klasse fit): drei Stufen 100 / 88 / 78 %. Gewählt wird die größte, bei der jedes Wort in eine Zeile passt und der Name
   // nicht abgeschnitten wird (Zeilenzahl der Regel). Getrennt wird nur an Leerzeichen und Bindestrich; passt ein Wort selbst bei 78 % nicht: Silbentrennung
+  // Gebündelt: erst alles schreiben, dann alles messen (je Stufe eine Layout-Berechnung statt einer je Name)
   function fitNames(root) {
-    var S = [1, 0.88, 0.78];
+    var S = [1, 0.88, 0.78], L = [];
     (root || document).querySelectorAll('.fit').forEach(function (b) {
       // Zahl und Einheit bleiben zusammen (1,5 %, 500 g)
       var nu = /(\d)[ \t]+(%|g\b|ml\b|kg\b|l\b)/g; if (!b.children.length && nu.test(b.textContent)) b.textContent = b.textContent.replace(nu, '$1' + String.fromCharCode(160) + '$2');
       b.style.setProperty('--tf', '1'); b.style.webkitHyphens = b.style.hyphens = '';
-      var cs = getComputedStyle(b), av = b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight); if (av <= 0) return;
       // breitestes Wort: alle Wörter untereinander in einem unsichtbaren Element
       var m = document.createElement('span'); m.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;display:block;width:auto';
       m.textContent = b.textContent.trim().split(/[ \t\n]+/).join('\n').replace(/-/g, '-\n'); b.appendChild(m);
-      var w = m.offsetWidth; b.removeChild(m);
-      for (var i = 0; i < S.length; i++) {
-        if (w * S[i] > av - 2) continue;
-        b.style.setProperty('--tf', S[i]);
-        if (b.scrollHeight <= b.clientHeight + 1 && b.scrollWidth <= b.clientWidth + 1) return;
-      }
-      b.style.setProperty('--tf', S[2]); if (w * S[2] > av - 2) b.style.webkitHyphens = b.style.hyphens = 'auto';
+      L.push({ b: b, m: m });
     });
+    L.forEach(function (o) { var cs = getComputedStyle(o.b); o.av = o.b.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight); o.w = o.m.offsetWidth; });
+    L.forEach(function (o) { o.b.removeChild(o.m); });
+    L = L.filter(function (o) { return o.av > 0; });
+    S.forEach(function (s) {
+      L.forEach(function (o) { o.on = o.w * s <= o.av - 2; if (o.on) o.b.style.setProperty('--tf', s); });
+      L = L.filter(function (o) { var b = o.b; return !(o.on && b.scrollHeight <= b.clientHeight + 1 && b.scrollWidth <= b.clientWidth + 1); });
+    });
+    L.forEach(function (o) { o.b.style.setProperty('--tf', S[2]); if (o.w * S[2] > o.av - 2) o.b.style.webkitHyphens = o.b.style.hyphens = 'auto'; });
   }
   function fmtDate(ms) { return new Date(ms).toLocaleDateString('de-DE', { day: 'numeric', month: 'short' }); }
   function fmtDay(di) { return new Date(di * 864e5).toLocaleDateString('de-DE', { day: 'numeric', month: 'short', timeZone: 'UTC' }); }

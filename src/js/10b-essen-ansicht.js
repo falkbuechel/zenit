@@ -305,22 +305,32 @@
   // wechselt das Fenster selbst (anderer Titel), blendet der neue Inhalt ein. Frisch geöffnete Fenster gleiten nur hoch (shMorph.h = 0)
   var shMorph = { h: 0, busy: 0, ms: 340, tm: null };
   // Laufendes Gleiten sofort beenden (Schließen, Fenster ziehen): Inline-Höhe und -Übergang weg, damit die CSS-Übergänge wieder gelten
-  function shMorphStop() { var s = $('sheet'); clearTimeout(shMorph.tm); if (shMorph.busy) { s.style.height = ''; s.style.transition = ''; } shMorph.busy = 0; shMorph.ms = 340; s.style.minHeight = ''; }
+  function shMorphStop() { var s = $('sheet'); clearTimeout(shMorph.tm); if (shMorph.busy) { s.style.height = ''; s.style.transition = ''; s.style.transform = ''; } shMorph.busy = 0; shMorph.ms = 340; s.style.minHeight = ''; }
   (function () {
     var s = $('sheet'); if (!s || !window.ResizeObserver) return;
     new ResizeObserver(function () {
-      var n = s.offsetHeight, open = s.classList.contains('open');
+      var n = s.offsetHeight, open = s.classList.contains('open'), d = shMorph.h - n;
       if (shMorph.busy) return;
-      if (!open || !shMorph.h || Math.abs(n - shMorph.h) < 4 || matchMedia('(prefers-reduced-motion: reduce)').matches) { shMorph.h = open ? n : 0; shMorph.ms = 340; return; }
-      shMorph.busy = 1; s.style.height = shMorph.h + 'px'; void s.offsetHeight;
-      s.style.transition = 'height ' + shMorph.ms + 'ms var(--drawer), transform .34s var(--drawer)'; s.style.height = n + 'px';
-      shMorph.tm = setTimeout(function () { s.style.height = ''; s.style.transition = ''; shMorph.h = s.offsetHeight; shMorph.busy = 0; shMorph.ms = 340; }, shMorph.ms + 20);
+      if (!open || !shMorph.h || Math.abs(d) < 4 || matchMedia('(prefers-reduced-motion: reduce)').matches) { shMorph.h = open ? n : 0; shMorph.ms = 340; return; }
+      shMorph.busy = 1;
+      if (document.documentElement.dataset.sz !== 'e' && !s.classList.contains('peek')) {
+        // Unten angedockt: statt der Höhe gleitet das ganze Fenster (nur Zusammensetzen, kein Layout/Malen je Bild).
+        // Größer: neue Höhe, startet um den Unterschied tiefer. Kleiner: alte Höhe bleibt, gleitet um den Unterschied nach unten, am Ende Höhe weg
+        if (d > 0) s.style.height = shMorph.h + 'px';
+        s.style.transition = 'none'; s.style.transform = d < 0 ? 'translateY(' + -d + 'px)' : 'none'; void s.offsetHeight;
+        s.style.transition = 'transform ' + shMorph.ms + 'ms var(--drawer)'; s.style.transform = d > 0 ? 'translateY(' + d + 'px)' : '';
+      } else {
+        s.style.height = shMorph.h + 'px'; void s.offsetHeight;
+        s.style.transition = 'height ' + shMorph.ms + 'ms var(--drawer), transform .34s var(--drawer)'; s.style.height = n + 'px';
+      }
+      shMorph.tm = setTimeout(function () { s.style.transition = 'none'; s.style.height = ''; s.style.transform = ''; void s.offsetHeight; s.style.transition = ''; shMorph.h = s.offsetHeight; shMorph.busy = 0; shMorph.ms = 340; }, shMorph.ms + 20);
     }).observe(s);
     new MutationObserver(function (ms) {
       if (!s.classList.contains('open')) return;
       var old = null; ms.forEach(function (m) { [].forEach.call(m.removedNodes, function (x) { if (x.classList && x.classList.contains('sh-h')) old = x.textContent; }); });
       var cur = s.querySelector('.sh-h'); if (old == null || !cur || cur.textContent === old) return;
-      s.classList.remove('sw'); void s.offsetWidth; s.classList.add('sw'); clearTimeout(shMorph.t); shMorph.t = setTimeout(function () { s.classList.remove('sw'); }, 300);
+      // eigener Klassenname: .sw ist der Schalter (display: flex), das ließ das Fenster beim Wechsel kurz zusammenfallen
+      s.classList.remove('shsw'); void s.offsetWidth; s.classList.add('shsw'); clearTimeout(shMorph.t); shMorph.t = setTimeout(function () { s.classList.remove('shsw'); }, 300);
     }).observe(s, { childList: true });
   })();
   function fresSet() { $('fres').innerHTML = fresHtml(); fresFit(); }

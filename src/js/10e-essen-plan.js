@@ -151,8 +151,10 @@
     if (!tp.length) return '<p class="muted tplh">' + ic('cards') + 'Menüs sind ganze Mahlzeiten oder Tage zum Wiederholen. Über + oben eine Mahlzeit oder einen Tag speichern.</p>';
     function tile(t) {
       var v = tplNut(t), at = 'data-ptp="' + t.id + '"';
-      if (t.k === 'd') return '<button class="fti q-m svt tpd' + (del ? ' tdel' : '') + '" ' + at + ' aria-label="Tages-Menü ' + esc(t.n) + (del ? ' löschen' : '') + '"><i class="ftq">' + ic(del ? 'close' : 'cal') + '</i><b>' + esc(t.n) + '</b>' +
-        '<small class="tpk">' + MEALS.filter(function (m) { return t.it.some(function (q) { return q.mk === m[1]; }); }).map(function (m) { return '<i class="m-' + m[1] + '">' + ic(MEALI[m[1]]) + '</i>'; }).join('') + '</small>' +
+      // Tag: Etikett „Tag“ und unten ein Streifen aus den Mahlzeitfarben, Breite nach kcal-Anteil
+      var mkk = {}; if (t.k === 'd') t.it.forEach(function (q) { var it = fItem(q.i); if (it) mkk[q.mk] = (mkk[q.mk] || 0) + (fNut(it, q.g).k || 0); });
+      if (t.k === 'd') return '<button class="fti q-m svt tpd' + (del ? ' tdel' : '') + '" ' + at + ' aria-label="Tages-Menü ' + esc(t.n) + (del ? ' löschen' : '') + '"><i class="ftq">' + ic(del ? 'close' : 'cal') + (del ? '' : '<small>Tag</small>') + '</i><b>' + esc(t.n) + '</b>' +
+        '<i class="tpk" aria-hidden="true">' + MEALS.filter(function (m) { return mkk[m[1]] > 0; }).map(function (m) { return '<i class="m-' + m[1] + '" style="flex:' + Math.round(mkk[m[1]]) + '"></i>'; }).join('') + '</i>' +
         '<span class="ftv"><span>' + Math.round(v.k) + '</span><small style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + Math.round(v.p) + '</small></span></button>';
       return savedTile(t.n, v.k, v.p, t.mk, del ? 'close' : MEALI[t.mk], at, del ? ' tdel' : '');
     }

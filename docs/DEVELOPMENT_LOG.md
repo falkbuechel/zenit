@@ -6,11 +6,11 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Falk arbeitet mit „Bypass permissions“ (keine Rückfragen). Schutz über PreToolUse-Hook `tools/hook-guard.py` (greift auch im Bypass) + deny-Regeln (zusätzlich: Zugangsdaten ~/.ssh, gh, .git-credentials, .npmrc nicht lesen). `settings.local.json` von Einmal-Freigaben geleert.
 - Gesperrtes braucht Falk selbst im Terminal. Regeln sind Textmuster: neue Fälle in `RULES` ergänzen und mit Beispielbefehlen testen.
 
-## Stand 2026-10-31 (Nacht)
-- Gerade: Essen planen nach Essen verlegt (4aae5c0, 20f521e), Planen → Training-Tab Variante A (9cde7f8), alles gepusht.
-- Falk testet am iPhone: Essen-Tagesleiste (Woche, Griff/runterziehen = 2 Wochen), künftigen Tag einplanen (Suche, Kacheln ziehen, Mahlzeit antippen), Vorlagen- und Einkauf-Knopf; Training: Kalender mit Workout-Symbolen (Zeile 66 px), Symbol-Leiste „Tag ändern“ in der Tageskarte.
-- Frage an Falk: Toast im Training-Tab freischalten (Aussetzen usw. zeigen nur den Punkt am Knopf)?
-- Nächster Schritt: Rückmeldung zu Essen/Training einarbeiten; dann Heute geleitet neu (Varianten A/B/C im Zahnrad noch drin) und Essen-Restpunkte.
+## Stand 2026-10-31 (Abend)
+- Gerade: Essen-Prüfrunde 3 gepusht (4ffa3fc, 92b4671, 4a7bbc0): Tagesleiste, später planen, Nährwert gegessen/geplant, Fenster Geplant/Gerichte/Menüs/Einkauf neu.
+- Falk testet am iPhone: geplante Mahlzeit in der Zeile (Chips, Gegessen, Als Menü), Gerichte/Menüs-Kacheln + „+“ im Kopf, Neues Menü, Einkauf (Kopfkarte, Wischen rot/blau, Haken bis zum geplanten Tag). Alte Einkaufshaken sind nach dem Update einmal wieder offen.
+- Nächster Schritt: Rückmeldung einarbeiten; danach Unslop-Skill nach `.claude/skills/unslop/` (ohne Video/Bild-Teile, Quelle in README), mit ux-review/Emil-Skills abgleichen, Setup-Inventur.
+- Frage an Falk: Toast im Training-Tab freischalten?
 - Offene Entscheidungen: Heute-Richtung; App-Name/Farbe; Maskottchen-Wahl später; Link-Import Rezepte; Skilltree Dead Hang/Hollow.
 - Vorschau: `tools/serve.py` (Port 8000) startet VS Code; nie aus Claudes Sitzung starten. App NICHT vom Homescreen löschen (Daten weg).
 - Nicht committet: nur dieses Log.
@@ -26,6 +26,7 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Unslop-Skill von Damir ist da (github.com/heydamir/unslop, CC BY 4.0) – nach der Essen-Runde ins Design-Setup; Routine „Damir unslop-Skill prüfen“ abschalten.
 - Gerichte bearbeiten: Zutatenmenge noch in g (Einheit nur in der Ansicht `fingHtml` und beim Hinzufügen über das Mengen-Fenster).
 - iPhone-Test offen: siehe Stand oben.
+- Suche „eier“ findet auch Hähnchen-Reis-Pfanne (vermutlich über eine Zutat) – prüfen.
 - Bekannt: aus Schnell gemerktes Stück-Lebensmittel zeigt in „Lebensmittel bearbeiten“ die Stück-Werte als „je 100 g“ (Rechengröße 100 = 1 Stück) – bei Bedarf eigene Stück-Ansicht.
 - Bekannt: „Gibt es schon“ im Schnell-Fenster → Zurück führt zur Suche, nicht zurück ins Schnell-Formular (Eingaben weg).
 - Entscheidung offen: Link-Import für Rezepte über einen fremden CORS-Dienst (genauer, aber Abhängigkeit)?
@@ -53,6 +54,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 - Ganz am Ende: Design und Illustrationen (ComfyUI-Assets, Karten-Schema zuerst)
 
 ## Verlauf
+
+## 2026-10-31 Übergänge flüssiger, Tages-Menüs erkennbar
+- Fehler: Fensterwechsel (neuer Titel) setzte Klasse `sw` am Fenster; `.sw` ist der Schalter (`display: flex`) → Fenster fiel einen Frame auf ~150 px zusammen, Höhe glitt dorthin und sprang zurück. Jetzt `shsw`. Lehre: JS-gesetzte Klassen gegen einzelne Klassen-Selektoren prüfen (der Hook sieht `.sheet.sw` vs `.sw` nicht als doppelt).
+- Höhen-Gleiten (`shMorph`): schmal per `transform` (größer: neue Höhe, startet tiefer; kleiner: alte Höhe bleibt, gleitet runter), breit (`e`) und `peek` weiter per `height`.
+- `fitNames` gebündelt (erst schreiben, dann messen, je Stufe eine Layout-Berechnung). Balken-Glanz `fshim` per `transform` statt `left`. Dauer-Effekte (Lichtpunkt, Glanz) pausieren bei offenem Fenster (`body:has(.sheet.open)`). Gezogene Glas-Kacheln ohne `backdrop-filter`; Tab-Leiste behält Unschärfe.
+- Gemessen (4× gedrosselt): Tab-Wechsel Training/Essen ~120–150 ms JS, Rest `derive()` bei jedem Render (~6 ms ungedrosselt). Zwischenspeichern wäre der nächste Schritt, falls es noch hängt.
+- Menüs: Tages-Menü hat „Tag“-Etikett und unten einen Streifen aus den Mahlzeitfarben (Breite nach kcal), statt der kleinen Mahlzeit-Symbole.
 
 ## 2026-10-31 Essen-Fenster im Stil der Essen-Ansicht (Falk gewählt)
 - Geplante Mahlzeit klappt in der Zeile auf wie Gegessenes (`fMealPl`, `fPlChips`: Teile hohl mit Uhr, antippen = Mengen-Fenster im Planen-Modus mit Mahlzeit und Löschen `data-plx`; heute „Gegessen“ = `planEat`; „Als Menü“). Leere Mahlzeit an künftigen Tagen = Suche mit dieser Mahlzeit. Fenster „… planen“ (`openPlanMeal`, `tplRowHtml`, `openTplDay` und Handler) entfernt.

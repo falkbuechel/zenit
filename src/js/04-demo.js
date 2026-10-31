@@ -62,7 +62,7 @@
     });
     food.tp = [{ id: 't1', n: 'Frühstück Standard', k: 'm', mk: 'fr', it: [{ i: 'hafer', g: 80 }, { i: 'skyr', g: 150 }, { i: 'beeren', g: 125 }] },
       { id: 't2', n: 'Trainingstag', k: 'd', it: [{ i: 'dm1', g: 1, mk: 'fr' }, { i: 'dm2', g: 1, mk: 'mi' }, { i: 'mquark', g: 250, mk: 'sn' }, { i: 'lachs', g: 125, mk: 'ab' }, { i: 'kart', g: 250, mk: 'ab' }] }];
-    food.sh = { hafer: today, skyr: today };
+    food.sh = { hafer: today + 6, skyr: today + 6 };
     // Gewicht (120 Tage, leicht steigend) und Maße
     for (k = 120; k >= 0; k -= (k > 30 ? 3 : 2)) food.w.push({ t: at(k, 7, 30), kg: Math.round((78 + 2.4 * (120 - k) / 120 + (rnd() - 0.5) * 0.9) * 10) / 10 });
     [[100, 83, 101, 33.5, 56, 112], [70, 83.5, 102, 34, 57, 113], [40, 84, 103, 34.5, 57.5, 114], [10, 84.5, 104, 35, 58, 115]].forEach(function (r) { food.m.push({ t: at(r[0], 7, 45), w: r[1], c: r[2], a: r[3], th: r[4], sh: r[5] }); });

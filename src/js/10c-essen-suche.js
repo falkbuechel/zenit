@@ -118,13 +118,14 @@
     ui.fingx = null;
     var it = fItem(id); if (!it) return;
     ui.sheet = { fpick: true }; ui.fstpo = false; ui.fpick = { i: id, a: a != null ? a : it.dish ? 1 : it.d || (it.u.length ? it.u[it.ub && it.u[1] ? 1 : 0][1] : 100), edit: edit };
-    sheetOpen(fpickHtml(), true); $('sheet').classList.add('fp'); if (it.dish && ui.fingo) fpPaint();
+    sheetOpen(fpickHtml(), true); $('sheet').classList.add('fp'); if (it.dish && ui.fingo) fpPaint(); fplnSync();
   }
   function fpPaint() {
     // Mengen-Fenster neu zeichnen; Zutaten-Ansicht eines Gerichts ist mindestens so hoch wie die normale (kein Springen beim Umschalten)
     var s = $('sheet'), pk = ui.fpick, it = pk && fItem(pk.i), hs = s.style.height; s.style.minHeight = '';
     if (it && it.dish && ui.fingo && !ui.fstpo) { s.style.height = ''; ui.fingo = false; s.innerHTML = fpickHtml(); var mh = s.offsetHeight; ui.fingo = true; s.innerHTML = fpickHtml(); s.style.minHeight = mh + 'px'; s.style.height = hs; }
     else s.innerHTML = fpickHtml();
+    fplnSync();
   }
   function fpickHtml() {
     var pk = ui.fpick, it = fItem(pk.i), back = !!(ui.sheet && ui.sheet.from), un = it.ml ? 'ml' : 'g', b0 = it.u[0], cu = fUnit(it);

@@ -257,7 +257,7 @@ button.pdb-h:active { background: var(--s2); }
 .ptl2 { margin-top: 2px; }
 /* Vorlagen-Kacheln: Mahlzeit in ihrer Farbe (wie Vorschläge), Tag neutral; neue/Löschen gestrichelt mit Symbol; Löschmodus rot umrandet */
 .fti.tpd { --tq: var(--ink2); }
-.fti.tplnew { display: grid; place-items: center; align-content: center; gap: 2px; border: 1px dashed var(--line); background: transparent; box-shadow: none; color: var(--ink3); }
+.fti.tplnew { display: grid; place-items: center; align-content: center; gap: 2px; border: 1px solid var(--line); background: color-mix(in srgb, var(--s1) 50%, transparent); box-shadow: none; color: var(--ink3); }
 .fti.tplnew .ic { width: 20px; height: 20px; }
 .fti.tplnew small { font: 700 10px/1.2 var(--f-mono); text-align: center; }
 /* Vorlage = Stapel aus mehreren Teilen (hinten eine zweite Kante), klar anders als ein Gericht */
@@ -270,7 +270,7 @@ button.pdb-h:active { background: var(--s2); }
 .fti .tpk .ic { width: 11px; height: 11px; }
 .tplh { grid-column: 1 / -1; display: flex; gap: 8px; margin: 4px 2px; font-size: 13px; line-height: 1.4; }
 .tplh .ic { flex: none; width: 18px; height: 18px; margin-top: 1px; }
-.ptv.pnew { place-items: center; border: 1px dashed var(--line); background: transparent; box-shadow: none; color: var(--ink3); }
+.ptv.pnew { place-items: center; border: 1px solid var(--line); background: color-mix(in srgb, var(--s1) 50%, transparent); box-shadow: none; color: var(--ink3); }
 .ptv.pnew .ic { width: 20px; height: 20px; }
 /* Ziel beim Hochziehen in Planen: Kalendertag oder Tageskarte leuchtet */
 .pc2.drop { box-shadow: inset 0 0 0 2px var(--ac); background: color-mix(in srgb, var(--ac) 14%, transparent); }

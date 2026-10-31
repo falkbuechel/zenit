@@ -3,7 +3,8 @@
   function foodPush(x, editIdx) {
     var sho = $('fmk') && $('sheet').classList.contains('open');
     // Heute für später: Schalter „Geplant“ im Mengen-Fenster an → als Geplantes für heute
-    if (!ui.fplan && editIdx == null && !ui.fday && sho && fplnOn()) ui.fplan = { d: dayIdx(Date.now()), mk: null, pg: 1 };
+    // Ohne Fenster auf eine spätere Mahlzeit gezogen (ui.fdmk): ebenfalls geplant
+    if (!ui.fplan && editIdx == null && !ui.fday && (sho ? fplnOn() : ui.fdmk && mkLater(ui.fdmk))) ui.fplan = { d: dayIdx(Date.now()), mk: sho ? null : ui.fdmk, pg: 1 };
     if (ui.fplan && editIdx == null) {
       // Planen: als geplanter Eintrag (Tag, Mahlzeit) speichern, zurück zur Mahlzeit (aus einer Kachel unter der Tageskarte: Fenster zu, wie in Essen)
       // Geplanten Eintrag ändern (ui.plEdit = Index in food.pl) oder neu einplanen. Mahlzeit aus dem Fenster, sonst fplMk
@@ -108,9 +109,12 @@
       else { o.bg = Math.ceil(o.g / 100) * 100; o.a = sz(o.bg); }
       if (!pk) o.eur = o.bg / 1000 * (SHPI[o.id] || SHP[o.c] || SHP.x);
       o.pe = cnt > 1 ? o.eur / cnt : 0; o.need = sz(Math.round(o.g));
-      o.ok = st.sh[o.key] != null; o.gone = st.sh[shKx(o.key)] != null;
+      // Haken, Zuhause, Gelöscht gelten bis zum letzten geplanten Tag, für den sie gesetzt wurden: kommt danach Neues dazu (nächste Woche), ist die Zeile wieder offen
+      o.last = Math.max.apply(null, o.src.map(function (q) { return q.d; }));
+      var hs = function (k) { return st.sh[k] != null && st.sh[k] >= o.last; };
+      o.ok = hs(o.key); o.gone = hs(shKx(o.key)); o.del = hs(shKd(o.key));
     });
-    return l.filter(function (o) { return st.sh[shKd(o.key)] == null; });
+    return l.filter(function (o) { return !o.del; });
   }
   function shopN() {
     // Zeitraum: gewählt, sonst bis zum letzten geplanten Tag der nächsten 7 Tage (mindestens heute)
@@ -119,7 +123,7 @@
     return mx || 7;
   }
   function eur(v) { return v.toFixed(2).replace('.', ',') + ' €'; }
-  // Aus der Liste gewischt („habe ich noch“): eigener Schlüssel in food.sh, vergessen wie abgehakt nach 14 Tagen
+  // Nach rechts gewischt („habe ich noch“): eigener Schlüssel in food.sh; Wert = letzter geplanter Tag der Zeile (wie abgehakt), cleanFood vergisst 14 Tage danach
   function shKx(key) { return ('x:' + key).slice(0, 40); }
   function shopHtml() {
     var n = shopN(), t = dayIdx(Date.now()), l = shopList(n), co = Object.keys(CATI), h = '';
@@ -133,9 +137,9 @@
       o.src.forEach(function (q) { var y = dy[q.d]; if (!y) { y = dy[q.d] = { d: q.d, g: 0, mk: [], n: [] }; ds.push(y); } y.g += q.g; if (y.mk.indexOf(q.mk) < 0) y.mk.push(q.mk); if (q.n && y.n.indexOf(q.n) < 0) y.n.push(q.n); });
       ds.sort(function (a, b) { return a.d - b.d; });
       var rest = Math.round(o.bg - o.g);
-      return '<div class="shr' + (o.ok ? ' ok' : '') + (o.gone ? ' gone' : '') + (op ? ' open' : '') + '"' + (o.gone ? '' : ' data-shrow="' + esc(o.key) + '"') + ' style="--cc:' + (CCOL[o.c] || CCOL.x) + '">' +
+      return '<div class="shr' + (o.ok ? ' ok' : '') + (o.gone ? ' gone' : '') + (op ? ' open' : '') + '"' + (o.gone ? '' : ' data-shrow="' + esc(o.key) + '" data-shl="' + o.last + '"') + ' style="--cc:' + (CCOL[o.c] || CCOL.x) + '">' +
         (o.gone ? '<button class="shc" data-shk="' + esc(shKx(o.key)) + '" aria-label="' + esc(o.n) + ' wieder auf die Liste">' + ic('undo') + '</button>'
-          : '<button class="shc" data-shk="' + esc(o.key) + '" aria-pressed="' + o.ok + '" aria-label="' + esc(o.n) + (o.ok ? ' wieder offen' : ' abhaken') + '">' + (o.ok ? ic('check') : '') + '</button>') +
+          : '<button class="shc" data-shk="' + esc(o.key) + '" data-shl="' + o.last + '" aria-pressed="' + o.ok + '" aria-label="' + esc(o.n) + (o.ok ? ' wieder offen' : ' abhaken') + '">' + (o.ok ? ic('check') : '') + '</button>') +
         '<button class="shm" data-shx="' + esc(o.key) + '" aria-expanded="' + op + '"><i class="fsc" style="color:' + (o.id ? fTone(o.id, ck) : 'var(--ink3)') + '">' + ic(o.id ? fIco(o.id, ck) : 'food') + '</i><span><b>' + esc(o.n) + '</b><small>' +
         esc(o.need === o.a ? o.a : o.need + ' → ' + o.a) + '</small></span><em><b>≈ ' + eur(o.eur) + '</b>' + (o.pe ? '<small>à ' + eur(o.pe) + '</small>' : '') + '</em></button>' +
         (op ? '<div class="shw">' + ds.map(function (y) {
@@ -205,7 +209,7 @@
       return '<div class="m-' + m[1] + '">' + ic(MEALI[m[1]]) + '<span>' + l.map(function (o) { return esc(o.x.n); }).join(', ') + '</span><em>' + Math.round(l.reduce(function (a, o) { return a + o.x.k; }, 0)) + '</em></div>';
     }).join('') + '</div>' + tplRowHtml('d', ps, kc, 'Tag ' + WDN[wdOf(di)]));
   }
-  // Gelöscht („brauche ich nicht“): fällt aus der Liste, vergessen nach 14 Tagen wie abgehakt
+  // Gelöscht („brauche ich nicht“): fällt aus der Liste, bis Neues danach geplant wird
   function shKd(key) { return ('d:' + key).slice(0, 40); }
   // Einkaufszeile wischen (ab 25 % der Breite): nach links = löschen (roter Verlauf, mit Rückgängig), nach rechts = „habe ich noch“ → Zuhause; senkrecht bleibt Scrollen
   var shSw = false, shP = null;
@@ -223,7 +227,7 @@
     p.r.classList.remove('drag');
     if (!p.arm) { p.r.style.transform = ''; p.r.style.removeProperty('--sw'); p.r.classList.remove('swl', 'swr'); return; }
     var st = foodState(), k = p.r.dataset.shrow; p.r.style.transform = 'translateX(' + (p.dx < 0 ? -1 : 1) * p.w * 1.1 + 'px)';
-    if (p.dx < 0) { fUndo(); st.sh[shKd(k)] = dayIdx(Date.now()); } else st.sh[shKx(k)] = dayIdx(Date.now());
+    if (p.dx < 0) { fUndo(); st.sh[shKd(k)] = +p.r.dataset.shl; } else st.sh[shKx(k)] = +p.r.dataset.shl;
     persist(); buzz([10, 30, 10]); setTimeout(function () { render(); if (p.dx < 0) toast('Gelöscht', 'trash', true); }, 180);
   }
   document.addEventListener('pointerup', shEnd);
@@ -295,7 +299,7 @@
     if ((el = t.closest('[data-shn]'))) { ui.shn = +el.dataset.shn; render(); buzz(4); return true; }
     if ((el = t.closest('[data-shx]'))) { if (shSw) { shSw = false; return true; } ui.shx = ui.shx === el.dataset.shx ? null : el.dataset.shx; render(); buzz(4); return true; }
     if (t.closest('[data-shsh]')) { shopShare(); return true; }
-    if ((el = t.closest('[data-shk]'))) { if (shSw) { shSw = false; return true; } var shk = el.dataset.shk; if (st.sh[shk] != null) delete st.sh[shk]; else st.sh[shk] = dayIdx(Date.now()); persist(); render(); buzz(6); return true; }
+    if ((el = t.closest('[data-shk]'))) { if (shSw) { shSw = false; return true; } var shk = el.dataset.shk; if (el.dataset.shl == null || st.sh[shk] != null && st.sh[shk] >= +el.dataset.shl) delete st.sh[shk]; else st.sh[shk] = +el.dataset.shl; persist(); render(); buzz(6); return true; }
     if (t.closest('[data-fingo]')) { ui.fingo = !ui.fingo; ui.fstpo = false; $('sheet').classList.remove('full'); fpPaint(); buzz(4); return true; }
     // Schritte: Fenster geht ganz auf (.full), die Schritte erscheinen unter den Zutaten
     if (t.closest('[data-fstp]')) { fstpTog(!ui.fstpo); return true; }
@@ -343,7 +347,8 @@
     }
     if ((el = t.closest('[data-fedit]'))) { if (fswMoved) { fswMoved = false; return true; } var x = st.e[+el.dataset.fedit]; if (x && x.r && fItem(x.r.i)) openPick(x.r.i, x.r.g, +el.dataset.fedit); else openQuick(+el.dataset.fedit); return true; }
     if ((el = t.closest('[data-ftile]'))) { if (fswMoved) { fswMoved = false; return true; } var tl = (ui.ftiles || [])[+el.dataset.ftile]; if (tl) { ui.fday = fBack(); buzz(8); openPick(tl.i, tl.g); } return true; }
-    if (t.closest('[data-fsearch]')) { openFsearch(); return true; }
+    // Leere Mahlzeit antippen: Suche mit dieser Mahlzeit vorgewählt (spätere = geplant, s. fplnSync)
+    if ((el = t.closest('[data-fsearch]'))) { var emk = el.dataset.femk || null; openFsearch(); ui.fdmk = emk; return true; }
     if (t.closest('[data-fdishes]')) { openDishes(); return true; }
     if ((el = t.closest('[data-fpick]'))) { if (ui.fdgno && Date.now() - ui.fdgno < 400) return true; var from =ui.sheet && (ui.sheet.fsearch || ui.sheet.fdishes) ? (ui.sheet.fsearch ? 's' : 'd') : null; openPick(el.dataset.fpick); ui.sheet.from = from; fpPaint(); return true; }
     if (t.closest('[data-fback]')) {

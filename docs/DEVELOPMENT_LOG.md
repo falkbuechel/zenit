@@ -55,6 +55,13 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+## 2026-10-31 Essen: zweite Rückmeldung
+- Später geplant ohne Schalter: leere Mahlzeit antippen wählt sie vor (`data-femk` → `ui.fdmk`, `whenFor`); spätere Mahlzeit ohne selbst gesetzte Uhrzeit (`ftm.dataset.chg`) = geplant (`mkLater`, `fplnSync` auch nach `openPick`/`fpPaint`); Kachel/Gericht auf spätere Mahlzeit gezogen = geplant. `closeSheet` setzt `ui.fdmk` zurück.
+- Einkauf: Wisch-Verlauf als Overlay (`::after`, Deckkraft mit dem Weg; vorher `color-mix` mit `calc`-Anteil, auf iOS unsicher), links rot, rechts blau. Haken/Zuhause/Gelöscht speichern den letzten geplanten Tag der Zeile (`o.last`, `data-shl`): wird danach Neues geplant (nächste Woche), ist die Zeile wieder offen. Alte Haken (Tag des Abhakens) zählen nur bis dahin.
+- Nährwert-Fenster heute mit Geplantem: Abschnitte „Gegessen“ / „Noch geplant“ (Uhr, Geplant-Farbe), Balken zweifarbig (`.fnb2`), Kopf „X + Y geplant / Ziel“.
+- Zutaten: Liste mit getöntem Icon-Kreis und leichtem Farbhauch. Suche: Tippfehler ab 4 Buchstaben, auch am Wortanfang beim Tippen.
+- Fenster: gestrichelte Kacheln (Neu, Menü speichern, Neues Workout) jetzt durchgezogen; Reiter Gerichte | Menüs als Unterstrich-Leiste; Gramm auf der Gerichte-Karte bricht nicht mehr um.
+
 ## 2026-10-31 Essen: Falks iPhone-Rückmeldung
 - Tagesleiste: heute immer Platz 4 (`fW0`: Start heute − 3, Seiten zu 7, aufgeklappt zu 14; `ui.fw0` statt `ui.fpg`), aufgeklappt wischen = 14 Tage weiter (keine doppelte Woche). Griff `.fdgx` dezent (18×2, blass).
 - Heute für später planen: Mengen-Fenster zeigt bei späterer Mahlzeit den Schalter „Geplant“ (`fpln`, vorbelegt an, Uhrzeit-Pille weg, Knopf „Einplanen“) → `foodPush` legt in `pl` für heute. Beim Einplanen jetzt Mahlzeit wählbar (`whenRow(…, plan)`, `fplMk`).

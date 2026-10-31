@@ -22,15 +22,18 @@
       (plan ? '' : (withDay ? '<button type="button" class="fpln" id="fpln" data-fpln="1" aria-pressed="false" aria-label="Für später planen" hidden>' + ic('clock') + '<b>Geplant</b></button>' : '') +
         '<label class="ftm">' + ic('clock') + '<b id="ftmv">' + hmOf(t || Date.now()) + '</b><input id="ftm" type="time" value="' + hmOf(t || Date.now()) + '" aria-label="Uhrzeit"></label>') + '</div>';
   }
-  // Schalter „Geplant“ nur heute bei einer späteren Mahlzeit als jetzt; erscheint er neu, ist er an. An = Uhrzeit-Pille weg (geplant hat keine)
+  // Mahlzeit liegt heute noch vor uns (später als die jetzige)
+  function mkLater(mk) { var ix = function (k) { return MEALS.map(function (m) { return m[1]; }).indexOf(k); }; return ix(mk) > ix(mealOf(Date.now())[1]); }
+  // Schalter „Geplant“ nur heute bei einer späteren Mahlzeit als jetzt und ohne selbst gesetzte Uhrzeit; erscheint er neu, ist er an. An = Uhrzeit-Pille weg (geplant hat keine)
   function fplnSync() {
-    var b = $('fpln'), v = $('fmk') && $('fmk').value; if (!b) return;
-    var ix = function (k) { return MEALS.map(function (m) { return m[1]; }).indexOf(k); }, on = !ui.fday && ix(v) > ix(mealOf(Date.now())[1]);
+    var b = $('fpln'), v = $('fmk') && $('fmk').value, tm = $('ftm'); if (!b) return;
+    var on = !ui.fday && mkLater(v) && !(tm && tm.dataset.chg);
     if (on && b.hidden) b.setAttribute('aria-pressed', 'true'); b.hidden = !on; fplnShow();
   }
   function fplnOn() { var b = $('fpln'); return !!(b && !b.hidden && b.getAttribute('aria-pressed') === 'true'); }
   function fplnShow() { var tm = document.querySelector('#sheet .ftm'); if (tm) tm.hidden = fplnOn(); var g = document.querySelector('[data-fpadd] span'); if (g && g.firstChild) g.firstChild.textContent = fplnOn() ? 'Einplanen' : 'Eintragen'; }
-  function whenFor(idx) { var x = idx != null ? foodState().e[idx] : null; return whenRow(x ? x.t : 0, !x, x ? x.mk : ''); }
+  // Neuer Eintrag aus einer leeren Mahlzeit (ui.fdmk): diese Mahlzeit vorgewählt
+  function whenFor(idx) { var x = idx != null ? foodState().e[idx] : null; return whenRow(x ? x.t : 0, !x, x ? x.mk : ui.fdmk || ''); }
   function mealOfE(x) { return x.mk ? MEALS.filter(function (m) { return m[1] === x.mk; })[0] || mealOf(x.t) : mealOf(x.t); }
   function dayTog() {
     // Tag als ein Knopf: antippen wechselt Heute → Gestern → (älterer gewählter Tag) → Heute
@@ -117,25 +120,41 @@
   }
   // Nährwertfarben (wie in der Bilanz) und -Icons statt Namen (Name bleibt als aria-label)
   var NCOL = { k: '--g-push', p: '--g-kh', f: '--g-mob', c: '--g-cardio', fb: '--g-pull', su: '--g-core' }, NIC = { k: 'nk', p: 'np', f: 'nf', c: 'nc', fb: 'nfb', su: 'nsu' };  function fNv(k, v) { return v == null ? '–' : k === 'k' ? String(Math.round(v)) : fN(v); }
-  // Nährwert antippen: gleiche Lebensmittel zusammengefasst (×n, gestapelt), sortiert nach diesem Wert, Anteil am Tag als Balken; antippen = übrige Nährwerte darunter (nur ansehen)
+  // Nährwert antippen: gleiche Lebensmittel zusammengefasst (×n, gestapelt), sortiert nach diesem Wert, Anteil am Tag als Ring; antippen = übrige Nährwerte darunter (nur ansehen).
+  // Künftiger Tag: aus dem Geplanten in der Geplant-Farbe. Heute mit Geplantem: zwei Abschnitte „Gegessen“ und „Noch geplant“ (Uhr, Geplant-Farbe), Balken zweifarbig
+  var PLC = 'color-mix(in srgb, var(--g-cardio) 55%, var(--s3))';
   function openNut(k) {
-    // Künftiger Tag: gleich, aber aus dem Geplanten und in der Geplant-Farbe (.pl)
-    var sd = fSd(), fu = sd > dayIdx(Date.now()), s = fu ? planSum(sd) : foodSum(sd), g = foodGoal(sd), u = k === 'k' ? ' kcal' : ' g', tot = s[k] || 0, gm = {}, gl = [], unk = 0;
-    s.items.forEach(function (o) {
-      var x = o.x, key = x.r ? x.r.i : 'n:' + (x.n || ''); if (x[k] == null) unk++;
-      if (!gm[key]) { gm[key] = { n: x.n || 'Mahlzeit', c: 0, v: {} }; gl.push(gm[key]); }
-      gm[key].c++; NK.forEach(function (j) { if (x[j] != null) gm[key].v[j] = (gm[key].v[j] || 0) + x[j]; });
-    });
-    var rows = gl.filter(function (q) { return q.v[k] > 0; }).sort(function (a, b) { return b.v[k] - a.v[k]; }).map(function (q) {
-      var sh = tot ? q.v[k] / tot : 0;
-      // Ring links = Anteil am Tag (Prozent darin), Name mit „n× gegessen“, rechts der Wert
-      return '<div class="fnr' + (q.c > 1 ? ' fnrs' : '') + '" data-fnx="1" role="button" tabindex="0" aria-expanded="false"><div class="fnh"><i class="fnp" style="--p:' + sh.toFixed(3) + '" aria-label="' + Math.round(sh * 100) + ' Prozent des Tages">' + Math.round(sh * 100) + '</i>' +
-        '<span><b>' + esc(q.n) + '</b>' + (q.c > 1 ? '<small>' + q.c + (fu ? '× geplant' : '× gegessen') + '</small>' : '') + '</span><em>' + fNv(k, q.v[k]) + u + '</em></div>' +
-        '<div class="fnd">' + NK.filter(function (j) { return j !== k; }).map(function (j) { return '<span style="--nc:var(' + NCOL[j] + ')" aria-label="' + (j === 'k' ? 'kcal' : NSH[j]) + '">' + ic(NIC[j]) + '<b>' + fNv(j, q.v[j]) + '</b></span>'; }).join('') + '</div></div>';
-    }).join('');
+    var t0 = dayIdx(Date.now()), sd = fSd(), fu = sd > t0, s = fu ? planSum(sd) : foodSum(sd), ps = sd === t0 ? planSum(sd) : null, g = foodGoal(sd), u = k === 'k' ? ' kcal' : ' g', unk = 0;
+    if (ps && !ps.items.length) ps = null;
+    var te = s[k] || 0, tp = ps ? ps[k] || 0 : 0, tot = te + tp;
+    function grp(items) {
+      var gm = {}, gl = [];
+      items.forEach(function (o) {
+        var x = o.x, key = x.r ? x.r.i : 'n:' + (x.n || ''); if (x[k] == null) unk++;
+        if (!gm[key]) { gm[key] = { n: x.n || 'Mahlzeit', c: 0, v: {} }; gl.push(gm[key]); }
+        gm[key].c++; NK.forEach(function (j) { if (x[j] != null) gm[key].v[j] = (gm[key].v[j] || 0) + x[j]; });
+      });
+      return gl;
+    }
+    function rows(gl, w) {
+      return gl.filter(function (q) { return q.v[k] > 0; }).sort(function (a, b) { return b.v[k] - a.v[k]; }).map(function (q) {
+        var sh = tot ? q.v[k] / tot : 0;
+        // Ring links = Anteil am Tag (Prozent darin), Name mit „n× gegessen/geplant“, rechts der Wert
+        return '<div class="fnr' + (q.c > 1 ? ' fnrs' : '') + '" data-fnx="1" role="button" tabindex="0" aria-expanded="false"><div class="fnh"><i class="fnp" style="--p:' + sh.toFixed(3) + '" aria-label="' + Math.round(sh * 100) + ' Prozent des Tages">' + Math.round(sh * 100) + '</i>' +
+          '<span><b>' + esc(q.n) + '</b>' + (q.c > 1 ? '<small>' + q.c + '× ' + w + '</small>' : '') + '</span><em>' + fNv(k, q.v[k]) + u + '</em></div>' +
+          '<div class="fnd">' + NK.filter(function (j) { return j !== k; }).map(function (j) { return '<span style="--nc:var(' + NCOL[j] + ')" aria-label="' + (j === 'k' ? 'kcal' : NSH[j]) + '">' + ic(NIC[j]) + '<b>' + fNv(j, q.v[j]) + '</b></span>'; }).join('') + '</div></div>';
+      }).join('');
+    }
+    var nv = function (v) { return k === 'k' ? Math.round(v) : fN(v); }, gk = (k === 'su' ? '≤' : '') + g[k] + u, re = rows(grp(s.items), fu ? 'geplant' : 'gegessen'), body;
+    if (ps) {
+      // Zwei Abschnitte mit Kopf (Symbol, Wort, Summe); Balken: gegessen in der Nährwertfarbe, danach geplant
+      var rp = rows(grp(ps.items), 'geplant'), q1 = Math.min(1, te / (g[k] || 1)), q2 = Math.min(1, tot / (g[k] || 1));
+      body = '<i class="fnb fnb2" style="--fc:var(' + NCOL[k] + ');--p:' + q1.toFixed(3) + ';--p2:' + q2.toFixed(3) + '"></i>' +
+        '<div class="fnl" style="--fc:var(' + NCOL[k] + ')"><p class="fnhd">' + ic('check') + 'Gegessen<b>' + nv(te) + u + '</b></p>' + (re || '<p class="muted">Noch nichts.</p>') + '</div>' +
+        '<div class="fnl fnlp" style="--fc:' + PLC + '"><p class="fnhd">' + ic('clock') + 'Noch geplant<b>' + nv(tp) + u + '</b></p>' + rp + '</div>';
+    } else body = '<div class="fnl" style="--fc:' + (fu ? PLC : 'var(' + NCOL[k] + ')') + '"><i class="fnb" style="--p:' + Math.min(1, tot / (g[k] || 1)).toFixed(3) + '"></i>' + (re || '<p class="muted">Noch nichts mit ' + (k === 'k' ? 'Kalorien' : NSH[k]) + '.</p>') + '</div>';
     ui.sheet = { nut: k };
-    sheetOpen(shHead(NIC[k], (k === 'k' ? 'Kalorien' : NSH[k]) + (sd === dayIdx(Date.now()) ? ' heute' : fu ? ' geplant' : ''), (k === 'k' ? Math.round(tot) : fN(tot)) + ' / ' + (k === 'su' ? '≤' : '') + g[k] + u) +
-      '<div class="fnl" style="--fc:' + (fu ? 'color-mix(in srgb, var(--g-cardio) 55%, var(--s3))' : 'var(' + NCOL[k] + ')') + '"><i class="fnb" style="--p:' + Math.min(1, tot / (g[k] || 1)).toFixed(3) + '"></i>' + (rows || '<p class="muted">Noch nichts mit ' + (k === 'k' ? 'Kalorien' : NSH[k]) + '.</p>') + '</div>' +
+    sheetOpen(shHead(NIC[k], (k === 'k' ? 'Kalorien' : NSH[k]) + (sd === t0 ? ' heute' : fu ? ' geplant' : ''), (ps ? nv(te) + ' + ' + nv(tp) + ' geplant' : nv(tot)) + ' / ' + gk) + body +
       (unk ? '<p class="sh-note">' + unk + (unk === 1 ? ' Eintrag' : ' Einträge') + ' ohne Angabe</p>' : ''), true);
   }
   function fChip(o) {

@@ -120,7 +120,7 @@
     if (/^c-/.test(t.id || '') && $('c-res')) calcUpd();
     // Wasser-Feld in Litern (Komma erlaubt); Zahlen über 20 gelten als ml
     if (t.id === 'wa-v') { var wl = parseFloat(t.value.replace(',', '.')) || 0, wv = waSet(wl > 20 ? wl : wl * 1000); $('wa-r').dataset.v = wv; waShow(wv); }
-    if (t.id === 'ftm' && /^\d\d:\d\d/.test(t.value)) $('ftmv').textContent = t.value.slice(0, 5);
+    if (t.id === 'ftm' && /^\d\d:\d\d/.test(t.value)) { $('ftmv').textContent = t.value.slice(0, 5); t.dataset.chg = '1'; }
     if (t.id === 'ftm' && $('fmk') && !$('fmk').dataset.man && /^\d\d:\d\d$/.test(t.value)) { var qd = new Date(); qd.setHours(+t.value.slice(0, 2), +t.value.slice(3), 0, 0); fmkSet(mealOf(qd.getTime())[1]); }
     if (t.id === 'fq') { ui.fq = t.value; fresSet(); clearTimeout(fonT); fonT = setTimeout(fonSearch, 450); }
     if (/^f-/.test(t.id || '') && ui.fqd) quickRead();

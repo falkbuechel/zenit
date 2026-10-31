@@ -87,7 +87,7 @@
     logsOf(id).forEach(function (l) { l.s.forEach(function (x) { if (x > m) m = x; }); });
     return m;
   }
-  function closeSheet(force) { ui.dd = null; ui.ingm = false; ui.fplan = null; ui.plEdit = null; ui.pe = null; scanStop(); if (tm && (tm.phase === 'cd' || tm.phase === 'run') && !force) return; clearInterval(tmT); tm = null; ui.sheet = null; shMorphStop(); shMorph.h = 0; $('shade').classList.remove('open'); $('sheet').classList.remove('open'); }
+  function closeSheet(force) { ui.dd = null; ui.ingm = false; ui.fplan = null; ui.fdmk = null; ui.plEdit = null; ui.pe = null; scanStop(); if (tm && (tm.phase === 'cd' || tm.phase === 'run') && !force) return; clearInterval(tmT); tm = null; ui.sheet = null; shMorphStop(); shMorph.h = 0; $('shade').classList.remove('open'); $('sheet').classList.remove('open'); }
   function sheetVal() { var v = parseFloat($('sv').value); return isFinite(v) && v >= 0 ? Math.round(v) : 0; }
   function updSheetXp() { /* XP hängt vom ganzen Übungsblock ab, keine Satz-Vorschau */ }
   function saveSheet() {

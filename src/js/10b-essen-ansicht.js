@@ -213,7 +213,7 @@
         if (q) return fMealCard(q, pi.length);
         // Künftiger Tag: Mahlzeit antippen = planen (Fenster mit Geplantem: ändern, entfernen, als Vorlage); heute: Geplantes antippen = gegessen
         if (pi.length) return '<button class="fmc fpm m-' + m[1] + '"' + (sf ? ' data-pml="' + m[1] + '" aria-label="' + m[2] + ' geplant, ändern"' : ' data-fpe="' + m[1] + '" aria-label="' + m[2] + ' geplant, antippen = gegessen"') + '><span class="fmt">' + ic(MEALI[m[1]]) + ic(sf ? 'clock' : 'check') + '</span><b>' + Math.round(pi.reduce(function (a, o) { return a + o.x.k; }, 0)) + '<em>kcal</em></b><small>' + pi.length + ' geplant</small></button>';
-        return '<button class="fmc fme m-' + m[1] + '"' + (sf ? ' data-pml="' + m[1] + '" aria-label="' + m[2] + ' planen"' : ' data-fsearch="1" aria-label="' + m[2] + ' eintragen"') + '>' + ic(MEALI[m[1]]) + '</button>';
+        return '<button class="fmc fme m-' + m[1] + '"' + (sf ? ' data-pml="' + m[1] + '" aria-label="' + m[2] + ' planen"' : ' data-fsearch="1" data-femk="' + m[1] + '" aria-label="' + m[2] + ' eintragen"') + '>' + ic(MEALI[m[1]]) + '</button>';
       }).join('')) + '</div></section>';
     // Einkauf links, Suchen als Feld-Optik (Lupe, blasser Text, Scan rechts), rechts Gerichte und Menüs (ein Fenster mit Reitern)
     h += '<div class="fact2 rise" style="--i:3"><button class="fdsb" data-fshop="1" aria-label="Einkauf">' + ic('cart') + '</button><div class="fsrb"><button class="fsrq" data-fsearch="1">' + ic('search') + '<span>' + (sf ? 'Einplanen …' : 'Suchen …') + '</span></button><button class="fsrs" data-fscan="go" aria-label="Barcode scannen">' + ic('scan') + '</button></div>' +
@@ -353,7 +353,7 @@
     foodState().e.forEach(function (e) { if (e.r && e.r.i === x.id) { var m = mealOfE(e)[1]; mc[m] = (mc[m] || 0) + 1; if (!ml || mc[m] > mc[ml]) ml = m; } });
     return ml ? [ml] : [];
   }
-  // Suche großzügig: jedes Wort muss passen, Mehrzahl/Endungen egal (Eier → Ei, Tomaten → Tomate), ein Tippfehler ab 5 Buchstaben erlaubt. Kleiner = besser, null = kein Treffer
+  // Suche großzügig: jedes Wort muss passen, Mehrzahl/Endungen egal (Eier → Ei, Tomaten → Tomate), ein Tippfehler ab 4 Buchstaben erlaubt. Kleiner = besser, null = kein Treffer
   function fqStem(w) { return w.length > 3 ? w.replace(/(ern|en|er|es|e|n|s)$/, '') : w; }
   function fqNear(a, b) {
     // Höchstens ein Buchstabe anders, fehlt oder zu viel
@@ -367,7 +367,9 @@
     for (var k = 0, qw = q.split(/\s+/); k < qw.length; k++) {
       var w = qw[k], st = fqStem(w), s = null; if (!w) continue;
       hw.forEach(function (h) {
-        var v = h.indexOf(w) === 0 ? 1 : fqStem(h) === st || st.length > 2 && h.indexOf(st) === 0 ? 2 : w.length > 2 && h.indexOf(w) > 0 ? 3 : w.length >= 5 && fqNear(fqStem(h), st) ? 4 : null;
+        // Tippfehler ab 4 Buchstaben: ganzes Wort oder Wortanfang (beim Tippen, „Hafr“ → Haferflocken)
+        var fz = w.length >= 4 && (fqNear(fqStem(h), st) || [0, 1, -1].some(function (d) { return fqNear(h.slice(0, w.length + d), w); }));
+        var v = h.indexOf(w) === 0 ? 1 : fqStem(h) === st || st.length > 2 && h.indexOf(st) === 0 ? 2 : w.length > 2 && h.indexOf(w) > 0 ? 3 : fz ? 4 : null;
         if (v != null && (s == null || v < s)) s = v;
       });
       if (s == null) return null; tot = Math.max(tot, s);

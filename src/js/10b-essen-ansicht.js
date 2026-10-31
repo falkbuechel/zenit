@@ -111,16 +111,16 @@
   // Tage zurück für neue Einträge (ui.fday). An künftigen Tagen wird stattdessen eingeplant: ui.fplan ohne Mahlzeit (die kommt aus dem Ablegen, sonst mealFor)
   function fBack() { var t = dayIdx(Date.now()), sd = fSd(); if (sd > t && !ui.fplan) ui.fplan = { d: sd, mk: null, pg: 1 }; return t - sd; }
   function fMon(di) { var q = new Date(di * 864e5); return q.toLocaleDateString('de-DE', q.getUTCFullYear() === new Date().getFullYear() ? { month: 'long', timeZone: 'UTC' } : { month: 'long', year: 'numeric', timeZone: 'UTC' }); }
-  // Seite der Tagesleiste in Wochen Mo–So: 0 = diese Woche, positiv = zurück, negativ = voraus (ui.fpg, sonst die Woche des gewählten Tags)
-  function fWk(di) { return di - wdOf(di); }
-  function fPg() { var t = dayIdx(Date.now()), sd = fSd(); return ui.fpg != null ? ui.fpg : ui.fdx && sd > t ? 0 : (fWk(t) - fWk(sd)) / 7; }
+  // Erster Tag der Tagesleiste: heute steht an Platz 4 (heute − 3), Seiten zu 7 Tagen, aufgeklappt zu 14 (ui.fw0, sonst die Seite des gewählten Tags)
+  function fN0() { return ui.fdx ? 14 : 7; }
+  function fW0() { var b = dayIdx(Date.now()) - 3, n = fN0(); return ui.fw0 != null ? ui.fw0 : b + Math.floor((fSd() - b) / n) * n; }
   function fdsMove(dir) {
-    // Tagesleiste wischen: eine Woche zurück/vor (ein Jahr zurück, 8 Wochen voraus); der gewählte Tag wandert mit. Neuer Monat wird kurz eingeblendet
-    var t = dayIdx(Date.now()), pg = fPg(), np = pg - dir, a = fWk(t) - pg * 7, b = fWk(t) - np * 7, e = b + (ui.fdx ? 13 : 6);
-    if (np < -8 || e <= t - 366) return false;
+    // Tagesleiste wischen: eine Seite zurück/vor (ein Jahr zurück, 9 Wochen voraus); der gewählte Tag wandert mit. Neuer Monat wird kurz eingeblendet
+    var t = dayIdx(Date.now()), n = fN0(), a = fW0(), b = a + dir * n, e = b + n - 1;
+    if (b > t + 63 || e <= t - 366) return false;
     if (fMon(a) !== fMon(b)) ui.fmon = fMon(b);
-    var s0 = fSd(); if (s0 < b || s0 > e) ui.fsd = Math.max(b, Math.min(e, s0 + dir * 7));
-    ui.fpg = np; ui.fdir = dir; ui.fresh = false; buzz(4); render(); return true;
+    var s0 = fSd(); if (s0 < b || s0 > e) ui.fsd = Math.max(b, Math.min(e, s0 + dir * n));
+    ui.fw0 = b; ui.fdir = dir; ui.fresh = false; buzz(4); render(); return true;
   }
   // Zweite Woche auf/zu (runterziehen an der Leiste oder Griff darunter)
   function fdxSet(on) { ui.fdx = on; ui.fresh = false; buzz(4); render(); }
@@ -182,9 +182,9 @@
     ui.ftiles = tl;
     // Keine Überschrift (wie in Spielen ergibt sich der Bereich aus der unteren Leiste); Ziele/Rechner im Profil
     var h = '';
-    // Tagesleiste: Woche Mo–So, aufgeklappt (ui.fdx) mit der Woche danach (wischen = Wochen zurück/vor). Dünner Ring um die Zahl = kcal vom Ziel (wie im Kalender, dayRing;
+    // Tagesleiste: 7 Tage mit heute in der Mitte, aufgeklappt (ui.fdx) 14 (wischen = eine Seite zurück/vor). Dünner Ring um die Zahl = kcal vom Ziel (wie im Kalender, dayRing;
     // grün = Protein fast erreicht und kcal im Rahmen, orange = deutlich zu wenig, rot = über 110 %), geplant kühl. Künftige Tage: einplanen statt eintragen
-    var ds = '', w0 = fWk(today) - fPg() * 7; for (var i = 0; i < (ui.fdx ? 14 : 7); i++) {
+    var ds = '', w0 = fW0(); for (var i = 0; i < fN0(); i++) {
       var di = w0 + i, fu = di > today, sm = fu ? planSum(di) : foodSum(di);
       var gc = di < today ? ' past' : di === today ? ' today' : ' fut';
       ds += '<button class="fdd' + (di === sd ? ' sel' : '') + gc + (fu && sm.items.length ? ' pl' : '') + '" data-fsd="' + di + '" aria-label="' + esc(fmtDayL(di)) + '"><small>' + WDN[wdOf(di)].slice(0, 2) + '</small><b>' + dayFood(di, today) + new Date(di * 864e5).getUTCDate() + '</b></button>';
@@ -212,12 +212,12 @@
         var q = gs.filter(function (x) { return x.m === m[1]; })[0], pi = pq.items.filter(function (o) { return o.x.mk === m[1]; });
         if (q) return fMealCard(q, pi.length);
         // Künftiger Tag: Mahlzeit antippen = planen (Fenster mit Geplantem: ändern, entfernen, als Vorlage); heute: Geplantes antippen = gegessen
-        if (pi.length) return '<button class="fmc fpm m-' + m[1] + '"' + (sf ? ' data-pml="' + m[1] + '" aria-label="' + m[2] + ' geplant, ändern"' : ' data-fpe="' + m[1] + '" aria-label="' + m[2] + ' geplant, antippen = gegessen"') + '><span class="fmt">' + ic(MEALI[m[1]]) + (sf ? '' : ic('check')) + '</span><b>' + Math.round(pi.reduce(function (a, o) { return a + o.x.k; }, 0)) + '<em>kcal</em></b><small>' + pi.length + ' geplant</small></button>';
+        if (pi.length) return '<button class="fmc fpm m-' + m[1] + '"' + (sf ? ' data-pml="' + m[1] + '" aria-label="' + m[2] + ' geplant, ändern"' : ' data-fpe="' + m[1] + '" aria-label="' + m[2] + ' geplant, antippen = gegessen"') + '><span class="fmt">' + ic(MEALI[m[1]]) + ic(sf ? 'clock' : 'check') + '</span><b>' + Math.round(pi.reduce(function (a, o) { return a + o.x.k; }, 0)) + '<em>kcal</em></b><small>' + pi.length + ' geplant</small></button>';
         return '<button class="fmc fme m-' + m[1] + '"' + (sf ? ' data-pml="' + m[1] + '" aria-label="' + m[2] + ' planen"' : ' data-fsearch="1" aria-label="' + m[2] + ' eintragen"') + '>' + ic(MEALI[m[1]]) + '</button>';
       }).join('')) + '</div></section>';
-    // Suchen als Feld-Optik (Lupe, blasser Text, Scan rechts), daneben Gerichte, Vorlagen, Einkauf als Icon-Knöpfe
-    h += '<div class="fact2 rise" style="--i:3"><div class="fsrb"><button class="fsrq" data-fsearch="1">' + ic('search') + '<span>' + (sf ? 'Einplanen …' : 'Suchen …') + '</span></button><button class="fsrs" data-fscan="go" aria-label="Barcode scannen">' + ic('scan') + '</button></div>' +
-      '<button class="fdsb" data-fdishes="1" aria-label="Gerichte">' + ic('pot') + '</button><button class="fdsb" data-ftpl="1" aria-label="Vorlagen">' + ic('cards') + '</button><button class="fdsb" data-fshop="1" aria-label="Einkauf">' + ic('cart') + '</button></div>';
+    // Einkauf links, Suchen als Feld-Optik (Lupe, blasser Text, Scan rechts), rechts Gerichte und Menüs (ein Fenster mit Reitern)
+    h += '<div class="fact2 rise" style="--i:3"><button class="fdsb" data-fshop="1" aria-label="Einkauf">' + ic('cart') + '</button><div class="fsrb"><button class="fsrq" data-fsearch="1">' + ic('search') + '<span>' + (sf ? 'Einplanen …' : 'Suchen …') + '</span></button><button class="fsrs" data-fscan="go" aria-label="Barcode scannen">' + ic('scan') + '</button></div>' +
+      '<button class="fdsb" data-fdishes="1" aria-label="Gerichte und Menüs">' + ic('pot') + '</button></div>';
     // Vorschläge 4×2: zuletzt, häufig, typisch für die Uhrzeit (antippen = Menge wählen, nach oben ziehen = sofort eintragen bzw. an künftigen Tagen einplanen)
     h += '<section class="ftl rise" style="--i:4" data-noswipe="1">' + tl.map(function (x, j) { return fTile(x, 'data-ftile="' + j + '"', ui.ftok === j ? ' done' : ''); }).join('') + '</section>';
     ui.ftok = null;
@@ -353,6 +353,27 @@
     foodState().e.forEach(function (e) { if (e.r && e.r.i === x.id) { var m = mealOfE(e)[1]; mc[m] = (mc[m] || 0) + 1; if (!ml || mc[m] > mc[ml]) ml = m; } });
     return ml ? [ml] : [];
   }
+  // Suche großzügig: jedes Wort muss passen, Mehrzahl/Endungen egal (Eier → Ei, Tomaten → Tomate), ein Tippfehler ab 5 Buchstaben erlaubt. Kleiner = besser, null = kein Treffer
+  function fqStem(w) { return w.length > 3 ? w.replace(/(ern|en|er|es|e|n|s)$/, '') : w; }
+  function fqNear(a, b) {
+    // Höchstens ein Buchstabe anders, fehlt oder zu viel
+    if (Math.abs(a.length - b.length) > 1) return false; var i = 0, j = 0, d = 0;
+    while (i < a.length && j < b.length) { if (a[i] === b[j]) { i++; j++; continue; } if (++d > 1) return false; if (a.length > b.length) i++; else if (b.length > a.length) j++; else { i++; j++; } }
+    return d + (a.length - i) + (b.length - j) <= 1;
+  }
+  function fqScore(n, q) {
+    if (n.indexOf(q) === 0) return 0;
+    var hw = n.split(/[^a-z0-9]+/), tot = 0;
+    for (var k = 0, qw = q.split(/\s+/); k < qw.length; k++) {
+      var w = qw[k], st = fqStem(w), s = null; if (!w) continue;
+      hw.forEach(function (h) {
+        var v = h.indexOf(w) === 0 ? 1 : fqStem(h) === st || st.length > 2 && h.indexOf(st) === 0 ? 2 : w.length > 2 && h.indexOf(w) > 0 ? 3 : w.length >= 5 && fqNear(fqStem(h), st) ? 4 : null;
+        if (v != null && (s == null || v < s)) s = v;
+      });
+      if (s == null) return null; tot = Math.max(tot, s);
+    }
+    return tot;
+  }
   function fresHtml() {
     // Ohne Suchtext drei Reiter: Zuletzt, Kategorien (antippen = Liste, Zurück oben), Meins (Schnell / Lebensmittel anlegen / Gericht anlegen, Gerichte als Karten, eigene Lebensmittel);
     // mit Suchtext nur die Treffer
@@ -360,7 +381,7 @@
     if (q) {
       var sc = [];
       st.o.map(function (x) { return x.id; }).concat((ui.ingm ? [] : st.d).map(function (x) { return x.id; }), FOODS.filter(function (x) { return !x.vh; }).map(function (x) { return x.id; })).forEach(function (id) {
-        var it0 = fItem(id), n = fnorm(fHay(it0)), i = n.indexOf(q); if (i >= 0) sc.push([id, i === 0 ? 0 : n.indexOf(' ' + q) >= 0 ? 1 : 2]);
+        var s = fqScore(fnorm(fHay(fItem(id))), q); if (s != null) sc.push([id, s]);
       });
       sc.sort(function (a, b) { return a[1] - b[1]; });
       // Immer möglich: über den Treffern den Suchtext als Schnell-Eintrag, leicht abgehoben wie ein Vorschlag (nicht beim Zutat fürs Gericht)

@@ -201,52 +201,6 @@
 
     return h;
   }
-  // ---------- Essen-Vorlagen (food.tp): [{id, n, k: 'm' (Mahlzeit, mk) | 'd' (Tag), it: [{i, g, mk?}]}]
-  function tplKcal(t) { return Math.round(t.it.reduce(function (a, q) { var it = fItem(q.i); return a + (it ? fNut(it, q.g).k || 0 : 0); }, 0)); }
-  function tplTiles(sd) {
-    // Kacheln: Mahlzeit-Vorlagen in der Farbe ihrer Mahlzeit, Tages-Vorlagen neutral mit Kalender-Symbol; dazu gestrichelt „Tag als Vorlage“ (wenn der Tag geplant ist).
-    // Im Löschmodus (Mülleimer-Kachel) löscht Antippen eine Vorlage
-    var tp = foodState().tp, del = ui.tpdel, dayHas = planSum(sd).items.some(function (o) { return o.x.r; });
-    // Getrennt in „Ganze Tage“ und „Mahlzeiten“; Tages-Kachel zeigt die enthaltenen Mahlzeiten als Symbole, Mahlzeit-Kachel den Namen der Mahlzeit
-    function tile(t) {
-      var mks = t.k === 'd' ? MEALS.filter(function (m) { return t.it.some(function (q) { return q.mk === m[1]; }); }) : [];
-      return '<button class="fti q-m tpl' + (t.k === 'm' ? ' m-' + t.mk : ' tpd') + (del ? ' tdel' : '') + '" data-ptp="' + t.id + '" aria-label="' + (t.k === 'd' ? 'Tages' : 'Mahlzeit') + '-Vorlage ' + esc(t.n) + (del ? ' löschen' : '') + '"><i class="ftq">' + ic(del ? 'close' : t.k === 'm' ? MEALI[t.mk] : 'cal') + '</i>' +
-        '<small class="tpk">' + (t.k === 'd' ? mks.map(function (m) { return ic(MEALI[m[1]]); }).join('') : MEALS.filter(function (m) { return m[1] === t.mk; })[0][2]) + '</small>' +
-        '<b class="' + fitCls(t.n, 8) + '">' + esc(t.n) + '</b><span class="ftv"><span>' + tplKcal(t) + '</span><small>' + t.it.length + '×</small></span></button>';
-    }
-    var td = tp.filter(function (t) { return t.k === 'd'; }), tm = tp.filter(function (t) { return t.k !== 'd'; });
-    return (td.length ? '<p class="tplg">' + ic('cal') + 'Ganze Tage</p>' + td.map(tile).join('') : '') + (tm.length ? '<p class="tplg">' + ic('food') + 'Mahlzeiten</p>' + tm.map(tile).join('') : '') + (dayHas && !del ? '<button class="fti tplnew" data-ptpms="1" aria-label="Eine geplante Mahlzeit als Vorlage speichern">' + ic('plus') + '<small>Mahlzeit<br>speichern</small></button>' +
-        '<button class="fti tplnew" data-ptpd="1" aria-label="Diesen Tag als Vorlage speichern">' + ic('plus') + '<small>Tag<br>speichern</small></button>' : '') +
-      (tp.length ? '<button class="fti tplnew" data-ptpx="1" aria-label="' + (del ? 'Fertig' : 'Vorlagen löschen') + '">' + ic(del ? 'check' : 'trash') + '</button>' : '') +
-      (!tp.length && !dayHas ? '<p class="muted tplh">' + ic('cards') + 'Vorlagen sind ganze Mahlzeiten oder Tage zum Wiederholen (Gerichte sind Rezepte). Plane zuerst eine Mahlzeit, dann „Als Vorlage speichern“.</p>' : '');
-  }
-  function tplAdd(t, di, mk) {
-    // Vorlage einplanen: Mahlzeit-Vorlage in Mahlzeit mk (sonst ihre eigene), Tages-Vorlage mit den gespeicherten Mahlzeiten
-    var pl = foodState().pl; fUndo();
-    t.it.forEach(function (q) {
-      var it = fItem(q.i); if (!it) return; var v = fNut(it, q.g), x = { d: di, mk: t.k === 'm' ? (mk || t.mk) : q.mk, n: fEn(it).slice(0, 30) };
-      NK.forEach(function (k) { if (v[k] != null) x[k] = k === 'k' ? Math.round(v.k) : Math.round(v[k] * 10) / 10; }); x.r = { i: q.i, g: q.g }; pl.push(x);
-    });
-    persist(); ui.fresh = false; render(); buzz([10, 30, 10]); toast('Vorlage geplant · ' + tplKcal(t) + ' kcal', 'cal', true);
-  }
-  function tplSave(k, di, mk, nm) {
-    // Geplantes eines Tags (k = 'd') oder einer Mahlzeit (k = 'm') als Vorlage speichern; Name selbst gewählt, sonst aus den ersten Einträgen. Gibt den Namen zurück
-    // Grenzen wie in cleanFood (40 Vorlagen, 30 Einträge), sonst ginge Überzähliges beim nächsten Laden still verloren
-    var l = planSum(di).items.filter(function (o) { return o.x.r && (k === 'd' || o.x.mk === mk); }).slice(0, 30); if (!l.length) return '';
-    if (foodState().tp.length >= 40) { toast('Höchstens 40 Vorlagen', 'bolt'); return ''; }
-    var n = String(nm || '').trim() || (k === 'd' ? 'Tag ' + WDN[wdOf(di)] : l[0].x.n.split(' ')[0] + (l.length > 1 ? ' +' + (l.length - 1) : ''));
-    foodState().tp.push({ id: 't' + Date.now().toString(36), n: n.slice(0, 24), k: k, mk: k === 'm' ? mk : undefined, it: l.map(function (o) { var q = { i: o.x.r.i, g: o.x.r.g }; if (k === 'd') q.mk = o.x.mk; return q; }) });
-    persist(); buzz([10, 30, 10]); return n.slice(0, 24);
-  }
-  function openTplDay(di, keep) {
-    // Tag als Vorlage: je Mahlzeit kurz, was geplant ist, darunter Name + Speichern (gleich offen)
-    var ps = planSum(di).items, kc = Math.round(ps.reduce(function (a, o) { return a + (o.x.k || 0); }, 0));
-    if (!keep) { ui.tpnm = true; ui.tpok = ''; } ui.sheet = { tpday: di };
-    sheetOpen(shHead('cal', 'Tag als Vorlage', dayHead(di)) + '<div class="tpdl">' + MEALS.map(function (m) {
-      var l = ps.filter(function (o) { return o.x.mk === m[1]; }); if (!l.length) return '';
-      return '<div class="m-' + m[1] + '">' + ic(MEALI[m[1]]) + '<span>' + l.map(function (o) { return esc(o.x.n); }).join(', ') + '</span><em>' + Math.round(l.reduce(function (a, o) { return a + o.x.k; }, 0)) + '</em></div>';
-    }).join('') + '</div>' + tplRowHtml('d', ps, kc, 'Tag ' + WDN[wdOf(di)]));
-  }
   function planSheet(d) {
     // Tag-Editor als Fenster über Planen (wie Gerichte); render() zeichnet es mit, Scroll bleibt; ohne Editor zu
     var day = ui.tab === 'tage' && ui.pe ? pDay(ui.pe) : null, sh = $('sheet');

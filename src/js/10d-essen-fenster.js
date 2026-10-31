@@ -13,13 +13,23 @@
   var MEALS = [[10.5, 'fr', 'Frühstück', 8], [14.5, 'mi', 'Mittag', 12.5], [17.5, 'sn', 'Snack', 16], [24, 'ab', 'Abend', 19]], MEALI = { fr: 'sun', mi: 'food', sn: 'snack', ab: 'moon' };
   function mealOf(t) { var q = new Date(t), h = q.getHours() + q.getMinutes() / 60; return h < 5 ? MEALS[3] : MEALS.filter(function (m) { return h < m[0]; })[0]; }
   function hmOf(t) { var q = new Date(t); return ('0' + q.getHours()).slice(-2) + ':' + ('0' + q.getMinutes()).slice(-2); }
-  function whenRow(t, withDay, mk) {
-    // Tag (nur neue Einträge) oben, darunter eine Zeile: Mahlzeit als Symbol-Leiste + Uhrzeit-Pille; die Mahlzeit folgt der Uhrzeit, bis man sie wählt
+  function whenRow(t, withDay, mk, plan) {
+    // Tag (nur neue Einträge) oben, darunter eine Zeile: Mahlzeit als Symbol-Leiste + Uhrzeit-Pille; die Mahlzeit folgt der Uhrzeit, bis man sie wählt.
+    // Einplanen (plan): nur die Mahlzeit. Neuer Eintrag: Schalter „Geplant“ erscheint, sobald eine spätere Mahlzeit gewählt ist (heute für später planen)
     var ml = mk || mealOf(t || Date.now())[1];
-    return '<div class="fwh">' + (withDay ? dayTog() : '') + '<div class="seg fmk" role="group" aria-label="Mahlzeit"><input type="hidden" id="fmk" value="' + ml + '"' + (mk ? ' data-man="1"' : '') + '>' +
+    return '<div class="fwh">' + (withDay && !plan ? dayTog() : '') + '<div class="seg fmk" role="group" aria-label="Mahlzeit"><input type="hidden" id="fmk" value="' + ml + '"' + (mk ? ' data-man="1"' : '') + '>' +
       MEALS.map(function (m) { return '<button type="button" data-fmk="' + m[1] + '" aria-pressed="' + (m[1] === ml) + '" aria-label="' + m[2] + '">' + ic(MEALI[m[1]]) + '</button>'; }).join('') + '</div>' +
-      '<label class="ftm">' + ic('clock') + '<b id="ftmv">' + hmOf(t || Date.now()) + '</b><input id="ftm" type="time" value="' + hmOf(t || Date.now()) + '" aria-label="Uhrzeit"></label></div>';
+      (plan ? '' : (withDay ? '<button type="button" class="fpln" id="fpln" data-fpln="1" aria-pressed="false" aria-label="Für später planen" hidden>' + ic('clock') + '<b>Geplant</b></button>' : '') +
+        '<label class="ftm">' + ic('clock') + '<b id="ftmv">' + hmOf(t || Date.now()) + '</b><input id="ftm" type="time" value="' + hmOf(t || Date.now()) + '" aria-label="Uhrzeit"></label>') + '</div>';
   }
+  // Schalter „Geplant“ nur heute bei einer späteren Mahlzeit als jetzt; erscheint er neu, ist er an. An = Uhrzeit-Pille weg (geplant hat keine)
+  function fplnSync() {
+    var b = $('fpln'), v = $('fmk') && $('fmk').value; if (!b) return;
+    var ix = function (k) { return MEALS.map(function (m) { return m[1]; }).indexOf(k); }, on = !ui.fday && ix(v) > ix(mealOf(Date.now())[1]);
+    if (on && b.hidden) b.setAttribute('aria-pressed', 'true'); b.hidden = !on; fplnShow();
+  }
+  function fplnOn() { var b = $('fpln'); return !!(b && !b.hidden && b.getAttribute('aria-pressed') === 'true'); }
+  function fplnShow() { var tm = document.querySelector('#sheet .ftm'); if (tm) tm.hidden = fplnOn(); var g = document.querySelector('[data-fpadd] span'); if (g && g.firstChild) g.firstChild.textContent = fplnOn() ? 'Einplanen' : 'Eintragen'; }
   function whenFor(idx) { var x = idx != null ? foodState().e[idx] : null; return whenRow(x ? x.t : 0, !x, x ? x.mk : ''); }
   function mealOfE(x) { return x.mk ? MEALS.filter(function (m) { return m[1] === x.mk; })[0] || mealOf(x.t) : mealOf(x.t); }
   function dayTog() {
@@ -98,7 +108,7 @@
     st.g = { a: 1 }; persist(); closeSheet(true); ui.fresh = false; render(); toast('Ziele: ' + foodGoal().k + ' kcal heute', 'check');
   }
 
-  function fmkSet(v) { $('fmk').value = v; document.querySelectorAll('[data-fmk]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.fmk === v)); }); }
+  function fmkSet(v) { $('fmk').value = v; document.querySelectorAll('[data-fmk]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.fmk === v)); }); fplnSync(); }
   // Gegessenes gruppieren: je Mahlzeit eine Gruppe (Reihenfolge und Uhrzeit nach dem ersten Eintrag)
   function fGroups(items) {
     var gs = [], gm = {};
@@ -109,7 +119,8 @@
   var NCOL = { k: '--g-push', p: '--g-kh', f: '--g-mob', c: '--g-cardio', fb: '--g-pull', su: '--g-core' }, NIC = { k: 'nk', p: 'np', f: 'nf', c: 'nc', fb: 'nfb', su: 'nsu' };  function fNv(k, v) { return v == null ? '–' : k === 'k' ? String(Math.round(v)) : fN(v); }
   // Nährwert antippen: gleiche Lebensmittel zusammengefasst (×n, gestapelt), sortiert nach diesem Wert, Anteil am Tag als Balken; antippen = übrige Nährwerte darunter (nur ansehen)
   function openNut(k) {
-    var sd = fSd(), s = foodSum(sd), g = foodGoal(sd), u = k === 'k' ? ' kcal' : ' g', tot = s[k] || 0, gm = {}, gl = [], unk = 0;
+    // Künftiger Tag: gleich, aber aus dem Geplanten und in der Geplant-Farbe (.pl)
+    var sd = fSd(), fu = sd > dayIdx(Date.now()), s = fu ? planSum(sd) : foodSum(sd), g = foodGoal(sd), u = k === 'k' ? ' kcal' : ' g', tot = s[k] || 0, gm = {}, gl = [], unk = 0;
     s.items.forEach(function (o) {
       var x = o.x, key = x.r ? x.r.i : 'n:' + (x.n || ''); if (x[k] == null) unk++;
       if (!gm[key]) { gm[key] = { n: x.n || 'Mahlzeit', c: 0, v: {} }; gl.push(gm[key]); }
@@ -119,12 +130,12 @@
       var sh = tot ? q.v[k] / tot : 0;
       // Ring links = Anteil am Tag (Prozent darin), Name mit „n× gegessen“, rechts der Wert
       return '<div class="fnr' + (q.c > 1 ? ' fnrs' : '') + '" data-fnx="1" role="button" tabindex="0" aria-expanded="false"><div class="fnh"><i class="fnp" style="--p:' + sh.toFixed(3) + '" aria-label="' + Math.round(sh * 100) + ' Prozent des Tages">' + Math.round(sh * 100) + '</i>' +
-        '<span><b>' + esc(q.n) + '</b>' + (q.c > 1 ? '<small>' + q.c + '× gegessen</small>' : '') + '</span><em>' + fNv(k, q.v[k]) + u + '</em></div>' +
+        '<span><b>' + esc(q.n) + '</b>' + (q.c > 1 ? '<small>' + q.c + (fu ? '× geplant' : '× gegessen') + '</small>' : '') + '</span><em>' + fNv(k, q.v[k]) + u + '</em></div>' +
         '<div class="fnd">' + NK.filter(function (j) { return j !== k; }).map(function (j) { return '<span style="--nc:var(' + NCOL[j] + ')" aria-label="' + (j === 'k' ? 'kcal' : NSH[j]) + '">' + ic(NIC[j]) + '<b>' + fNv(j, q.v[j]) + '</b></span>'; }).join('') + '</div></div>';
     }).join('');
     ui.sheet = { nut: k };
-    sheetOpen(shHead(NIC[k], (k === 'k' ? 'Kalorien' : NSH[k]) + (sd === dayIdx(Date.now()) ? ' heute' : ''), (k === 'k' ? Math.round(tot) : fN(tot)) + ' / ' + (k === 'su' ? '≤' : '') + g[k] + u) +
-      '<div class="fnl" style="--fc:var(' + NCOL[k] + ')"><i class="fnb" style="--p:' + Math.min(1, tot / (g[k] || 1)).toFixed(3) + '"></i>' + (rows || '<p class="muted">Noch nichts mit ' + (k === 'k' ? 'Kalorien' : NSH[k]) + '.</p>') + '</div>' +
+    sheetOpen(shHead(NIC[k], (k === 'k' ? 'Kalorien' : NSH[k]) + (sd === dayIdx(Date.now()) ? ' heute' : fu ? ' geplant' : ''), (k === 'k' ? Math.round(tot) : fN(tot)) + ' / ' + (k === 'su' ? '≤' : '') + g[k] + u) +
+      '<div class="fnl" style="--fc:' + (fu ? 'color-mix(in srgb, var(--g-cardio) 55%, var(--s3))' : 'var(' + NCOL[k] + ')') + '"><i class="fnb" style="--p:' + Math.min(1, tot / (g[k] || 1)).toFixed(3) + '"></i>' + (rows || '<p class="muted">Noch nichts mit ' + (k === 'k' ? 'Kalorien' : NSH[k]) + '.</p>') + '</div>' +
       (unk ? '<p class="sh-note">' + unk + (unk === 1 ? ' Eintrag' : ' Einträge') + ' ohne Angabe</p>' : ''), true);
   }
   function fChip(o) {

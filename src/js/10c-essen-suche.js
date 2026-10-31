@@ -169,7 +169,7 @@
       (it.dish ? '' : '<div class="fpc">' + ch.map(function (c) { return '<button data-famt="' + c[0] + '" aria-pressed="' + (c[0] === pk.a) + '"' + (c[2] ? ' aria-label="Zuletzt: ' + fAmt(it, c[0]) + '">' + ic('clock') : '>') + fAmt(it, c[0], c[1]) + '</button>'; }).join('') + '</div>') +
       // Zutaten an: Zutaten als Chips (zwei je Zeile), Nährwerte der Portionen in einer Zeile, darunter der Griff zu den Schritten; kein Tag/Mahlzeit/Uhrzeit und kein Eintragen
       (ingOn ? '<div class="fing" id="fing">' + fingHtml(pk.i, pk.a) + '</div>' + fstpHtml(pk.i, dEd) :
-      '<div class="ftot" id="ftot">' + ftotHtml(fNut(it, pk.a)) + '</div>' + (ui.ingm || ui.fplan ? '' : whenFor(pk.edit)) +
+      '<div class="ftot" id="ftot">' + ftotHtml(fNut(it, pk.a)) + '</div>' + (ui.ingm ? '' : ui.fplan ? whenRow(0, false, fplMk(pk.i), true) : whenFor(pk.edit)) +
       // Eintragen und (beim Ändern) Löschen teilen sich die Zeile: Löschen klein, rot, nur Mülleimer
       '<div class="fpgo"><button class="btn primary big" data-fpadd="1">' + ic('check') + '<span>' + (ui.ingm ? 'Hinzufügen' : ui.fplan ? (ui.plEdit != null ? 'Ändern' : 'Einplanen') : pk.edit != null ? 'Ändern' : 'Eintragen') + (ui.ingm ? '' : '<small id="ffit">' + ffitHtml() + '</small>') + '</span></button>' +
       (pk.edit != null ? '<button class="btn big fpdel" data-fdel="' + pk.edit + '" aria-label="Eintrag löschen">' + ic('trash') + '</button>' : '') +
@@ -320,12 +320,15 @@
     ui.sheet = { fdishes: true }; if (!ui.fplan) ui.fday = fBack(); sheetOpen(dishesHtml(), true);
   }
   function dishesHtml() {
-    // Gerichte-Menü: Filter nach Mahlzeit (fest gewählt oder meist gegessen, dishMeals); Karten (antippen = Menge wählen und bearbeiten, nach rechts wischen = 1 Portion sofort,
-    // halten und ziehen = auf eine Mahlzeit), zuletzt gegessene zuerst; als letzte Kachel gestrichelt „Neues Gericht“
-    var st = foodState(), lt = {}, f = ui.dmf || '';
+    // Gespeichertes: Reiter Gerichte (Rezepte) | Menüs (ganze Mahlzeiten/Tage aus food.tp, ui.dtab 'm')
+    // Gerichte: Filter nach Mahlzeit (fest gewählt oder meist gegessen, dishMeals); Karten (antippen = Menge wählen und bearbeiten, nach rechts wischen = 1 Portion sofort,
+    // halten und ziehen = auf eine Mahlzeit), zuletzt gegessene zuerst; als letzte Kachel „Neues Gericht“
+    var st = foodState(), lt = {}, f = ui.dmf || '', mt = ui.dtab === 'm';
+    var tabs = '<div class="seg fdtb">' + [['d', 'pot', 'Gerichte'], ['m', 'cards', 'Menüs']].map(function (q) { return '<button data-dtab="' + q[0] + '" aria-pressed="' + (mt === (q[0] === 'm')) + '">' + ic(q[1]) + q[2] + '</button>'; }).join('') + '</div>';
+    if (mt) { var di = fTplDay(); return shHead('cards', 'Menüs', 'Einplanen für ' + dayHead(di)) + tabs + '<div class="ftl">' + tplTiles(di) + '</div>'; }
     st.e.forEach(function (x) { if (x.r && /^d/.test(x.r.i)) lt[x.r.i] = Math.max(lt[x.r.i] || 0, x.t); });
     var l = st.d.filter(function (x) { return !f || dishMeals(x).indexOf(f) >= 0; }).sort(function (a, b) { return (lt[b.id] || 0) - (lt[a.id] || 0); });
-    return shHead('pot', 'Gerichte', st.d.length + (st.d.length === 1 ? ' Gericht' : ' Gerichte') + ' · je Portion') +
+    return shHead('pot', 'Gerichte', st.d.length + (st.d.length === 1 ? ' Gericht' : ' Gerichte') + ' · je Portion') + tabs +
       (st.d.length ? '<div class="seg fdm">' + [['', 'Alle']].concat(MEALS.map(function (m) { return [m[1], m[2]]; })).map(function (m) {
         return '<button data-dmf="' + m[0] + '" aria-pressed="' + (f === m[0]) + '" aria-label="' + m[1] + '">' + (m[0] ? ic(MEALI[m[0]]) : 'Alle') + '</button>'; }).join('') + '</div>' : '') +
       '<div class="fdg" data-noswipe="1">' + l.map(fDishCard).join('') + '<button class="fdnew" data-fde="new" aria-label="Neues Gericht">' + ic('plus') + '<small>Neu</small></button></div>';

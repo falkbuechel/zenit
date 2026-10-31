@@ -264,7 +264,7 @@ button.pdb-h:active { background: var(--s2); }
 .fti.tpl { box-shadow: 3px -3px 0 -1px var(--s1), 3px -3px 0 0 color-mix(in srgb, var(--mc, var(--line)) 50%, var(--line)), var(--hs); }
 .fti.tdel { box-shadow: 0 0 0 1.5px var(--danger); }
 .fti.tdel .ftq { color: var(--danger); }
-.tplg { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; margin: 6px 2px 0; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); }
+.tplg { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; margin: 0 2px -10px; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); }
 .tplg .ic { width: 14px; height: 14px; }
 /* Tages-Menü: Etikett „Tag“ neben dem Kalender, Streifen unten aus den Mahlzeitfarben (Anteil nach kcal) */
 .fti.tpd .ftq { align-items: center; gap: 3px; }

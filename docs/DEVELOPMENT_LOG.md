@@ -55,6 +55,10 @@ Neueste Einträge oben. Hier stehen Änderungen, Fehler und Lösungen sowie offe
 
 ## Verlauf
 
+## 2026-10-31 Fenster kompakter, „Menüs“ heißen Mahlzeiten und Tage (Falk gewählt)
+- Gerichte-Fenster: drei Reiter Gerichte | Mahlzeiten | Tage (`ui.dtab` `d`/`m`/`t`) als Symbol-Pille links, Mahlzeit-Filter rechts in derselben Zeile (`.fdtr`); Tag-Filter weg, Abschnittsüberschriften enger. Wort „Menü“ in der App ersetzt (Toasts, „Speichern als Mahlzeit“, Fenster „Speichern“ ohne Hinweistext).
+- Nährwerte: Einträge als Listenzeilen mit Trennlinie, kleiner Ring (~41 statt 56 px). Einkauf: Kopf einzeilig (offen, Zeitraum, Preis, Teilen), Zeilen 40 px; „im Wagen“-Zahl nur noch unten im eingeklappten Abschnitt.
+
 ## 2026-10-31 Übergänge flüssiger, Tages-Menüs erkennbar
 - Fehler: Fensterwechsel (neuer Titel) setzte Klasse `sw` am Fenster; `.sw` ist der Schalter (`display: flex`) → Fenster fiel einen Frame auf ~150 px zusammen, Höhe glitt dorthin und sprang zurück. Jetzt `shsw`. Lehre: JS-gesetzte Klassen gegen einzelne Klassen-Selektoren prüfen (der Hook sieht `.sheet.sw` vs `.sw` nicht als doppelt).
 - Höhen-Gleiten (`shMorph`): schmal per `transform` (größer: neue Höhe, startet tiefer; kleiner: alte Höhe bleibt, gleitet runter), breit (`e`) und `peek` weiter per `height`.

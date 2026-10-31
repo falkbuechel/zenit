@@ -124,11 +124,11 @@
     // Im Wagen und Zuhause unten, eingeklappt (Kopf antippen = auf/zu)
     function fold(k, icn, nm, g) { var on = ui['shg' + k]; return g.length ? '<button class="shh shf" data-shg="' + k + '" aria-expanded="' + !!on + '">' + ic(icn) + nm + '<small>' + g.length + '</small>' + ic('chev') + '</button>' + (on ? g.map(row).join('') : '') : ''; }
     h += fold('w', 'check', 'Im Wagen', done) + fold('z', 'jar', 'Zuhause', gone);
-    // Kopf als Karte: offen · im Wagen, Preis, Fortschritt; Zeitraum als Pille (antippen = Tage ab heute, dazu 2 Wochen), Teilen
-    var lab = n === 14 ? '2 Wochen' : n === 1 ? 'Heute' : 'bis ' + WDN[wdOf(t + n - 1)].slice(0, 2), days = [1, 2, 3, 4, 5, 6, 7].map(function (k) { return [k, k === 1 ? 'Heute' : WDN[wdOf(t + k - 1)].slice(0, 2)]; }).concat([[14, '2 Wo']]);
-    return '<div class="shk2"><div class="shk2t"><span><b>' + open.length + '</b> offen' + (done.length ? '<small> · ' + done.length + ' im Wagen</small>' : '') + '</span><b class="shk2e">≈ ' + eur(sum) + '</b></div>' +
+    // Kopf als Karte in einer Zeile: offen, Zeitraum als Pille (antippen = Tage ab heute, dazu 2 Wochen), Preis, Teilen; darunter Fortschritt (im Wagen steht unten eingeklappt)
+    var lab = n === 14 ? '2 Wo' : n === 1 ? 'Heute' : 'bis ' + WDN[wdOf(t + n - 1)].slice(0, 2), days = [1, 2, 3, 4, 5, 6, 7].map(function (k) { return [k, k === 1 ? 'Heute' : WDN[wdOf(t + k - 1)].slice(0, 2)]; }).concat([[14, '2 Wo']]);
+    return '<div class="shk2"><div class="shk2t"><span><b>' + open.length + '</b> offen</span><button class="shpp" data-shp="1" aria-expanded="' + !!ui.shpo + '">' + ic('cal') + lab + ic('chev') + '</button>' +
+      '<b class="shk2e">≈ ' + eur(sum) + '</b>' + (l.length ? '<button class="x" data-shsh="1" aria-label="Liste teilen">' + ic('share') + '</button>' : '') + '</div>' +
       '<i class="shk2b" style="--p:' + (all.length ? done.length / all.length : 0).toFixed(3) + '"></i>' +
-      '<div class="shk2r"><button class="shpp" data-shp="1" aria-expanded="' + !!ui.shpo + '">' + ic('cal') + lab + ic('chev') + '</button>' + (l.length ? '<button class="x" data-shsh="1" aria-label="Liste teilen">' + ic('share') + '</button>' : '') + '</div>' +
       (ui.shpo ? '<div class="shd" role="group" aria-label="Zeitraum">' + days.map(function (x) { var on = x[0] === 14 ? n === 14 : n < 14 && x[0] <= n; return '<button data-shn="' + x[0] + '" aria-pressed="' + on + '"' + (n === x[0] ? ' class="end"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div>' : '') + '</div>' +
       '<div class="shl" data-noswipe="1">' + (h || '<p class="muted">Nichts geplant. Einen künftigen Tag oben wählen und einplanen.</p>') + '</div>';
   }
@@ -136,33 +136,33 @@
   // Vorlagen gelten für den gewählten Tag, vergangene Tage planen heute
   function fTplDay() { return Math.max(fSd(), dayIdx(Date.now())); }
   function openTpl() { ui.dtab = 'm'; openDishes(); }
-  // ---------- Menüs (food.tp, im Code „Vorlagen“/tpl): [{id, n, k: 'm' (Mahlzeit, mk) | 'd' (Tag), it: [{i, g, mk?}]}]
+  // ---------- Gespeicherte Mahlzeiten und Tage (food.tp, früher „Menüs“, im Code „Vorlagen“/tpl): [{id, n, k: 'm' (Mahlzeit, mk) | 'd' (Tag), it: [{i, g, mk?}]}]
   function tplKcal(t) { return Math.round(t.it.reduce(function (a, q) { var it = fItem(q.i); return a + (it ? fNut(it, q.g).k || 0 : 0); }, 0)); }
-  // Kachel für Gespeichertes (Gericht, Menü): Mahlzeitfarbe, Symbol oben rechts, Name, kcal groß und Protein
+  // Kachel für Gespeichertes (Gericht, Mahlzeit, Tag): Mahlzeitfarbe, Symbol oben rechts, Name, kcal groß und Protein
   function savedTile(n, k, p, mk, icn, attr, cls) {
     return '<button class="fti q-m svt' + (mk ? ' m-' + mk : ' tpd') + (cls || '') + '" ' + attr + ' aria-label="' + esc(n) + '"><i class="ftq">' + ic(icn) + '</i><b class="' + fitCls(n, 8) + '">' + esc(n) + '</b>' +
       '<span class="ftv"><span>' + Math.round(k) + '</span><small style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + Math.round(p) + '</small></span></button>';
   }
   function tplNut(t) { return t.it.reduce(function (a, q) { var it = fItem(q.i), v = it ? fNut(it, q.g) : {}; a.k += v.k || 0; a.p += v.p || 0; return a; }, { k: 0, p: 0 }); }
-  function tplTiles(sd) {
-    // Menüs nach Mahlzeit (Filter ui.tmf: '' alle, Mahlzeit oder 'd' = ganze Tage): je Abschnitt 4er-Kacheln; Tage breit mit den Mahlzeit-Symbolen.
-    // Antippen = einplanen; im Löschmodus (Mülleimer im Kopf, ui.tpdel) = löschen
-    var tp = foodState().tp, del = ui.tpdel, f = ui.tmf || '';
-    if (!tp.length) return '<p class="muted tplh">' + ic('cards') + 'Menüs sind ganze Mahlzeiten oder Tage zum Wiederholen. Über + oben eine Mahlzeit oder einen Tag speichern.</p>';
+  function tplTiles(dt, row) {
+    // Reiter Mahlzeiten (dt 'm', Filter ui.tmf: '' alle oder Mahlzeit): je Abschnitt 4er-Kacheln; Reiter Tage (dt 't'): breite Kacheln mit Farbstreifen.
+    // row(Filter-HTML) = Reiterzeile aus dishesHtml. Antippen = einplanen; im Löschmodus (Mülleimer im Kopf, ui.tpdel) = löschen
+    var tp = foodState().tp.filter(function (t) { return t.k === (dt === 't' ? 'd' : 'm'); }), del = ui.tpdel, f = /^(fr|mi|sn|ab)$/.test(ui.tmf) ? ui.tmf : '';
+    if (!tp.length) return row('') + '<p class="muted tplh">' + ic(dt === 't' ? 'cal' : 'cards') + (dt === 't' ? 'Ganze Tage zum Wiederholen.' : 'Ganze Mahlzeiten zum Wiederholen.') + ' Über + oben aus Gegessenem oder Geplantem speichern.</p>';
     function tile(t) {
       var v = tplNut(t), at = 'data-ptp="' + t.id + '"';
       // Tag: Etikett „Tag“ und unten ein Streifen aus den Mahlzeitfarben, Breite nach kcal-Anteil
       var mkk = {}; if (t.k === 'd') t.it.forEach(function (q) { var it = fItem(q.i); if (it) mkk[q.mk] = (mkk[q.mk] || 0) + (fNut(it, q.g).k || 0); });
-      if (t.k === 'd') return '<button class="fti q-m svt tpd' + (del ? ' tdel' : '') + '" ' + at + ' aria-label="Tages-Menü ' + esc(t.n) + (del ? ' löschen' : '') + '"><i class="ftq">' + ic(del ? 'close' : 'cal') + (del ? '' : '<small>Tag</small>') + '</i><b>' + esc(t.n) + '</b>' +
+      if (t.k === 'd') return '<button class="fti q-m svt tpd' + (del ? ' tdel' : '') + '" ' + at + ' aria-label="Tag ' + esc(t.n) + (del ? ' löschen' : '') + '"><i class="ftq">' + ic(del ? 'close' : 'cal') + (del ? '' : '<small>Tag</small>') + '</i><b>' + esc(t.n) + '</b>' +
         '<i class="tpk" aria-hidden="true">' + MEALS.filter(function (m) { return mkk[m[1]] > 0; }).map(function (m) { return '<i class="m-' + m[1] + '" style="flex:' + Math.round(mkk[m[1]]) + '"></i>'; }).join('') + '</i>' +
         '<span class="ftv"><span>' + Math.round(v.k) + '</span><small style="--nc:var(' + NCOL.p + ')">' + ic(NIC.p) + Math.round(v.p) + '</small></span></button>';
       return savedTile(t.n, v.k, v.p, t.mk, del ? 'close' : MEALI[t.mk], at, del ? ' tdel' : '');
     }
-    var h = '', sec = function (icn, nm, l, cls) { return l.length ? '<p class="tplg">' + ic(icn) + nm + '</p><div class="ftl' + (cls || '') + '">' + l.map(tile).join('') + '</div>' : ''; };
-    if (!f || f === 'd') h += sec('cal', 'Ganze Tage', tp.filter(function (t) { return t.k === 'd'; }), ' tpdw');
-    MEALS.forEach(function (m) { if (!f || f === m[1]) h += sec(MEALI[m[1]], m[2], tp.filter(function (t) { return t.k === 'm' && t.mk === m[1]; })); });
-    return '<div class="seg fdm tmf">' + [['', 'Alle']].concat(MEALS.map(function (m) { return [m[1], m[2]]; }), [['d', 'Tag']]).map(function (m) {
-      return '<button data-tmf="' + m[0] + '" aria-pressed="' + (f === m[0]) + '" aria-label="' + m[1] + '">' + (m[0] === '' ? 'Alle' : ic(m[0] === 'd' ? 'cal' : MEALI[m[0]])) + '</button>'; }).join('') + '</div>' + (h || '<p class="muted">Hier noch keine Menüs.</p>');
+    if (dt === 't') return row('') + '<div class="ftl tpdw">' + tp.map(tile).join('') + '</div>';
+    var h = '', sec = function (icn, nm, l) { return l.length ? '<p class="tplg">' + ic(icn) + nm + '</p><div class="ftl">' + l.map(tile).join('') + '</div>' : ''; };
+    MEALS.forEach(function (m) { if (!f || f === m[1]) h += sec(MEALI[m[1]], m[2], tp.filter(function (t) { return t.mk === m[1]; })); });
+    return row('<div class="seg fdm">' + [['', 'Alle']].concat(MEALS.map(function (m) { return [m[1], m[2]]; })).map(function (m) {
+      return '<button data-tmf="' + m[0] + '" aria-pressed="' + (f === m[0]) + '" aria-label="' + m[1] + '">' + (m[0] === '' ? 'Alle' : ic(MEALI[m[0]])) + '</button>'; }).join('') + '</div>') + (h || '<p class="muted">Hier noch keine Mahlzeiten.</p>');
   }
   function tplAdd(t, di, mk) {
     // Vorlage einplanen: Mahlzeit-Vorlage in Mahlzeit mk (sonst ihre eigene), Tages-Vorlage mit den gespeicherten Mahlzeiten
@@ -171,7 +171,7 @@
       var it = fItem(q.i); if (!it) return; var v = fNut(it, q.g), x = { d: di, mk: t.k === 'm' ? (mk || t.mk) : q.mk, n: fEn(it).slice(0, 30) };
       NK.forEach(function (k) { if (v[k] != null) x[k] = k === 'k' ? Math.round(v.k) : Math.round(v[k] * 10) / 10; }); x.r = { i: q.i, g: q.g }; pl.push(x);
     });
-    persist(); ui.fresh = false; render(); buzz([10, 30, 10]); toast('Menü geplant · ' + tplKcal(t) + ' kcal', 'cal', true);
+    persist(); ui.fresh = false; render(); buzz([10, 30, 10]); toast((t.k === 'd' ? 'Tag' : 'Mahlzeit') + ' geplant · ' + tplKcal(t) + ' kcal', 'cal', true);
   }
   // Teile eines Tags für ein Menü: Gegessenes und Geplantes mit Quelle, je mit Mahlzeit
   function tplItems(di) {
@@ -181,7 +181,7 @@
     // Gegessenes/Geplantes eines Tags (k = 'd') oder einer Mahlzeit (k = 'm') als Menü speichern; Name selbst gewählt, sonst aus den ersten Einträgen. Gibt den Namen zurück
     // Grenzen wie in cleanFood (40 Menüs, 30 Einträge), sonst ginge Überzähliges beim nächsten Laden still verloren
     var l = tplItems(di).filter(function (o) { return k === 'd' || o.mk === mk; }).slice(0, 30); if (!l.length) return '';
-    if (foodState().tp.length >= 40) { toast('Höchstens 40 Menüs', 'bolt'); return ''; }
+    if (foodState().tp.length >= 40) { toast('Höchstens 40 Mahlzeiten und Tage', 'bolt'); return ''; }
     var n = String(nm || '').trim() || (k === 'd' ? 'Tag ' + WDN[wdOf(di)] : l[0].x.n.split(' ')[0] + (l.length > 1 ? ' +' + (l.length - 1) : ''));
     foodState().tp.push({ id: 't' + Date.now().toString(36), n: n.slice(0, 24), k: k, mk: k === 'm' ? mk : undefined, it: l.map(function (o) { var q = { i: o.x.r.i, g: o.x.r.g }; if (k === 'd') q.mk = o.mk; return q; }) });
     persist(); buzz([10, 30, 10]); return n.slice(0, 24);
@@ -197,10 +197,10 @@
     var pick = sel === 'd' ? its : its.filter(function (o) { return o.mk === sel; }), mn = sel && sel !== 'd' && MEALS.filter(function (m) { return m[1] === sel; })[0];
     var def = sel === 'd' ? 'Tag ' + WDN[wdOf(di)] : pick.length ? mn[2] + ' · ' + String(pick[0].x.n || '').split(' ')[0] + (pick.length > 1 ? ' +' + (pick.length - 1) : '') : '';
     ui.sheet = { tpnew: true };
-    sheetOpen(shHead('cards', 'Neues Menü', 'Mahlzeit oder Tag wählen') + '<nav class="fds tpnd">' + ds + '</nav>' +
+    sheetOpen(shHead('cards', 'Speichern', 'Mahlzeit oder ganzen Tag wählen') + '<nav class="fds tpnd">' + ds + '</nav>' +
       '<div class="fchips fem tpnr">' + tiles + '</div><button class="tpnday" data-tpnm="d" aria-pressed="' + (sel === 'd') + '"' + (its.length ? '' : ' disabled') + '>' + ic('cal') + '<b>Ganzer Tag</b><small>' + its.length + ' Teile · ' + kc(its) + ' kcal</small></button>' +
-      (pick.length ? '<p class="tpnl">' + pick.map(function (o) { return esc(o.x.n || ''); }).join(' · ') + '</p><div class="tpsv on"><input id="tpn" class="fnm" type="text" maxlength="24" value="' + esc(def.slice(0, 24)) + '" aria-label="Name des Menüs"><button class="btn primary" data-tpns="1">' + ic('check') + 'Speichern</button></div>'
-        : '<p class="muted tpnl">' + (its.length ? 'Mahlzeit oder ganzen Tag antippen.' : 'An diesem Tag ist nichts gegessen oder geplant.') + '</p>'), true);
+      (pick.length ? '<p class="tpnl">' + pick.map(function (o) { return esc(o.x.n || ''); }).join(' · ') + '</p><div class="tpsv on"><input id="tpn" class="fnm" type="text" maxlength="24" value="' + esc(def.slice(0, 24)) + '" aria-label="Name"><button class="btn primary" data-tpns="1">' + ic('check') + 'Speichern</button></div>'
+        : its.length ? '' : '<p class="muted tpnl">An diesem Tag ist nichts gegessen oder geplant.</p>'), true);
   }
   // Gelöscht („brauche ich nicht“): fällt aus der Liste, bis Neues danach geplant wird
   function shKd(key) { return ('d:' + key).slice(0, 40); }
@@ -274,10 +274,10 @@
       ui.dd.m = MEALS.map(function (m) { return m[1]; }).filter(function (k) { return k === el.dataset.ddm ? on : dm.indexOf(k) >= 0; }); el.setAttribute('aria-pressed', String(on)); buzz(4); return true;
     }
     if (t.closest('[data-fdx]')) { fdxSet(!ui.fdx); return true; }
-    // Neues Menü: Tag wählen, Mahlzeit/Tag wählen, speichern (danach Menüs-Reiter mit diesem Filter)
+    // Neues Menü: Tag wählen, Mahlzeit/Tag wählen, speichern (danach Reiter Mahlzeiten mit diesem Filter bzw. Tage)
     if ((el = t.closest('[data-tpnd]'))) { openTplNew(+el.dataset.tpnd, null); buzz(4); return true; }
     if ((el = t.closest('[data-tpnm]'))) { openTplNew(ui.tpn.d, el.dataset.tpnm); buzz(4); return true; }
-    if (t.closest('[data-tpns]')) { var tn0 = ui.tpn.mk === 'd' ? tplSave('d', ui.tpn.d, null, $('tpn').value) : tplSave('m', ui.tpn.d, ui.tpn.mk, $('tpn').value); if (tn0) { ui.dtab = 'm'; ui.tmf = ui.tpn.mk; openDishes(); toast('Menü gespeichert · ' + tn0, 'cards'); } return true; }
+    if (t.closest('[data-tpns]')) { var tn0 = ui.tpn.mk === 'd' ? tplSave('d', ui.tpn.d, null, $('tpn').value) : tplSave('m', ui.tpn.d, ui.tpn.mk, $('tpn').value); if (tn0) { ui.dtab = ui.tpn.mk === 'd' ? 't' : 'm'; ui.tmf = ui.tpn.mk === 'd' ? '' : ui.tpn.mk; openDishes(); toast((ui.dtab === 't' ? 'Tag' : 'Mahlzeit') + ' gespeichert · ' + tn0, 'cards'); } return true; }
     if ((el = t.closest('[data-tmf]'))) { ui.tmf = el.dataset.tmf; $('sheet').innerHTML = dishesHtml(); buzz(4); return true; }
     if (t.closest('[data-tpadd]')) { ui.tpdel = false; openTplNew(Math.max(fSd(), dayIdx(Date.now())), null); return true; }
     if ((el = t.closest('[data-dtab]'))) { ui.dtab = el.dataset.dtab; ui.tpdel = false; $('sheet').innerHTML = dishesHtml(); buzz(4); return true; }

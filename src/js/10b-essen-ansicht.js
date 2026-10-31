@@ -217,9 +217,9 @@
         if (pi.length) return '<button class="fmc fpm m-' + m[1] + '" data-fml="' + m[1] + '" aria-label="' + m[2] + ' geplant, öffnen"><span class="fmt">' + ic(MEALI[m[1]]) + ic(sf ? 'clock' : 'check') + '</span><b>' + Math.round(pi.reduce(function (a, o) { return a + o.x.k; }, 0)) + '<em>kcal</em></b><small>' + pi.length + ' geplant</small></button>';
         return '<button class="fmc fme m-' + m[1] + '" data-fsearch="1" data-femk="' + m[1] + '" aria-label="' + m[2] + (sf ? ' planen"' : ' eintragen"') + '>' + ic(MEALI[m[1]]) + '</button>';
       }).join('')) + '</div></section>';
-    // Einkauf links, Suchen als Feld-Optik (Lupe, blasser Text, Scan rechts), rechts Gerichte und Menüs (ein Fenster mit Reitern)
+    // Einkauf links, Suchen als Feld-Optik (Lupe, blasser Text, Scan rechts), rechts Gerichte, Mahlzeiten, Tage (ein Fenster mit Reitern)
     h += '<div class="fact2 rise" style="--i:3"><button class="fdsb" data-fshop="1" aria-label="Einkauf">' + ic('cart') + '</button><div class="fsrb"><button class="fsrq" data-fsearch="1">' + ic('search') + '<span>' + (sf ? 'Einplanen …' : 'Suchen …') + '</span></button><button class="fsrs" data-fscan="go" aria-label="Barcode scannen">' + ic('scan') + '</button></div>' +
-      '<button class="fdsb" data-fdishes="1" aria-label="Gerichte und Menüs">' + ic('pot') + '</button></div>';
+      '<button class="fdsb" data-fdishes="1" aria-label="Gerichte, Mahlzeiten, Tage">' + ic('pot') + '</button></div>';
     // Vorschläge 4×2: zuletzt, häufig, typisch für die Uhrzeit (antippen = Menge wählen, nach oben ziehen = sofort eintragen bzw. an künftigen Tagen einplanen)
     h += '<section class="ftl rise" style="--i:4" data-noswipe="1">' + tl.map(function (x, j) { return fTile(x, 'data-ftile="' + j + '"', ui.ftok === j ? ' done' : ''); }).join('') + '</section>';
     ui.ftok = null;
@@ -273,7 +273,7 @@
     if (!pi.length) return '';
     return (today ? '<button class="fcpi fpa m-' + mk + '" data-fpe="' + mk + '"><b>' + ic('check') + 'Gegessen</b><small>' + (pi.length > 1 ? 'alle ' + pi.length : 'geplant') + '</small><em>' + fKc(pi) + '<i>kcal</i></em></button>' : '') +
       pi.map(function (o) { var it = o.x.r && fItem(o.x.r.i); return '<button class="fcpi fpm m-' + mk + '" data-fple="' + o.i + '"><b>' + ic('clock') + esc(o.x.n || 'Mahlzeit') + '</b><small>' + (it ? fAmt(it, o.x.r.g) : 'Schnell · ' + ic('close') + 'entfernen') + '</small><em>' + Math.round(o.x.k) + '<i>kcal</i></em></button>'; }).join('') +
-      (menu ? '<button class="fcpi fpa m-' + mk + '" data-ftpn="' + mk + '"><b>' + ic('cards') + 'Als Menü</b><small>speichern</small></button>' : '');
+      (menu ? '<button class="fcpi fpa m-' + mk + '" data-ftpn="' + mk + '"><b>' + ic('cards') + 'Speichern</b><small>als Mahlzeit</small></button>' : '');
   }
   function fMealPl(mk) {
     // Nur Geplantes: Zurück-Knopf (Symbol, Uhr), die geplanten Teile

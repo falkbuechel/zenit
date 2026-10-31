@@ -322,16 +322,16 @@
     ui.sheet = { fdishes: true }; if (!ui.fplan) ui.fday = fBack(); sheetOpen(dishesHtml(), true);
   }
   function dishesHtml() {
-    // Gespeichertes: Reiter Gerichte (Rezepte) | Menüs (ganze Mahlzeiten/Tage aus food.tp, ui.dtab 'm'); beide nach Mahlzeit in 4er-Kacheln, + im Kopf legt neu an.
+    // Gespeichertes: Reiter Gerichte (Rezepte) | Mahlzeiten | Tage (beide aus food.tp, ui.dtab 'm'/'t'); Reiter als Symbole links, Mahlzeit-Filter rechts in einer Zeile; + im Kopf legt neu an.
     // Gerichte: Filter nach Mahlzeit (fest gewählt oder meist gegessen, dishMeals; ohne = „Sonstige“); Kachel antippen = Menge wählen und bearbeiten,
     // nach rechts wischen = 1 Portion sofort, halten und ziehen = auf eine Mahlzeit; zuletzt gegessene zuerst
-    var st = foodState(), lt = {}, f = ui.dmf || '', mt = ui.dtab === 'm';
-    var tabs = '<div class="seg fdtb">' + [['d', 'pot', 'Gerichte'], ['m', 'cards', 'Menüs']].map(function (q) { return '<button data-dtab="' + q[0] + '" aria-pressed="' + (mt === (q[0] === 'm')) + '">' + ic(q[1]) + q[2] + '</button>'; }).join('') + '</div>';
+    var st = foodState(), lt = {}, f = ui.dmf || '', dt = ui.dtab === 'm' || ui.dtab === 't' ? ui.dtab : 'd';
+    var row = function (flt) { return '<div class="fdtr"><div class="seg fdtb">' + [['d', 'pot', 'Gerichte'], ['m', 'cards', 'Mahlzeiten'], ['t', 'cal', 'Tage']].map(function (q) { return '<button data-dtab="' + q[0] + '" aria-pressed="' + (dt === q[0]) + '" aria-label="' + q[2] + '">' + ic(q[1]) + '</button>'; }).join('') + '</div>' + flt + '</div>'; };
     var hb = function (h, x) { return h.replace('<button class="x" data-sheet-close', x + '<button class="x" data-sheet-close'); };
-    if (mt) {
-      var di = fTplDay(), tp = st.tp.length;
-      return hb(shHead('cards', 'Menüs', 'Einplanen für ' + dayHead(di)), (tp ? '<button class="x' + (ui.tpdel ? ' on' : '') + '" data-ptpx="1" aria-pressed="' + !!ui.tpdel + '" aria-label="Menüs löschen">' + ic(ui.tpdel ? 'check' : 'trash') + '</button>' : '') +
-        '<button class="x" data-tpadd="1" aria-label="Neues Menü">' + ic('plus') + '</button>') + tabs + tplTiles(di);
+    if (dt !== 'd') {
+      var di = fTplDay(), tp = st.tp.filter(function (t) { return t.k === (dt === 't' ? 'd' : 'm'); }).length;
+      return hb(shHead(dt === 't' ? 'cal' : 'cards', dt === 't' ? 'Tage' : 'Mahlzeiten', 'Einplanen für ' + dayHead(di)), (tp ? '<button class="x' + (ui.tpdel ? ' on' : '') + '" data-ptpx="1" aria-pressed="' + !!ui.tpdel + '" aria-label="Löschen">' + ic(ui.tpdel ? 'check' : 'trash') + '</button>' : '') +
+        '<button class="x" data-tpadd="1" aria-label="Neu speichern">' + ic('plus') + '</button>') + tplTiles(dt, row);
     }
     st.e.forEach(function (x) { if (x.r && /^d/.test(x.r.i)) lt[x.r.i] = Math.max(lt[x.r.i] || 0, x.t); });
     var l = st.d.slice().sort(function (a, b) { return (lt[b.id] || 0) - (lt[a.id] || 0); });
@@ -339,9 +339,10 @@
     var sec = function (icn, nm, g) { return g.length ? '<p class="tplg">' + ic(icn) + nm + '</p><div class="ftl" data-noswipe="1">' + g.map(tile).join('') + '</div>' : ''; }, h = '';
     MEALS.forEach(function (m) { if (!f || f === m[1]) h += sec(MEALI[m[1]], m[2], l.filter(function (x) { var ms = dishMeals(x); return f ? ms.indexOf(f) >= 0 : ms[0] === m[1]; })); });
     if (!f) h += sec('pot', 'Sonstige', l.filter(function (x) { return !dishMeals(x).length; }));
-    return hb(shHead('pot', 'Gerichte', st.d.length + (st.d.length === 1 ? ' Gericht' : ' Gerichte') + ' · je Portion'), '<button class="x" data-fde="new" aria-label="Neues Gericht">' + ic('plus') + '</button>') + tabs +
-      (st.d.length ? '<div class="seg fdm">' + [['', 'Alle']].concat(MEALS.map(function (m) { return [m[1], m[2]]; })).map(function (m) {
-        return '<button data-dmf="' + m[0] + '" aria-pressed="' + (f === m[0]) + '" aria-label="' + m[1] + '">' + (m[0] ? ic(MEALI[m[0]]) : 'Alle') + '</button>'; }).join('') + '</div>' + (h || '<p class="muted">Hier noch keine Gerichte.</p>')
+    return hb(shHead('pot', 'Gerichte', st.d.length + (st.d.length === 1 ? ' Gericht' : ' Gerichte') + ' · je Portion'), '<button class="x" data-fde="new" aria-label="Neues Gericht">' + ic('plus') + '</button>') +
+      row(st.d.length ? '<div class="seg fdm">' + [['', 'Alle']].concat(MEALS.map(function (m) { return [m[1], m[2]]; })).map(function (m) {
+        return '<button data-dmf="' + m[0] + '" aria-pressed="' + (f === m[0]) + '" aria-label="' + m[1] + '">' + (m[0] ? ic(MEALI[m[0]]) : 'Alle') + '</button>'; }).join('') + '</div>' : '') +
+      (st.d.length ? (h || '<p class="muted">Hier noch keine Gerichte.</p>')
         : '<p class="muted tplh">' + ic('pot') + 'Gerichte sind Rezepte mit Zutaten und Portionen. Über + oben anlegen oder ein Rezept einfügen.</p>');
   }
   // Gericht bearbeiten: Zutaten aus der Datenbank füllen alle Nährwerte, sonst kcal und Protein von Hand
